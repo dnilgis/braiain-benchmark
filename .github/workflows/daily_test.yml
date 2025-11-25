@@ -11,6 +11,10 @@ on:
 
 jobs:
   run-benchmark:
+    # IMPORTANT: Add permissions to allow the action to write/commit files
+    permissions:
+      contents: write
+      
     runs-on: ubuntu-latest
     
     steps:
@@ -27,21 +31,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
-      - name: Run Benchmark
+      - name: Run Benchmark Script
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          # --- FIX: Configure Git for committing the file ---
-          # This provides the necessary identity for the git push command
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          # --- Run the Python script and create data.json ---
+          # The Python script creates the data.json file
           python benchmark.py
-
-          # --- Commit and push the new data.json file ---
-          git add data.json
-          git commit -m "Update benchmark stats"
-          git push
+          
+      - name: Commit and Push Results
+        # This dedicated action is more robust than manual git commands
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Update benchmark stats
+          files: data.json
+          # Note: The 'permissions: contents: write' block above is required for this step.
