@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Braiain.com | AI Speed Benchmarks</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: #1e293b; margin: 0; padding: 20px; }
+        .container { max-width: 700px; margin: 40px auto; }
+        
+        /* Header */
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; margin: 0; letter-spacing: -1px; color: #0f172a; }
+        p.subtitle { color: #64748b; font-size: 1.1rem; }
+        
+        /* Cards */
+        .card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; transition: transform 0.2s; border: 1px solid #e2e8f0; }
+        .card:hover { transform: translateY(-2px); border-color: var(--primary); }
+        
+        /* Rank Badge */
+        .rank { font-size: 1.5rem; font-weight: 800; color: #cbd5e1; width: 40px; }
+        .rank-1 { color: #eab308; } /* Gold */
+        .rank-2 { color: #94a3b8; } /* Silver */
+        .rank-3 { color: #b45309; } /* Bronze */
+        
+        /* Model Info */
+        .model-info h2 { margin: 0; font-size: 1.1rem; }
+        .model-info span { font-size: 0.85rem; color: #64748b; }
+        
+        /* Stats */
+        .stats { text-align: right; }
+        .speed { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .unit { font-size: 0.8rem; color: #64748b; display: block; }
+        
+        /* Button */
+        .action-btn { background: #0f172a; color: white; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 500; display: inline-block; margin-top: 5px; }
+        
+        .footer { text-align: center; margin-top: 50px; color: #94a3b8; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>braiain.com</h1>
+        <p class="subtitle">Daily Speed Tests of the World's Smartest AIs</p>
+    </header>
+
+    <div id="loading">Loading live data...</div>
+    <div id="app"></div>
+
+    <div class="footer" id="last-updated"></div>
+</div>
+
+<script>
+    fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('loading').style.display = 'none';
+            const container = document.getElementById('app');
+            
+            data.results.forEach((item, index) => {
+                // Determine rank color
+                let rankClass = 'rank-' + (index + 1);
+                
+                // Create Card HTML
+                const card = `
+                <div class="card">
+                    <div style="display:flex; align-items:center;">
+                        <div class="rank ${rankClass}">#${index + 1}</div>
+                        <div class="model-info">
+                            <h2>${item.provider}</h2>
+                            <span>${item.model}</span>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <div class="speed">${item.time}s</div>
+                        <span class="unit">Response Time</span>
+                    </div>
+                </div>`;
+                container.innerHTML += card;
+            });
+
+            document.getElementById('last-updated').innerText = "Last updated: " + data.last_updated;
+        })
+        .catch(err => {
+            document.getElementById('loading').innerText = "System Offline (No Data)";
+        });
+</script>
+
+</body>
+</html>
