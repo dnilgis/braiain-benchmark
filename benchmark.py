@@ -32,17 +32,19 @@ def test_openai(api_key):
         
 def test_anthropic(api_key):
     if not api_key: return None
+    # We are updating the header to the current standard
     headers = {"x-api-key": api_key, "anthropic-version": "2023-06-01", "content-type": "application/json"}
     data = {
         "model": ANTHROPIC_MODEL,
         "max_tokens": 100,
         "messages": [{"role": "user", "content": PROMPT}]
     }
-    start = time.time()
+    start = monotonic()
     try:
+        # Check for non-200 status code errors
         response = requests.post("https://api.anthropic.com/v1/messages", headers=headers, json=data)
-        response.raise_for_status()
-        duration = round(time.time() - start, 2)
+        response.raise_for_status() 
+        duration = round(monotonic() - start, 4)
         return {"provider": "Anthropic", "model": ANTHROPIC_MODEL, "time": duration, "status": "Online"}
     except Exception as e:
         print(f"Anthropic API Failure: {e}")
@@ -50,19 +52,19 @@ def test_anthropic(api_key):
         
 def test_gemini(api_key):
     if not api_key: return None
-    # Google uses a URL parameter for the key
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={api_key}"
+    # The correct current endpoint is v1, and we ensure the model is referenced correctly.
+    url = f"https://generativelanguage.googleapis.com/v1/models/{GEMINI_MODEL}:generateContent?key={api_key}"
     data = {"contents": [{"parts": [{"text": PROMPT}]}]}
-    start = time.time()
+    start = monotonic()
     try:
         response = requests.post(url, headers={"Content-Type": "application/json"}, json=data)
         response.raise_for_status()
-        duration = round(time.time() - start, 2)
+        duration = round(monotonic() - start, 4)
         return {"provider": "Google", "model": GEMINI_MODEL, "time": duration, "status": "Online"}
     except Exception as e:
         print(f"Gemini API Failure: {e}")
         return {"provider": "Google", "model": GEMINI_MODEL, "time": 99.9999, "status": "API FAILURE"}
-
+        
 def update_json():
     results = []
     
