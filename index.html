@@ -3,106 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Braiain.com | AI Speed Benchmarks</title>
+    <title>Braiain AI Speed Index | Daily LLM Benchmarks</title>
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: #1e293b; margin: 0; padding: 20px; }
-        .container { max-width: 700px; margin: 40px auto; }
-        
-        /* Header */
-        header { text-align: center; margin-bottom: 40px; }
-        h1 { font-size: 2.5rem; margin: 0; letter-spacing: -1px; color: #0f172a; }
-        p.subtitle { color: #64748b; font-size: 1.1rem; }
-
-        <section class="about-section">
-            <h2>🚀 The Braiain AI Speed Benchmark</h2>
-            <p>
-            Welcome to the **Braiain Speed Index**, the internet's only fully automated, daily-updated leaderboard for large language model (LLM) performance. We provide objective, real-world speed data, not just theoretical scores.
-            </p>
-            <p>
-            We continuously test the flagship models from OpenAI (GPT-4), Google (Gemini), and Anthropic (Claude) using the same complex prompt: 
-            <strong>"Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030."</strong> 
-            </p>
-            <p>
-            <strong>Why Speed Matters:</strong> Latency directly translates to cost and user experience. The fastest model is the most efficient and offers the best performance for production applications. Data is updated daily.
-            </p>
-            </section>
-            <hr>
-        
-        /* Cards */
-        .card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; transition: transform 0.2s; border: 1px solid #e2e8f0; }
-        .card:hover { transform: translateY(-2px); border-color: var(--primary); }
-        
-        /* Rank Badge */
-        .rank { font-size: 1.5rem; font-weight: 800; color: #cbd5e1; width: 40px; }
-        .rank-1 { color: #eab308; } /* Gold */
-        .rank-2 { color: #94a3b8; } /* Silver */
-        .rank-3 { color: #b45309; } /* Bronze */
-        
-        /* Model Info */
-        .model-info h2 { margin: 0; font-size: 1.1rem; }
-        .model-info span { font-size: 0.85rem; color: #64748b; }
-        
-        /* Stats */
-        .stats { text-align: right; }
-        .speed { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-        .unit { font-size: 0.8rem; color: #64748b; display: block; }
-        
-        /* Button */
-        .action-btn { background: #0f172a; color: white; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 500; display: inline-block; margin-top: 5px; }
-        
-        .footer { text-align: center; margin-top: 50px; color: #94a3b8; font-size: 0.9rem; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        h1 {
+            color: #1a237e;
+            border-bottom: 3px solid #7986cb;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        .about-section {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #3949ab;
+            margin-top: 0;
+        }
+        .leaderboard {
+            max-width: 800px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header-row, .result-row {
+            display: grid;
+            grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 2fr;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+            font-size: 14px;
+        }
+        .header-row {
+            background-color: #e8eaf6;
+            font-weight: bold;
+            color: #1a237e;
+            text-transform: uppercase;
+        }
+        .result-row:nth-child(even) {
+            background-color: #fafafa;
+        }
+        .rank {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .speed-fast {
+            color: #388e3c;
+            font-weight: bold;
+        }
+        .speed-medium {
+            color: #fbc02d;
+        }
+        .status-online {
+            color: #43a047;
+            font-weight: bold;
+        }
+        .status-error {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .affiliate-btn {
+            background-color: #e53935;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+        .affiliate-btn:hover {
+            background-color: #c62828;
+        }
+        #last-updated {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #777;
+        }
     </style>
 </head>
 <body>
-
-<div class="container">
     <header>
-        <h1>braiain.com</h1>
-        <p class="subtitle">Daily Speed Tests of the World's Smartest AIs</p>
+        <h1>🤖 Braiain AI Speed Index</h1>
     </header>
 
-    <div id="loading">Loading live data...</div>
-    <div id="app"></div>
-
-    <div class="footer" id="last-updated"></div>
-</div>
-
-<script>
-    fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('loading').style.display = 'none';
-            const container = document.getElementById('app');
-            
-            data.results.forEach((item, index) => {
-                // Determine rank color
-                let rankClass = 'rank-' + (index + 1);
-                
-                // Create Card HTML
-                const card = `
-                <div class="card">
-                    <div style="display:flex; align-items:center;">
-                        <div class="rank ${rankClass}">#${index + 1}</div>
-                        <div class="model-info">
-                            <h2>${item.provider}</h2>
-                            <span>${item.model}</span>
-                        </div>
-                    </div>
-                    <div class="stats">
-                        <div class="speed">${item.time}s</div>
-                        <span class="unit">Response Time</span>
-                    </div>
-                </div>`;
-                container.innerHTML += card;
-            });
-
-            document.getElementById('last-updated').innerText = "Last updated: " + data.last_updated;
-        })
-        .catch(err => {
-            document.getElementById('loading').innerText = "System Offline (No Data)";
-        });
-</script>
-
-</body>
-</html>
+    <section class="about-section">
+        <h2>🚀 The Braiain AI Speed Benchmark</h2>
+        <p>
+            Welcome to the **Braiain Speed Index**, the internet's only fully automated, daily-updated leaderboard for large language model (LLM) performance. We provide objective, real-world speed data, not just theoretical scores.
+        </p>
+        <p>
+            We continuously test the flagship models from OpenAI (GPT), Google (Gemini), and Anthropic (Claude) using the same complex prompt: 
+            <strong>"Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for
