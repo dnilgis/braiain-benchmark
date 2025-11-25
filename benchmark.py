@@ -8,7 +8,7 @@ from datetime import datetime
 OPENAI_MODEL = "gpt-4o"
 ANTHROPIC_MODEL = "claude-3-5-sonnet-20240620"
 GEMINI_MODEL = "gemini-1.5-flash"
-PROMPT = "Explain the concept of entropy to a 5-year-old in exactly 50 words."
+PROMPT = "Explain the concept of quantum entanglement to a college student in exactly 150 words."
 
 def test_openai(api_key):
     if not api_key: return None
@@ -22,7 +22,7 @@ def test_openai(api_key):
     try:
         response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=data)
         response.raise_for_status()
-        duration = round(time.time() - start, 2)
+        duration = round(time.time() - start, 4)
         # Calculate cost (Approximate based on input/output)
         return {"provider": "OpenAI", "model": OPENAI_MODEL, "time": duration, "status": "Online"}
     except Exception as e:
