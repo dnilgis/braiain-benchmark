@@ -163,8 +163,7 @@
             margin-top: 20px;
             padding-top: 15px;
             border-top: 1px dashed #e0e0e0;
-            /* Flex-grow ensures it takes remaining space, but height: auto is key */
-            flex-grow: 1; 
+            /* FIX: Removed flex-grow to ensure it only takes content height */
         }
         .full-response-text {
             /* FORCE HEIGHT TO AUTOFIT CONTENT */
@@ -247,7 +246,7 @@
 
     <footer id="site-footer">
         <div>
-            A <a href="mailto:dnilgis@gmail.com">dnligis</a> X Gemini project.
+            A <a href="mailto:dnilgis@gmail.com">dnilgis</a> X Gemini project.
         </div>
         <div class="legal-text">
             *Legal Disclaimer Mumbo Jumbo:* This site provides benchmark data for informational purposes only. Speed metrics are based on testing conditions and may vary. All product names, logos, and brands are property of their respective owners.
