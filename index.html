@@ -54,14 +54,15 @@
         /* GRID STYLES (ROWS) */
         .header-row, .result-link {
             display: grid;
-            /* Columns: Rank, Provider, Preview, Speed, Status, Action */
             grid-template-columns: 0.3fr 1.2fr 3.1fr 0.8fr 0.8fr 1.7fr; 
             padding: 15px 15px; 
             border-bottom: 1px solid #eeeeee;
-            align-items: center; /* Set to center for stable visual alignment */
             font-size: 14px;
             text-decoration: none; 
             color: inherit; 
+            
+            /* FIX 1: Force all grid items (cells) to stretch to the height of the tallest item (preview text) */
+            align-items: stretch; 
         }
 
         .header-row {
@@ -82,9 +83,11 @@
         /* CELL STYLES */
         .rank {
             font-weight: 700;
+            /* FIX 2: Vertically center content inside the now-stretched cell */
+            align-self: center; 
         }
+        
         .provider {
-            /* Vertical column content container */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -110,6 +113,8 @@
             text-align: center;
             font-size: 1.1em;
             font-weight: 600;
+            /* FIX 2: Vertically center content inside the now-stretched cell */
+            align-self: center;
         }
         .speed-fast {
             color: #2e7d32;
@@ -125,11 +130,12 @@
         .action-button {
             text-align: right; 
             grid-column: 6; 
-            /* Use Flexbox for button vertical alignment */
+            
+            /* FIX 3: Use Flexbox to center the button content horizontally and vertically */
             display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            height: 100%; /* Ensure it spans the full cell height */
+            align-items: center; /* Vertical centering */
+            justify-content: flex-end; /* Horizontal centering to the right */
+            height: 100%; 
         }
         .affiliate-btn {
             background-color: #007bff;
@@ -172,12 +178,12 @@
             margin-top: 15px;
         }
         
-        /* LAST UPDATED STYLING FIX */
+        /* LAST UPDATED STYLING */
         #last-updated-wrapper {
             text-align: center;
             margin-top: 20px;
-            font-size: 1.1em; /* Larger */
-            font-weight: bold; /* Bolder */
+            font-size: 1.1em; 
+            font-weight: bold; 
             color: #555;
         }
     </style>
