@@ -4,31 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Braiain AI Speed Index | Daily LLM Benchmarks</title>
+    <meta name="description" content="Real-time AI model speed benchmarks. Compare OpenAI, Anthropic, and Google Gemini API latency performance updated daily.">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        /* --- BASE STYLES --- */
+        /* === BASE STYLES === */
+        * { box-sizing: border-box; }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f5f5f7;
             color: #1c1c1c;
+            line-height: 1.6;
         }
+        
+        /* === HEADER === */
         header {
             background-color: #1c1c1c;
             color: white;
             text-align: center;
-            padding: 30px 0 20px 0;
+            padding: 30px 20px 20px;
             margin-bottom: 20px;
         }
-        h1 { font-size: 2.4em; margin-bottom: 8px; }
-        .tagline { font-size: 1.1em; color: #c0c0c0; }
-        .about-section { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
-        h2 { color: #333; font-size: 1.5em; margin-top: 30px; border-bottom: 2px solid #e0e0e0; padding-bottom: 5px; }
         
-        /* --- CARD CONTAINER --- */
+        h1 { font-size: 2.4em; margin: 0 0 8px 0; }
+        .tagline { font-size: 1.1em; color: #c0c0c0; margin: 0; }
+        
+        /* === CONTENT SECTIONS === */
+        .about-section { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        h2 { color: #333; font-size: 1.5em; margin-top: 30px; border-bottom: 2px solid #e0e0e0; padding-bottom: 8px; }
+        
+        /* === TREND CHART SECTION === */
+        .chart-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 20px;
+        }
+        
+        /* === LEADERBOARD CARDS === */
         .leaderboard-cards-wrapper {
             max-width: 1200px;
             margin: 40px auto;
+            padding: 0 20px;
             display: flex;
             flex-wrap: wrap;
             gap: 20px; 
@@ -36,29 +63,25 @@
             align-items: flex-start; 
         }
 
-        /* --- INDIVIDUAL CARD --- */
         .model-card {
             background-color: #ffffff;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             padding: 20px;
-            width: 300px;
+            width: 100%;
+            max-width: 360px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s;
-            
-            /* CRITICAL FIX: Ensure height can grow */
-            height: auto; 
-            min-height: 0;
-            overflow: visible; 
+            transition: transform 0.2s, box-shadow 0.2s;
         }
+        
         .model-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
         }
 
-        /* --- CARD HEADER --- */
+        /* === CARD HEADER === */
         .card-header {
             display: flex;
             align-items: center;
@@ -66,118 +89,272 @@
             border-bottom: 2px solid #f0f0f0;
             padding-bottom: 10px;
         }
+        
         .rank-badge {
-            background-color: #007bff;
+            background-color: #666;
             color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
+            padding: 6px 12px;
+            border-radius: 5px;
             font-weight: bold;
             font-size: 1.2em;
             margin-right: 15px;
             flex-shrink: 0;
+            min-width: 45px;
+            text-align: center;
         }
+        
+        .rank-badge.rank-1 { 
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); 
+            color: #1c1c1c;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+        }
+        .rank-badge.rank-2 { 
+            background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%); 
+            color: #1c1c1c;
+            box-shadow: 0 2px 8px rgba(192, 192, 192, 0.4);
+        }
+        .rank-badge.rank-3 { 
+            background: linear-gradient(135deg, #cd7f32 0%, #e6a85c 100%); 
+            color: #1c1c1c;
+            box-shadow: 0 2px 8px rgba(205, 127, 50, 0.4);
+        }
+        
         .provider-model-wrapper {
             display: flex;
             flex-direction: column;
-            line-height: 1.1;
+            line-height: 1.2;
             overflow: hidden; 
+            flex: 1;
         }
+        
         .card-provider { font-size: 1.3em; font-weight: 700; }
-        .card-model { font-size: 0.9em; color: #555; word-break: break-all; }
+        .card-model { font-size: 0.9em; color: #555; word-break: break-word; }
 
-        /* --- STATS --- */
+        /* === STATS === */
         .stats-wrapper {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
             margin-bottom: 15px;
+            padding: 10px 0;
         }
+        
         .stat-group { text-align: center; }
+        
         .stat-value {
-            font-size: 1.4em;
+            font-size: 1.3em;
             font-weight: bold;
             display: flex;
             flex-direction: column;
             align-items: center;
             line-height: 1.1;
         }
-        .stat-label { font-size: 0.8em; color: #777; text-transform: uppercase; margin-bottom: 3px; }
         
-        .speed-fast { color: #2e7d32; }
+        .stat-label { 
+            font-size: 0.75em; 
+            color: #777; 
+            text-transform: uppercase; 
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        /* Speed & TPS colors */
+        .speed-fast, .tps-fast { color: #2e7d32; }
+        .speed-medium, .tps-medium { color: #f57c00; }
+        .speed-slow, .tps-slow { color: #c62828; }
+        
         .status-online { color: #2e7d32; }
         .status-error { color: #c62828; }
-        .last-speed { font-size: 0.8em; color: #999; margin-top: 5px; font-weight: normal; }
         
-        /* --- BUTTON --- */
+        /* === COST BADGE === */
+        .cost-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+        
+        .cost-free { background-color: #e8f5e9; color: #2e7d32; }
+        .cost-cheap { background-color: #fff3e0; color: #f57c00; }
+        .cost-expensive { background-color: #ffebee; color: #c62828; }
+
+        /* === BADGE SYSTEM === */
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 10px 0;
+        }
+        
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-fastest { background-color: #ffd700; color: #1c1c1c; }
+        .badge-best-value { background-color: #4caf50; color: white; }
+        .badge-highest-tps { background-color: #2196f3; color: white; }
+
+        /* === AFFILIATE BUTTON === */
         .affiliate-btn {
             background-color: #2196f3;
             color: white;
-            padding: 10px 15px;
-            border-radius: 4px;
+            padding: 12px 20px;
+            border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 0.9em;
-            transition: background-color 0.2s;
+            font-size: 0.95em;
+            transition: background-color 0.2s, transform 0.1s;
             text-align: center;
             margin-top: 10px;
             display: block;
+            border: none;
+            cursor: pointer;
         }
-        .affiliate-btn:hover { background-color: #1976d2; }
+        
+        .affiliate-btn:hover { 
+            background-color: #1976d2;
+            transform: translateY(-2px);
+        }
 
-        /* --- FULL RESPONSE --- */
+        /* === TOGGLE BUTTON === */
+        .toggle-response-btn {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+            width: 100%;
+            font-weight: 500;
+        }
+        
+        .toggle-response-btn:hover { background-color: #e0e0e0; }
+
+        /* === RESPONSE === */
         .response-content-wrapper {
-            margin-top: 20px;
+            margin-top: 15px;
             padding-top: 15px;
             border-top: 1px dashed #e0e0e0;
             width: 100%;
-            /* CRITICAL FIX: Prevent the response wrapper from shrinking */
-            flex-shrink: 0; 
+            display: none;
         }
         
-        /* SCROLL FIX: The final attempt at stopping clipping by adding scroll capability */
+        .response-content-wrapper.visible { display: block; }
+        
         .full-response-text {
             display: block;
             width: 100%;
-            /* Explicitly set min-height to allow content growth */
-            min-height: 50px; 
+            min-height: 60px; 
             max-height: 300px; 
-            overflow-y: auto; /* Enable vertical scrolling */
-            
+            overflow-y: auto;
             white-space: pre-wrap; 
             word-wrap: break-word; 
-            font-family: monospace;
+            font-family: 'Monaco', 'Menlo', monospace;
             font-size: 0.85em;
-            line-height: 1.5;
+            line-height: 1.6;
             color: #333;
             background-color: #fafafa;
-            padding: 10px;
+            padding: 12px;
             border-radius: 4px;
-            box-sizing: border-box;
             border: 1px solid #eee;
         }
+
+        /* === FOOTER === */
+        #last-updated-wrapper { 
+            text-align: center; 
+            margin: 30px auto; 
+            font-size: 1em; 
+            color: #666; 
+            padding: 0 20px;
+        }
         
-        /* --- FOOTER --- */
-        #last-updated-wrapper { text-align: center; margin: 20px auto 40px auto; font-size: 1.1em; font-weight: bold; color: #555; }
-        #site-footer { background-color: #1c1c1c; color: #c0c0c0; padding: 20px 15px; text-align: center; font-size: 0.85em; margin-top: 40px; }
+        #site-footer { 
+            background-color: #1c1c1c; 
+            color: #c0c0c0; 
+            padding: 30px 20px; 
+            text-align: center; 
+            font-size: 0.9em; 
+            margin-top: 60px; 
+        }
+        
         #site-footer a { color: #007bff; text-decoration: none; font-weight: bold; }
         #site-footer a:hover { text-decoration: underline; }
-        .legal-text { margin-top: 10px; font-size: 0.75em; color: #777; }
+        .legal-text { margin-top: 15px; font-size: 0.8em; color: #999; line-height: 1.5; }
+
+        /* === LOADING & ERROR === */
+        .loading-container { width: 100%; text-align: center; padding: 40px 20px; }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .model-card { max-width: 100%; }
+            .stats-wrapper { grid-template-columns: repeat(2, 1fr); }
+            .stat-group:last-child { grid-column: 1 / -1; }
+            .chart-container { height: 300px; }
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>🤖 Braiain AI Speed Index</h1>
-        <p class="tagline">The definitive ranking for **Real-World LLM API Latency**</p>
+        <p class="tagline">Real-World LLM Speed, Cost & Performance Tracking</p>
     </header>
 
     <section class="about-section">
         <p>
-            Welcome to the **Braiain Speed Index**, the internet's only fully automated, daily-updated leaderboard focused exclusively on **Real-World API Latency** (End-to-End Speed). **We tell you which model is fastest, not just which model is smartest.**
+            Welcome to the <strong>Braiain Speed Index</strong>, featuring automated daily benchmarks of <strong>API speed, tokens-per-second, and cost efficiency</strong> across major AI providers. <strong>Make informed decisions with real data.</strong>
         </p>
     </section>
 
+    <!-- TREND CHART -->
+    <section class="chart-section">
+        <h2>📈 7-Day Performance Trends</h2>
+        <p style="color: #666; font-size: 0.9em;">Historical speed comparison - lower is better</p>
+        <div class="chart-container">
+            <canvas id="trendChart"></canvas>
+        </div>
+    </section>
+
+    <!-- LEADERBOARD -->
     <div class="leaderboard-cards-wrapper" id="results-container">
-        <p style="text-align: center; padding: 20px; width: 100%;">Loading live data...</p>
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading live benchmark data...</p>
+        </div>
     </div>
     
     <div id="last-updated-wrapper">
@@ -185,24 +362,94 @@
     </div>
 
     <section class="about-section">
-        <h2>🔬 Methodology and Transparency</h2>
+        <h2>🔬 Methodology</h2>
         <p>
-            The benchmark measures **end-to-end inference speed** (latency), which is the total time from sending the API request to receiving the final byte of the response. This directly impacts real-world application speed and user experience.
+            We measure <strong>end-to-end API latency</strong> using identical prompts across all models. Each test generates ~300 tokens and tracks speed, throughput (tokens/second), and cost per request.
         </p>
-        <p>
-            The test uses the same **"complex, high-token prompt"** for every model: "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030." All models are configured to generate a minimum of **"300 output tokens"**. The lowest recorded time determines the winner. Data is updated daily via a GitHub Actions workflow.
-        </p>
+        
+        <h2>📊 Metrics Explained</h2>
+        <ul>
+            <li><strong>Speed (seconds):</strong> Total time from request to response - lower is better</li>
+            <li><strong>TPS (Tokens Per Second):</strong> Throughput metric - higher is better</li>
+            <li><strong>Cost Per Request:</strong> Approximate cost based on current API pricing</li>
+        </ul>
     </section>
 
     <footer id="site-footer">
-        <div>
-            A <a href="mailto:dnilgis@gmail.com">dnilgis</a> X Gemini project.
-        </div>
+        <div>A <a href="mailto:dnilgis@gmail.com">dnilgis</a> project.</div>
         <div class="legal-text">
-            *Legal Disclaimer Mumbo Jumbo:* This site provides benchmark data for informational purposes only. Speed metrics are based on testing conditions and may vary. All product names, logos, and brands are property of their respective owners.
+            <strong>Legal Disclaimer:</strong> Benchmark data provided for informational purposes only. Pricing and performance may vary. All product names and brands are property of their respective owners.
         </div>
     </footer>
 
-    <script src="leaderboard.js"></script>
-</body>
-</html>
+    <script>
+        // === CONFIGURATION ===
+        const AFFILIATE_LINKS = {
+            'OpenAI': 'https://platform.openai.com/signup',
+            'Google': 'https://ai.google.dev/', 
+            'Anthropic': 'https://console.anthropic.com/'
+        };
+
+        const PROVIDER_COLORS = {
+            'OpenAI': '#10a37f',
+            'Anthropic': '#d97757',
+            'Google': '#4285f4'
+        };
+
+        let trendChart = null;
+
+        // === UTILITY FUNCTIONS ===
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function getSpeedClass(time, isOnline) {
+            if (!isOnline) return 'status-error';
+            if (time < 5) return 'speed-fast';
+            if (time < 10) return 'speed-medium';
+            return 'speed-slow';
+        }
+
+        function getTpsClass(tps) {
+            if (tps > 60) return 'tps-fast';
+            if (tps > 30) return 'tps-medium';
+            return 'tps-slow';
+        }
+
+        function getCostClass(cost) {
+            if (cost === null || cost === 0) return 'cost-free';
+            if (cost < 0.001) return 'cost-cheap';
+            return 'cost-expensive';
+        }
+
+        function formatCost(cost) {
+            if (cost === null) return 'N/A';
+            if (cost === 0) return 'FREE';
+            if (cost < 0.0001) return '<$0.0001';
+            return `$${cost.toFixed(4)}`;
+        }
+
+        // === TREND CHART ===
+        function createTrendChart(history) {
+            const ctx = document.getElementById('trendChart');
+            if (!ctx) return;
+
+            // Prepare data
+            const labels = [];
+            const datasets = {};
+
+            // Get last 7 entries
+            const recentHistory = history.slice(-7);
+
+            recentHistory.forEach(entry => {
+                const date = new Date(entry.timestamp);
+                labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+
+                Object.keys(entry.results).forEach(provider => {
+                    if (!datasets[provider]) {
+                        datasets[provider] = {
+                            label: provider,
+                            data: [],
+                            borderColor: PROVIDER_COLORS[provi
