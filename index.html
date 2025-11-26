@@ -158,12 +158,13 @@
             background-color: #1976d2;
         }
 
-        /* FULL RESPONSE SECTION */
+        /* FULL RESPONSE SECTION - FIX APPLIED HERE */
         .full-response-section {
             margin-top: 20px;
             padding-top: 15px;
             border-top: 1px dashed #e0e0e0;
-            /* FIX: Removed flex-grow to ensure it only takes content height */
+            /* CRITICAL FIX: Forces Flexbox to allow children to dictate minimum size */
+            min-height: 0; 
         }
         .full-response-text {
             /* FORCE HEIGHT TO AUTOFIT CONTENT */
