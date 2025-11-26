@@ -1,12 +1,12 @@
 {
-    "last_updated": "2025-11-26 23:37:55 UTC",
+    "last_updated": "2025-11-26 23:39:57 UTC",
     "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030.",
     "max_tokens": 300,
     "results": [
         {
             "provider": "Google",
             "model": "gemini-2.0-flash-exp",
-            "time": 0.1099,
+            "time": 0.1113,
             "status": "API FAILURE",
             "response_preview": "404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1/models/gemini-2.0-...",
             "tokens_per_second": 0,
@@ -16,7 +16,7 @@
         {
             "provider": "Anthropic",
             "model": "claude-3-5-sonnet-20241022",
-            "time": 0.1619,
+            "time": 0.1763,
             "status": "API FAILURE",
             "response_preview": "404 Client Error: Not Found for url: https://api.anthropic.com/v1/messages",
             "tokens_per_second": 0,
@@ -26,10 +26,10 @@
         {
             "provider": "OpenAI",
             "model": "gpt-4o-mini",
-            "time": 6.4517,
+            "time": 6.1181,
             "status": "Online",
-            "response_preview": "The history of the internet dates back to the 1960s, when the U.S. Department of Defense initiated the ARPANET project, primarily aimed at creating a ...",
-            "tokens_per_second": 46.5,
+            "response_preview": "The internet's history began in the late 1960s with the development of ARPANET, a project funded by the U.S. Department of Defense to enable communica...",
+            "tokens_per_second": 49.03,
             "output_tokens": 300,
             "cost_per_request": 0.000185
         }
@@ -53,6 +53,29 @@
                 "OpenAI": {
                     "time": 6.4517,
                     "tps": 46.5,
+                    "status": "Online",
+                    "cost": 0.000185
+                }
+            }
+        },
+        {
+            "timestamp": "2025-11-26 23:39:57 UTC",
+            "results": {
+                "Google": {
+                    "time": 0.1113,
+                    "tps": 0,
+                    "status": "API FAILURE",
+                    "cost": null
+                },
+                "Anthropic": {
+                    "time": 0.1763,
+                    "tps": 0,
+                    "status": "API FAILURE",
+                    "cost": null
+                },
+                "OpenAI": {
+                    "time": 6.1181,
+                    "tps": 49.03,
                     "status": "Online",
                     "cost": 0.000185
                 }
