@@ -41,17 +41,16 @@
             overflow: hidden;
         }
         
-        /* FIX: Apply grid directly to the link/row element */
+        /* FIX: Ensure grid is applied directly to the link/row element */
         .header-row, .result-link {
-            /* Defines the column layout */
             display: grid;
             grid-template-columns: 0.3fr 1fr 3fr 0.8fr 0.8fr 1.5fr; 
             padding: 12px 15px;
             border-bottom: 1px solid #eeeeee;
             align-items: center;
             font-size: 14px;
-            text-decoration: none; /* Removes anchor underline */
-            color: inherit; /* Inherits text color */
+            text-decoration: none; 
+            color: inherit; 
         }
         
         .header-row {
@@ -61,7 +60,6 @@
             text-transform: uppercase;
         }
         
-        /* Hover and cleanup on the rows */
         .result-link:last-child {
             border-bottom: none;
         }
@@ -88,6 +86,10 @@
         .status-error {
             color: #c62828;
         }
+        /* Ensure the button is styled and the container allows it */
+        .action-button {
+            text-align: right; /* Align button to the right of its cell */
+        }
         .affiliate-btn {
             background-color: #2196f3;
             color: white;
@@ -97,7 +99,7 @@
             font-weight: bold;
             font-size: 0.85em;
             transition: background-color 0.3s;
-            text-align: center;
+            display: inline-block; /* Ensure it respects padding/margins */
         }
         .affiliate-btn:hover {
             background-color: #1976d2;
@@ -128,7 +130,7 @@
             <div class="preview-text-header">Response Preview</div>
             <div class="speed">Speed (s)</div>
             <div class="status">Status</div>
-            <div class="action-button">Action</div>
+            <div class="action-button-header">Action</div>
         </div>
         
         <div id="results-container">
@@ -151,82 +153,4 @@
     <script>
         const AFFILIATE_LINKS = {
             'OpenAI': 'https://link.openai.com/signup?ref=your-openai-affiliate-id', 
-            'Google': 'https://cloud.google.com/gemini/signup?ref=your-google-affiliate-id', 
-            'Anthropic': 'https://www.anthropic.com/signup?ref=your-anthropic-affiliate-id'
-        };
-
-        function getAffiliateLink(provider) {
-            return AFFILIATE_LINKS[provider] || '#';
-        }
-
-        function formatResults(results) {
-            let html = '';
-            results.forEach((item, index) => {
-                const modelSlug = (item.provider + '-' + item.model).toLowerCase().replace(/[^a-z0-9-]+/g, '-');
-                
-                let statusClass = item.status === 'Online' ? 'status-online' : 'status-error';
-                let speedClass = item.time < 1.0 ? 'speed-fast' : (item.time < 5.0 ? 'speed-medium' : '');
-
-                const isWinner = (index === 0 && item.status === 'Online');
-
-                let affiliateButton = '';
-                if (isWinner) {
-                    const link = getAffiliateLink(item.provider);
-                    if (link && link !== '#') {
-                         affiliateButton = `<a href="${link}" target="_blank" class="affiliate-btn">🥇 RUN THIS MODEL NOW</a>`;
-                    }
-                }
-                
-                const providerModel = `
-                    <div style="font-weight: 600;">${item.provider}</div>
-                    <div style="font-size: 0.85em; color: #777;">${item.model}</div>
-                `;
-
-                // The row structure with the anchor wrapper
-                html += `
-                    <a href="#${modelSlug}" class="result-link" id="${modelSlug}">
-                        <div class="rank">${index + 1}</div>
-                        <div class="provider">${providerModel}</div>
-                        <div class="preview-text">${item.response_preview}</div>
-                        <div class="speed ${speedClass}">${item.time}s</div>
-                        <div class="status ${statusClass}">${item.status}</div>
-                        <div class="action-button">${affiliateButton}</div>
-                    </a>
-                `;
-            });
-            return html;
-        }
-
-        async function fetchData() {
-            try {
-                const cacheBuster = `?t=${new Date().getTime()}`;
-                const response = await fetch('data.json' + cacheBuster);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                const resultsContainer = document.getElementById('results-container');
-                const lastUpdatedElement = document.getElementById('last-updated');
-
-                if (resultsContainer && data.results) {
-                    resultsContainer.innerHTML = formatResults(data.results);
-                }
-                if (lastUpdatedElement && data.last_updated) {
-                    lastUpdatedElement.textContent = `Last Updated: ${data.last_updated}`;
-                }
-
-            } catch (error) {
-                console.error('Data loading failed:', error);
-                document.getElementById('results-container').innerHTML = `<p class="error-message" style="text-align: center; color: #c62828; padding: 20px;">
-                    🔴 Error loading data (${error.message}). Please ensure the GitHub Action has run successfully.
-                </p>`;
-            }
-        }
-
-        fetchData(); 
-    </script>
-</body>
-</html>
+            'Google': '
