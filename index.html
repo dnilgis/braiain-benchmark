@@ -6,91 +6,86 @@
     <title>Braiain AI Speed Index | Daily LLM Benchmarks</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f7f9;
-            color: #333;
+            background-color: #ffffff; /* White background */
+            color: #1c1c1c; /* Dark text */
         }
         header {
             text-align: center;
             padding-bottom: 20px;
         }
         h1 {
-            color: #1a237e;
-            border-bottom: 3px solid #7986cb;
-            display: inline-block;
-            padding-bottom: 10px;
+            color: #000000;
+            font-size: 2.2em;
+            margin-bottom: 5px;
         }
         .about-section {
             max-width: 800px;
             margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0 20px;
         }
         h2 {
-            color: #3949ab;
-            margin-top: 0;
+            color: #333333;
+            font-size: 1.5em;
+            margin-top: 30px;
+            border-bottom: 2px solid #eeeeee;
+            padding-bottom: 5px;
         }
         .leaderboard {
             max-width: 800px;
-            margin: 30px auto;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: 40px auto;
+            border: 1px solid #e0e0e0; /* Subtle border */
+            border-radius: 6px;
             overflow: hidden;
         }
         .header-row, .result-row {
             display: grid;
             grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 2fr;
             padding: 12px 15px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #eeeeee;
             align-items: center;
             font-size: 14px;
         }
         .header-row {
-            background-color: #e8eaf6;
+            background-color: #f7f7f7; /* Light header background */
             font-weight: bold;
-            color: #1a237e;
+            color: #333;
             text-transform: uppercase;
         }
-        .result-row:nth-child(even) {
-            background-color: #fafafa;
+        .result-row:last-child {
+            border-bottom: none;
         }
         .rank {
-            font-weight: bold;
-            font-size: 1.1em;
+            font-weight: 600;
         }
         .speed-fast {
-            color: #388e3c;
+            color: #2e7d32; /* Dark green */
             font-weight: bold;
         }
         .speed-medium {
-            color: #fbc02d;
+            color: #f9a825; /* Amber */
         }
         .status-online {
-            color: #43a047;
-            font-weight: bold;
+            color: #2e7d32;
         }
         .status-error {
-            color: #d32f2f;
-            font-weight: bold;
+            color: #c62828;
         }
         .affiliate-btn {
-            background-color: #e53935;
+            background-color: #2196f3; /* Blue primary color */
             color: white;
             padding: 6px 12px;
             border-radius: 4px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 0.9em;
+            font-size: 0.85em;
             transition: background-color 0.3s;
             text-align: center;
         }
         .affiliate-btn:hover {
-            background-color: #c62828;
+            background-color: #1976d2;
         }
         #last-updated {
             text-align: center;
@@ -106,16 +101,8 @@
     </header>
 
     <section class="about-section">
-        <h2>🚀 The Braiain AI Speed Benchmark</h2>
         <p>
             Welcome to the **Braiain Speed Index**, the internet's only fully automated, daily-updated leaderboard for large language model (LLM) performance. We provide objective, real-world speed data, not just theoretical scores.
-        </p>
-        <p>
-            We continuously test the flagship models from OpenAI (GPT), Google (Gemini), and Anthropic (Claude) using the same complex prompt: 
-            <strong>"Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030."</strong> 
-        </p>
-        <p>
-            <strong>Why Speed Matters:</strong> Latency directly translates to cost and user experience. The fastest model is the most efficient and offers the best performance for production applications. Data is updated daily.
         </p>
     </section>
 
@@ -135,6 +122,16 @@
     </div>
     
     <div id="last-updated"></div>
+
+    <section class="about-section">
+        <h2>🔬 Methodology and Transparency</h2>
+        <p>
+            The benchmark measures **end-to-end inference speed** (latency), which is the total time from sending the API request to receiving the final byte of the response. This directly impacts real-world application speed and user experience.
+        </p>
+        <p>
+            The test uses the same **complex, high-token prompt** for every model: "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030." All models are configured to generate a minimum of **300 output tokens**. The lowest recorded time determines the winner. Data is updated daily via a GitHub Actions workflow.
+        </p>
+    </section>
 
     <script>
         // Define Affiliate Links (Must be updated by you!)
@@ -185,7 +182,6 @@
                 const response = await fetch('data.json' + cacheBuster);
                 
                 if (!response.ok) {
-                    // If we get a 404 or any other non-200 error, throw it
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
@@ -202,10 +198,9 @@
                 }
 
             } catch (error) {
-                // Shows a clear error message if the file is not found (404) or fails to parse
                 console.error('Data loading failed:', error);
-                document.getElementById('results-container').innerHTML = `<p class="error-message" style="text-align: center; color: #d32f2f; padding: 20px;">
-                    🔴 Error loading data (${error.message}). Please ensure the GitHub Action has run successfully and the file exists.
+                document.getElementById('results-container').innerHTML = `<p class="error-message" style="text-align: center; color: #c62828; padding: 20px;">
+                    🔴 Error loading data (${error.message}). Please ensure the GitHub Action has run successfully.
                 </p>`;
             }
         }
