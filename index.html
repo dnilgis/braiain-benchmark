@@ -29,7 +29,7 @@
             color: #c0c0c0;
         }
         .about-section {
-            max-width: 1000px;
+            max-width: 1200px; /* Increased max width for cards */
             margin: 20px auto;
             padding: 0 15px;
         }
@@ -41,80 +41,80 @@
             padding-bottom: 5px;
         }
         
-        /* LEADERBOARD CONTAINER */
-        .leaderboard {
-            max-width: 1000px; 
+        /* CARD CONTAINER: Horizontal Layout */
+        .leaderboard-cards-wrapper {
+            max-width: 1200px; /* Matches about section width */
             margin: 40px auto;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-        
-        /* GRID STYLES (ROWS) */
-        .header-row, .result-link {
-            display: grid;
-            grid-template-columns: 0.3fr 1.2fr 3.1fr 0.8fr 0.8fr 1.7fr; 
-            padding: 15px 15px; 
-            border-bottom: 1px solid #eeeeee;
-            font-size: 14px;
-            text-decoration: none; 
-            color: inherit; 
-            
-            /* FIX 1: Force all grid items (cells) to stretch to the height of the tallest item (preview text) */
-            align-items: stretch; 
+            display: flex; /* Enables horizontal arrangement */
+            flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
+            gap: 25px; /* Space between cards */
+            justify-content: center; /* Center the cards on the page */
         }
 
-        .header-row {
-            background-color: #e0e0e0;
-            font-weight: bold;
-            color: #333;
-            text-transform: uppercase;
-        }
-        
-        .result-link:last-child {
-            border-bottom: none;
-        }
-        .result-link:hover {
-            background-color: #ebebeb;
-            cursor: pointer;
-        }
-        
-        /* CELL STYLES */
-        .rank {
-            font-weight: 700;
-            /* FIX 2: Vertically center content inside the now-stretched cell */
-            align-self: center; 
-        }
-        
-        .provider {
+        /* INDIVIDUAL MODEL CARD */
+        .model-card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            width: 350px; /* Fixed width for card (3 cards per row on large screen) */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            flex-direction: column; /* Stacks content vertically within the card */
+            transition: transform 0.2s;
         }
-        .provider-model {
-            font-size: 0.85em; 
-            color: #777;
+        .model-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
         }
-        
-        /* TRUNCATED PREVIEW TEXT */
-        .preview-text {
-            font-style: italic;
+
+        /* CARD HEADER */
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        .rank-badge {
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 15px;
+        }
+        .card-provider {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        .card-model {
+            font-size: 1em;
             color: #555;
-            font-size: 0.9em;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            align-self: flex-end;
         }
-        
-        /* SPEED & STATUS EMPHASIS */
-        .speed, .status {
+
+        /* STATS AND BUTTON */
+        .stats-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .stat-group {
             text-align: center;
-            font-size: 1.1em;
-            font-weight: 600;
-            /* FIX 2: Vertically center content inside the now-stretched cell */
-            align-self: center;
+        }
+        .stat-label {
+            font-size: 0.8em;
+            color: #777;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+        .stat-value {
+            font-size: 1.4em;
+            font-weight: bold;
         }
         .speed-fast {
             color: #2e7d32;
@@ -125,66 +125,54 @@
         .status-error {
             color: #c62828;
         }
-        
-        /* ACTION BUTTON */
-        .action-button {
-            text-align: right; 
-            grid-column: 6; 
-            
-            /* FIX 3: Use Flexbox to center the button content horizontally and vertically */
-            display: flex;
-            align-items: center; /* Vertical centering */
-            justify-content: flex-end; /* Horizontal centering to the right */
-            height: 100%; 
-        }
         .affiliate-btn {
-            background-color: #007bff;
+            background-color: #2196f3;
             color: white;
-            padding: 8px 14px;
+            padding: 10px 15px;
             border-radius: 4px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 0.85em;
+            font-size: 0.9em;
             transition: background-color 0.2s;
-            display: inline-block; 
-            white-space: nowrap; 
+            text-align: center;
+            margin-top: 10px;
         }
         .affiliate-btn:hover {
-            background-color: #0056b3;
+            background-color: #1976d2;
         }
 
         /* FULL RESPONSE SECTION */
-        #full-response-container {
-            max-width: 1000px;
-            margin: 40px auto;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        .full-response-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed #e0e0e0;
+            flex-grow: 1;
         }
-        #full-response-container h3 {
-            margin-top: 0;
+        .full-response-section h4 {
             color: #007bff;
-            border-bottom: 1px dashed #e0e0e0;
-            padding-bottom: 10px;
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
         }
-        #full-response-text {
-            white-space: pre-wrap;
+        .full-response-text {
+            white-space: pre-wrap; /* Preserves formatting and wraps */
             font-family: monospace;
-            font-size: 0.9em;
-            line-height: 1.6;
+            font-size: 0.85em;
+            line-height: 1.5;
             color: #333;
-            margin-top: 15px;
+            background-color: #fafafa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
         }
         
         /* LAST UPDATED STYLING */
         #last-updated-wrapper {
             text-align: center;
-            margin-top: 20px;
+            margin: 20px auto 40px auto;
             font-size: 1.1em; 
             font-weight: bold; 
             color: #555;
+            max-width: 1200px;
         }
     </style>
 </head>
@@ -200,27 +188,12 @@
         </p>
     </section>
 
-    <div class="leaderboard">
-        <div id="results-container">
-            <div class="header-row">
-                <div class="rank">#</div>
-                <div class="provider">Provider / Model</div>
-                <div class="preview-text-header">Response Preview</div>
-                <div class="speed">Speed (s)</div>
-                <div class="status">Status</div>
-                <div class="action-button-header">Action</div>
-            </div>
-            <p style="text-align: center; padding: 20px;">Loading live data...</p>
-        </div>
+    <div class="leaderboard-cards-wrapper" id="results-container">
+        <p style="text-align: center; padding: 20px; width: 100%;">Loading live data...</p>
     </div>
     
     <div id="last-updated-wrapper">
         <span id="last-updated"></span>
-    </div>
-
-    <div id="full-response-container" class="about-section" style="display: none;">
-        <h3>🥇 Complete Response from the Current Winner</h3>
-        <pre id="full-response-text"></pre>
     </div>
 
     <section class="about-section">
@@ -244,28 +217,12 @@
             return AFFILIATE_LINKS[provider] || '#';
         }
 
-        function displayFullResponse(response, modelName) {
-            const container = document.getElementById('full-response-container');
-            const header = container.querySelector('h3');
-            const textElement = document.getElementById('full-response-text');
-
-            if (container && textElement && response) {
-                header.innerHTML = `🥇 Complete Response from the Current Winner: **${modelName}**`;
-                textElement.textContent = response;
-                container.style.display = 'block';
-            }
-        }
-
         function formatResults(results) {
             let html = '';
-            let winnerModelName = '';
-            let winnerFullResponse = '';
-
-            // Start with the header row HTML
-            html += document.querySelector('.header-row').outerHTML;
 
             results.forEach((item, index) => {
                 const modelSlug = (item.provider + '-' + item.model).toLowerCase().replace(/[^a-z0-9-]+/g, '-');
+                const rank = index + 1;
                 
                 let statusClass = item.status === 'Online' ? 'status-online' : 'status-error';
                 let speedClass = item.time < 1.0 ? 'speed-fast' : (item.time < 5.0 ? 'speed-medium' : '');
@@ -273,35 +230,44 @@
                 const isWinner = (index === 0 && item.status === 'Online'); 
 
                 let affiliateButtonHTML = '';
-                if (isWinner) {
+                if (item.status === 'Online') {
                     const link = getAffiliateLink(item.provider);
+                    const buttonText = isWinner ? '🥇 RUN THIS MODEL NOW' : 'RUN THIS MODEL';
                     if (link && link !== '#') {
-                         affiliateButtonHTML = `<a href="${link}" target="_blank" class="affiliate-btn">🥇 RUN THIS MODEL NOW</a>`;
+                         affiliateButtonHTML = `<a href="${link}" target="_blank" class="affiliate-btn">${buttonText}</a>`;
                     }
-                    winnerFullResponse = item.full_response;
-                    winnerModelName = `${item.provider} ${item.model}`;
+                } else {
+                    affiliateButtonHTML = `<a class="affiliate-btn" style="background-color: #c62828;">API FAILURE</a>`;
                 }
-                
-                const providerModelContent = `
-                    <div style="font-weight: 600;">${item.provider}</div>
-                    <div class="provider-model">${item.model}</div>
-                `;
 
                 html += `
-                    <a href="#${modelSlug}" class="result-link" id="${modelSlug}">
-                        <div class="rank">${index + 1}</div>
-                        <div class="provider">${providerModelContent}</div>
-                        <div class="preview-text">${item.response_preview}</div>
-                        <div class="speed ${speedClass}">${item.time}s</div>
-                        <div class="status ${statusClass}">${item.status}</div>
-                        <div class="action-button">${affiliateButtonHTML}</div>
-                    </a>
+                    <div class="model-card" id="${modelSlug}">
+                        <div class="card-header">
+                            <span class="rank-badge">#${rank}</span>
+                            <div class="card-provider">${item.provider}</div>
+                            <div class="card-model">${item.model}</div>
+                        </div>
+                        
+                        <div class="stats-wrapper">
+                            <div class="stat-group">
+                                <div class="stat-label">Speed</div>
+                                <div class="stat-value ${speedClass}">${item.time}s</div>
+                            </div>
+                            <div class="stat-group">
+                                <div class="stat-label">Status</div>
+                                <div class="stat-value ${statusClass}">${item.status}</div>
+                            </div>
+                        </div>
+                        
+                        ${affiliateButtonHTML}
+
+                        <div class="full-response-section">
+                            <h4>Full Response</h4>
+                            <pre class="full-response-text">${item.full_response || item.response_preview}</pre>
+                        </div>
+                    </div>
                 `;
             });
-
-            if (winnerFullResponse) {
-                displayFullResponse(winnerFullResponse, winnerModelName);
-            }
 
             return html;
         }
@@ -337,18 +303,9 @@
             }
 
             // If we reach here, both paths failed
-            document.getElementById('results-container').innerHTML = `
-                <div class="header-row">
-                    <div class="rank">#</div>
-                    <div class="provider">Provider / Model</div>
-                    <div class="preview-text-header">Response Preview</div>
-                    <div class="speed">Speed (s)</div>
-                    <div class="status">Status</div>
-                    <div class="action-button-header">Action</div>
-                </div>
-                <p class="error-message" style="text-align: center; color: #c62828; padding: 20px; font-weight: bold; background: #fff;">
-                    🔴 ERROR: Live data failed to load. Please check the data.json file path.
-                </p>`;
+            document.getElementById('results-container').innerHTML = `<p class="error-message" style="text-align: center; color: #c62828; padding: 20px; font-weight: bold; background: #fff; width: 100%;">
+                🔴 ERROR: Live data failed to load. Please ensure the data.json file exists and is accessible.
+            </p>`;
         }
 
         fetchData(); 
