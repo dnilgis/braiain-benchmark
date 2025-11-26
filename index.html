@@ -159,6 +159,15 @@
             return AFFILIATE_LINKS[provider] || '#';
         }
 
+        // --- NEW: Dynamic Base Path Function ---
+        function getBasePath() {
+            // Get the repository path for GitHub Pages (e.g., /repository-name)
+            const pathname = window.location.pathname;
+            // Get the base path (removes index.html if present)
+            const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+            return basePath;
+        }
+
         function formatResults(results) {
             let html = '';
             results.forEach((item, index) => {
@@ -198,9 +207,11 @@
 
         async function fetchData() {
             try {
-                // *** FIX: Changed path from 'data.json' to '/data.json' ***
-                const cacheBuster = `?t=${new Date().getTime()}`;
-                const response = await fetch('/data.json' + cacheBuster); 
+                // *** FIX: Uses dynamic pathing for data.json ***
+                const basePath = getBasePath();
+                const url = basePath + 'data.json' + `?t=${new Date().getTime()}`;
+                
+                const response = await fetch(url); 
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -221,7 +232,7 @@
             } catch (error) {
                 console.error('Data loading failed:', error);
                 document.getElementById('results-container').innerHTML = `<p class="error-message" style="text-align: center; color: #c62828; padding: 20px;">
-                    🔴 FINAL ERROR: Data loading failed (${error.message}). Please check the browser console for exact errors.
+                    🔴 FINAL ERROR: Data loading failed (${error.message}). Please ensure the GitHub Pages URL is correct.
                 </p>`;
             }
         }
