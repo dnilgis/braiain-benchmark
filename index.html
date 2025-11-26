@@ -44,11 +44,13 @@
         .header-row, .result-link {
             /* Final Grid Sizing */
             display: grid;
+            /* Column sizing: Rank, Provider (more room), Preview (more room), Speed, Status, Action (sweet spot) */
             grid-template-columns: 0.3fr 1.2fr 3.1fr 0.8fr 0.8fr 1.7fr; 
             padding: 12px 15px; /* Sets row height */
             border-bottom: 1px solid #eeeeee;
-            /* FIX 1: Ensures content aligns to the center of the vertical space */
-            align-items: center; 
+            
+            /* FIX: ALIGN ITEMS TO START */
+            align-items: start; 
             font-size: 14px;
             text-decoration: none; 
             color: inherit; 
@@ -71,19 +73,22 @@
         
         .rank {
             font-weight: 600;
+            /* Added padding to align rank number with the top text */
+            padding-top: 5px; 
+        }
+        .provider div {
+            padding-top: 5px; /* Aligns the provider text with the rank number */
         }
         .preview-text {
             font-style: italic;
             color: #555;
             font-size: 0.9em;
+            padding-top: 5px;
         }
-        /* FIX 3: Make speed more pronounced */
-        .speed { 
+        .speed, .status {
             text-align: center;
-            font-size: 1.1em;
-        }
-        .status { 
-            text-align: center;
+            font-size: 1.1em; /* Response time pronunciation */
+            padding-top: 5px;
         }
         .speed-fast {
             color: #2e7d32;
@@ -98,6 +103,7 @@
         .action-button {
             text-align: right; 
             grid-column: 6; 
+            padding-top: 5px;
         }
         .affiliate-btn {
             background-color: #2196f3;
@@ -189,9 +195,8 @@
                     }
                 }
                 
-                // FIX 2: Added a clean wrapper div to ensure the entire cell content aligns consistently (top-align).
                 const providerModelContent = `
-                    <div style="font-weight: 600; padding-top: 5px;">${item.provider}</div>
+                    <div style="font-weight: 600;">${item.provider}</div>
                     <div style="font-size: 0.85em; color: #777;">${item.model}</div>
                 `;
 
