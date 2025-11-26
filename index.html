@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Braiain AI Speed Index | Daily LLM Benchmarks</title>
     <style>
-        /* BASE STYLES */
+        /* --- BASE STYLES --- */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
@@ -20,28 +20,12 @@
             padding: 30px 0 20px 0;
             margin-bottom: 20px;
         }
-        h1 {
-            font-size: 2.4em;
-            margin-bottom: 8px;
-        }
-        .tagline {
-            font-size: 1.1em;
-            color: #c0c0c0;
-        }
-        .about-section {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
-        h2 {
-            color: #333333;
-            font-size: 1.5em;
-            margin-top: 30px;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 5px;
-        }
+        h1 { font-size: 2.4em; margin-bottom: 8px; }
+        .tagline { font-size: 1.1em; color: #c0c0c0; }
+        .about-section { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        h2 { color: #333; font-size: 1.5em; margin-top: 30px; border-bottom: 2px solid #e0e0e0; padding-bottom: 5px; }
         
-        /* CARD CONTAINER */
+        /* --- CARD CONTAINER --- */
         .leaderboard-cards-wrapper {
             max-width: 1200px;
             margin: 40px auto;
@@ -49,11 +33,11 @@
             flex-wrap: wrap;
             gap: 20px; 
             justify-content: center;
-            /* ALIGN-ITEMS: FLEX-START is critical so cards don't stretch to match neighbors */
+            /* CRITICAL: Aligns cards to top so they can grow individually */
             align-items: flex-start; 
         }
 
-        /* INDIVIDUAL MODEL CARD */
+        /* --- INDIVIDUAL CARD --- */
         .model-card {
             background-color: #ffffff;
             border: 1px solid #e0e0e0;
@@ -65,16 +49,17 @@
             flex-direction: column;
             transition: transform 0.2s;
             
-            /* CRITICAL: Let the card grow as tall as it needs to be */
+            /* CRITICAL: Allows card to grow with text */
             height: auto; 
             min-height: 0;
+            overflow: visible; 
         }
         .model-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
         }
 
-        /* CARD HEADER */
+        /* --- CARD HEADER --- */
         .card-header {
             display: flex;
             align-items: center;
@@ -92,63 +77,39 @@
             margin-right: 15px;
             flex-shrink: 0;
         }
-        
         .provider-model-wrapper {
             display: flex;
             flex-direction: column;
             line-height: 1.1;
             overflow: hidden; 
         }
-        .card-provider {
-            font-size: 1.3em;
-            font-weight: 700;
-        }
-        .card-model {
-            font-size: 0.9em;
-            color: #555;
-            font-weight: normal;
-            word-break: break-all;
-        }
+        .card-provider { font-size: 1.3em; font-weight: 700; }
+        .card-model { font-size: 0.9em; color: #555; word-break: break-all; }
 
-        /* STATS */
+        /* --- STATS --- */
         .stats-wrapper {
             display: flex;
             justify-content: space-around;
             align-items: center;
             margin-bottom: 15px;
         }
-        .stat-group {
-            text-align: center;
-        }
-        
-        /* Ensure stats column lays out vertically */
+        .stat-group { text-align: center; }
         .stat-value {
             font-size: 1.4em;
             font-weight: bold;
-            display: flex; 
-            flex-direction: column; 
+            display: flex;
+            flex-direction: column;
             align-items: center;
             line-height: 1.1;
         }
-        .stat-label {
-            font-size: 0.8em;
-            color: #777;
-            text-transform: uppercase;
-            margin-bottom: 3px;
-        }
-
+        .stat-label { font-size: 0.8em; color: #777; text-transform: uppercase; margin-bottom: 3px; }
+        
         .speed-fast { color: #2e7d32; }
         .status-online { color: #2e7d32; }
         .status-error { color: #c62828; }
+        .last-speed { font-size: 0.8em; color: #999; margin-top: 5px; font-weight: normal; }
         
-        .last-speed {
-            font-size: 0.8em;
-            color: #999;
-            margin-top: 5px;
-            font-weight: normal;
-        }
-        
-        /* BUTTON */
+        /* --- BUTTON --- */
         .affiliate-btn {
             background-color: #2196f3;
             color: white;
@@ -160,12 +121,11 @@
             transition: background-color 0.2s;
             text-align: center;
             margin-top: 10px;
+            display: block;
         }
-        .affiliate-btn:hover {
-            background-color: #1976d2;
-        }
+        .affiliate-btn:hover { background-color: #1976d2; }
 
-        /* RESPONSE SECTION */
+        /* --- FULL RESPONSE --- */
         .response-content-wrapper {
             margin-top: 20px;
             padding-top: 15px;
@@ -173,62 +133,30 @@
             width: 100%;
         }
         
-        /* *** THE FIX *** */
+        /* This ensures the text expands fully */
         .full-response-text {
-            /* 1. Make it a block so it takes width */
             display: block;
-            /* 2. Visible overflow ensures NO scrollbars, it just grows */
-            overflow: visible; 
-            /* 3. Pre-wrap preserves newlines from the API */
-            white-space: pre-wrap; 
-            /* 4. Break-word prevents horizontal scrolling if a word is too long */
-            word-wrap: break-word;
-            
-            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; 
+            width: 100%;
+            height: auto;
+            overflow: visible; /* No scrollbars */
+            white-space: pre-wrap; /* Keep line breaks */
+            word-wrap: break-word; /* Break long words */
+            font-family: monospace;
             font-size: 0.85em;
             line-height: 1.5;
             color: #333;
             background-color: #fafafa;
             padding: 10px;
             border-radius: 4px;
+            box-sizing: border-box;
         }
         
-        #last-updated-wrapper {
-            text-align: center;
-            margin: 20px auto 40px auto;
-            font-size: 1.1em; 
-            font-weight: bold; 
-            color: #555;
-            max-width: 1200px;
-        }
-
-        #site-footer {
-            background-color: #1c1c1c;
-            color: #c0c0c0;
-            padding: 20px 15px;
-            text-align: center;
-            font-size: 0.85em;
-            margin-top: 40px;
-        }
-        #site-footer a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        #site-footer a:hover {
-            text-decoration: underline;
-        }
-        .legal-text {
-            margin-top: 10px;
-            font-size: 0.75em;
-            color: #777;
-        }
-
-        @media (max-width: 1000px) {
-            .leaderboard-cards-wrapper {
-                gap: 15px; 
-            }
-        }
+        /* --- FOOTER --- */
+        #last-updated-wrapper { text-align: center; margin: 20px auto 40px auto; font-size: 1.1em; font-weight: bold; color: #555; }
+        #site-footer { background-color: #1c1c1c; color: #c0c0c0; padding: 20px 15px; text-align: center; font-size: 0.85em; margin-top: 40px; }
+        #site-footer a { color: #007bff; text-decoration: none; font-weight: bold; }
+        #site-footer a:hover { text-decoration: underline; }
+        .legal-text { margin-top: 10px; font-size: 0.75em; color: #777; }
     </style>
 </head>
 <body>
@@ -254,10 +182,7 @@
     <section class="about-section">
         <h2>🔬 Methodology and Transparency</h2>
         <p>
-            The benchmark measures **end-to-end inference speed** (latency), which is the total time from sending the API request to receiving the final byte of the response. This directly impacts real-world application speed and user experience.
-        </p>
-        <p>
-            The test uses the same **complex, high-token prompt** for every model: "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030." All models are configured to generate a minimum of **300 output tokens**. The lowest recorded time determines the winner. Data is updated daily via a GitHub Actions workflow.
+            The benchmark measures **end-to-end inference speed** (latency), which is the total time from sending the API request to receiving the final byte of the response.
         </p>
     </section>
 
@@ -271,6 +196,8 @@
     </footer>
 
     <script>
+    // Wrap everything in a try-catch to catch syntax errors immediately
+    try {
         const AFFILIATE_LINKS = {
             'OpenAI': 'https://link.openai.com/signup?ref=your-openai-affiliate-id', 
             'Google': 'https://cloud.google.com/gemini/signup?ref=your-google-affiliate-id', 
@@ -293,8 +220,11 @@
 
                 const isWinner = (index === 0 && item.status === 'Online'); 
                 
-                // Check for previous_time in JSON. If missing, default to N/A
-                const previousTime = item.previous_time ? `Prev: ${item.previous_time}s` : 'Prev: N/A';
+                // Safe check for previous_time
+                let previousTime = 'Prev: N/A';
+                if (item.previous_time !== undefined && item.previous_time !== null) {
+                    previousTime = `Prev: ${item.previous_time}s`;
+                }
 
                 let affiliateButtonHTML = '';
                 if (item.status === 'Online') {
@@ -306,6 +236,9 @@
                 } else {
                     affiliateButtonHTML = `<a class="affiliate-btn" style="background-color: #c62828;">API FAILURE</a>`;
                 }
+
+                // Determine response text to show (Full response priority)
+                const responseText = item.full_response || item.response_preview || "No response text available.";
 
                 html += `
                     <div class="model-card" id="${modelSlug}">
@@ -322,4 +255,70 @@
                                 <div class="stat-label">Current Speed</div>
                                 <div class="stat-value ${speedClass}">
                                     ${item.time}s
-                                    <div class="last-speed">${
+                                    <div class="last-speed">${previousTime}</div>
+                                </div>
+                            </div>
+                            <div class="stat-group">
+                                <div class="stat-label">Status</div>
+                                <div class="stat-value ${statusClass}">${item.status}</div>
+                            </div>
+                        </div>
+                        
+                        ${affiliateButtonHTML}
+
+                        <div class="response-content-wrapper">
+                            <div class="full-response-text">${responseText}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            return html;
+        }
+
+        async function fetchData() {
+            const paths = ['data.json', '/data.json']; 
+            const cacheBuster = `?t=${new Date().getTime()}`;
+            
+            for (const path of paths) {
+                try {
+                    const response = await fetch(path + cacheBuster); 
+                    
+                    if (!response.ok) {
+                        throw new Error(`Path ${path} failed with status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    const resultsContainer = document.getElementById('results-container');
+                    const lastUpdatedElement = document.getElementById('last-updated');
+
+                    if (resultsContainer && data.results) {
+                        resultsContainer.innerHTML = formatResults(data.results);
+                    }
+                    if (lastUpdatedElement && data.last_updated) {
+                        lastUpdatedElement.textContent = `Last Updated: ${data.last_updated}`;
+                    }
+                    return; // Success!
+
+                } catch (error) {
+                    console.warn('Data load attempt failed:', error);
+                }
+            }
+
+            // If code reaches here, everything failed.
+            document.getElementById('results-container').innerHTML = `<p class="error-message" style="text-align: center; color: #c62828; padding: 20px; font-weight: bold; background: #fff; width: 100%;">
+                🔴 FATAL ERROR: Live data failed to load. Check console for details.
+            </p>`;
+        }
+
+        // Execute
+        fetchData(); 
+
+    } catch (criticalError) {
+        // Catch syntax errors or script crashes
+        document.body.innerHTML = `<h1 style="color:red; text-align:center; margin-top:50px;">CRITICAL SITE ERROR</h1><p style="text-align:center;">${criticalError.message}</p>`;
+    }
+    </script>
+</body>
+</html>
