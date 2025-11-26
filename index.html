@@ -112,4 +112,106 @@
         </p>
         <p>
             We continuously test the flagship models from OpenAI (GPT), Google (Gemini), and Anthropic (Claude) using the same complex prompt: 
-            <strong>"Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for
+            <strong>"Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030."</strong> 
+        </p>
+        <p>
+            <strong>Why Speed Matters:</strong> Latency directly translates to cost and user experience. The fastest model is the most efficient and offers the best performance for production applications. Data is updated daily.
+        </p>
+    </section>
+
+    <div class="leaderboard">
+        <div class="header-row">
+            <div class="rank">#</div>
+            <div class="provider">Provider</div>
+            <div class="model">Model</div>
+            <div class="speed">Speed (s)</div>
+            <div class="status">Status</div>
+            <div class="action-button">Action</div>
+        </div>
+        
+        <div id="results-container">
+            <p style="text-align: center; padding: 20px;">Loading live data...</p>
+        </div>
+    </div>
+    
+    <div id="last-updated"></div>
+
+    <script>
+        // Define Affiliate Links (Must be updated by you!)
+        const AFFILIATE_LINKS = {
+            'OpenAI': 'https://link.openai.com/signup?ref=your-openai-affiliate-id', 
+            'Google': 'https://cloud.google.com/gemini/signup?ref=your-google-affiliate-id', 
+            'Anthropic': 'https://www.anthropic.com/signup?ref=your-anthropic-affiliate-id'
+        };
+
+        function getAffiliateLink(provider) {
+            return AFFILIATE_LINKS[provider] || '#';
+        }
+
+        function formatResults(results) {
+            let html = '';
+            results.forEach((item, index) => {
+                let statusClass = item.status === 'Online' ? 'status-online' : 'status-error';
+                let speedClass = item.time < 1.0 ? 'speed-fast' : (item.time < 5.0 ? 'speed-medium' : '');
+
+                const isWinner = (index === 0 && item.status === 'Online');
+
+                let affiliateButton = '';
+                if (isWinner) {
+                    const link = getAffiliateLink(item.provider);
+                    if (link && link !== '#') {
+                         affiliateButton = `<a href="${link}" target="_blank" class="affiliate-btn">🥇 RUN THIS MODEL NOW</a>`;
+                    }
+                }
+
+                html += `
+                    <div class="result-row">
+                        <div class="rank">${index + 1}</div>
+                        <div class="provider">${item.provider}</div>
+                        <div class="model">${item.model}</div>
+                        <div class="speed ${speedClass}">${item.time}s</div>
+                        <div class="status ${statusClass}">${item.status}</div>
+                        <div class="action-button">${affiliateButton}</div>
+                    </div>
+                `;
+            });
+            return html;
+        }
+
+        async function fetchData() {
+            try {
+                // FIX: Append a unique query parameter to bust any local/server cache
+                const cacheBuster = `?t=${new Date().getTime()}`;
+                const response = await fetch('data.json' + cacheBuster);
+                
+                if (!response.ok) {
+                    // If we get a 404 or any other non-200 error, throw it
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                const resultsContainer = document.getElementById('results-container');
+                const lastUpdatedElement = document.getElementById('last-updated');
+
+                if (resultsContainer && data.results) {
+                    resultsContainer.innerHTML = formatResults(data.results);
+                }
+                if (lastUpdatedElement && data.last_updated) {
+                    lastUpdatedElement.textContent = `Last Updated: ${data.last_updated}`;
+                }
+
+            } catch (error) {
+                // Shows a clear error message if the file is not found (404) or fails to parse
+                console.error('Data loading failed:', error);
+                document.getElementById('results-container').innerHTML = `<p class="error-message" style="text-align: center; color: #d32f2f; padding: 20px;">
+                    🔴 Error loading data (${error.message}). Please ensure the GitHub Action has run successfully and the file exists.
+                </p>`;
+            }
+        }
+
+        // Call the function to load data when the page loads
+        fetchData(); 
+    </script>
+</body>
+</html>
