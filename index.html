@@ -41,14 +41,16 @@
             padding-bottom: 5px;
         }
         
-        /* CARD CONTAINER: Horizontal Layout */
+        /* CARD CONTAINER: Horizontal Layout - CLIPPING FIX APPLIED HERE */
         .leaderboard-cards-wrapper {
             max-width: 1200px;
             margin: 40px auto;
             display: flex;
             flex-wrap: wrap;
-            gap: 25px;
+            gap: 20px; 
             justify-content: center;
+            /* CRITICAL FIX 1: Stops cards from stretching to the height of the tallest card */
+            align-items: flex-start; 
         }
 
         /* INDIVIDUAL MODEL CARD */
@@ -62,7 +64,7 @@
             display: flex;
             flex-direction: column;
             transition: transform 0.2s;
-            height: auto; /* Ensures card can expand vertically */
+            height: auto; 
         }
         .model-card:hover {
             transform: translateY(-5px);
@@ -158,28 +160,32 @@
             background-color: #1976d2;
         }
 
-        /* FULL RESPONSE SECTION */
+        /* FULL RESPONSE SECTION - CRITICAL FIX APPLIED HERE */
         .full-response-section {
             margin-top: 20px;
             padding-top: 15px;
             border-top: 1px dashed #e0e0e0;
+            /* CRITICAL FIX 2: Prevents this section from shrinking its contents */
+            flex-shrink: 0; 
+            min-height: 0; 
+            height: auto;
         }
         
-        /* RESPONSE TEXT - Clipping Fix Applied */
+        /* RESPONSE TEXT */
         .full-response-text {
             /* Aggressive overrides for full display */
             height: unset !important; 
             max-height: fit-content; 
             
             white-space: pre-wrap;
-            font-family: monospace;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; 
             font-size: 0.85em;
             line-height: 1.5;
             color: #333;
             background-color: #fafafa;
             padding: 10px;
             border-radius: 4px;
-            overflow: auto; /* Allow scrolling if text is too wide/long */
+            overflow: auto; 
             display: block; 
         }
         
@@ -214,6 +220,13 @@
             margin-top: 10px;
             font-size: 0.75em;
             color: #777;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 1000px) {
+            .leaderboard-cards-wrapper {
+                gap: 15px; 
+            }
         }
     </style>
 </head>
@@ -279,7 +292,7 @@
 
                 const isWinner = (index === 0 && item.status === 'Online'); 
                 
-                // FIXED LOGIC: Get previous time, formatted correctly
+                // CORRECTED LOGIC: Generates the full string for Previous Time
                 const previousTime = item.previous_time ? `Prev: ${item.previous_time}s` : 'Prev: N/A';
 
                 let affiliateButtonHTML = '';
