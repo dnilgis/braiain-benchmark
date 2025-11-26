@@ -185,7 +185,10 @@
     <section class="about-section">
         <h2>🔬 Methodology and Transparency</h2>
         <p>
-            The benchmark measures **end-to-end inference speed** (latency), which is the total time from sending the API request to receiving the final byte of the response.
+            The benchmark measures **end-to-end inference speed** (latency), which is the total time from sending the API request to receiving the final byte of the response. This directly impacts real-world application speed and user experience.
+        </p>
+        <p>
+            The test uses the same **"complex, high-token prompt"** for every model: "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030." All models are configured to generate a minimum of **"300 output tokens"**. The lowest recorded time determines the winner. Data is updated daily via a GitHub Actions workflow.
         </p>
     </section>
 
