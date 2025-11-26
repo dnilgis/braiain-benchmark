@@ -46,11 +46,10 @@
             display: grid;
             /* Column sizing: Rank, Provider (more room), Preview (more room), Speed, Status, Action (sweet spot) */
             grid-template-columns: 0.3fr 1.2fr 3.1fr 0.8fr 0.8fr 1.7fr; 
-            padding: 12px 15px; /* Sets row height */
+            padding: 12px 15px; 
             border-bottom: 1px solid #eeeeee;
-            
-            /* FIX: ALIGN ITEMS TO START */
-            align-items: start; 
+            /* ALIGN ALL ITEMS TO CENTER (default) but we will override item alignment below */
+            align-items: center; 
             font-size: 14px;
             text-decoration: none; 
             color: inherit; 
@@ -71,24 +70,26 @@
             cursor: pointer;
         }
         
+        /* FIX 1: Force all multi-line text content to align to the top of its row space */
+        .rank, .provider, .preview-text, .speed, .status, .action-button {
+            align-self: start; 
+            padding-top: 5px; /* Aligns the top line of content */
+        }
+
         .rank {
             font-weight: 600;
-            /* Added padding to align rank number with the top text */
-            padding-top: 5px; 
         }
         .provider div {
-            padding-top: 5px; /* Aligns the provider text with the rank number */
+            /* No change, but ensures the two lines work */
         }
         .preview-text {
             font-style: italic;
             color: #555;
             font-size: 0.9em;
-            padding-top: 5px;
         }
         .speed, .status {
             text-align: center;
             font-size: 1.1em; /* Response time pronunciation */
-            padding-top: 5px;
         }
         .speed-fast {
             color: #2e7d32;
@@ -103,7 +104,6 @@
         .action-button {
             text-align: right; 
             grid-column: 6; 
-            padding-top: 5px;
         }
         .affiliate-btn {
             background-color: #2196f3;
