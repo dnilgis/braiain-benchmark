@@ -41,7 +41,7 @@
             padding-bottom: 5px;
         }
         
-        /* CARD CONTAINER: Horizontal Layout - CLIPPING FIX APPLIED HERE */
+        /* CARD CONTAINER */
         .leaderboard-cards-wrapper {
             max-width: 1200px;
             margin: 40px auto;
@@ -49,7 +49,7 @@
             flex-wrap: wrap;
             gap: 20px; 
             justify-content: center;
-            /* CRITICAL FIX 1: Stops cards from stretching to the height of the tallest card */
+            /* ALIGN-ITEMS: FLEX-START is critical so cards don't stretch to match neighbors */
             align-items: flex-start; 
         }
 
@@ -64,11 +64,10 @@
             display: flex;
             flex-direction: column;
             transition: transform 0.2s;
-            height: auto; 
             
-            /* CRITICAL FIX 2: Overrides internal Flexbox height calculation for column layouts */
+            /* CRITICAL: Let the card grow as tall as it needs to be */
+            height: auto; 
             min-height: 0;
-            overflow: visible;
         }
         .model-card:hover {
             transform: translateY(-5px);
@@ -94,7 +93,6 @@
             flex-shrink: 0;
         }
         
-        /* Provider/Model Wrapper */
         .provider-model-wrapper {
             display: flex;
             flex-direction: column;
@@ -112,7 +110,7 @@
             word-break: break-all;
         }
 
-        /* STATS AND BUTTON */
+        /* STATS */
         .stats-wrapper {
             display: flex;
             justify-content: space-around;
@@ -123,11 +121,10 @@
             text-align: center;
         }
         
-        /* PREV TIME FIX: Ensure stat-value is a flex container for its content and the nested last-speed */
+        /* Ensure stats column lays out vertically */
         .stat-value {
             font-size: 1.4em;
             font-weight: bold;
-            /* CRITICAL FIX 4: Explicitly display as a column flex container */
             display: flex; 
             flex-direction: column; 
             align-items: center;
@@ -140,25 +137,18 @@
             margin-bottom: 3px;
         }
 
-        .speed-fast {
-            color: #2e7d32;
-        }
-        .status-online {
-            color: #2e7d32;
-        }
-        .status-error {
-            color: #c62828;
-        }
+        .speed-fast { color: #2e7d32; }
+        .status-online { color: #2e7d32; }
+        .status-error { color: #c62828; }
         
-        /* LAST RECORDED SPEED STYLING */
         .last-speed {
-            /* Now the value is inside a flex column, this style will apply correctly */
             font-size: 0.8em;
             color: #999;
             margin-top: 5px;
             font-weight: normal;
         }
         
+        /* BUTTON */
         .affiliate-btn {
             background-color: #2196f3;
             color: white;
@@ -175,23 +165,25 @@
             background-color: #1976d2;
         }
 
-        /* RESPONSE CONTENT WRAPPER */
+        /* RESPONSE SECTION */
         .response-content-wrapper {
             margin-top: 20px;
             padding-top: 15px;
             border-top: 1px dashed #e0e0e0;
-            /* CRITICAL FIX 5: Prevents this section from shrinking its contents */
-            flex-shrink: 0; 
-            height: auto;
+            width: 100%;
         }
         
-        /* RESPONSE TEXT */
+        /* *** THE FIX *** */
         .full-response-text {
-            /* Aggressive overrides for full display */
-            height: unset !important; 
-            max-height: fit-content; 
+            /* 1. Make it a block so it takes width */
+            display: block;
+            /* 2. Visible overflow ensures NO scrollbars, it just grows */
+            overflow: visible; 
+            /* 3. Pre-wrap preserves newlines from the API */
+            white-space: pre-wrap; 
+            /* 4. Break-word prevents horizontal scrolling if a word is too long */
+            word-wrap: break-word;
             
-            white-space: pre-wrap;
             font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; 
             font-size: 0.85em;
             line-height: 1.5;
@@ -199,11 +191,8 @@
             background-color: #fafafa;
             padding: 10px;
             border-radius: 4px;
-            overflow: auto; 
-            display: block; 
         }
         
-        /* LAST UPDATED STYLING */
         #last-updated-wrapper {
             text-align: center;
             margin: 20px auto 40px auto;
@@ -213,7 +202,6 @@
             max-width: 1200px;
         }
 
-        /* FOOTER STYLING */
         #site-footer {
             background-color: #1c1c1c;
             color: #c0c0c0;
@@ -236,7 +224,6 @@
             color: #777;
         }
 
-        /* RESPONSIVE DESIGN */
         @media (max-width: 1000px) {
             .leaderboard-cards-wrapper {
                 gap: 15px; 
@@ -306,7 +293,7 @@
 
                 const isWinner = (index === 0 && item.status === 'Online'); 
                 
-                // CORRECTED LOGIC: Generates the full string for Previous Time
+                // Check for previous_time in JSON. If missing, default to N/A
                 const previousTime = item.previous_time ? `Prev: ${item.previous_time}s` : 'Prev: N/A';
 
                 let affiliateButtonHTML = '';
@@ -335,64 +322,4 @@
                                 <div class="stat-label">Current Speed</div>
                                 <div class="stat-value ${speedClass}">
                                     ${item.time}s
-                                    <div class="last-speed">${previousTime}</div>
-                                </div>
-                            </div>
-                            <div class="stat-group">
-                                <div class="stat-label">Status</div>
-                                <div class="stat-value ${statusClass}">${item.status}</div>
-                            </div>
-                        </div>
-                        
-                        ${affiliateButtonHTML}
-
-                        <div class="response-content-wrapper">
-                            <div class="full-response-text">${item.full_response || item.response_preview}</div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            return html;
-        }
-
-        async function fetchData() {
-            const paths = ['data.json', '/data.json']; 
-            const cacheBuster = `?t=${new Date().getTime()}`;
-            
-            for (const path of paths) {
-                try {
-                    const response = await fetch(path + cacheBuster); 
-                    
-                    if (!response.ok) {
-                        throw new Error(`Path ${path} failed with status: ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-                    
-                    const resultsContainer = document.getElementById('results-container');
-                    const lastUpdatedElement = document.getElementById('last-updated');
-
-                    if (resultsContainer && data.results) {
-                        resultsContainer.innerHTML = formatResults(data.results);
-                    }
-                    if (lastUpdatedElement && data.last_updated) {
-                        lastUpdatedElement.textContent = `Last Updated: ${data.last_updated}`;
-                    }
-                    return; 
-
-                } catch (error) {
-                    console.error('Data load attempt failed:', error);
-                }
-            }
-
-            // If we reach here, both paths failed
-            document.getElementById('results-container').innerHTML = `<p class="error-message" style="text-align: center; color: #c62828; padding: 20px; font-weight: bold; background: #fff; width: 100%;">
-                🔴 ERROR: Live data failed to load. Please ensure the data.json file exists and is accessible.
-            </p>`;
-        }
-
-        fetchData(); 
-    </script>
-</body>
-</html>
+                                    <div class="last-speed">${
