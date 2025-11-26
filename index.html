@@ -29,7 +29,7 @@
             color: #c0c0c0;
         }
         .about-section {
-            max-width: 1200px; /* Increased max width for cards */
+            max-width: 1200px;
             margin: 20px auto;
             padding: 0 15px;
         }
@@ -43,12 +43,12 @@
         
         /* CARD CONTAINER: Horizontal Layout */
         .leaderboard-cards-wrapper {
-            max-width: 1200px; /* Matches about section width */
+            max-width: 1200px;
             margin: 40px auto;
-            display: flex; /* Enables horizontal arrangement */
-            flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
-            gap: 25px; /* Space between cards */
-            justify-content: center; /* Center the cards on the page */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
         }
 
         /* INDIVIDUAL MODEL CARD */
@@ -57,10 +57,10 @@
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             padding: 20px;
-            width: 350px; /* Fixed width for card (3 cards per row on large screen) */
+            width: 300px; /* NARROWER CARD WIDTH */
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             display: flex;
-            flex-direction: column; /* Stacks content vertically within the card */
+            flex-direction: column;
             transition: transform 0.2s;
         }
         .model-card:hover {
@@ -99,7 +99,7 @@
         /* STATS AND BUTTON */
         .stats-wrapper {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around; /* Distribute stats evenly */
             align-items: center;
             margin-bottom: 15px;
         }
@@ -125,6 +125,15 @@
         .status-error {
             color: #c62828;
         }
+        
+        /* LAST RECORDED SPEED STYLING */
+        .last-speed {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 5px;
+            font-weight: normal;
+        }
+        
         .affiliate-btn {
             background-color: #2196f3;
             color: white;
@@ -154,7 +163,7 @@
             font-size: 1.1em;
         }
         .full-response-text {
-            white-space: pre-wrap; /* Preserves formatting and wraps */
+            white-space: pre-wrap;
             font-family: monospace;
             font-size: 0.85em;
             line-height: 1.5;
@@ -228,6 +237,9 @@
                 let speedClass = item.time < 1.0 ? 'speed-fast' : (item.time < 5.0 ? 'speed-medium' : '');
 
                 const isWinner = (index === 0 && item.status === 'Online'); 
+                
+                // NEW: Get previous time, default to N/A if not present
+                const previousTime = item.previous_time ? item.previous_time + 's' : 'N/A';
 
                 let affiliateButtonHTML = '';
                 if (item.status === 'Online') {
@@ -250,8 +262,11 @@
                         
                         <div class="stats-wrapper">
                             <div class="stat-group">
-                                <div class="stat-label">Speed</div>
-                                <div class="stat-value ${speedClass}">${item.time}s</div>
+                                <div class="stat-label">Current Speed</div>
+                                <div class="stat-value ${speedClass}">
+                                    ${item.time}s
+                                    <div class="last-speed">Prev: ${previousTime}</div>
+                                </div>
                             </div>
                             <div class="stat-group">
                                 <div class="stat-label">Status</div>
