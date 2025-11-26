@@ -44,16 +44,24 @@
         .header-row, .result-link {
             /* Final Grid Sizing */
             display: grid;
-            /* Column sizing: Rank, Provider (more room), Preview (more room), Speed, Status, Action (sweet spot) */
             grid-template-columns: 0.3fr 1.2fr 3.1fr 0.8fr 0.8fr 1.7fr; 
-            padding: 12px 15px; 
+            padding: 12px 15px; /* Sets overall row padding */
             border-bottom: 1px solid #eeeeee;
-            /* ALIGN ALL ITEMS TO CENTER (default) but we will override item alignment below */
+            
+            /* Keep align-items: center for overall clean look, but rely on align-self for content */
             align-items: center; 
             font-size: 14px;
             text-decoration: none; 
             color: inherit; 
         }
+
+        /* --- THE CRITICAL FIX --- */
+        /* Force every cell's content to start at the top, preventing the blank row issue. */
+        .rank, .provider, .preview-text, .speed, .status, .action-button {
+            align-self: start; 
+            padding-top: 5px; /* Adds consistent top spacing to all content */
+        }
+        /* End of Critical Fix */
         
         .header-row {
             background-color: #f7f7f7;
@@ -70,17 +78,8 @@
             cursor: pointer;
         }
         
-        /* FIX 1: Force all multi-line text content to align to the top of its row space */
-        .rank, .provider, .preview-text, .speed, .status, .action-button {
-            align-self: start; 
-            padding-top: 5px; /* Aligns the top line of content */
-        }
-
         .rank {
             font-weight: 600;
-        }
-        .provider div {
-            /* No change, but ensures the two lines work */
         }
         .preview-text {
             font-style: italic;
