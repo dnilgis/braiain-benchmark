@@ -1,5 +1,4 @@
 name: Daily AI Benchmark
-
 on:
   push:
     branches:
@@ -8,7 +7,6 @@ on:
     # Runs once a day at 12:00 AM UTC
     - cron: '0 0 * * *'
   workflow_dispatch:
-
 jobs:
   run-benchmark:
     # Permissions are explicitly set here to allow file commit
@@ -23,17 +21,14 @@ jobs:
         with:
           # FIX: Prevents shallow clone issues that can break file commits
           fetch-depth: 0 
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests
-
       - name: Run Benchmark Script
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -48,4 +43,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Update benchmark stats
-          files: data.json
+          file_pattern: data.json
