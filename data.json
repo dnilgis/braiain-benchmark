@@ -1,12 +1,12 @@
 {
-    "last_updated": "2025-11-27 00:30:00 UTC",
+    "last_updated": "2025-11-27 00:35:06 UTC",
     "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030.",
     "max_tokens": 300,
     "results": [
         {
             "provider": "Google",
             "model": "gemini-2.0-flash-exp",
-            "time": 0.1191,
+            "time": 0.0919,
             "status": "API FAILURE",
             "response_preview": "404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1/models/gemini-2.0-...",
             "full_response": "404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyCDWfvoF4QiRUDQ_9mL4IY4ocGRe24QGa8",
@@ -15,9 +15,20 @@
             "cost_per_request": null
         },
         {
+            "provider": "Groq",
+            "model": "llama-3.1-70b-versatile",
+            "time": 0.1088,
+            "status": "API FAILURE",
+            "response_preview": "400 Client Error: Bad Request for url: https://api.groq.com/openai/v1/chat/completions",
+            "full_response": "400 Client Error: Bad Request for url: https://api.groq.com/openai/v1/chat/completions",
+            "tokens_per_second": 0,
+            "output_tokens": 0,
+            "cost_per_request": null
+        },
+        {
             "provider": "Anthropic",
             "model": "claude-3-5-sonnet-20241022",
-            "time": 0.1759,
+            "time": 0.1178,
             "status": "API FAILURE",
             "response_preview": "404 Client Error: Not Found for url: https://api.anthropic.com/v1/messages",
             "full_response": "404 Client Error: Not Found for url: https://api.anthropic.com/v1/messages",
@@ -28,11 +39,11 @@
         {
             "provider": "OpenAI",
             "model": "gpt-4o-mini",
-            "time": 4.986,
+            "time": 5.812,
             "status": "Online",
-            "response_preview": "The history of the internet dates back to the early 1960s when the United States Department of Defense initiated research on a robust, fault-tolerant ...",
-            "full_response": "The history of the internet dates back to the early 1960s when the United States Department of Defense initiated research on a robust, fault-tolerant network known as ARPANET. This network was designed to facilitate communication between computers and was first demonstrated in 1969 when different universities successfully connected and shared data. Over the following decades, ARPANET expanded, and in 1974, the term \"internet\" was coined to describe the interconnected network of various computer systems. The introduction of TCP/IP protocols in 1983 standardized communication over the network, leading to the development of the modern internet. By the early 1990s, the World Wide Web was created by Tim Berners-Lee, making information more accessible and igniting the commercialization and widespread use of the internet.\n\nIn the 1990s and early 2000s, the internet experienced explosive growth, both in terms of user base and technological advancements. The proliferation of web browsers, such as Netscape Navigator and Internet Explorer, along with the rise of search engines like Google, transformed how people accessed information. Businesses began to realize the potential for online presence, leading to the dot-com boom, where internet startups flourished, although many eventually failed in the subsequent crash. As broadband technology improved, it enhanced connectivity and transformed the internet from a text-based to a multimedia-rich environment, paving the way for social media platforms, e-commerce, and online content streaming services that define today's digital landscape.\n\nLooking toward 2030",
-            "tokens_per_second": 60.17,
+            "response_preview": "The history of the internet began in the late 1960s when the United States Department of Defense developed ARPANET, the first network to implement pac...",
+            "full_response": "The history of the internet began in the late 1960s when the United States Department of Defense developed ARPANET, the first network to implement packet-switching technology. This allowed multiple computers to communicate on a single network, paving the way for future developments. By the 1970s, key protocols like TCP/IP were established, enabling diverse networks to interconnect. The introduction of the World Wide Web in the early 1990s, developed by Tim Berners-Lee, revolutionized public access to the internet, facilitating not just academic and military communication but also commercial activities. This era marked the transition of the internet from a predominantly scientific tool to a mainstream global platform.\n\nIn the late 1990s and early 2000s, the internet experienced explosive growth, characterized by the proliferation of web browsers, e-commerce platforms, and social media. Companies like Amazon and eBay emerged, radically changing retail, while platforms such as Facebook and Twitter transformed social interactions and information dissemination. The introduction of broadband made internet access faster and more reliable, further fueling its adoption in households worldwide. Mobile technologies revolutionized access yet again, with smartphones allowing users to stay connected anytime and anywhere, leading to significant societal shifts in communication and entertainment.\n\nLooking ahead to 2030, the internet is expected to become even more integrated into daily life, driven by advancements in machine learning, artificial intelligence, and the Internet of Things (IoT). We may see a more decentralized web, utilizing blockchain technologies for enhanced",
+            "tokens_per_second": 51.62,
             "output_tokens": 300,
             "cost_per_request": 0.000185
         }
@@ -194,6 +205,35 @@
                 "OpenAI": {
                     "time": 4.986,
                     "tps": 60.17,
+                    "status": "Online",
+                    "cost": 0.000185
+                }
+            }
+        },
+        {
+            "timestamp": "2025-11-27 00:35:06 UTC",
+            "results": {
+                "Google": {
+                    "time": 0.0919,
+                    "tps": 0,
+                    "status": "API FAILURE",
+                    "cost": null
+                },
+                "Groq": {
+                    "time": 0.1088,
+                    "tps": 0,
+                    "status": "API FAILURE",
+                    "cost": null
+                },
+                "Anthropic": {
+                    "time": 0.1178,
+                    "tps": 0,
+                    "status": "API FAILURE",
+                    "cost": null
+                },
+                "OpenAI": {
+                    "time": 5.812,
+                    "tps": 51.62,
                     "status": "Online",
                     "cost": 0.000185
                 }
