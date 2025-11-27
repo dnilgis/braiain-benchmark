@@ -114,6 +114,7 @@ def test_openai(api_key):
             "time": duration,
             "status": "Online",
             "response_preview": get_preview(response_text),
+            "full_response": response_text,
             "tokens_per_second": tps,
             "output_tokens": output_tokens,
             "cost_per_request": cost
@@ -127,6 +128,7 @@ def test_openai(api_key):
             "time": duration,
             "status": "API FAILURE",
             "response_preview": get_preview(str(e), 100),
+            "full_response": str(e),
             "tokens_per_second": 0,
             "output_tokens": 0,
             "cost_per_request": None
@@ -175,6 +177,7 @@ def test_anthropic(api_key):
             "time": duration,
             "status": "Online",
             "response_preview": get_preview(response_text),
+            "full_response": response_text,
             "tokens_per_second": tps,
             "output_tokens": output_tokens,
             "cost_per_request": cost
@@ -188,6 +191,7 @@ def test_anthropic(api_key):
             "time": duration,
             "status": "API FAILURE",
             "response_preview": get_preview(str(e), 100),
+            "full_response": str(e),
             "tokens_per_second": 0,
             "output_tokens": 0,
             "cost_per_request": None
@@ -231,6 +235,7 @@ def test_google(api_key):
             "time": duration,
             "status": "Online",
             "response_preview": get_preview(response_text),
+            "full_response": response_text,
             "tokens_per_second": tps,
             "output_tokens": output_tokens,
             "cost_per_request": cost
@@ -244,6 +249,7 @@ def test_google(api_key):
             "time": duration,
             "status": "API FAILURE",
             "response_preview": get_preview(str(e), 100),
+            "full_response": str(e),
             "tokens_per_second": 0,
             "output_tokens": 0,
             "cost_per_request": None
@@ -291,6 +297,7 @@ def test_groq(api_key):
             "time": duration,
             "status": "Online",
             "response_preview": get_preview(response_text),
+            "full_response": response_text,
             "tokens_per_second": tps,
             "output_tokens": output_tokens,
             "cost_per_request": cost
@@ -304,6 +311,7 @@ def test_groq(api_key):
             "time": duration,
             "status": "API FAILURE",
             "response_preview": get_preview(str(e), 100),
+            "full_response": str(e),
             "tokens_per_second": 0,
             "output_tokens": 0,
             "cost_per_request": None
@@ -351,6 +359,7 @@ def test_mistral(api_key):
             "time": duration,
             "status": "Online",
             "response_preview": get_preview(response_text),
+            "full_response": response_text,
             "tokens_per_second": tps,
             "output_tokens": output_tokens,
             "cost_per_request": cost
@@ -364,6 +373,7 @@ def test_mistral(api_key):
             "time": duration,
             "status": "API FAILURE",
             "response_preview": get_preview(str(e), 100),
+            "full_response": str(e),
             "tokens_per_second": 0,
             "output_tokens": 0,
             "cost_per_request": None
@@ -411,6 +421,7 @@ def test_cohere(api_key):
             "time": duration,
             "status": "Online",
             "response_preview": get_preview(response_text),
+            "full_response": response_text,
             "tokens_per_second": tps,
             "output_tokens": output_tokens,
             "cost_per_request": cost
@@ -424,6 +435,7 @@ def test_cohere(api_key):
             "time": duration,
             "status": "API FAILURE",
             "response_preview": get_preview(str(e), 100),
+            "full_response": str(e),
             "tokens_per_second": 0,
             "output_tokens": 0,
             "cost_per_request": None
@@ -471,6 +483,7 @@ def test_together(api_key):
             "time": duration,
             "status": "Online",
             "response_preview": get_preview(response_text),
+            "full_response": response_text,
             "tokens_per_second": tps,
             "output_tokens": output_tokens,
             "cost_per_request": cost
@@ -484,6 +497,7 @@ def test_together(api_key):
             "time": duration,
             "status": "API FAILURE",
             "response_preview": get_preview(str(e), 100),
+            "full_response": str(e),
             "tokens_per_second": 0,
             "output_tokens": 0,
             "cost_per_request": None
