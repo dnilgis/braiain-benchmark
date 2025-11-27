@@ -608,7 +608,7 @@
                 affiliateButtonHTML = `<div class="affiliate-btn" style="background-color: #c62828; cursor: not-allowed;">API Failure</div>`;
             }
             
-            const responseText = result.response_preview || 'No response available';
+            const responseText = result.full_response || result.response_preview || 'No response available';
             const hasResponse = responseText && responseText !== 'No response available';
             
             card.innerHTML = `
