@@ -4,133 +4,304 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Braiain AI Speed Index | Daily LLM Benchmarks</title>
+    <meta name="description" content="Real-time AI model speed benchmarks. Compare OpenAI, Anthropic, Google Gemini, Groq, and more API latency performance updated daily.">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="keywords" content="AI benchmarks, LLM speed test, OpenAI GPT-4, Claude API, Gemini speed, Groq performance, AI API comparison">
+    <meta name="robots" content="index, follow">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #f5f5f7;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f7;
             color: #1c1c1c;
             line-height: 1.6;
         }
         
         header {
-            background: #1c1c1c;
+            background-color: #1c1c1c;
             color: white;
             text-align: center;
-            padding: 30px 20px;
+            padding: 30px 20px 20px;
+            margin-bottom: 20px;
         }
         
-        h1 { font-size: 2.4em; margin-bottom: 8px; }
-        .tagline { font-size: 1.1em; color: #c0c0c0; }
+        h1 { font-size: 2.4em; margin: 0 0 8px 0; }
+        .tagline { font-size: 1.1em; color: #c0c0c0; margin: 0; }
         
-        .container {
+        .about-section { 
+            max-width: 1200px; 
+            margin: 20px auto; 
+            padding: 0 20px; 
+        }
+        
+        h2 { 
+            color: #333; 
+            font-size: 1.5em; 
+            margin-top: 30px; 
+            border-bottom: 2px solid #e0e0e0; 
+            padding-bottom: 8px; 
+        }
+        
+        .data-source-indicator {
             max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
+            margin: 10px auto;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 0.9em;
+            border-radius: 4px;
         }
         
-        .debug-info {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 8px;
-        }
-        
-        .debug-info.success {
+        .data-live {
             background: #d4edda;
-            border-color: #28a745;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
         
-        .debug-info.error {
-            background: #f8d7da;
-            border-color: #dc3545;
+        .data-fallback {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
         }
         
-        .cards {
+        /* CHART SECTION */
+        .chart-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 20px;
+        }
+        
+        .chart-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .chart-btn {
+            padding: 8px 16px;
+            border: 2px solid #2196f3;
+            background: white;
+            color: #2196f3;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .chart-btn.active {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .chart-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .leaderboard-cards-wrapper {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 20px; 
             justify-content: center;
-            margin: 40px 0;
+            align-items: flex-start; 
         }
-        
-        .card {
-            background: white;
+
+        .model-card {
+            background-color: #ffffff;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             padding: 20px;
             width: 100%;
             max-width: 360px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         
+        .model-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
         .card-header {
             display: flex;
             align-items: center;
             margin-bottom: 15px;
-            padding-bottom: 10px;
             border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
         }
         
-        .rank {
-            background: #666;
+        .rank-badge {
+            background-color: #666;
             color: white;
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 5px;
             font-weight: bold;
             font-size: 1.2em;
             margin-right: 15px;
-        }
-        
-        .rank.gold { background: linear-gradient(135deg, #ffd700, #ffed4e); color: #1c1c1c; }
-        .rank.silver { background: linear-gradient(135deg, #c0c0c0, #e8e8e8); color: #1c1c1c; }
-        .rank.bronze { background: linear-gradient(135deg, #cd7f32, #e6a85c); color: #1c1c1c; }
-        
-        .provider { font-size: 1.3em; font-weight: 700; }
-        .model { font-size: 0.9em; color: #555; }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 15px 0;
-        }
-        
-        .stat {
+            flex-shrink: 0;
+            min-width: 45px;
             text-align: center;
         }
         
-        .stat-label {
-            font-size: 0.75em;
-            color: #777;
-            text-transform: uppercase;
-            font-weight: 600;
+        .rank-badge.rank-1 { 
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); 
+            color: #1c1c1c;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
         }
+        .rank-badge.rank-2 { 
+            background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%); 
+            color: #1c1c1c;
+            box-shadow: 0 2px 8px rgba(192, 192, 192, 0.4);
+        }
+        .rank-badge.rank-3 { 
+            background: linear-gradient(135deg, #cd7f32 0%, #e6a85c 100%); 
+            color: #1c1c1c;
+            box-shadow: 0 2px 8px rgba(205, 127, 50, 0.4);
+        }
+        
+        .provider-model-wrapper {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+            overflow: hidden; 
+            flex: 1;
+        }
+        
+        .card-provider { font-size: 1.3em; font-weight: 700; }
+        .card-model { font-size: 0.9em; color: #555; word-break: break-word; }
+
+        .stats-wrapper {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+        }
+        
+        .stat-group { text-align: center; }
         
         .stat-value {
             font-size: 1.3em;
             font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.1;
+        }
+        
+        .stat-label { 
+            font-size: 0.75em; 
+            color: #777; 
+            text-transform: uppercase; 
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .speed-fast, .tps-fast { color: #2e7d32; }
+        .speed-medium, .tps-medium { color: #f57c00; }
+        .speed-slow, .tps-slow { color: #c62828; }
+        
+        .status-online { color: #2e7d32; }
+        .status-error { color: #c62828; }
+        
+        .cost-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
             margin-top: 5px;
         }
         
-        .online { color: #2e7d32; }
-        .offline { color: #c62828; }
-        .fast { color: #2e7d32; }
-        .medium { color: #f57c00; }
-        .slow { color: #c62828; }
-        
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
+        .cost-free { background-color: #e8f5e9; color: #2e7d32; }
+        .cost-cheap { background-color: #fff3e0; color: #f57c00; }
+        .cost-expensive { background-color: #ffebee; color: #c62828; }
+
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 10px 0;
         }
         
-        .spinner {
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-fastest { background-color: #ffd700; color: #1c1c1c; }
+        .badge-best-value { background-color: #4caf50; color: white; }
+        .badge-highest-tps { background-color: #2196f3; color: white; }
+
+        .affiliate-btn {
+            background-color: #2196f3;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95em;
+            transition: background-color 0.2s, transform 0.1s;
+            text-align: center;
+            margin-top: 10px;
+            display: block;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .affiliate-btn:hover { 
+            background-color: #1976d2;
+            transform: translateY(-2px);
+        }
+
+        #last-updated-wrapper { 
+            text-align: center; 
+            margin: 30px auto; 
+            font-size: 1em; 
+            color: #666; 
+            padding: 0 20px;
+        }
+        
+        #site-footer { 
+            background-color: #1c1c1c; 
+            color: #c0c0c0; 
+            padding: 30px 20px; 
+            text-align: center; 
+            font-size: 0.9em; 
+            margin-top: 60px; 
+        }
+        
+        #site-footer a { color: #007bff; text-decoration: none; font-weight: bold; }
+        #site-footer a:hover { text-decoration: underline; }
+
+        .loading-container { width: 100%; text-align: center; padding: 40px 20px; }
+        .loading-spinner {
             border: 4px solid #f3f3f3;
-            border-top: 4px solid #2196f3;
+            border-top: 4px solid #007bff;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -142,36 +313,13 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        button {
-            background: #2196f3;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            margin: 5px;
-        }
-        
-        button:hover {
-            background: #1976d2;
-        }
-        
-        footer {
-            background: #1c1c1c;
-            color: #c0c0c0;
-            text-align: center;
-            padding: 30px 20px;
-            margin-top: 60px;
-        }
-        
-        pre {
-            background: #f5f5f5;
-            padding: 10px;
-            border-radius: 4px;
-            overflow-x: auto;
-            font-size: 0.85em;
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .model-card { max-width: 100%; }
+            .stats-wrapper { grid-template-columns: repeat(2, 1fr); }
+            .stat-group:last-child { grid-column: 1 / -1; }
+            .chart-container { height: 300px; }
         }
     </style>
 </head>
@@ -181,32 +329,61 @@
         <p class="tagline">Real-World LLM Speed, Cost & Performance Tracking</p>
     </header>
 
-    <div class="container">
-        <div id="debug-info"></div>
-        <div id="controls" style="text-align: center; margin: 20px 0;">
-            <button onclick="loadFromFile()">Try Loading data.json</button>
-            <button onclick="useEmbeddedData()">Use Embedded Fallback Data</button>
-            <button onclick="showDebugInfo()">Show Debug Info</button>
+    <div id="data-source-indicator"></div>
+
+    <section class="about-section">
+        <p>
+            Welcome to the <strong>Braiain Speed Index</strong>, featuring automated daily benchmarks of <strong>API speed, tokens-per-second, and cost efficiency</strong> across major AI providers. <strong>Make informed decisions with real data.</strong>
+        </p>
+    </section>
+
+    <!-- TREND CHART SECTION -->
+    <section class="chart-section" id="chart-section" style="display: none;">
+        <h2>📈 Performance Trends</h2>
+        <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">Historical speed comparison - lower is better</p>
+        
+        <div class="chart-controls">
+            <button class="chart-btn active" onclick="updateChartRange(7)">7 Days</button>
+            <button class="chart-btn" onclick="updateChartRange(30)">30 Days</button>
+            <button class="chart-btn" onclick="updateChartRange(0)">All Time</button>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="trendChart"></canvas>
+        </div>
+    </section>
+
+    <div class="leaderboard-cards-wrapper" id="results-container">
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading benchmark data...</p>
         </div>
     </div>
-
-    <div id="results-container">
-        <div class="loading">
-            <div class="spinner"></div>
-            <p>Attempting to load data...</p>
-        </div>
+    
+    <div id="last-updated-wrapper">
+        <span id="last-updated"></span>
     </div>
 
-    <div class="container">
-        <div id="last-updated" style="text-align: center; color: #666; margin: 20px 0;"></div>
-    </div>
+    <section class="about-section">
+        <h2>🔬 Methodology</h2>
+        <p>
+            We measure <strong>end-to-end API latency</strong> using identical prompts across all models. Each test generates ~300 tokens and tracks speed, throughput (tokens/second), and cost per request.
+        </p>
+        
+        <h2>📊 Metrics Explained</h2>
+        <ul>
+            <li><strong>Speed (seconds):</strong> Total time from request to response - lower is better</li>
+            <li><strong>TPS (Tokens Per Second):</strong> Throughput metric - higher is better</li>
+            <li><strong>Cost Per Request:</strong> Approximate cost based on current API pricing</li>
+        </ul>
+    </section>
 
-    <footer>
-        <div>A <a href="mailto:dnilgis@gmail.com" style="color: #007bff;">dnilgis</a> project.</div>
+    <footer id="site-footer">
+        <div>A <a href="mailto:dnilgis@gmail.com">dnilgis</a> project.</div>
     </footer>
 
     <script>
-        // EMBEDDED FALLBACK DATA - from your actual data.json
+        // EMBEDDED FALLBACK DATA with history
         const FALLBACK_DATA = {
             "last_updated": "2025-11-28 21:56:17 UTC",
             "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030.",
@@ -252,146 +429,425 @@
                     "output_tokens": 0,
                     "cost_per_request": null
                 }
+            ],
+            "history": [
+                {
+                    "timestamp": "2025-11-21 00:00:00 UTC",
+                    "results": {
+                        "Groq": { "time": 2.1, "tps": 220, "status": "Online", "cost": 0.0 },
+                        "OpenAI": { "time": 6.5, "tps": 46, "status": "Online", "cost": 0.000185 }
+                    }
+                },
+                {
+                    "timestamp": "2025-11-22 00:00:00 UTC",
+                    "results": {
+                        "Groq": { "time": 1.8, "tps": 265, "status": "Online", "cost": 0.0 },
+                        "OpenAI": { "time": 6.2, "tps": 48, "status": "Online", "cost": 0.000185 }
+                    }
+                },
+                {
+                    "timestamp": "2025-11-23 00:00:00 UTC",
+                    "results": {
+                        "Groq": { "time": 1.4, "tps": 340, "status": "Online", "cost": 0.0 },
+                        "OpenAI": { "time": 6.0, "tps": 50, "status": "Online", "cost": 0.000185 }
+                    }
+                },
+                {
+                    "timestamp": "2025-11-24 00:00:00 UTC",
+                    "results": {
+                        "Groq": { "time": 1.3, "tps": 370, "status": "Online", "cost": 0.0 },
+                        "OpenAI": { "time": 7.0, "tps": 43, "status": "Online", "cost": 0.000185 }
+                    }
+                },
+                {
+                    "timestamp": "2025-11-25 00:00:00 UTC",
+                    "results": {
+                        "Groq": { "time": 2.3, "tps": 215, "status": "Online", "cost": 0.0 },
+                        "OpenAI": { "time": 7.0, "tps": 43, "status": "Online", "cost": 0.000185 }
+                    }
+                },
+                {
+                    "timestamp": "2025-11-26 00:00:00 UTC",
+                    "results": {
+                        "Groq": { "time": 1.8, "tps": 255, "status": "Online", "cost": 0.0 },
+                        "OpenAI": { "time": 10.0, "tps": 30, "status": "Online", "cost": 0.000185 }
+                    }
+                },
+                {
+                    "timestamp": "2025-11-27 00:00:00 UTC",
+                    "results": {
+                        "Groq": { "time": 2.0, "tps": 235, "status": "Online", "cost": 0.0 },
+                        "OpenAI": { "time": 6.6, "tps": 45, "status": "Online", "cost": 0.000185 }
+                    }
+                },
+                {
+                    "timestamp": "2025-11-28 21:56:17 UTC",
+                    "results": {
+                        "Groq": { "time": 1.1861, "tps": 403.84, "status": "Online", "cost": 0.0 },
+                        "OpenAI": { "time": 10.2888, "tps": 29.16, "status": "Online", "cost": 0.000185 },
+                        "Anthropic": { "time": 99.9999, "tps": 0, "status": "API FAILURE", "cost": null },
+                        "Google": { "time": 99.9999, "tps": 0, "status": "API FAILURE", "cost": null }
+                    }
+                }
             ]
         };
 
-        function debugLog(message, type = 'info') {
-            console.log(`[${type.toUpperCase()}] ${message}`);
+        const AFFILIATE_LINKS = {
+            'OpenAI': 'https://platform.openai.com/signup',
+            'Google': 'https://ai.google.dev/', 
+            'Anthropic': 'https://console.anthropic.com/',
+            'Groq': 'https://console.groq.com/',
+            'Mistral AI': 'https://console.mistral.ai/',
+            'Cohere': 'https://dashboard.cohere.com/',
+            'Together AI': 'https://api.together.xyz/'
+        };
+
+        const PROVIDER_COLORS = {
+            'OpenAI': '#10a37f',
+            'Anthropic': '#d97757',
+            'Google': '#4285f4',
+            'Groq': '#f55036',
+            'Mistral AI': '#ff7000',
+            'Cohere': '#39594d',
+            'Together AI': '#6366f1'
+        };
+
+        let dataSource = 'loading';
+        let trendChart = null;
+        let currentChartRange = 7;
+        let fullHistoryData = [];
+
+        function setDataSourceIndicator(source, data) {
+            const indicator = document.getElementById('data-source-indicator');
             
-            const debugDiv = document.getElementById('debug-info');
-            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : '';
-            debugDiv.innerHTML += `<div class="debug-info ${className}"><strong>[${new Date().toLocaleTimeString()}]</strong> ${message}</div>`;
+            if (source === 'live') {
+                indicator.className = 'data-source-indicator data-live';
+                indicator.innerHTML = `✅ <strong>Live Data</strong> - Updated: ${data.last_updated} | Auto-refreshes every 5 minutes`;
+            } else if (source === 'fallback') {
+                indicator.className = 'data-source-indicator data-fallback';
+                indicator.innerHTML = `⚠️ <strong>Using Cached Data</strong> - Last snapshot: ${data.last_updated} | Unable to load fresh data.json`;
+            }
         }
 
-        function displayResults(data) {
-            debugLog(`Displaying ${data.results.length} results`, 'success');
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function getSpeedClass(time, isOnline) {
+            if (!isOnline) return 'status-error';
+            if (time < 5) return 'speed-fast';
+            if (time < 10) return 'speed-medium';
+            return 'speed-slow';
+        }
+
+        function getTpsClass(tps) {
+            if (tps > 60) return 'tps-fast';
+            if (tps > 30) return 'tps-medium';
+            return 'tps-slow';
+        }
+
+        function getCostClass(cost) {
+            if (cost === null || cost === 0) return 'cost-free';
+            if (cost < 0.001) return 'cost-cheap';
+            return 'cost-expensive';
+        }
+
+        function formatCost(cost) {
+            if (cost === null) return 'N/A';
+            if (cost === 0) return 'FREE';
+            if (cost < 0.0001) return '<$0.0001';
+            return `$${cost.toFixed(4)}`;
+        }
+
+        // CHART FUNCTIONS
+        function createTrendChart(history, range = 7) {
+            const ctx = document.getElementById('trendChart');
+            const chartSection = document.getElementById('chart-section');
             
+            if (!ctx || !history || history.length < 2) {
+                if (chartSection) chartSection.style.display = 'none';
+                return;
+            }
+
+            if (chartSection) chartSection.style.display = 'block';
+
+            // Store full history
+            fullHistoryData = history;
+
+            // Get data for selected range
+            const recentHistory = range > 0 ? history.slice(-range) : history;
+
+            const labels = [];
+            const datasets = {};
+
+            recentHistory.forEach(entry => {
+                const date = new Date(entry.timestamp);
+                labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+
+                Object.keys(entry.results).forEach(provider => {
+                    if (!datasets[provider]) {
+                        datasets[provider] = {
+                            label: provider,
+                            data: [],
+                            borderColor: PROVIDER_COLORS[provider] || '#999',
+                            backgroundColor: PROVIDER_COLORS[provider] || '#999',
+                            tension: 0.3,
+                            spanGaps: true,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        };
+                    }
+                    const time = entry.results[provider].time;
+                    datasets[provider].data.push(
+                        time < 99 && entry.results[provider].status === 'Online' ? time : null
+                    );
+                });
+            });
+
+            if (trendChart) {
+                trendChart.destroy();
+            }
+
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: Object.values(datasets)
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.parsed.y === null) return null;
+                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(2) + 's';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Response Time (seconds)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                }
+            });
+        }
+
+        function updateChartRange(range) {
+            currentChartRange = range;
+            
+            // Update button states
+            document.querySelectorAll('.chart-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Recreate chart with new range
+            if (fullHistoryData.length > 0) {
+                createTrendChart(fullHistoryData, range);
+            }
+        }
+
+        function calculateBadges(results) {
+            if (results.length === 0) return {};
+
+            const online = results.filter(r => r.status === 'Online');
+            if (online.length === 0) return {};
+
+            const badges = {};
+
+            const fastest = online.reduce((min, r) => r.time < min.time ? r : min);
+            badges[fastest.provider] = badges[fastest.provider] || [];
+            badges[fastest.provider].push('fastest');
+
+            const highestTps = online.reduce((max, r) => r.tokens_per_second > max.tokens_per_second ? r : max);
+            badges[highestTps.provider] = badges[highestTps.provider] || [];
+            badges[highestTps.provider].push('highest-tps');
+
+            const paid = online.filter(r => r.cost_per_request > 0);
+            if (paid.length > 0) {
+                const bestValue = paid.reduce((best, r) => {
+                    const value = r.tokens_per_second / r.cost_per_request;
+                    const bestVal = best.tokens_per_second / best.cost_per_request;
+                    return value > bestVal ? r : best;
+                });
+                badges[bestValue.provider] = badges[bestValue.provider] || [];
+                badges[bestValue.provider].push('best-value');
+            }
+
+            return badges;
+        }
+
+        function createModelCard(result, rank, badges) {
+            const card = document.createElement('div');
+            card.className = 'model-card';
+            
+            const isOnline = result.status === 'Online';
+            const speedClass = getSpeedClass(result.time, isOnline);
+            const tpsClass = getTpsClass(result.tokens_per_second);
+            const costClass = getCostClass(result.cost_per_request);
+            
+            const timeDisplay = isOnline ? `${result.time.toFixed(2)}s` : 'N/A';
+            const tpsDisplay = isOnline ? result.tokens_per_second.toFixed(0) : 'N/A';
+            
+            const rankClass = (isOnline && rank <= 3) ? ` rank-${rank}` : '';
+            
+            const providerBadges = badges[result.provider] || [];
+            let badgesHTML = '';
+            if (providerBadges.length > 0) {
+                badgesHTML = '<div class="badge-container">';
+                providerBadges.forEach(badge => {
+                    const text = badge === 'fastest' ? '⚡ Fastest' :
+                                badge === 'highest-tps' ? '🚀 Highest TPS' :
+                                badge === 'best-value' ? '💰 Best Value' : '';
+                    badgesHTML += `<span class="badge badge-${badge}">${text}</span>`;
+                });
+                badgesHTML += '</div>';
+            }
+            
+            let affiliateButtonHTML = '';
+            if (isOnline) {
+                const link = AFFILIATE_LINKS[result.provider];
+                affiliateButtonHTML = `<a href="${link}" target="_blank" rel="noopener" class="affiliate-btn">Try ${result.provider}</a>`;
+            } else {
+                affiliateButtonHTML = `<div class="affiliate-btn" style="background-color: #c62828; cursor: not-allowed;">Currently Offline</div>`;
+            }
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="rank-badge${rankClass}">#${rank}</span>
+                    <div class="provider-model-wrapper">
+                        <div class="card-provider">${escapeHtml(result.provider)}</div>
+                        <div class="card-model">${escapeHtml(result.model)}</div>
+                    </div>
+                </div>
+                
+                ${badgesHTML}
+                
+                <div class="stats-wrapper">
+                    <div class="stat-group">
+                        <div class="stat-label">Speed</div>
+                        <div class="stat-value ${speedClass}">${timeDisplay}</div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">TPS</div>
+                        <div class="stat-value ${tpsClass}">${tpsDisplay}</div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">Status</div>
+                        <div class="stat-value ${isOnline ? 'status-online' : 'status-error'}">
+                            ${escapeHtml(result.status)}
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div class="stat-label">Cost Per Request</div>
+                    <div class="cost-badge ${costClass}">${formatCost(result.cost_per_request)}</div>
+                </div>
+                
+                ${affiliateButtonHTML}
+            `;
+            
+            return card;
+        }
+
+        function displayResults(data, source = 'live') {
             const container = document.getElementById('results-container');
             const lastUpdated = document.getElementById('last-updated');
             
-            lastUpdated.textContent = `Last Updated: ${data.last_updated}`;
+            dataSource = source;
+            setDataSourceIndicator(source, data);
             
-            let html = '<div class="cards">';
+            if (data.last_updated) {
+                lastUpdated.textContent = `Last Updated: ${data.last_updated}`;
+            }
+            
+            // Create trend chart if history available
+            if (data.history && data.history.length >= 2) {
+                createTrendChart(data.history, currentChartRange);
+            }
+            
+            if (!data.results || data.results.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px;">No results available</div>';
+                return;
+            }
+            
+            const badges = calculateBadges(data.results);
+            
+            container.innerHTML = '';
             
             data.results.forEach((result, index) => {
                 const rank = index + 1;
-                const rankClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
-                const isOnline = result.status === 'Online';
-                const speedClass = isOnline ? (result.time < 5 ? 'fast' : result.time < 10 ? 'medium' : 'slow') : 'offline';
-                const statusClass = isOnline ? 'online' : 'offline';
-                
-                html += `
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="rank ${rankClass}">#${rank}</div>
-                            <div>
-                                <div class="provider">${result.provider}</div>
-                                <div class="model">${result.model}</div>
-                            </div>
-                        </div>
-                        <div class="stats">
-                            <div class="stat">
-                                <div class="stat-label">Speed</div>
-                                <div class="stat-value ${speedClass}">
-                                    ${isOnline ? result.time.toFixed(2) + 's' : 'N/A'}
-                                </div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-label">TPS</div>
-                                <div class="stat-value ${speedClass}">
-                                    ${isOnline ? Math.round(result.tokens_per_second) : 'N/A'}
-                                </div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-label">Status</div>
-                                <div class="stat-value ${statusClass}">
-                                    ${result.status}
-                                </div>
-                            </div>
-                        </div>
-                        <div style="text-align: center; margin-top: 10px;">
-                            <div class="stat-label">Cost Per Request</div>
-                            <div style="font-weight: 600; margin-top: 5px;">
-                                ${result.cost_per_request === null ? 'N/A' : 
-                                  result.cost_per_request === 0 ? 'FREE' : 
-                                  '$' + result.cost_per_request.toFixed(4)}
-                            </div>
-                        </div>
-                    </div>
-                `;
+                const card = createModelCard(result, rank, badges);
+                container.appendChild(card);
             });
-            
-            html += '</div>';
-            container.innerHTML = html;
-            
-            debugLog('✅ Results displayed successfully!', 'success');
         }
 
-        async function loadFromFile() {
-            document.getElementById('debug-info').innerHTML = '';
-            debugLog('Attempting to load data.json from file...', 'info');
+        async function fetchData() {
+            console.log('Attempting to fetch fresh data...');
             
-            const paths = ['data.json', './data.json', '/data.json'];
+            const paths = ['./data.json', 'data.json', '/data.json'];
             
             for (const path of paths) {
                 try {
-                    debugLog(`Trying path: ${path}`, 'info');
                     const response = await fetch(path + '?t=' + Date.now());
-                    debugLog(`Status: ${response.status} ${response.statusText}`, 
-                             response.ok ? 'success' : 'error');
                     
                     if (response.ok) {
                         const data = await response.json();
-                        debugLog(`✅ Successfully loaded from ${path}!`, 'success');
-                        displayResults(data);
-                        return;
+                        console.log('✅ Successfully loaded fresh data from:', path);
+                        displayResults(data, 'live');
+                        return true;
                     }
                 } catch (error) {
-                    debugLog(`Failed ${path}: ${error.message}`, 'error');
+                    console.log(`Failed to load from ${path}:`, error.message);
                 }
             }
             
-            debugLog('❌ All paths failed. Click "Use Embedded Fallback Data" to continue.', 'error');
+            console.log('⚠️ Could not load data.json, using fallback data');
+            displayResults(FALLBACK_DATA, 'fallback');
+            return false;
         }
 
-        function useEmbeddedData() {
-            document.getElementById('debug-info').innerHTML = '';
-            debugLog('Using embedded fallback data...', 'info');
-            debugLog('This is the last data from your data.json file', 'info');
-            displayResults(FALLBACK_DATA);
-        }
-
-        function showDebugInfo() {
-            const info = `
-Current URL: ${window.location.href}
-Origin: ${window.location.origin}
-Pathname: ${window.location.pathname}
-Protocol: ${window.location.protocol}
-
-If data.json is in the same folder as this HTML file, it should work.
-If you're on GitHub Pages, make sure data.json is committed to the repository.
-
-Try these steps:
-1. Check that data.json exists in the same directory
-2. Open browser DevTools (F12) and check Console tab
-3. Look for CORS errors or 404 errors
-4. If on GitHub Pages, verify the file is in the repo
-            `;
-            
-            alert(info);
-            console.log(info);
-        }
-
-        // Auto-load on page load
-        debugLog('Page loaded. Current location: ' + window.location.href, 'info');
-        debugLog('Attempting automatic load...', 'info');
+        // Initialize
+        console.log('🚀 Braiain Speed Index initializing...');
+        fetchData();
         
-        // Try to load from file first
-        loadFromFile().catch(error => {
-            debugLog(`Auto-load failed: ${error.message}`, 'error');
-            debugLog('Using fallback data...', 'info');
-            useEmbeddedData();
-        });
+        // Auto-refresh every 5 minutes (only if live data)
+        setInterval(async () => {
+            if (dataSource === 'live') {
+                console.log('🔄 Auto-refreshing data...');
+                await fetchData();
+            }
+        }, 300000);
     </script>
 </body>
 </html>
