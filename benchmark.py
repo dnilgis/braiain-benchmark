@@ -507,7 +507,8 @@ def update_json():
             continue
 
     if results:
-        results.sort(key=lambda x: x['time'])
+        # Sort: Online providers first (by time), then failed providers (by name)
+        results.sort(key=lambda x: (x['status'] != 'Online', x['time'] if x['status'] == 'Online' else 999, x['provider']))
     else:
         print("WARNING: No successful API tests. Creating empty data file.")
         results = []
