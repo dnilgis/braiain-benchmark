@@ -11,12 +11,6 @@
     <meta name="author" content="Braiain AI Speed Index">
     <meta name="robots" content="index, follow">
     
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yourdomain.com/">
-    <meta property="og:title" content="Braiain AI Speed Index - Real-Time LLM Performance">
-    <meta property="og:description" content="Daily automated benchmarks of AI model speed, TPS, and cost across OpenAI, Anthropic, Google, and Groq.">
-    
     <!-- Google Analytics GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-1Y5SESHWEE"></script>
     <script>
@@ -28,15 +22,42 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
+        :root {
+            --bg-primary: #f5f5f7;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f9f9f9;
+            --text-primary: #1c1c1c;
+            --text-secondary: #555;
+            --text-tertiary: #777;
+            --border-color: #e0e0e0;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 6px 16px rgba(0,0,0,0.15);
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #252525;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #888;
+            --border-color: #404040;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --shadow-lg: 0 6px 16px rgba(0,0,0,0.5);
+        }
+        
         * { box-sizing: border-box; }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f7;
-            color: #1c1c1c;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
         }
         
         header {
@@ -45,10 +66,63 @@
             text-align: center;
             padding: 30px 20px 20px;
             margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
         }
         
         h1 { font-size: 2.4em; margin: 0 0 8px 0; }
         .tagline { font-size: 1.1em; color: #c0c0c0; margin: 0; }
+        
+        .controls-bar {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 15px 20px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .filter-btn, .sort-btn {
+            padding: 8px 16px;
+            border: 2px solid #2196f3;
+            background: var(--bg-secondary);
+            color: #2196f3;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.9em;
+        }
+        
+        .filter-btn.active, .sort-btn.active {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .filter-btn:hover, .sort-btn:hover {
+            transform: translateY(-2px);
+        }
         
         .about-section { 
             max-width: 1200px; 
@@ -57,10 +131,10 @@
         }
         
         h2 { 
-            color: #333; 
+            color: var(--text-primary);
             font-size: 1.5em; 
             margin-top: 30px; 
-            border-bottom: 2px solid #e0e0e0; 
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 8px; 
         }
         
@@ -97,13 +171,13 @@
         }
 
         .model-card {
-            background-color: #ffffff;
-            border: 1px solid #e0e0e0;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 20px;
             width: 100%;
             max-width: 360px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-md);
             display: flex;
             flex-direction: column;
             transition: transform 0.2s, box-shadow 0.2s;
@@ -111,14 +185,14 @@
         
         .model-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
         }
 
         .card-header {
             display: flex;
             align-items: center;
             margin-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
         }
         
@@ -160,7 +234,7 @@
         }
         
         .card-provider { font-size: 1.3em; font-weight: 700; }
-        .card-model { font-size: 0.9em; color: #555; word-break: break-word; }
+        .card-model { font-size: 0.9em; color: var(--text-secondary); word-break: break-word; }
 
         .stats-wrapper {
             display: grid;
@@ -183,7 +257,7 @@
         
         .stat-label { 
             font-size: 0.75em; 
-            color: #777; 
+            color: var(--text-tertiary);
             text-transform: uppercase; 
             margin-bottom: 5px;
             font-weight: 600;
@@ -208,6 +282,55 @@
         .cost-free { background-color: #e8f5e9; color: #2e7d32; }
         .cost-cheap { background-color: #fff3e0; color: #f57c00; }
         .cost-expensive { background-color: #ffebee; color: #c62828; }
+
+        /* RESPONSE PREVIEW */
+        .response-preview {
+            margin: 15px 0;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            border-left: 3px solid #2196f3;
+            font-size: 0.85em;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            max-height: 60px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: max-height 0.3s, box-shadow 0.3s;
+        }
+        
+        .response-preview.expanded {
+            max-height: 500px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+        
+        .response-preview::after {
+            content: '👁️ Click to view response';
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 0.75em;
+            color: #2196f3;
+            font-weight: 600;
+        }
+        
+        .response-preview.expanded::after {
+            content: '👁️ Click to collapse';
+        }
+        
+        .char-count-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .char-ok { background: #e8f5e9; color: #2e7d32; }
+        .char-warn { background: #fff3cd; color: #856404; }
+        .char-over { background: #ffebee; color: #c62828; }
 
         .badge-container {
             display: flex;
@@ -254,19 +377,18 @@
             text-align: center; 
             margin: 30px auto; 
             font-size: 1em; 
-            color: #666; 
+            color: var(--text-tertiary);
             padding: 0 20px;
         }
         
-        /* ADSENSE CONTAINER */
         .adsense-container {
             max-width: 1200px;
             margin: 40px auto;
             padding: 20px;
             text-align: center;
-            background: #f9f9f9;
+            background: var(--bg-tertiary);
             border-radius: 8px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid var(--border-color);
         }
         
         .adsense-label {
@@ -277,14 +399,13 @@
             letter-spacing: 1px;
         }
         
-        /* CHART SECTION */
         .chart-section {
             max-width: 1200px;
             margin: 40px auto;
             padding: 20px;
-            background: white;
+            background: var(--bg-secondary);
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-sm);
         }
         
         .chart-container {
@@ -304,7 +425,7 @@
         .chart-btn {
             padding: 8px 16px;
             border: 2px solid #2196f3;
-            background: white;
+            background: var(--bg-secondary);
             color: #2196f3;
             border-radius: 6px;
             cursor: pointer;
@@ -336,7 +457,7 @@
 
         .loading-container { width: 100%; text-align: center; padding: 40px 20px; }
         .loading-spinner {
-            border: 4px solid #f3f3f3;
+            border: 4px solid var(--border-color);
             border-top: 4px solid #007bff;
             border-radius: 50%;
             width: 50px;
@@ -349,6 +470,35 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85em;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
 
         @media (max-width: 768px) {
             h1 { font-size: 1.8em; }
@@ -356,11 +506,14 @@
             .stats-wrapper { grid-template-columns: repeat(2, 1fr); }
             .stat-group:last-child { grid-column: 1 / -1; }
             .chart-container { height: 300px; }
+            .controls-bar { flex-direction: column; }
+            .theme-toggle { position: static; margin: 10px auto; }
         }
     </style>
 </head>
 <body>
     <header>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">🌓</button>
         <h1>🤖 Braiain AI Speed Index</h1>
         <p class="tagline">Real-World LLM Speed, Cost & Performance Tracking</p>
     </header>
@@ -372,6 +525,22 @@
             Welcome to the <strong>Braiain Speed Index</strong>, featuring automated daily benchmarks of <strong>API speed, tokens-per-second, and cost efficiency</strong> across major AI providers. <strong>Make informed decisions with real data.</strong>
         </p>
     </section>
+
+    <!-- CONTROLS BAR -->
+    <div class="controls-bar">
+        <div style="flex: 1; min-width: 200px;">
+            <strong>Filter:</strong>
+            <button class="filter-btn active" onclick="filterResults('all')">All</button>
+            <button class="filter-btn" onclick="filterResults('online')">Online Only</button>
+            <button class="filter-btn" onclick="filterResults('free')">Free Only</button>
+        </div>
+        <div style="flex: 1; min-width: 200px;">
+            <strong>Sort:</strong>
+            <button class="sort-btn active" onclick="sortResults('speed')">⚡ Speed</button>
+            <button class="sort-btn" onclick="sortResults('tps')">🚀 TPS</button>
+            <button class="sort-btn" onclick="sortResults('cost')">💰 Cost</button>
+        </div>
+    </div>
 
     <!-- LEADERBOARD CARDS -->
     <div class="leaderboard-cards-wrapper" id="results-container">
@@ -390,7 +559,6 @@
         <div class="adsense-label">Advertisement</div>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2906493623732277"
              crossorigin="anonymous"></script>
-        <!-- Braiain Speed Index Ad -->
         <ins class="adsbygoogle"
              style="display:block"
              data-ad-client="ca-pub-2906493623732277"
@@ -402,10 +570,10 @@
         </script>
     </div>
 
-    <!-- TREND CHART SECTION (Below cards and ads) -->
+    <!-- TREND CHART SECTION -->
     <section class="chart-section" id="chart-section" style="display: none;">
         <h2>📈 Performance Trends</h2>
-        <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">Historical speed comparison - lower is better</p>
+        <p style="color: var(--text-tertiary); font-size: 0.9em; margin-bottom: 10px;">Historical speed comparison - lower is better</p>
         
         <div class="chart-controls">
             <button class="chart-btn active" onclick="updateChartRange(7)">7 Days</button>
@@ -429,27 +597,26 @@
             <li><strong>Speed (seconds):</strong> Total time from request to response - lower is better</li>
             <li><strong>TPS (Tokens Per Second):</strong> Throughput metric - higher is better</li>
             <li><strong>Cost Per Request:</strong> Approximate cost based on current API pricing</li>
+            <li><strong>Character Count:</strong> Length of response (target: ≤1200 characters)</li>
         </ul>
     </section>
 
     <footer id="site-footer">
-        <div>A <a href="/cdn-cgi/l/email-protection#482c2621242f213b082f25292124662b2725">dnilgis</a> project.</div>
+        <div>A <a href="mailto:dnilgis@gmail.com">dnilgis</a> project.</div>
         <div class="legal-text">
             <strong>Legal Disclaimer:</strong> Benchmark data provided for informational purposes only. Pricing and performance may vary. All product names and brands are property of their respective owners.
         </div>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // [Full JavaScript code - same as above but with Analytics tracking]
-        // This is the complete code with fallback data, charts, and all features
-        
+    <script>
+        // EMBEDDED FALLBACK DATA
         const FALLBACK_DATA = {
             "last_updated": "2025-11-28 21:56:17 UTC",
             "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030. CRITICAL: Your response must not exceed 1200 characters (about 300 tokens). Complete all sentences and provide a proper conclusion. Do not cut off mid-sentence - plan your response to fit within this character limit.",
             "max_tokens": 300,
             "results": [
-                {"provider": "Groq", "model": "Llama 3.1 70B", "time": 1.1861, "status": "Online", "response_preview": "The history of the internet began in the 1960s...", "tokens_per_second": 403.84, "output_tokens": 479, "character_count": 1150, "cost_per_request": 0.0},
-                {"provider": "OpenAI", "model": "GPT-4o Mini", "time": 10.2888, "status": "Online", "response_preview": "The history of the internet dates back to the 1960s...", "tokens_per_second": 29.16, "output_tokens": 300, "character_count": 985, "cost_per_request": 0.000185},
+                {"provider": "Groq", "model": "Llama 3.1 70B", "time": 1.1861, "status": "Online", "response_preview": "The history of the internet began in the 1960s with ARPANET, a project funded by the US Department of Defense to create a network of computers that could communicate with each other. This pioneering effort laid the groundwork for the modern internet. In the 1980s, the Internet Protocol Suite (TCP/IP) was developed, allowing different networks to interconnect and forming the basis of the internet as we know it today. The 1990s saw the rapid expansion of the World Wide Web, email, and online services, transforming the internet into a global phenomenon.\n\nBy 2030, the internet is expected to be even more pervasive, with the proliferation of the Internet of Things (IoT), artificial intelligence, and 5G networks. We can anticipate seamless connectivity, augmented reality experiences, and unprecedented access to information and services worldwide.", "tokens_per_second": 403.84, "output_tokens": 479, "character_count": 1150, "cost_per_request": 0.0},
+                {"provider": "OpenAI", "model": "GPT-4o Mini", "time": 10.2888, "status": "Online", "response_preview": "The internet's history began in the 1960s with ARPANET, funded by the U.S. Department of Defense to enable communication between computers. By the 1980s, TCP/IP protocols standardized data transmission, paving the way for widespread connectivity. The 1990s introduced the World Wide Web, developed by Tim Berners-Lee, revolutionizing how information was accessed and shared globally.\n\nThe 2000s saw rapid expansion with social media, e-commerce, and mobile internet transforming daily life. Innovations like cloud computing, streaming services, and smartphones made the internet indispensable for communication, entertainment, and business.\n\nBy 2030, the internet will likely feature ubiquitous AI integration, enhanced virtual and augmented reality experiences, and seamless IoT connectivity, fundamentally reshaping how we interact with technology and each other.", "tokens_per_second": 29.16, "output_tokens": 300, "character_count": 985, "cost_per_request": 0.000185},
                 {"provider": "Anthropic", "model": "Claude 3.5 Sonnet", "time": 99.9999, "status": "API FAILURE", "response_preview": "All model versions failed", "tokens_per_second": 0, "output_tokens": 0, "character_count": 0, "cost_per_request": null},
                 {"provider": "Google", "model": "Gemini 1.5 Pro", "time": 99.9999, "status": "API FAILURE", "response_preview": "All model versions failed", "tokens_per_second": 0, "output_tokens": 0, "character_count": 0, "cost_per_request": null}
             ],
@@ -469,6 +636,24 @@
         const PROVIDER_COLORS = {"OpenAI": "#10a37f", "Anthropic": "#d97757", "Google": "#4285f4", "Groq": "#f55036", "Mistral AI": "#ff7000", "Cohere": "#39594d", "Together AI": "#6366f1"};
 
         let dataSource = "loading", trendChart = null, currentChartRange = 7, fullHistoryData = [];
+        let currentFilter = 'all', currentSort = 'speed', allResults = [];
+
+        // THEME TOGGLE
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'theme_toggle', {event_category: 'ui', event_label: newTheme});
+            }
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
 
         function setDataSourceIndicator(source, data) {
             const indicator = document.getElementById("data-source-indicator");
@@ -481,6 +666,17 @@
         function getTpsClass(tps) { return tps > 60 ? "tps-fast" : tps > 30 ? "tps-medium" : "tps-slow"; }
         function getCostClass(cost) { return cost === null || cost === 0 ? "cost-free" : cost < 0.001 ? "cost-cheap" : "cost-expensive"; }
         function formatCost(cost) { return cost === null ? "N/A" : cost === 0 ? "FREE" : cost < 0.0001 ? "<$0.0001" : `$${cost.toFixed(4)}`; }
+        
+        function getCharCountClass(charCount) {
+            if (!charCount || charCount === 0) return 'char-ok';
+            if (charCount <= 1200) return 'char-ok';
+            if (charCount <= 1400) return 'char-warn';
+            return 'char-over';
+        }
+
+        function toggleResponse(element) {
+            element.classList.toggle('expanded');
+        }
 
         function createTrendChart(history, range = 7) {
             const ctx = document.getElementById("trendChart"), chartSection = document.getElementById("chart-section");
@@ -534,8 +730,16 @@
         function createModelCard(result, rank, badges) {
             const card = document.createElement("div");
             card.className = "model-card";
-            const isOnline = result.status === "Online", speedClass = getSpeedClass(result.time, isOnline), tpsClass = getTpsClass(result.tokens_per_second), costClass = getCostClass(result.cost_per_request);
-            const timeDisplay = isOnline ? `${result.time.toFixed(2)}s` : "N/A", tpsDisplay = isOnline ? result.tokens_per_second.toFixed(0) : "N/A", rankClass = (isOnline && rank <= 3) ? ` rank-${rank}` : "";
+            const isOnline = result.status === "Online";
+            const speedClass = getSpeedClass(result.time, isOnline);
+            const tpsClass = getTpsClass(result.tokens_per_second);
+            const costClass = getCostClass(result.cost_per_request);
+            const charClass = getCharCountClass(result.character_count);
+            
+            const timeDisplay = isOnline ? `${result.time.toFixed(2)}s` : "N/A";
+            const tpsDisplay = isOnline ? result.tokens_per_second.toFixed(0) : "N/A";
+            const rankClass = (isOnline && rank <= 3) ? ` rank-${rank}` : "";
+            
             const providerBadges = badges[result.provider] || [];
             let badgesHTML = "";
             if (providerBadges.length > 0) {
@@ -546,21 +750,132 @@
                 });
                 badgesHTML += "</div>";
             }
+            
             const link = AFFILIATE_LINKS[result.provider];
             const affiliateButtonHTML = isOnline ? `<a href="${link}" target="_blank" rel="noopener" class="affiliate-btn">Try ${result.provider}</a>` : '<div class="affiliate-btn" style="background-color: #c62828; cursor: not-allowed;">Currently Offline</div>';
-            card.innerHTML = `<div class="card-header"><span class="rank-badge${rankClass}">#${rank}</span><div class="provider-model-wrapper"><div class="card-provider">${escapeHtml(result.provider)}</div><div class="card-model">${escapeHtml(result.model)}</div></div></div>${badgesHTML}<div class="stats-wrapper"><div class="stat-group"><div class="stat-label">Speed</div><div class="stat-value ${speedClass}">${timeDisplay}</div></div><div class="stat-group"><div class="stat-label">TPS</div><div class="stat-value ${tpsClass}">${tpsDisplay}</div></div><div class="stat-group"><div class="stat-label">Status</div><div class="stat-value ${isOnline ? "status-online" : "status-error"}">${escapeHtml(result.status)}</div></div></div><div style="text-align: center;"><div class="stat-label">Cost Per Request</div><div class="cost-badge ${costClass}">${formatCost(result.cost_per_request)}</div></div>${affiliateButtonHTML}`;
+            
+            const responseHTML = isOnline && result.response_preview ? 
+                `<div class="response-preview" onclick="toggleResponse(this)">
+                    ${escapeHtml(result.response_preview)}
+                </div>` : '';
+            
+            const charCountHTML = result.character_count ? 
+                `<span class="char-count-badge ${charClass}">${result.character_count} chars</span>` : '';
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="rank-badge${rankClass}">#${rank}</span>
+                    <div class="provider-model-wrapper">
+                        <div class="card-provider">${escapeHtml(result.provider)}</div>
+                        <div class="card-model">${escapeHtml(result.model)}${charCountHTML}</div>
+                    </div>
+                </div>
+                
+                ${badgesHTML}
+                ${responseHTML}
+                
+                <div class="stats-wrapper">
+                    <div class="stat-group">
+                        <div class="stat-label">Speed</div>
+                        <div class="stat-value ${speedClass}">${timeDisplay}</div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">TPS</div>
+                        <div class="stat-value ${tpsClass}">${tpsDisplay}</div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">Status</div>
+                        <div class="stat-value ${isOnline ? "status-online" : "status-error"}">
+                            ${escapeHtml(result.status)}
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div class="stat-label">Cost Per Request</div>
+                    <div class="cost-badge ${costClass}">${formatCost(result.cost_per_request)}</div>
+                </div>
+                
+                ${affiliateButtonHTML}
+            `;
+            
             return card;
         }
 
+        function filterResults(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            displayResults({...allResults, results: getFilteredAndSortedResults()}, dataSource);
+        }
+
+        function sortResults(sortBy) {
+            currentSort = sortBy;
+            document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            displayResults({...allResults, results: getFilteredAndSortedResults()}, dataSource);
+        }
+
+        function getFilteredAndSortedResults() {
+            let filtered = [...allResults.results];
+            
+            // Filter
+            if (currentFilter === 'online') {
+                filtered = filtered.filter(r => r.status === 'Online');
+            } else if (currentFilter === 'free') {
+                filtered = filtered.filter(r => r.cost_per_request === 0 || r.cost_per_request === null);
+            }
+            
+            // Sort
+            if (currentSort === 'speed') {
+                filtered.sort((a, b) => {
+                    if (a.status !== 'Online') return 1;
+                    if (b.status !== 'Online') return -1;
+                    return a.time - b.time;
+                });
+            } else if (currentSort === 'tps') {
+                filtered.sort((a, b) => {
+                    if (a.status !== 'Online') return 1;
+                    if (b.status !== 'Online') return -1;
+                    return b.tokens_per_second - a.tokens_per_second;
+                });
+            } else if (currentSort === 'cost') {
+                filtered.sort((a, b) => {
+                    if (a.status !== 'Online') return 1;
+                    if (b.status !== 'Online') return -1;
+                    const costA = a.cost_per_request === null ? 0 : a.cost_per_request;
+                    const costB = b.cost_per_request === null ? 0 : b.cost_per_request;
+                    return costA - costB;
+                });
+            }
+            
+            return filtered;
+        }
+
         function displayResults(data, source = "live") {
-            const container = document.getElementById("results-container"), lastUpdated = document.getElementById("last-updated");
+            const container = document.getElementById("results-container");
+            const lastUpdated = document.getElementById("last-updated");
+            
             dataSource = source;
             setDataSourceIndicator(source, data);
+            
             if (data.last_updated) lastUpdated.textContent = `Last Updated: ${data.last_updated}`;
-            if (!data.results || data.results.length === 0) { container.innerHTML = '<div style="text-align: center; padding: 40px;">No results available</div>'; return; }
-            const badges = calculateBadges(data.results);
+            if (!data.results || data.results.length === 0) { 
+                container.innerHTML = '<div style="text-align: center; padding: 40px;">No results available</div>'; 
+                return; 
+            }
+            
+            allResults = data;
+            const results = getFilteredAndSortedResults();
+            const badges = calculateBadges(results);
+            
             container.innerHTML = "";
-            data.results.forEach((result, index) => { const rank = index + 1; const card = createModelCard(result, rank, badges); container.appendChild(card); });
+            results.forEach((result, index) => {
+                const rank = index + 1;
+                const card = createModelCard(result, rank, badges);
+                container.appendChild(card);
+            });
+            
             if (data.history && data.history.length >= 2) createTrendChart(data.history, currentChartRange);
         }
 
@@ -587,9 +902,11 @@
 
         console.log("🚀 Braiain Speed Index initializing...");
         fetchData();
-        setInterval(async () => { if (dataSource === "live") { console.log("🔄 Auto-refreshing data..."); await fetchData(); } }, 21600000); // 6 hours
+        setInterval(async () => { if (dataSource === "live") { console.log("🔄 Auto-refreshing data..."); await fetchData(); } }, 21600000);
     </script>
     
-    <!-- Schema.org structured data for SEO -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "WebApplication", "name": "Braiain AI Speed Index", "description": "Daily automated benchmarks of AI model API speed, tokens-per-second, and cost efficiency", "url": "https://yourdomain.com", "applicationCategory": "TechnologyApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "
+    {"@context": "https://schema.org", "@type": "WebApplication", "name": "Braiain AI Speed Index", "description": "Daily automated benchmarks of AI model API speed, tokens-per-second, and cost efficiency", "url": "https://yourdomain.com", "applicationCategory": "TechnologyApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "dnilgis", "email": "dnilgis@gmail.com"}}
+    </script>
+</body>
+</html>
