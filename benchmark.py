@@ -26,9 +26,10 @@ MODELS = {
     "together": ["meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"]
 }
 
-PROMPT = "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030. CRITICAL: Your response must not exceed 1200 characters (about 300 tokens). Complete all sentences and provide a proper conclusion. Do not cut off mid-sentence - plan your response to fit within this character limit." 
+PROMPT = "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030. STRICT REQUIREMENTS: (1) Your response must be EXACTLY 1000-1200 characters - no more, no less. (2) You MUST end with a complete sentence - no partial thoughts. (3) Count your characters as you write and plan accordingly. (4) If you reach 1150 characters, wrap up your final sentence by character 1200. This is a hard limit - responses outside 1000-1200 characters will be rejected." 
 MAX_TOKENS = 300
-MAX_CHARACTERS = 1200  # Approximately 4 chars per token 
+MAX_CHARACTERS = 1200  # Approximately 4 chars per token
+MIN_CHARACTERS = 1000  # Minimum to ensure substance 
 TIMEOUT = 30
 MAX_RETRIES = 2
 
@@ -77,6 +78,18 @@ def calculate_cost(model_name, input_tokens, output_tokens):
     input_cost = (input_tokens / 1_000_000) * pricing["input"]
     output_cost = (output_tokens / 1_000_000) * pricing["output"]
     return round(input_cost + output_cost, 6)
+
+def validate_character_count(char_count, model_name):
+    """Validate character count and print appropriate message"""
+    if char_count < MIN_CHARACTERS:
+        print(f"  ⚠️  Response too short: {char_count} chars (minimum: {MIN_CHARACTERS})")
+        return False
+    elvalidate_character_count(char_count, model)
+        print(f"  ⚠️  Response too long: {char_count} chars (maximum: {MAX_CHARACTERS})")
+        return False
+    else:
+        print(f"  ✓ Character count within range: {char_count} chars")
+        return True
 
 def make_request_with_retry(request_func, max_retries=MAX_RETRIES):
     for attempt in range(max_retries):
@@ -143,8 +156,7 @@ def test_openai(api_key):
             cost = calculate_cost(model, input_tokens, output_tokens)
             
             print(f"  ✓ Successfully used model: {model}")
-            if char_count > MAX_CHARACTERS:
-                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
+            validate_character_count(char_count, model)
             
             return {
                 "provider": "OpenAI",
@@ -246,8 +258,7 @@ def test_anthropic(api_key):
             cost = calculate_cost(model, input_tokens, output_tokens)
             
             print(f"  ✓ Successfully used model: {model}")
-            if char_count > MAX_CHARACTERS:
-                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
+            validate_character_count(char_count, model)
             
             return {
                 "provider": "Anthropic",
@@ -345,8 +356,7 @@ def test_google(api_key):
             cost = 0.0  # Google is free
             
             print(f"  ✓ Successfully used model: {model_name}")
-            if char_count > MAX_CHARACTERS:
-                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
+            validate_character_count(char_count, model)
             
             return {
                 "provider": "Google",
@@ -449,8 +459,7 @@ def test_groq(api_key):
             cost = 0.0  # Groq is free
             
             print(f"  ✓ Successfully used model: {model}")
-            if char_count > MAX_CHARACTERS:
-                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
+            validate_character_count(char_count, model)
             
             return {
                 "provider": "Groq",
@@ -551,8 +560,7 @@ def test_mistral(api_key):
             cost = calculate_cost(model, input_tokens, output_tokens)
             
             print(f"  ✓ Successfully used model: {model}")
-            if char_count > MAX_CHARACTERS:
-                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
+            validate_character_count(char_count, model)
             
             return {
                 "provider": "Mistral AI",
@@ -652,8 +660,7 @@ def test_cohere(api_key):
             cost = calculate_cost(model, input_tokens, output_tokens)
             
             print(f"  ✓ Successfully used model: {model}")
-            if char_count > MAX_CHARACTERS:
-                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
+            validate_character_count(char_count, model)
             
             return {
                 "provider": "Cohere",
@@ -753,8 +760,7 @@ def test_together(api_key):
         cost = calculate_cost(model, input_tokens, output_tokens)
         
         print(f"  ✓ Successfully used model: {model}")
-        if char_count > MAX_CHARACTERS:
-            print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
+        validate_character_count(char_count, model)
         
         return {
             "provider": "Together AI",
