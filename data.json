@@ -1,29 +1,31 @@
 {
-    "last_updated": "2025-11-29 18:47:02 UTC",
-    "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030.",
+    "last_updated": "2025-11-29 18:47:38 UTC",
+    "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030. CRITICAL: Your response must not exceed 1200 characters (about 300 tokens). Complete all sentences and provide a proper conclusion. Do not cut off mid-sentence - plan your response to fit within this character limit.",
     "max_tokens": 300,
     "results": [
         {
             "provider": "Groq",
             "model": "Llama 3.1 70B",
-            "time": 1.3454,
+            "time": 0.6779,
             "status": "Online",
-            "response_preview": "The history of the internet began in the 1960s with the United States Department of Defense's Advanced Research Projects Agency (ARPA), which funded a...",
-            "full_response": "The history of the internet began in the 1960s with the United States Department of Defense's Advanced Research Projects Agency (ARPA), which funded a project to create a network of computers that could communicate with each other. This project, called ARPANET, was the first operational packet switching network, and it was developed in the late 1960s and early 1970s by Vint Cerf and Bob Kahn, who are often referred to as the \"fathers of the internet.\" In the 1980s, the Internet Protocol (IP) was developed, allowing different computer networks to communicate with each other and forming the basis of the modern internet. The internet was initially used by government and academic researchers, but it soon expanded to other areas, including businesses and individuals.\n\nThe widespread adoption of the internet by the general public began in the 1990s, with the development of the World Wide Web (WWW) by Tim Berners-Lee. The WWW made it easy for people to access and share information using web browsers and hyperlinks, and it quickly became a popular way for people to communicate, shop, and access information. The internet continued to grow and evolve throughout the 2000s, with the development of new technologies such as social media, online streaming, and cloud computing. The internet also became more mobile, with the widespread adoption of smartphones and other mobile devices. Today, the internet is an essential part of modern life, with billions of people around the world using it to communicate, work, and access information.\n\nAs the internet continues to evolve, it is likely that it will become even more integrated into our daily lives. By 2030, it is predicted that the internet will be even more ubiquitous, with the Internet of Things (IoT) connecting billions of devices and objects to the internet. Artificial intelligence (AI) and machine learning will also play a larger role in shaping the internet, with AI-powered assistants and algorithms helping to personalize and optimize our online experiences. Additionally, the rise of 5G networks and edge computing will enable faster and more reliable internet connections, making it possible for people to access high-quality video and other bandwidth-intensive content from anywhere. Overall, the future of the internet looks bright, with new technologies and innovations emerging all the time to shape and transform the way we live, work, and communicate online.",
-            "tokens_per_second": 355.28,
-            "output_tokens": 478,
+            "response_preview": "The internet began as ARPANET in 1969. It connected US universities and research centers.  In the 1990s, the World Wide Web was developed, making the ...",
+            "full_response": "The internet began as ARPANET in 1969. It connected US universities and research centers.\n\nIn the 1990s, the World Wide Web was developed, making the internet accessible to the public. Broadband internet became widespread in the 2000s.\n\nBy 2030, the internet is expected to be even more integrated into daily life, with increased use of AI and IoT devices.",
+            "tokens_per_second": 120.96,
+            "output_tokens": 82,
+            "character_count": 356,
             "cost_per_request": 0.0
         },
         {
             "provider": "OpenAI",
             "model": "GPT-4o Mini",
-            "time": 8.4699,
+            "time": 7.7327,
             "status": "Online",
-            "response_preview": "The history of the internet began in the late 1960s when the ARPANET was developed by the U.S. Department of Defense as a means of allowing different ...",
-            "full_response": "The history of the internet began in the late 1960s when the ARPANET was developed by the U.S. Department of Defense as a means of allowing different computer networks to communicate with each other. This pioneering project laid the foundation for modern internet protocols. The introduction of the Transmission Control Protocol (TCP) and Internet Protocol (IP) in the 1970s enabled diverse networks to interconnect, setting the stage for the growth of a global network. By the early 1980s, the domain name system (DNS) was established, making it easier to access websites, while the invention of the World Wide Web by Tim Berners-Lee in 1989 further revolutionized online interaction by allowing users to navigate through linked multimedia content.\n\nThe 1990s marked a significant expansion of the internet into public consciousness. The launch of user-friendly web browsers, such as Mosaic, made the internet accessible to a wider audience, facilitating a surge in website creation and online content. E-commerce emerged as a new frontier, with companies like Amazon and eBay capitalizing on the internet's potential for commerce. By the turn of the millennium, social media platforms began to take shape, with sites like Friendster and MySpace paving the way for a new era of online social interaction. As internet usage became nearly ubiquitous, issues related to privacy, security, and digital inequality started to gain prominence.\n\nLooking forward to 2030, the internet is poised to evolve further with the integration of advanced technologies",
-            "tokens_per_second": 35.42,
-            "output_tokens": 300,
-            "cost_per_request": 0.000185
+            "response_preview": "The history of the internet began in the late 1960s, when ARPANET, a project funded by the U.S. Department of Defense, connected four universities. Th...",
+            "full_response": "The history of the internet began in the late 1960s, when ARPANET, a project funded by the U.S. Department of Defense, connected four universities. This network used packet-switching technology, allowing multiple computers to communicate, which laid the foundation for modern networking. Throughout the 1970s and 1980s, protocols like TCP/IP were developed, enabling diverse networks to interconnect. By the early 1990s, the introduction of the World Wide Web by Tim Berners-Lee transformed the internet into a user-friendly platform, sparking rapid growth and commercial interest.\n\nIn the late 1990s and 2000s, the internet became a global phenomenon, with the rise of search engines, social media, and e-commerce. Companies like Google and Amazon revolutionized how information and goods were accessed. The early 2010s saw the advent of mobile internet and the proliferation of smartphones, further integrating internet usage into daily life. Concerns about privacy, cybersecurity, and digital divides emerged, prompting ongoing discussions about regulation and equitable access.\n\nLooking ahead to 2030, the internet is poised to evolve with advancements in artificial intelligence, IoT, and 5G technology. Hyperconnectivity will transform industries and daily routines, enhancing the capabilities of smart cities and telemedicine. However, challenges such as data privacy and cybersecurity will necessitate robust governance. The next decade may redefine interaction and innovation, driving humanity toward an even more interconnected future.",
+            "tokens_per_second": 38.41,
+            "output_tokens": 297,
+            "character_count": 1545,
+            "cost_per_request": 0.00019
         },
         {
             "provider": "Anthropic",
@@ -49,29 +51,6 @@
         }
     ],
     "history": [
-        {
-            "timestamp": "2025-11-26 23:42:49 UTC",
-            "results": {
-                "Google": {
-                    "time": 0.1211,
-                    "tps": 0,
-                    "status": "API FAILURE",
-                    "cost": null
-                },
-                "Anthropic": {
-                    "time": 0.1478,
-                    "tps": 0,
-                    "status": "API FAILURE",
-                    "cost": null
-                },
-                "OpenAI": {
-                    "time": 6.2712,
-                    "tps": 47.84,
-                    "status": "Online",
-                    "cost": 0.000185
-                }
-            }
-        },
         {
             "timestamp": "2025-11-27 00:17:51 UTC",
             "results": {
@@ -880,6 +859,35 @@
                     "tps": 35.42,
                     "status": "Online",
                     "cost": 0.000185
+                },
+                "Anthropic": {
+                    "time": 99.9999,
+                    "tps": 0,
+                    "status": "API FAILURE",
+                    "cost": null
+                },
+                "Google": {
+                    "time": 99.9999,
+                    "tps": 0,
+                    "status": "API FAILURE",
+                    "cost": null
+                }
+            }
+        },
+        {
+            "timestamp": "2025-11-29 18:47:38 UTC",
+            "results": {
+                "Groq": {
+                    "time": 0.6779,
+                    "tps": 120.96,
+                    "status": "Online",
+                    "cost": 0.0
+                },
+                "OpenAI": {
+                    "time": 7.7327,
+                    "tps": 38.41,
+                    "status": "Online",
+                    "cost": 0.00019
                 },
                 "Anthropic": {
                     "time": 99.9999,
