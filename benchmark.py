@@ -84,7 +84,7 @@ def validate_character_count(char_count, model_name):
     if char_count < MIN_CHARACTERS:
         print(f"  ⚠️  Response too short: {char_count} chars (minimum: {MIN_CHARACTERS})")
         return False
-    elvalidate_character_count(char_count, model)
+    elif char_count > MAX_CHARACTERS:
         print(f"  ⚠️  Response too long: {char_count} chars (maximum: {MAX_CHARACTERS})")
         return False
     else:
@@ -356,7 +356,8 @@ def test_google(api_key):
             cost = 0.0  # Google is free
             
             print(f"  ✓ Successfully used model: {model_name}")
-            validate_character_count(char_count, model)
+            if char_count > MAX_CHARACTERS:
+                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
             
             return {
                 "provider": "Google",
@@ -760,7 +761,8 @@ def test_together(api_key):
         cost = calculate_cost(model, input_tokens, output_tokens)
         
         print(f"  ✓ Successfully used model: {model}")
-        validate_character_count(char_count, model)
+        if char_count > MAX_CHARACTERS:
+            print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
         
         return {
             "provider": "Together AI",
