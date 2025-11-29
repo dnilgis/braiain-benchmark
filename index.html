@@ -433,25 +433,25 @@
     </section>
 
     <footer id="site-footer">
-        <div>A <a href="mailto:dnilgis@gmail.com">dnilgis</a> project.</div>
+        <div>A <a href="/cdn-cgi/l/email-protection#482c2621242f213b082f25292124662b2725">dnilgis</a> project.</div>
         <div class="legal-text">
             <strong>Legal Disclaimer:</strong> Benchmark data provided for informational purposes only. Pricing and performance may vary. All product names and brands are property of their respective owners.
         </div>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // [Full JavaScript code - same as above but with Analytics tracking]
         // This is the complete code with fallback data, charts, and all features
         
         const FALLBACK_DATA = {
             "last_updated": "2025-11-28 21:56:17 UTC",
-            "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030.",
+            "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030. CRITICAL: Your response must not exceed 1200 characters (about 300 tokens). Complete all sentences and provide a proper conclusion. Do not cut off mid-sentence - plan your response to fit within this character limit.",
             "max_tokens": 300,
             "results": [
-                {"provider": "Groq", "model": "Llama 3.1 70B", "time": 1.1861, "status": "Online", "response_preview": "The history of the internet began in the 1960s...", "tokens_per_second": 403.84, "output_tokens": 479, "cost_per_request": 0.0},
-                {"provider": "OpenAI", "model": "GPT-4o Mini", "time": 10.2888, "status": "Online", "response_preview": "The history of the internet dates back to the 1960s...", "tokens_per_second": 29.16, "output_tokens": 300, "cost_per_request": 0.000185},
-                {"provider": "Anthropic", "model": "Claude 3.5 Sonnet", "time": 99.9999, "status": "API FAILURE", "response_preview": "All model versions failed", "tokens_per_second": 0, "output_tokens": 0, "cost_per_request": null},
-                {"provider": "Google", "model": "Gemini 1.5 Pro", "time": 99.9999, "status": "API FAILURE", "response_preview": "All model versions failed", "tokens_per_second": 0, "output_tokens": 0, "cost_per_request": null}
+                {"provider": "Groq", "model": "Llama 3.1 70B", "time": 1.1861, "status": "Online", "response_preview": "The history of the internet began in the 1960s...", "tokens_per_second": 403.84, "output_tokens": 479, "character_count": 1150, "cost_per_request": 0.0},
+                {"provider": "OpenAI", "model": "GPT-4o Mini", "time": 10.2888, "status": "Online", "response_preview": "The history of the internet dates back to the 1960s...", "tokens_per_second": 29.16, "output_tokens": 300, "character_count": 985, "cost_per_request": 0.000185},
+                {"provider": "Anthropic", "model": "Claude 3.5 Sonnet", "time": 99.9999, "status": "API FAILURE", "response_preview": "All model versions failed", "tokens_per_second": 0, "output_tokens": 0, "character_count": 0, "cost_per_request": null},
+                {"provider": "Google", "model": "Gemini 1.5 Pro", "time": 99.9999, "status": "API FAILURE", "response_preview": "All model versions failed", "tokens_per_second": 0, "output_tokens": 0, "character_count": 0, "cost_per_request": null}
             ],
             "history": [
                 {"timestamp": "2025-11-21 00:00:00 UTC", "results": {"Groq": {"time": 2.1, "tps": 220, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 6.5, "tps": 46, "status": "Online", "cost": 0.000185}}},
@@ -473,7 +473,7 @@
         function setDataSourceIndicator(source, data) {
             const indicator = document.getElementById("data-source-indicator");
             indicator.className = "data-source-indicator data-" + source;
-            indicator.innerHTML = source === "live" ? `✅ <strong>Live Data</strong> - Updated: ${data.last_updated} | Auto-refreshes every 5 minutes` : `⚠️ <strong>Using Cached Data</strong> - Last snapshot: ${data.last_updated}`;
+            indicator.innerHTML = source === "live" ? `✅ <strong>Live Data</strong> - Updated: ${data.last_updated} | Auto-refreshes every 6 hours` : `⚠️ <strong>Using Cached Data</strong> - Last snapshot: ${data.last_updated}`;
         }
 
         function escapeHtml(text) { const div = document.createElement("div"); div.textContent = text; return div.innerHTML; }
@@ -587,12 +587,9 @@
 
         console.log("🚀 Braiain Speed Index initializing...");
         fetchData();
-        setInterval(async () => { if (dataSource === "live") { console.log("🔄 Auto-refreshing data..."); await fetchData(); } }, 300000);
+        setInterval(async () => { if (dataSource === "live") { console.log("🔄 Auto-refreshing data..."); await fetchData(); } }, 21600000); // 6 hours
     </script>
     
     <!-- Schema.org structured data for SEO -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "WebApplication", "name": "Braiain AI Speed Index", "description": "Daily automated benchmarks of AI model API speed, tokens-per-second, and cost efficiency", "url": "https://yourdomain.com", "applicationCategory": "TechnologyApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "dnilgis", "email": "dnilgis@gmail.com"}}
-    </script>
-</body>
-</html>
+    {"@context": "https://schema.org", "@type": "WebApplication", "name": "Braiain AI Speed Index", "description": "Daily automated benchmarks of AI model API speed, tokens-per-second, and cost efficiency", "url": "https://yourdomain.com", "applicationCategory": "TechnologyApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "
