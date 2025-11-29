@@ -26,8 +26,9 @@ MODELS = {
     "together": ["meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"]
 }
 
-PROMPT = "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030." 
-MAX_TOKENS = 300 
+PROMPT = "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030. CRITICAL: Your response must not exceed 1200 characters (about 300 tokens). Complete all sentences and provide a proper conclusion. Do not cut off mid-sentence - plan your response to fit within this character limit." 
+MAX_TOKENS = 300
+MAX_CHARACTERS = 1200  # Approximately 4 chars per token 
 TIMEOUT = 30
 MAX_RETRIES = 2
 
@@ -134,6 +135,7 @@ def test_openai(api_key):
             
             response_data = response.json()
             response_text = response_data.get('choices', [{}])[0].get('message', {}).get('content', '')
+            char_count = len(response_text)
             usage = response_data.get('usage', {})
             input_tokens = usage.get('prompt_tokens', PROMPT_TOKENS)
             output_tokens = usage.get('completion_tokens', MAX_TOKENS)
@@ -141,6 +143,8 @@ def test_openai(api_key):
             cost = calculate_cost(model, input_tokens, output_tokens)
             
             print(f"  ✓ Successfully used model: {model}")
+            if char_count > MAX_CHARACTERS:
+                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
             
             return {
                 "provider": "OpenAI",
@@ -151,6 +155,7 @@ def test_openai(api_key):
                 "full_response": response_text,
                 "tokens_per_second": tps,
                 "output_tokens": output_tokens,
+                "character_count": char_count,
                 "cost_per_request": cost
             }
         except requests.exceptions.HTTPError as e:
@@ -233,6 +238,7 @@ def test_anthropic(api_key):
             
             response_data = response.json()
             response_text = response_data.get('content', [{}])[0].get('text', '')
+            char_count = len(response_text)
             usage = response_data.get('usage', {})
             input_tokens = usage.get('input_tokens', PROMPT_TOKENS)
             output_tokens = usage.get('output_tokens', MAX_TOKENS)
@@ -240,6 +246,8 @@ def test_anthropic(api_key):
             cost = calculate_cost(model, input_tokens, output_tokens)
             
             print(f"  ✓ Successfully used model: {model}")
+            if char_count > MAX_CHARACTERS:
+                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
             
             return {
                 "provider": "Anthropic",
@@ -250,6 +258,7 @@ def test_anthropic(api_key):
                 "full_response": response_text,
                 "tokens_per_second": tps,
                 "output_tokens": output_tokens,
+                "character_count": char_count,
                 "cost_per_request": cost
             }
         except requests.exceptions.HTTPError as e:
@@ -328,6 +337,7 @@ def test_google(api_key):
             
             response_data = response.json()
             response_text = response_data.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+            char_count = len(response_text)
             usage = response_data.get('usageMetadata', {})
             input_tokens = usage.get('promptTokenCount', PROMPT_TOKENS)
             output_tokens = usage.get('candidatesTokenCount', MAX_TOKENS)
@@ -335,6 +345,8 @@ def test_google(api_key):
             cost = 0.0  # Google is free
             
             print(f"  ✓ Successfully used model: {model_name}")
+            if char_count > MAX_CHARACTERS:
+                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
             
             return {
                 "provider": "Google",
@@ -345,6 +357,7 @@ def test_google(api_key):
                 "full_response": response_text,
                 "tokens_per_second": tps,
                 "output_tokens": output_tokens,
+                "character_count": char_count,
                 "cost_per_request": cost
             }
         except requests.exceptions.HTTPError as e:
@@ -428,6 +441,7 @@ def test_groq(api_key):
             
             response_data = response.json()
             response_text = response_data.get('choices', [{}])[0].get('message', {}).get('content', '')
+            char_count = len(response_text)
             usage = response_data.get('usage', {})
             input_tokens = usage.get('prompt_tokens', PROMPT_TOKENS)
             output_tokens = usage.get('completion_tokens', MAX_TOKENS)
@@ -435,6 +449,8 @@ def test_groq(api_key):
             cost = 0.0  # Groq is free
             
             print(f"  ✓ Successfully used model: {model}")
+            if char_count > MAX_CHARACTERS:
+                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
             
             return {
                 "provider": "Groq",
@@ -445,6 +461,7 @@ def test_groq(api_key):
                 "full_response": response_text,
                 "tokens_per_second": tps,
                 "output_tokens": output_tokens,
+                "character_count": char_count,
                 "cost_per_request": cost
             }
         except requests.exceptions.HTTPError as e:
@@ -526,6 +543,7 @@ def test_mistral(api_key):
             
             response_data = response.json()
             response_text = response_data.get('choices', [{}])[0].get('message', {}).get('content', '')
+            char_count = len(response_text)
             usage = response_data.get('usage', {})
             input_tokens = usage.get('prompt_tokens', PROMPT_TOKENS)
             output_tokens = usage.get('completion_tokens', MAX_TOKENS)
@@ -533,6 +551,8 @@ def test_mistral(api_key):
             cost = calculate_cost(model, input_tokens, output_tokens)
             
             print(f"  ✓ Successfully used model: {model}")
+            if char_count > MAX_CHARACTERS:
+                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
             
             return {
                 "provider": "Mistral AI",
@@ -543,6 +563,7 @@ def test_mistral(api_key):
                 "full_response": response_text,
                 "tokens_per_second": tps,
                 "output_tokens": output_tokens,
+                "character_count": char_count,
                 "cost_per_request": cost
             }
         except requests.exceptions.HTTPError as e:
@@ -623,6 +644,7 @@ def test_cohere(api_key):
             
             response_data = response.json()
             response_text = response_data.get('text', '')
+            char_count = len(response_text)
             usage = response_data.get('meta', {}).get('billed_units', {})
             input_tokens = usage.get('input_tokens', PROMPT_TOKENS)
             output_tokens = usage.get('output_tokens', MAX_TOKENS)
@@ -630,6 +652,8 @@ def test_cohere(api_key):
             cost = calculate_cost(model, input_tokens, output_tokens)
             
             print(f"  ✓ Successfully used model: {model}")
+            if char_count > MAX_CHARACTERS:
+                print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
             
             return {
                 "provider": "Cohere",
@@ -640,6 +664,7 @@ def test_cohere(api_key):
                 "full_response": response_text,
                 "tokens_per_second": tps,
                 "output_tokens": output_tokens,
+                "character_count": char_count,
                 "cost_per_request": cost
             }
         except requests.exceptions.HTTPError as e:
@@ -720,6 +745,7 @@ def test_together(api_key):
         
         response_data = response.json()
         response_text = response_data.get('choices', [{}])[0].get('message', {}).get('content', '')
+        char_count = len(response_text)
         usage = response_data.get('usage', {})
         input_tokens = usage.get('prompt_tokens', PROMPT_TOKENS)
         output_tokens = usage.get('completion_tokens', MAX_TOKENS)
@@ -727,6 +753,8 @@ def test_together(api_key):
         cost = calculate_cost(model, input_tokens, output_tokens)
         
         print(f"  ✓ Successfully used model: {model}")
+        if char_count > MAX_CHARACTERS:
+            print(f"  ⚠️  Response exceeds character limit: {char_count}/{MAX_CHARACTERS} chars")
         
         return {
             "provider": "Together AI",
@@ -737,6 +765,7 @@ def test_together(api_key):
             "full_response": response_text,
             "tokens_per_second": tps,
             "output_tokens": output_tokens,
+            "character_count": char_count,
             "cost_per_request": cost
         }
     except Exception as e:
