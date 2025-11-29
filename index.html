@@ -8,7 +8,23 @@
     
     <!-- SEO Meta Tags -->
     <meta name="keywords" content="AI benchmarks, LLM speed test, OpenAI GPT-4, Claude API, Gemini speed, Groq performance, AI API comparison">
+    <meta name="author" content="Braiain AI Speed Index">
     <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/">
+    <meta property="og:title" content="Braiain AI Speed Index - Real-Time LLM Performance">
+    <meta property="og:description" content="Daily automated benchmarks of AI model speed, TPS, and cost across OpenAI, Anthropic, Google, and Groq.">
+    
+    <!-- Google Analytics GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1Y5SESHWEE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-1Y5SESHWEE');
+    </script>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
@@ -67,50 +83,6 @@
             background: #fff3cd;
             color: #856404;
             border: 1px solid #ffeaa7;
-        }
-        
-        /* CHART SECTION */
-        .chart-section {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .chart-container {
-            position: relative;
-            height: 400px;
-            margin-top: 20px;
-        }
-        
-        .chart-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .chart-btn {
-            padding: 8px 16px;
-            border: 2px solid #2196f3;
-            background: white;
-            color: #2196f3;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        
-        .chart-btn.active {
-            background: #2196f3;
-            color: white;
-        }
-        
-        .chart-btn:hover {
-            transform: translateY(-2px);
         }
         
         .leaderboard-cards-wrapper {
@@ -286,6 +258,69 @@
             padding: 0 20px;
         }
         
+        /* ADSENSE CONTAINER */
+        .adsense-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .adsense-label {
+            font-size: 0.75em;
+            color: #999;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* CHART SECTION */
+        .chart-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 20px;
+        }
+        
+        .chart-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .chart-btn {
+            padding: 8px 16px;
+            border: 2px solid #2196f3;
+            background: white;
+            color: #2196f3;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .chart-btn.active {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .chart-btn:hover {
+            transform: translateY(-2px);
+        }
+        
         #site-footer { 
             background-color: #1c1c1c; 
             color: #c0c0c0; 
@@ -297,6 +332,7 @@
         
         #site-footer a { color: #007bff; text-decoration: none; font-weight: bold; }
         #site-footer a:hover { text-decoration: underline; }
+        .legal-text { margin-top: 15px; font-size: 0.8em; color: #999; line-height: 1.5; }
 
         .loading-container { width: 100%; text-align: center; padding: 40px 20px; }
         .loading-spinner {
@@ -337,7 +373,36 @@
         </p>
     </section>
 
-    <!-- TREND CHART SECTION -->
+    <!-- LEADERBOARD CARDS -->
+    <div class="leaderboard-cards-wrapper" id="results-container">
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading benchmark data...</p>
+        </div>
+    </div>
+    
+    <div id="last-updated-wrapper">
+        <span id="last-updated"></span>
+    </div>
+
+    <!-- GOOGLE ADSENSE -->
+    <div class="adsense-container">
+        <div class="adsense-label">Advertisement</div>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2906493623732277"
+             crossorigin="anonymous"></script>
+        <!-- Braiain Speed Index Ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2906493623732277"
+             data-ad-slot="5895952530"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <!-- TREND CHART SECTION (Below cards and ads) -->
     <section class="chart-section" id="chart-section" style="display: none;">
         <h2>📈 Performance Trends</h2>
         <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">Historical speed comparison - lower is better</p>
@@ -352,17 +417,6 @@
             <canvas id="trendChart"></canvas>
         </div>
     </section>
-
-    <div class="leaderboard-cards-wrapper" id="results-container">
-        <div class="loading-container">
-            <div class="loading-spinner"></div>
-            <p>Loading benchmark data...</p>
-        </div>
-    </div>
-    
-    <div id="last-updated-wrapper">
-        <span id="last-updated"></span>
-    </div>
 
     <section class="about-section">
         <h2>🔬 Methodology</h2>
@@ -380,474 +434,165 @@
 
     <footer id="site-footer">
         <div>A <a href="mailto:dnilgis@gmail.com">dnilgis</a> project.</div>
+        <div class="legal-text">
+            <strong>Legal Disclaimer:</strong> Benchmark data provided for informational purposes only. Pricing and performance may vary. All product names and brands are property of their respective owners.
+        </div>
     </footer>
 
     <script>
-        // EMBEDDED FALLBACK DATA with history
+        // [Full JavaScript code - same as above but with Analytics tracking]
+        // This is the complete code with fallback data, charts, and all features
+        
         const FALLBACK_DATA = {
             "last_updated": "2025-11-28 21:56:17 UTC",
             "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030.",
             "max_tokens": 300,
             "results": [
-                {
-                    "provider": "Groq",
-                    "model": "Llama 3.1 70B",
-                    "time": 1.1861,
-                    "status": "Online",
-                    "response_preview": "The history of the internet began in the 1960s...",
-                    "tokens_per_second": 403.84,
-                    "output_tokens": 479,
-                    "cost_per_request": 0.0
-                },
-                {
-                    "provider": "OpenAI",
-                    "model": "GPT-4o Mini",
-                    "time": 10.2888,
-                    "status": "Online",
-                    "response_preview": "The history of the internet dates back to the 1960s...",
-                    "tokens_per_second": 29.16,
-                    "output_tokens": 300,
-                    "cost_per_request": 0.000185
-                },
-                {
-                    "provider": "Anthropic",
-                    "model": "Claude 3.5 Sonnet",
-                    "time": 99.9999,
-                    "status": "API FAILURE",
-                    "response_preview": "All model versions failed",
-                    "tokens_per_second": 0,
-                    "output_tokens": 0,
-                    "cost_per_request": null
-                },
-                {
-                    "provider": "Google",
-                    "model": "Gemini 1.5 Pro",
-                    "time": 99.9999,
-                    "status": "API FAILURE",
-                    "response_preview": "All model versions failed",
-                    "tokens_per_second": 0,
-                    "output_tokens": 0,
-                    "cost_per_request": null
-                }
+                {"provider": "Groq", "model": "Llama 3.1 70B", "time": 1.1861, "status": "Online", "response_preview": "The history of the internet began in the 1960s...", "tokens_per_second": 403.84, "output_tokens": 479, "cost_per_request": 0.0},
+                {"provider": "OpenAI", "model": "GPT-4o Mini", "time": 10.2888, "status": "Online", "response_preview": "The history of the internet dates back to the 1960s...", "tokens_per_second": 29.16, "output_tokens": 300, "cost_per_request": 0.000185},
+                {"provider": "Anthropic", "model": "Claude 3.5 Sonnet", "time": 99.9999, "status": "API FAILURE", "response_preview": "All model versions failed", "tokens_per_second": 0, "output_tokens": 0, "cost_per_request": null},
+                {"provider": "Google", "model": "Gemini 1.5 Pro", "time": 99.9999, "status": "API FAILURE", "response_preview": "All model versions failed", "tokens_per_second": 0, "output_tokens": 0, "cost_per_request": null}
             ],
             "history": [
-                {
-                    "timestamp": "2025-11-21 00:00:00 UTC",
-                    "results": {
-                        "Groq": { "time": 2.1, "tps": 220, "status": "Online", "cost": 0.0 },
-                        "OpenAI": { "time": 6.5, "tps": 46, "status": "Online", "cost": 0.000185 }
-                    }
-                },
-                {
-                    "timestamp": "2025-11-22 00:00:00 UTC",
-                    "results": {
-                        "Groq": { "time": 1.8, "tps": 265, "status": "Online", "cost": 0.0 },
-                        "OpenAI": { "time": 6.2, "tps": 48, "status": "Online", "cost": 0.000185 }
-                    }
-                },
-                {
-                    "timestamp": "2025-11-23 00:00:00 UTC",
-                    "results": {
-                        "Groq": { "time": 1.4, "tps": 340, "status": "Online", "cost": 0.0 },
-                        "OpenAI": { "time": 6.0, "tps": 50, "status": "Online", "cost": 0.000185 }
-                    }
-                },
-                {
-                    "timestamp": "2025-11-24 00:00:00 UTC",
-                    "results": {
-                        "Groq": { "time": 1.3, "tps": 370, "status": "Online", "cost": 0.0 },
-                        "OpenAI": { "time": 7.0, "tps": 43, "status": "Online", "cost": 0.000185 }
-                    }
-                },
-                {
-                    "timestamp": "2025-11-25 00:00:00 UTC",
-                    "results": {
-                        "Groq": { "time": 2.3, "tps": 215, "status": "Online", "cost": 0.0 },
-                        "OpenAI": { "time": 7.0, "tps": 43, "status": "Online", "cost": 0.000185 }
-                    }
-                },
-                {
-                    "timestamp": "2025-11-26 00:00:00 UTC",
-                    "results": {
-                        "Groq": { "time": 1.8, "tps": 255, "status": "Online", "cost": 0.0 },
-                        "OpenAI": { "time": 10.0, "tps": 30, "status": "Online", "cost": 0.000185 }
-                    }
-                },
-                {
-                    "timestamp": "2025-11-27 00:00:00 UTC",
-                    "results": {
-                        "Groq": { "time": 2.0, "tps": 235, "status": "Online", "cost": 0.0 },
-                        "OpenAI": { "time": 6.6, "tps": 45, "status": "Online", "cost": 0.000185 }
-                    }
-                },
-                {
-                    "timestamp": "2025-11-28 21:56:17 UTC",
-                    "results": {
-                        "Groq": { "time": 1.1861, "tps": 403.84, "status": "Online", "cost": 0.0 },
-                        "OpenAI": { "time": 10.2888, "tps": 29.16, "status": "Online", "cost": 0.000185 },
-                        "Anthropic": { "time": 99.9999, "tps": 0, "status": "API FAILURE", "cost": null },
-                        "Google": { "time": 99.9999, "tps": 0, "status": "API FAILURE", "cost": null }
-                    }
-                }
+                {"timestamp": "2025-11-21 00:00:00 UTC", "results": {"Groq": {"time": 2.1, "tps": 220, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 6.5, "tps": 46, "status": "Online", "cost": 0.000185}}},
+                {"timestamp": "2025-11-22 00:00:00 UTC", "results": {"Groq": {"time": 1.8, "tps": 265, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 6.2, "tps": 48, "status": "Online", "cost": 0.000185}}},
+                {"timestamp": "2025-11-23 00:00:00 UTC", "results": {"Groq": {"time": 1.4, "tps": 340, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 6.0, "tps": 50, "status": "Online", "cost": 0.000185}}},
+                {"timestamp": "2025-11-24 00:00:00 UTC", "results": {"Groq": {"time": 1.3, "tps": 370, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 7.0, "tps": 43, "status": "Online", "cost": 0.000185}}},
+                {"timestamp": "2025-11-25 00:00:00 UTC", "results": {"Groq": {"time": 2.3, "tps": 215, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 7.0, "tps": 43, "status": "Online", "cost": 0.000185}}},
+                {"timestamp": "2025-11-26 00:00:00 UTC", "results": {"Groq": {"time": 1.8, "tps": 255, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 10.0, "tps": 30, "status": "Online", "cost": 0.000185}}},
+                {"timestamp": "2025-11-27 00:00:00 UTC", "results": {"Groq": {"time": 2.0, "tps": 235, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 6.6, "tps": 45, "status": "Online", "cost": 0.000185}}},
+                {"timestamp": "2025-11-28 21:56:17 UTC", "results": {"Groq": {"time": 1.1861, "tps": 403.84, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 10.2888, "tps": 29.16, "status": "Online", "cost": 0.000185}, "Anthropic": {"time": 99.9999, "tps": 0, "status": "API FAILURE", "cost": null}, "Google": {"time": 99.9999, "tps": 0, "status": "API FAILURE", "cost": null}}}
             ]
         };
 
-        const AFFILIATE_LINKS = {
-            'OpenAI': 'https://platform.openai.com/signup',
-            'Google': 'https://ai.google.dev/', 
-            'Anthropic': 'https://console.anthropic.com/',
-            'Groq': 'https://console.groq.com/',
-            'Mistral AI': 'https://console.mistral.ai/',
-            'Cohere': 'https://dashboard.cohere.com/',
-            'Together AI': 'https://api.together.xyz/'
-        };
+        const AFFILIATE_LINKS = {"OpenAI": "https://platform.openai.com/signup", "Google": "https://ai.google.dev/", "Anthropic": "https://console.anthropic.com/", "Groq": "https://console.groq.com/", "Mistral AI": "https://console.mistral.ai/", "Cohere": "https://dashboard.cohere.com/", "Together AI": "https://api.together.xyz/"};
+        const PROVIDER_COLORS = {"OpenAI": "#10a37f", "Anthropic": "#d97757", "Google": "#4285f4", "Groq": "#f55036", "Mistral AI": "#ff7000", "Cohere": "#39594d", "Together AI": "#6366f1"};
 
-        const PROVIDER_COLORS = {
-            'OpenAI': '#10a37f',
-            'Anthropic': '#d97757',
-            'Google': '#4285f4',
-            'Groq': '#f55036',
-            'Mistral AI': '#ff7000',
-            'Cohere': '#39594d',
-            'Together AI': '#6366f1'
-        };
-
-        let dataSource = 'loading';
-        let trendChart = null;
-        let currentChartRange = 7;
-        let fullHistoryData = [];
+        let dataSource = "loading", trendChart = null, currentChartRange = 7, fullHistoryData = [];
 
         function setDataSourceIndicator(source, data) {
-            const indicator = document.getElementById('data-source-indicator');
-            
-            if (source === 'live') {
-                indicator.className = 'data-source-indicator data-live';
-                indicator.innerHTML = `✅ <strong>Live Data</strong> - Updated: ${data.last_updated} | Auto-refreshes every 5 minutes`;
-            } else if (source === 'fallback') {
-                indicator.className = 'data-source-indicator data-fallback';
-                indicator.innerHTML = `⚠️ <strong>Using Cached Data</strong> - Last snapshot: ${data.last_updated} | Unable to load fresh data.json`;
-            }
+            const indicator = document.getElementById("data-source-indicator");
+            indicator.className = "data-source-indicator data-" + source;
+            indicator.innerHTML = source === "live" ? `✅ <strong>Live Data</strong> - Updated: ${data.last_updated} | Auto-refreshes every 5 minutes` : `⚠️ <strong>Using Cached Data</strong> - Last snapshot: ${data.last_updated}`;
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        function escapeHtml(text) { const div = document.createElement("div"); div.textContent = text; return div.innerHTML; }
+        function getSpeedClass(time, isOnline) { return !isOnline ? "status-error" : time < 5 ? "speed-fast" : time < 10 ? "speed-medium" : "speed-slow"; }
+        function getTpsClass(tps) { return tps > 60 ? "tps-fast" : tps > 30 ? "tps-medium" : "tps-slow"; }
+        function getCostClass(cost) { return cost === null || cost === 0 ? "cost-free" : cost < 0.001 ? "cost-cheap" : "cost-expensive"; }
+        function formatCost(cost) { return cost === null ? "N/A" : cost === 0 ? "FREE" : cost < 0.0001 ? "<$0.0001" : `$${cost.toFixed(4)}`; }
 
-        function getSpeedClass(time, isOnline) {
-            if (!isOnline) return 'status-error';
-            if (time < 5) return 'speed-fast';
-            if (time < 10) return 'speed-medium';
-            return 'speed-slow';
-        }
-
-        function getTpsClass(tps) {
-            if (tps > 60) return 'tps-fast';
-            if (tps > 30) return 'tps-medium';
-            return 'tps-slow';
-        }
-
-        function getCostClass(cost) {
-            if (cost === null || cost === 0) return 'cost-free';
-            if (cost < 0.001) return 'cost-cheap';
-            return 'cost-expensive';
-        }
-
-        function formatCost(cost) {
-            if (cost === null) return 'N/A';
-            if (cost === 0) return 'FREE';
-            if (cost < 0.0001) return '<$0.0001';
-            return `$${cost.toFixed(4)}`;
-        }
-
-        // CHART FUNCTIONS
         function createTrendChart(history, range = 7) {
-            const ctx = document.getElementById('trendChart');
-            const chartSection = document.getElementById('chart-section');
-            
-            if (!ctx || !history || history.length < 2) {
-                if (chartSection) chartSection.style.display = 'none';
-                return;
-            }
-
-            if (chartSection) chartSection.style.display = 'block';
-
-            // Store full history
+            const ctx = document.getElementById("trendChart"), chartSection = document.getElementById("chart-section");
+            if (!ctx || !history || history.length < 2) { if (chartSection) chartSection.style.display = "none"; return; }
+            if (chartSection) chartSection.style.display = "block";
             fullHistoryData = history;
-
-            // Get data for selected range
-            const recentHistory = range > 0 ? history.slice(-range) : history;
-
-            const labels = [];
-            const datasets = {};
-
+            const recentHistory = range > 0 ? history.slice(-range) : history, labels = [], datasets = {};
             recentHistory.forEach(entry => {
                 const date = new Date(entry.timestamp);
-                labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-
+                labels.push(date.toLocaleDateString("en-US", {month: "short", day: "numeric"}));
                 Object.keys(entry.results).forEach(provider => {
-                    if (!datasets[provider]) {
-                        datasets[provider] = {
-                            label: provider,
-                            data: [],
-                            borderColor: PROVIDER_COLORS[provider] || '#999',
-                            backgroundColor: PROVIDER_COLORS[provider] || '#999',
-                            tension: 0.3,
-                            spanGaps: true,
-                            pointRadius: 4,
-                            pointHoverRadius: 6
-                        };
-                    }
+                    if (!datasets[provider]) datasets[provider] = {label: provider, data: [], borderColor: PROVIDER_COLORS[provider] || "#999", backgroundColor: PROVIDER_COLORS[provider] || "#999", tension: 0.3, spanGaps: true, pointRadius: 4, pointHoverRadius: 6};
                     const time = entry.results[provider].time;
-                    datasets[provider].data.push(
-                        time < 99 && entry.results[provider].status === 'Online' ? time : null
-                    );
+                    datasets[provider].data.push(time < 99 && entry.results[provider].status === "Online" ? time : null);
                 });
             });
-
-            if (trendChart) {
-                trendChart.destroy();
-            }
-
-            trendChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: Object.values(datasets)
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 15
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    if (context.parsed.y === null) return null;
-                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(2) + 's';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Response Time (seconds)'
-                            },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    },
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    }
-                }
-            });
+            if (trendChart) trendChart.destroy();
+            trendChart = new Chart(ctx, {type: "line", data: {labels: labels, datasets: Object.values(datasets)}, options: {responsive: true, maintainAspectRatio: false, plugins: {legend: {position: "top", labels: {usePointStyle: true, padding: 15}}, tooltip: {callbacks: {label: function(context) { if (context.parsed.y === null) return null; return context.dataset.label + ": " + context.parsed.y.toFixed(2) + "s"; }}}}, scales: {y: {beginAtZero: true, title: {display: true, text: "Response Time (seconds)"}, grid: {color: "rgba(0, 0, 0, 0.05)"}}, x: {grid: {display: false}}}, interaction: {mode: "index", intersect: false}}});
         }
 
         function updateChartRange(range) {
             currentChartRange = range;
-            
-            // Update button states
-            document.querySelectorAll('.chart-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Recreate chart with new range
-            if (fullHistoryData.length > 0) {
-                createTrendChart(fullHistoryData, range);
-            }
+            document.querySelectorAll(".chart-btn").forEach(btn => btn.classList.remove("active"));
+            event.target.classList.add("active");
+            if (fullHistoryData.length > 0) createTrendChart(fullHistoryData, range);
         }
 
         function calculateBadges(results) {
             if (results.length === 0) return {};
-
-            const online = results.filter(r => r.status === 'Online');
+            const online = results.filter(r => r.status === "Online");
             if (online.length === 0) return {};
-
             const badges = {};
-
             const fastest = online.reduce((min, r) => r.time < min.time ? r : min);
             badges[fastest.provider] = badges[fastest.provider] || [];
-            badges[fastest.provider].push('fastest');
-
+            badges[fastest.provider].push("fastest");
             const highestTps = online.reduce((max, r) => r.tokens_per_second > max.tokens_per_second ? r : max);
             badges[highestTps.provider] = badges[highestTps.provider] || [];
-            badges[highestTps.provider].push('highest-tps');
-
+            badges[highestTps.provider].push("highest-tps");
             const paid = online.filter(r => r.cost_per_request > 0);
             if (paid.length > 0) {
                 const bestValue = paid.reduce((best, r) => {
-                    const value = r.tokens_per_second / r.cost_per_request;
-                    const bestVal = best.tokens_per_second / best.cost_per_request;
+                    const value = r.tokens_per_second / r.cost_per_request, bestVal = best.tokens_per_second / best.cost_per_request;
                     return value > bestVal ? r : best;
                 });
                 badges[bestValue.provider] = badges[bestValue.provider] || [];
-                badges[bestValue.provider].push('best-value');
+                badges[bestValue.provider].push("best-value");
             }
-
             return badges;
         }
 
         function createModelCard(result, rank, badges) {
-            const card = document.createElement('div');
-            card.className = 'model-card';
-            
-            const isOnline = result.status === 'Online';
-            const speedClass = getSpeedClass(result.time, isOnline);
-            const tpsClass = getTpsClass(result.tokens_per_second);
-            const costClass = getCostClass(result.cost_per_request);
-            
-            const timeDisplay = isOnline ? `${result.time.toFixed(2)}s` : 'N/A';
-            const tpsDisplay = isOnline ? result.tokens_per_second.toFixed(0) : 'N/A';
-            
-            const rankClass = (isOnline && rank <= 3) ? ` rank-${rank}` : '';
-            
+            const card = document.createElement("div");
+            card.className = "model-card";
+            const isOnline = result.status === "Online", speedClass = getSpeedClass(result.time, isOnline), tpsClass = getTpsClass(result.tokens_per_second), costClass = getCostClass(result.cost_per_request);
+            const timeDisplay = isOnline ? `${result.time.toFixed(2)}s` : "N/A", tpsDisplay = isOnline ? result.tokens_per_second.toFixed(0) : "N/A", rankClass = (isOnline && rank <= 3) ? ` rank-${rank}` : "";
             const providerBadges = badges[result.provider] || [];
-            let badgesHTML = '';
+            let badgesHTML = "";
             if (providerBadges.length > 0) {
                 badgesHTML = '<div class="badge-container">';
                 providerBadges.forEach(badge => {
-                    const text = badge === 'fastest' ? '⚡ Fastest' :
-                                badge === 'highest-tps' ? '🚀 Highest TPS' :
-                                badge === 'best-value' ? '💰 Best Value' : '';
+                    const text = badge === "fastest" ? "⚡ Fastest" : badge === "highest-tps" ? "🚀 Highest TPS" : badge === "best-value" ? "💰 Best Value" : "";
                     badgesHTML += `<span class="badge badge-${badge}">${text}</span>`;
                 });
-                badgesHTML += '</div>';
+                badgesHTML += "</div>";
             }
-            
-            let affiliateButtonHTML = '';
-            if (isOnline) {
-                const link = AFFILIATE_LINKS[result.provider];
-                affiliateButtonHTML = `<a href="${link}" target="_blank" rel="noopener" class="affiliate-btn">Try ${result.provider}</a>`;
-            } else {
-                affiliateButtonHTML = `<div class="affiliate-btn" style="background-color: #c62828; cursor: not-allowed;">Currently Offline</div>`;
-            }
-            
-            card.innerHTML = `
-                <div class="card-header">
-                    <span class="rank-badge${rankClass}">#${rank}</span>
-                    <div class="provider-model-wrapper">
-                        <div class="card-provider">${escapeHtml(result.provider)}</div>
-                        <div class="card-model">${escapeHtml(result.model)}</div>
-                    </div>
-                </div>
-                
-                ${badgesHTML}
-                
-                <div class="stats-wrapper">
-                    <div class="stat-group">
-                        <div class="stat-label">Speed</div>
-                        <div class="stat-value ${speedClass}">${timeDisplay}</div>
-                    </div>
-                    <div class="stat-group">
-                        <div class="stat-label">TPS</div>
-                        <div class="stat-value ${tpsClass}">${tpsDisplay}</div>
-                    </div>
-                    <div class="stat-group">
-                        <div class="stat-label">Status</div>
-                        <div class="stat-value ${isOnline ? 'status-online' : 'status-error'}">
-                            ${escapeHtml(result.status)}
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="text-align: center;">
-                    <div class="stat-label">Cost Per Request</div>
-                    <div class="cost-badge ${costClass}">${formatCost(result.cost_per_request)}</div>
-                </div>
-                
-                ${affiliateButtonHTML}
-            `;
-            
+            const link = AFFILIATE_LINKS[result.provider];
+            const affiliateButtonHTML = isOnline ? `<a href="${link}" target="_blank" rel="noopener" class="affiliate-btn">Try ${result.provider}</a>` : '<div class="affiliate-btn" style="background-color: #c62828; cursor: not-allowed;">Currently Offline</div>';
+            card.innerHTML = `<div class="card-header"><span class="rank-badge${rankClass}">#${rank}</span><div class="provider-model-wrapper"><div class="card-provider">${escapeHtml(result.provider)}</div><div class="card-model">${escapeHtml(result.model)}</div></div></div>${badgesHTML}<div class="stats-wrapper"><div class="stat-group"><div class="stat-label">Speed</div><div class="stat-value ${speedClass}">${timeDisplay}</div></div><div class="stat-group"><div class="stat-label">TPS</div><div class="stat-value ${tpsClass}">${tpsDisplay}</div></div><div class="stat-group"><div class="stat-label">Status</div><div class="stat-value ${isOnline ? "status-online" : "status-error"}">${escapeHtml(result.status)}</div></div></div><div style="text-align: center;"><div class="stat-label">Cost Per Request</div><div class="cost-badge ${costClass}">${formatCost(result.cost_per_request)}</div></div>${affiliateButtonHTML}`;
             return card;
         }
 
-        function displayResults(data, source = 'live') {
-            const container = document.getElementById('results-container');
-            const lastUpdated = document.getElementById('last-updated');
-            
+        function displayResults(data, source = "live") {
+            const container = document.getElementById("results-container"), lastUpdated = document.getElementById("last-updated");
             dataSource = source;
             setDataSourceIndicator(source, data);
-            
-            if (data.last_updated) {
-                lastUpdated.textContent = `Last Updated: ${data.last_updated}`;
-            }
-            
-            // Create trend chart if history available
-            if (data.history && data.history.length >= 2) {
-                createTrendChart(data.history, currentChartRange);
-            }
-            
-            if (!data.results || data.results.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px;">No results available</div>';
-                return;
-            }
-            
+            if (data.last_updated) lastUpdated.textContent = `Last Updated: ${data.last_updated}`;
+            if (!data.results || data.results.length === 0) { container.innerHTML = '<div style="text-align: center; padding: 40px;">No results available</div>'; return; }
             const badges = calculateBadges(data.results);
-            
-            container.innerHTML = '';
-            
-            data.results.forEach((result, index) => {
-                const rank = index + 1;
-                const card = createModelCard(result, rank, badges);
-                container.appendChild(card);
-            });
+            container.innerHTML = "";
+            data.results.forEach((result, index) => { const rank = index + 1; const card = createModelCard(result, rank, badges); container.appendChild(card); });
+            if (data.history && data.history.length >= 2) createTrendChart(data.history, currentChartRange);
         }
 
         async function fetchData() {
-            console.log('Attempting to fetch fresh data...');
-            
-            const paths = ['./data.json', 'data.json', '/data.json'];
-            
+            console.log("Attempting to fetch fresh data...");
+            const paths = ["./data.json", "data.json", "/data.json"];
             for (const path of paths) {
                 try {
-                    const response = await fetch(path + '?t=' + Date.now());
-                    
+                    const response = await fetch(path + "?t=" + Date.now());
                     if (response.ok) {
                         const data = await response.json();
-                        console.log('✅ Successfully loaded fresh data from:', path);
-                        displayResults(data, 'live');
+                        console.log("✅ Successfully loaded fresh data from:", path);
+                        displayResults(data, "live");
+                        if (typeof gtag !== "undefined") gtag("event", "data_loaded", {event_category: "data", event_label: "live_data"});
                         return true;
                     }
-                } catch (error) {
-                    console.log(`Failed to load from ${path}:`, error.message);
-                }
+                } catch (error) { console.log(`Failed to load from ${path}:`, error.message); }
             }
-            
-            console.log('⚠️ Could not load data.json, using fallback data');
-            displayResults(FALLBACK_DATA, 'fallback');
+            console.log("⚠️ Could not load data.json, using fallback data");
+            displayResults(FALLBACK_DATA, "fallback");
+            if (typeof gtag !== "undefined") gtag("event", "data_loaded", {event_category: "data", event_label: "fallback_data"});
             return false;
         }
 
-        // Initialize
-        console.log('🚀 Braiain Speed Index initializing...');
+        console.log("🚀 Braiain Speed Index initializing...");
         fetchData();
-        
-        // Auto-refresh every 5 minutes (only if live data)
-        setInterval(async () => {
-            if (dataSource === 'live') {
-                console.log('🔄 Auto-refreshing data...');
-                await fetchData();
-            }
-        }, 300000);
+        setInterval(async () => { if (dataSource === "live") { console.log("🔄 Auto-refreshing data..."); await fetchData(); } }, 300000);
+    </script>
+    
+    <!-- Schema.org structured data for SEO -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "WebApplication", "name": "Braiain AI Speed Index", "description": "Daily automated benchmarks of AI model API speed, tokens-per-second, and cost efficiency", "url": "https://yourdomain.com", "applicationCategory": "TechnologyApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "dnilgis", "email": "dnilgis@gmail.com"}}
     </script>
 </body>
 </html>
