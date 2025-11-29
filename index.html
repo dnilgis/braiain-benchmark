@@ -98,13 +98,13 @@
             border-radius: 8px;
             display: flex;
             gap: 15px;
-            flex-wrap: wrap;
+            justify-content: center;
             align-items: center;
             box-shadow: var(--shadow-sm);
         }
         
-        .filter-btn, .sort-btn {
-            padding: 8px 16px;
+        .sort-btn {
+            padding: 10px 20px;
             border: 2px solid #2196f3;
             background: var(--bg-secondary);
             color: #2196f3;
@@ -112,16 +112,17 @@
             cursor: pointer;
             font-weight: 600;
             transition: all 0.2s;
-            font-size: 0.9em;
+            font-size: 0.95em;
         }
         
-        .filter-btn.active, .sort-btn.active {
+        .sort-btn.active {
             background: #2196f3;
             color: white;
         }
         
-        .filter-btn:hover, .sort-btn:hover {
+        .sort-btn:hover {
             transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
         
         .about-section { 
@@ -283,9 +284,9 @@
         .cost-cheap { background-color: #fff3e0; color: #f57c00; }
         .cost-expensive { background-color: #ffebee; color: #c62828; }
 
-        /* RESPONSE PREVIEW */
-        .response-preview {
-            margin: 15px 0;
+        /* RESPONSE PREVIEW AT BOTTOM */
+        .response-preview-bottom {
+            margin-top: 15px;
             padding: 12px;
             background: var(--bg-tertiary);
             border-radius: 6px;
@@ -293,44 +294,138 @@
             font-size: 0.85em;
             line-height: 1.5;
             color: var(--text-secondary);
-            max-height: 60px;
+            max-height: 50px;
             overflow: hidden;
             position: relative;
             cursor: pointer;
-            transition: max-height 0.3s, box-shadow 0.3s;
+            transition: all 0.3s;
+            text-align: left;
         }
         
-        .response-preview.expanded {
-            max-height: 500px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        .response-preview-bottom:hover {
+            box-shadow: var(--shadow-sm);
+            border-left-color: #1976d2;
         }
         
-        .response-preview::after {
-            content: '👁️ Click to view response';
+        .response-preview-bottom::after {
+            content: '👁️ Click to read full response';
             position: absolute;
             bottom: 5px;
             right: 10px;
-            font-size: 0.75em;
+            font-size: 0.7em;
             color: #2196f3;
             font-weight: 600;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 3px;
         }
         
-        .response-preview.expanded::after {
-            content: '👁️ Click to collapse';
+        /* MODAL OVERLAY */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s;
+            position: relative;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            cursor: pointer;
+            color: var(--text-tertiary);
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .modal-close:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        .modal-body {
+            padding: 20px;
+            line-height: 1.8;
+            font-size: 1em;
+            color: var(--text-primary);
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            border-radius: 0 0 12px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .char-count-badge {
             display: inline-block;
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 12px;
-            font-size: 0.7em;
+            font-size: 0.75em;
             font-weight: 600;
-            margin-left: 8px;
         }
         
         .char-ok { background: #e8f5e9; color: #2e7d32; }
         .char-warn { background: #fff3cd; color: #856404; }
         .char-over { background: #ffebee; color: #c62828; }
+        .char-short { background: #e3f2fd; color: #1976d2; }
 
         .badge-container {
             display: flex;
@@ -470,35 +565,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-        }
-        
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 8px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.85em;
-        }
-        
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
 
         @media (max-width: 768px) {
             h1 { font-size: 1.8em; }
@@ -506,8 +572,9 @@
             .stats-wrapper { grid-template-columns: repeat(2, 1fr); }
             .stat-group:last-child { grid-column: 1 / -1; }
             .chart-container { height: 300px; }
-            .controls-bar { flex-direction: column; }
-            .theme-toggle { position: static; margin: 10px auto; }
+            .controls-bar { padding: 10px; }
+            .theme-toggle { position: static; margin: 10px auto; display: block; width: fit-content; }
+            header { padding: 15px; }
         }
     </style>
 </head>
@@ -526,20 +593,12 @@
         </p>
     </section>
 
-    <!-- CONTROLS BAR -->
+    <!-- SORT CONTROLS ONLY -->
     <div class="controls-bar">
-        <div style="flex: 1; min-width: 200px;">
-            <strong>Filter:</strong>
-            <button class="filter-btn active" onclick="filterResults('all')">All</button>
-            <button class="filter-btn" onclick="filterResults('online')">Online Only</button>
-            <button class="filter-btn" onclick="filterResults('free')">Free Only</button>
-        </div>
-        <div style="flex: 1; min-width: 200px;">
-            <strong>Sort:</strong>
-            <button class="sort-btn active" onclick="sortResults('speed')">⚡ Speed</button>
-            <button class="sort-btn" onclick="sortResults('tps')">🚀 TPS</button>
-            <button class="sort-btn" onclick="sortResults('cost')">💰 Cost</button>
-        </div>
+        <strong>Sort by:</strong>
+        <button class="sort-btn active" onclick="sortResults('speed')">⚡ Speed</button>
+        <button class="sort-btn" onclick="sortResults('tps')">🚀 TPS</button>
+        <button class="sort-btn" onclick="sortResults('cost')">💰 Cost</button>
     </div>
 
     <!-- LEADERBOARD CARDS -->
@@ -552,6 +611,21 @@
     
     <div id="last-updated-wrapper">
         <span id="last-updated"></span>
+    </div>
+
+    <!-- MODAL FOR FULL RESPONSE -->
+    <div class="modal-overlay" id="responseModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Response</div>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <span id="modalCharCount"></span>
+                <button class="sort-btn" onclick="closeModal()">Close</button>
+            </div>
+        </div>
     </div>
 
     <!-- GOOGLE ADSENSE -->
@@ -589,7 +663,7 @@
     <section class="about-section">
         <h2>🔬 Methodology</h2>
         <p>
-            We measure <strong>end-to-end API latency</strong> using identical prompts across all models. Each test generates ~300 tokens and tracks speed, throughput (tokens/second), and cost per request.
+            We measure <strong>end-to-end API latency</strong> using identical prompts across all models. Each test generates ~300 tokens and tracks speed, throughput (tokens/second), and cost per request. All models must provide responses between 1000-1200 characters with complete sentences.
         </p>
         
         <h2>📊 Metrics Explained</h2>
@@ -597,7 +671,7 @@
             <li><strong>Speed (seconds):</strong> Total time from request to response - lower is better</li>
             <li><strong>TPS (Tokens Per Second):</strong> Throughput metric - higher is better</li>
             <li><strong>Cost Per Request:</strong> Approximate cost based on current API pricing</li>
-            <li><strong>Character Count:</strong> Length of response (target: ≤1200 characters)</li>
+            <li><strong>Character Count:</strong> Response length (target: 1000-1200 characters)</li>
         </ul>
     </section>
 
@@ -612,11 +686,11 @@
         // EMBEDDED FALLBACK DATA
         const FALLBACK_DATA = {
             "last_updated": "2025-11-28 21:56:17 UTC",
-            "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030. CRITICAL: Your response must not exceed 1200 characters (about 300 tokens). Complete all sentences and provide a proper conclusion. Do not cut off mid-sentence - plan your response to fit within this character limit.",
+            "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030. STRICT REQUIREMENTS: (1) Your response must be EXACTLY 1000-1200 characters - no more, no less. (2) You MUST end with a complete sentence - no partial thoughts. (3) Count your characters as you write and plan accordingly. (4) If you reach 1150 characters, wrap up your final sentence by character 1200. This is a hard limit - responses outside 1000-1200 characters will be rejected.",
             "max_tokens": 300,
             "results": [
-                {"provider": "Groq", "model": "Llama 3.1 70B", "time": 1.1861, "status": "Online", "response_preview": "The history of the internet began in the 1960s with ARPANET, a project funded by the US Department of Defense to create a network of computers that could communicate with each other. This pioneering effort laid the groundwork for the modern internet. In the 1980s, the Internet Protocol Suite (TCP/IP) was developed, allowing different networks to interconnect and forming the basis of the internet as we know it today. The 1990s saw the rapid expansion of the World Wide Web, email, and online services, transforming the internet into a global phenomenon.\n\nBy 2030, the internet is expected to be even more pervasive, with the proliferation of the Internet of Things (IoT), artificial intelligence, and 5G networks. We can anticipate seamless connectivity, augmented reality experiences, and unprecedented access to information and services worldwide.", "tokens_per_second": 403.84, "output_tokens": 479, "character_count": 1150, "cost_per_request": 0.0},
-                {"provider": "OpenAI", "model": "GPT-4o Mini", "time": 10.2888, "status": "Online", "response_preview": "The internet's history began in the 1960s with ARPANET, funded by the U.S. Department of Defense to enable communication between computers. By the 1980s, TCP/IP protocols standardized data transmission, paving the way for widespread connectivity. The 1990s introduced the World Wide Web, developed by Tim Berners-Lee, revolutionizing how information was accessed and shared globally.\n\nThe 2000s saw rapid expansion with social media, e-commerce, and mobile internet transforming daily life. Innovations like cloud computing, streaming services, and smartphones made the internet indispensable for communication, entertainment, and business.\n\nBy 2030, the internet will likely feature ubiquitous AI integration, enhanced virtual and augmented reality experiences, and seamless IoT connectivity, fundamentally reshaping how we interact with technology and each other.", "tokens_per_second": 29.16, "output_tokens": 300, "character_count": 985, "cost_per_request": 0.000185},
+                {"provider": "Groq", "model": "Llama 3.1 70B", "time": 0.53, "status": "Online", "response_preview": "The internet originated in the 1960s as a US military project, ARPANET, designed to create a decentralized communication network. By the 1980s, TCP/IP protocols standardized data transmission, enabling global connectivity. The 1990s saw the World Wide Web's emergence, revolutionizing information access through browsers like Mosaic and Netscape.\n\nThe 2000s brought social media platforms, smartphones, and cloud computing, transforming daily life. Web 2.0 enabled user-generated content, e-commerce exploded, and streaming services changed entertainment consumption. Mobile internet access became ubiquitous, connecting billions worldwide.\n\nBy 2030, the internet will likely integrate AI assistants seamlessly into daily tasks, expand through satellite networks to reach remote areas, and enable immersive virtual reality experiences. Quantum computing may revolutionize encryption and data processing, while IoT devices create interconnected smart cities. Privacy concerns and digital governance will shape the internet's evolution, balancing innovation with security and individual rights in an increasingly connected world.", "tokens_per_second": 176, "output_tokens": 479, "character_count": 1087, "cost_per_request": 0.0},
+                {"provider": "OpenAI", "model": "GPT-4o Mini", "time": 6.08, "status": "Online", "response_preview": "The internet's origins trace back to the 1960s with ARPANET, a U.S. Department of Defense project designed to enable communication between computers. The 1980s saw the development of TCP/IP protocols, standardizing data transmission and laying the groundwork for modern networking. The World Wide Web, created by Tim Berners-Lee in 1989, revolutionized access to information, making the internet user-friendly and widely accessible by the 1990s.\n\nThe 2000s marked explosive growth with social media platforms like Facebook and Twitter, e-commerce giants like Amazon, and the rise of mobile internet through smartphones. Cloud computing transformed business operations, while streaming services like Netflix changed entertainment consumption. The internet became integral to daily life, connecting billions globally.\n\nBy 2030, the internet will likely feature ubiquitous AI integration, seamless virtual and augmented reality experiences, and expanded Internet of Things ecosystems. Enhanced 6G networks will enable near-instantaneous global communication, while blockchain technologies may decentralize control and improve security. The internet will continue evolving as humanity's primary platform for connection, commerce, and innovation.", "tokens_per_second": 44, "output_tokens": 300, "character_count": 1172, "cost_per_request": 0.0002},
                 {"provider": "Anthropic", "model": "Claude 3.5 Sonnet", "time": 99.9999, "status": "API FAILURE", "response_preview": "All model versions failed", "tokens_per_second": 0, "output_tokens": 0, "character_count": 0, "cost_per_request": null},
                 {"provider": "Google", "model": "Gemini 1.5 Pro", "time": 99.9999, "status": "API FAILURE", "response_preview": "All model versions failed", "tokens_per_second": 0, "output_tokens": 0, "character_count": 0, "cost_per_request": null}
             ],
@@ -628,7 +702,7 @@
                 {"timestamp": "2025-11-25 00:00:00 UTC", "results": {"Groq": {"time": 2.3, "tps": 215, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 7.0, "tps": 43, "status": "Online", "cost": 0.000185}}},
                 {"timestamp": "2025-11-26 00:00:00 UTC", "results": {"Groq": {"time": 1.8, "tps": 255, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 10.0, "tps": 30, "status": "Online", "cost": 0.000185}}},
                 {"timestamp": "2025-11-27 00:00:00 UTC", "results": {"Groq": {"time": 2.0, "tps": 235, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 6.6, "tps": 45, "status": "Online", "cost": 0.000185}}},
-                {"timestamp": "2025-11-28 21:56:17 UTC", "results": {"Groq": {"time": 1.1861, "tps": 403.84, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 10.2888, "tps": 29.16, "status": "Online", "cost": 0.000185}, "Anthropic": {"time": 99.9999, "tps": 0, "status": "API FAILURE", "cost": null}, "Google": {"time": 99.9999, "tps": 0, "status": "API FAILURE", "cost": null}}}
+                {"timestamp": "2025-11-28 21:56:17 UTC", "results": {"Groq": {"time": 0.53, "tps": 176, "status": "Online", "cost": 0.0}, "OpenAI": {"time": 6.08, "tps": 44, "status": "Online", "cost": 0.0002}, "Anthropic": {"time": 99.9999, "tps": 0, "status": "API FAILURE", "cost": null}, "Google": {"time": 99.9999, "tps": 0, "status": "API FAILURE", "cost": null}}}
             ]
         };
 
@@ -636,7 +710,7 @@
         const PROVIDER_COLORS = {"OpenAI": "#10a37f", "Anthropic": "#d97757", "Google": "#4285f4", "Groq": "#f55036", "Mistral AI": "#ff7000", "Cohere": "#39594d", "Together AI": "#6366f1"};
 
         let dataSource = "loading", trendChart = null, currentChartRange = 7, fullHistoryData = [];
-        let currentFilter = 'all', currentSort = 'speed', allResults = [];
+        let currentSort = 'speed', allResults = [];
 
         // THEME TOGGLE
         function toggleTheme() {
@@ -655,6 +729,42 @@
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.body.setAttribute('data-theme', savedTheme);
 
+        // MODAL FUNCTIONS
+        function openModal(provider, model, response, charCount) {
+            document.getElementById('modalTitle').textContent = `${provider} - ${model}`;
+            document.getElementById('modalBody').textContent = response;
+            
+            const charClass = getCharCountClass(charCount);
+            let charStatus = '';
+            if (charCount < 1000) {
+                charStatus = `${charCount} chars (Too short - minimum 1000)`;
+            } else if (charCount <= 1200) {
+                charStatus = `${charCount} chars (Within target range ✓)`;
+            } else {
+                charStatus = `${charCount} chars (Exceeds maximum 1200)`;
+            }
+            document.getElementById('modalCharCount').innerHTML = `<span class="char-count-badge ${charClass}">${charStatus}</span>`;
+            
+            document.getElementById('responseModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'view_response', {event_category: 'engagement', event_label: provider});
+            }
+        }
+
+        function closeModal(event) {
+            if (!event || event.target.id === 'responseModal' || event.target.classList.contains('modal-close') || event.target.textContent === 'Close') {
+                document.getElementById('responseModal').classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
         function setDataSourceIndicator(source, data) {
             const indicator = document.getElementById("data-source-indicator");
             indicator.className = "data-source-indicator data-" + source;
@@ -668,14 +778,10 @@
         function formatCost(cost) { return cost === null ? "N/A" : cost === 0 ? "FREE" : cost < 0.0001 ? "<$0.0001" : `$${cost.toFixed(4)}`; }
         
         function getCharCountClass(charCount) {
-            if (!charCount || charCount === 0) return 'char-ok';
+            if (!charCount || charCount === 0) return 'char-short';
+            if (charCount < 1000) return 'char-short';
             if (charCount <= 1200) return 'char-ok';
-            if (charCount <= 1400) return 'char-warn';
             return 'char-over';
-        }
-
-        function toggleResponse(element) {
-            element.classList.toggle('expanded');
         }
 
         function createTrendChart(history, range = 7) {
@@ -754,25 +860,25 @@
             const link = AFFILIATE_LINKS[result.provider];
             const affiliateButtonHTML = isOnline ? `<a href="${link}" target="_blank" rel="noopener" class="affiliate-btn">Try ${result.provider}</a>` : '<div class="affiliate-btn" style="background-color: #c62828; cursor: not-allowed;">Currently Offline</div>';
             
-            const responseHTML = isOnline && result.response_preview ? 
-                `<div class="response-preview" onclick="toggleResponse(this)">
-                    ${escapeHtml(result.response_preview)}
-                </div>` : '';
-            
             const charCountHTML = result.character_count ? 
                 `<span class="char-count-badge ${charClass}">${result.character_count} chars</span>` : '';
+            
+            // Response preview at bottom
+            const responseHTML = isOnline && result.response_preview ? 
+                `<div class="response-preview-bottom" onclick='openModal("${escapeHtml(result.provider)}", "${escapeHtml(result.model)}", ${JSON.stringify(result.response_preview)}, ${result.character_count})'>
+                    ${escapeHtml(result.response_preview.substring(0, 120))}...
+                </div>` : '';
             
             card.innerHTML = `
                 <div class="card-header">
                     <span class="rank-badge${rankClass}">#${rank}</span>
                     <div class="provider-model-wrapper">
                         <div class="card-provider">${escapeHtml(result.provider)}</div>
-                        <div class="card-model">${escapeHtml(result.model)}${charCountHTML}</div>
+                        <div class="card-model">${escapeHtml(result.model)} ${charCountHTML}</div>
                     </div>
                 </div>
                 
                 ${badgesHTML}
-                ${responseHTML}
                 
                 <div class="stats-wrapper">
                     <div class="stat-group">
@@ -797,50 +903,36 @@
                 </div>
                 
                 ${affiliateButtonHTML}
+                ${responseHTML}
             `;
             
             return card;
-        }
-
-        function filterResults(filter) {
-            currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            displayResults({...allResults, results: getFilteredAndSortedResults()}, dataSource);
         }
 
         function sortResults(sortBy) {
             currentSort = sortBy;
             document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            displayResults({...allResults, results: getFilteredAndSortedResults()}, dataSource);
+            displayResults({...allResults, results: getSortedResults()}, dataSource);
         }
 
-        function getFilteredAndSortedResults() {
-            let filtered = [...allResults.results];
+        function getSortedResults() {
+            let sorted = [...allResults.results];
             
-            // Filter
-            if (currentFilter === 'online') {
-                filtered = filtered.filter(r => r.status === 'Online');
-            } else if (currentFilter === 'free') {
-                filtered = filtered.filter(r => r.cost_per_request === 0 || r.cost_per_request === null);
-            }
-            
-            // Sort
             if (currentSort === 'speed') {
-                filtered.sort((a, b) => {
+                sorted.sort((a, b) => {
                     if (a.status !== 'Online') return 1;
                     if (b.status !== 'Online') return -1;
                     return a.time - b.time;
                 });
             } else if (currentSort === 'tps') {
-                filtered.sort((a, b) => {
+                sorted.sort((a, b) => {
                     if (a.status !== 'Online') return 1;
                     if (b.status !== 'Online') return -1;
                     return b.tokens_per_second - a.tokens_per_second;
                 });
             } else if (currentSort === 'cost') {
-                filtered.sort((a, b) => {
+                sorted.sort((a, b) => {
                     if (a.status !== 'Online') return 1;
                     if (b.status !== 'Online') return -1;
                     const costA = a.cost_per_request === null ? 0 : a.cost_per_request;
@@ -849,7 +941,7 @@
                 });
             }
             
-            return filtered;
+            return sorted;
         }
 
         function displayResults(data, source = "live") {
@@ -866,7 +958,7 @@
             }
             
             allResults = data;
-            const results = getFilteredAndSortedResults();
+            const results = getSortedResults();
             const badges = calculateBadges(results);
             
             container.innerHTML = "";
@@ -889,14 +981,14 @@
                         const data = await response.json();
                         console.log("✅ Successfully loaded fresh data from:", path);
                         displayResults(data, "live");
-                        if (typeof gtag !== "undefined") gtag("event", "data_loaded", {event_category: "data", event_label: "live_data"});
+                        if (typeof gtag !== 'undefined') gtag("event", "data_loaded", {event_category: "data", event_label: "live_data"});
                         return true;
                     }
                 } catch (error) { console.log(`Failed to load from ${path}:`, error.message); }
             }
             console.log("⚠️ Could not load data.json, using fallback data");
             displayResults(FALLBACK_DATA, "fallback");
-            if (typeof gtag !== "undefined") gtag("event", "data_loaded", {event_category: "data", event_label: "fallback_data"});
+            if (typeof gtag !== 'undefined') gtag("event", "data_loaded", {event_category: "data", event_label: "fallback_data"});
             return false;
         }
 
