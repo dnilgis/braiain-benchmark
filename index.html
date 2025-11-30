@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- v1764461347 FORCE REFRESH -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -285,8 +286,8 @@
         .cost-expensive { background-color: #ffebee; color: #c62828; }
 
         /* RESPONSE PREVIEW AT BOTTOM */
-        .response-preview-bottom {
-            margin-top: 15px;
+                .response-preview-bottom {
+            margin: 15px 0 0 0;
             padding: 12px;
             background: var(--bg-tertiary);
             border-radius: 6px;
@@ -298,8 +299,12 @@
             overflow: hidden;
             position: relative;
             cursor: pointer;
-            transition: all 0.3s;
-            text-align: left;
+            transition: max-height 0.4s ease, box-shadow 0.3s;
+        }
+        
+        .response-preview-bottom.expanded {
+            max-height: 1000px;
+            cursor: default;
         }
         
         .response-preview-bottom:hover {
@@ -307,17 +312,21 @@
             border-left-color: #1976d2;
         }
         
-        .response-preview-bottom::after {
-            content: '👁️ Click to read full response';
+                .response-preview-bottom::after {
+            content: '▼ Click to expand';
             position: absolute;
             bottom: 5px;
             right: 10px;
-            font-size: 0.7em;
+            font-size: 0.75em;
             color: #2196f3;
             font-weight: 600;
             background: var(--bg-tertiary);
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 3px;
+        }
+        
+        .response-preview-bottom.expanded::after {
+            content: '▲ Click to collapse';
         }
         
         /* MODAL OVERLAY */
@@ -677,13 +686,13 @@
     </section>
 
     <footer id="site-footer">
-        <div>A <a href="mailto:dnilgis@gmail.com#53373d3a3f343a2013343e323a3f7d303c3e">dnilgis</a> project.</div>
+        <div>A <a href="/cdn-cgi/l/email-protection#14707a7d78737d67547379757d783a777b7937212727232770277527722720277526242527272027712726277527722370272427772771">dnilgis</a> project.</div>
         <div class="legal-text">
             <strong>Legal Disclaimer:</strong> Benchmark data provided for informational purposes only. Pricing and performance may vary. All product names and brands are property of their respective owners.
         </div>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // EMBEDDED FALLBACK DATA
         const FALLBACK_DATA = {
             "last_updated": "2025-11-28 21:56:17 UTC",
@@ -731,26 +740,11 @@
         document.body.setAttribute('data-theme', savedTheme);
 
         // MODAL FUNCTIONS
-        function openModal(provider, model, response, charCount) {
-            document.getElementById('modalTitle').textContent = `${provider} - ${model}`;
-            document.getElementById('modalBody').textContent = response;
-            
-            const charClass = getCharCountClass(charCount);
-            let charStatus = '';
-            if (charCount < 1000) {
-                charStatus = `${charCount} chars (Too short - minimum 1000)`;
-            } else if (charCount <= 1200) {
-                charStatus = `${charCount} chars (Within target range ✓)`;
-            } else {
-                charStatus = `${charCount} chars (Exceeds maximum 1200)`;
-            }
-            document.getElementById('modalCharCount').innerHTML = `<span class="char-count-badge ${charClass}">${charStatus}</span>`;
-            
-            document.getElementById('responseModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
+        function toggleResponse(element) {
+            element.classList.toggle('expanded');
             if (typeof gtag !== 'undefined') {
-                gtag('event', 'view_response', {event_category: 'engagement', event_label: provider});
+                const action = element.classList.contains('expanded') ? 'expand' : 'collapse';
+                gtag('event', 'response_' + action, {event_category: 'engagement'});
             }
         }
 
@@ -866,7 +860,7 @@
             
             // Response preview at bottom
             const responseHTML = isOnline && result.response_preview ? 
-                `<div class="response-preview-bottom" onclick='openModal("${escapeHtml(result.provider)}", "${escapeHtml(result.model)}", ${JSON.stringify(result.response_preview)}, ${result.character_count})'>
+                `<div class="response-preview-bottom" onclick="toggleResponse(this); return false;" data-old='openModal("${escapeHtml(result.provider)}", "${escapeHtml(result.model)}", ${JSON.stringify(result.response_preview)}, ${result.character_count})'>
                     ${escapeHtml(result.response_preview.substring(0, 120))}...
                 </div>` : '';
             
@@ -999,7 +993,4 @@
     </script>
     
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "WebApplication", "name": "Braiain AI Speed Index", "description": "Daily automated benchmarks of AI model API speed, tokens-per-second, and cost efficiency", "url": "https://yourdomain.com", "applicationCategory": "TechnologyApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "}
-    </script>
-</body>
-</html>
+    {"@context": "https://schema.org", "@type": "WebApplication", "name": "Braiain AI Speed Index", "description": "Daily automated benchmarks of AI model API speed, tokens-per-second, and c
