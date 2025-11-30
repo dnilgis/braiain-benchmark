@@ -27,20 +27,24 @@ MODELS = {
 
 PROMPT = """Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030.
 
-CRITICAL REQUIREMENTS - YOU WILL BE REJECTED IF YOU VIOLATE THESE:
-1. Your response MUST be between 1000-1200 characters (COUNT AS YOU WRITE!)
-2. You MUST end with a COMPLETE SENTENCE ending in a period (.)
-3. NO incomplete thoughts, NO trailing commas, NO cut-off sentences
-4. Write THREE complete paragraphs with proper endings
-5. If you go over 1200 characters, you FAILED
-6. If you write under 1000 characters, you FAILED
-7. Plan ahead: aim for 1100 characters and finish with a complete sentence
+ABSOLUTE REQUIREMENTS - FAILURE TO COMPLY WILL RESULT IN REJECTION:
 
-EXAMPLE OF GOOD ENDING: "...will transform global connectivity by 2030."
-EXAMPLE OF BAD ENDING: "...will transform global connectivity and"
+1. Response MUST be EXACTLY 1000-1200 characters
+2. COUNT YOUR CHARACTERS as you write
+3. Response MUST end with a complete sentence ending in a period (.)
+4. Write THREE complete paragraphs
+5. NO incomplete thoughts or trailing commas
 
-This is MANDATORY. Responses outside 1000-1200 characters OR with incomplete sentences will be rejected.""" 
-MAX_TOKENS = 320  # ~1200 chars at ~3.75 chars/token (allows for complete sentences)
+CHARACTER COUNT ENFORCEMENT:
+- If you reach 1150 characters, finish your sentence by 1200
+- If you're at 900 characters, you need to write more
+- Target: 1100 characters for safety margin
+
+GOOD ENDING EXAMPLE: "...enabling seamless global communication by 2030."
+BAD ENDING EXAMPLE: "...enabling seamless global communication and"
+
+THIS IS MANDATORY. Any response under 1000 or over 1200 characters WILL BE REJECTED.""" 
+MAX_TOKENS = 300  # Strict limit: ~1125 chars max at 3.75 chars/token
 MAX_CHARACTERS = 1200  # Approximately 4 chars per token
 MIN_CHARACTERS = 1000  # Minimum to ensure substance 
 TIMEOUT = 30
@@ -458,7 +462,8 @@ def test_groq(api_key):
         data = {
             "model": model,
             "messages": [{"role": "user", "content": PROMPT}],
-            "max_tokens": MAX_TOKENS  # Use same as all other models
+            "max_tokens": MAX_TOKENS,  # Use same as all other models
+            "stop": None  # Ensure no early stopping
         }
         
         start = time.monotonic()
