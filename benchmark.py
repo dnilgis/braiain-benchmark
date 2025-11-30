@@ -27,24 +27,41 @@ MODELS = {
 
 PROMPT = """Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030.
 
-ABSOLUTE REQUIREMENTS - FAILURE TO COMPLY WILL RESULT IN REJECTION:
+ABSOLUTE REQUIREMENTS - YOUR RESPONSE WILL BE REJECTED IF YOU VIOLATE THESE:
 
-1. Response MUST be EXACTLY 1000-1200 characters
-2. COUNT YOUR CHARACTERS as you write
-3. Response MUST end with a complete sentence ending in a period (.)
-4. Write THREE complete paragraphs
-5. NO incomplete thoughts or trailing commas
+YOU MUST GENERATE EXACTLY 1000-1200 CHARACTERS. NOT 300. NOT 1500. EXACTLY 1000-1200.
 
-CHARACTER COUNT ENFORCEMENT:
-- If you reach 1150 characters, finish your sentence by 1200
-- If you're at 900 characters, you need to write more
-- Target: 1100 characters for safety margin
+1. COUNT every character as you write
+2. At 1150 characters, finish your current sentence by 1200
+3. Response MUST end with a complete sentence ending with a period (.)
+4. Write EXACTLY THREE complete paragraphs
 
-GOOD ENDING EXAMPLE: "...enabling seamless global communication by 2030."
-BAD ENDING EXAMPLE: "...enabling seamless global communication and"
+DO NOT STOP EARLY. DO NOT WRITE TOO MUCH. TARGET: 1100 CHARACTERS.
 
-THIS IS MANDATORY. Any response under 1000 or over 1200 characters WILL BE REJECTED.""" 
-MAX_TOKENS = 300  # Strict limit: ~1125 chars max at 3.75 chars/token
+EXAMPLE GOOD ENDING: "...enabling seamless global communication by 2030."
+EXAMPLE BAD ENDING: "...enabling seamless global" (incomplete)
+
+THIS IS MANDATORY. RESPONSES UNDER 1000 OR OVER 1200 CHARACTERS ARE FAILURES.""" 
+
+# Model-specific token limits based on observed behavior
+MODEL_MAX_TOKENS = {
+    # Groq tends to stop early - give it more tokens
+    "groq": 350,
+    # Together tends to run long - limit it more
+    "together": 280,
+    # OpenAI tends to run long - limit it
+    "openai": 280,
+    # Mistral tends to run long - limit it
+    "mistral": 280,
+    # Anthropic is good - use standard
+    "anthropic": 300,
+    # Google is usually good - use standard
+    "google": 300,
+    # Cohere - use standard
+    "cohere": 300
+}
+
+MAX_TOKENS = 300  # Default fallback
 MAX_CHARACTERS = 1200  # Approximately 4 chars per token
 MIN_CHARACTERS = 1000  # Minimum to ensure substance 
 TIMEOUT = 30
@@ -177,7 +194,7 @@ def test_openai(api_key):
         data = {
             "model": model,
             "messages": [{"role": "user", "content": PROMPT}],
-            "max_tokens": MAX_TOKENS
+            "max_tokens": MODEL_MAX_TOKENS["openai"]  # Use provider-specific limit
         }
         
         start = time.monotonic()
@@ -278,7 +295,7 @@ def test_anthropic(api_key):
     for model in MODELS["anthropic"]:
         data = {
             "model": model,
-            "max_tokens": MAX_TOKENS,
+            "max_tokens": MODEL_MAX_TOKENS["anthropic"],  # Use provider-specific limit
             "messages": [{"role": "user", "content": [{"type": "text", "text": PROMPT}]}]
         }
         
@@ -382,7 +399,7 @@ def test_google(api_key):
             url = f"https://generativelanguage.googleapis.com/{api_version}/models/{model_name}:generateContent?key={api_key}"
             data = {
                 "contents": [{"parts": [{"text": PROMPT}]}],
-                "generationConfig": {"maxOutputTokens": MAX_TOKENS}
+                "generationConfig": {"maxOutputTokens": MODEL_MAX_TOKENS["google"]}
             }
             
             start = time.monotonic()
@@ -462,7 +479,7 @@ def test_groq(api_key):
         data = {
             "model": model,
             "messages": [{"role": "user", "content": PROMPT}],
-            "max_tokens": MAX_TOKENS,  # Use same as all other models
+            "max_tokens": MODEL_MAX_TOKENS["groq"],  # Higher limit for Groq - it tends to stop early
             "stop": None  # Ensure no early stopping
         }
         
@@ -564,7 +581,7 @@ def test_mistral(api_key):
         data = {
             "model": model,
             "messages": [{"role": "user", "content": PROMPT}],
-            "max_tokens": MAX_TOKENS
+            "max_tokens": MODEL_MAX_TOKENS["mistral"]  # Use provider-specific limit
         }
         
         start = time.monotonic()
@@ -664,7 +681,7 @@ def test_cohere(api_key):
         data = {
             "model": model,
             "message": PROMPT,
-            "max_tokens": MAX_TOKENS
+            "max_tokens": MODEL_MAX_TOKENS["cohere"]  # Use provider-specific limit
         }
         
         start = time.monotonic()
@@ -764,7 +781,7 @@ def test_together(api_key):
     data = {
         "model": model,
         "messages": [{"role": "user", "content": PROMPT}],
-        "max_tokens": MAX_TOKENS
+        "max_tokens": MODEL_MAX_TOKENS["together"]  # Use provider-specific limit (lower for Together)
     }
     
     start = time.monotonic()
