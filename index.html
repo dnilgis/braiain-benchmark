@@ -289,6 +289,7 @@
                 .response-preview-bottom {
             margin: 15px 0 0 0;
             padding: 12px;
+            padding-bottom: 35px;  /* Space for expand button */
             background: var(--bg-tertiary);
             border-radius: 6px;
             border-left: 3px solid #2196f3;
@@ -300,10 +301,12 @@
             position: relative;
             cursor: pointer;
             transition: max-height 0.4s ease, box-shadow 0.3s;
+            word-wrap: break-word;
+            white-space: pre-wrap;
         }
         
         .response-preview-bottom.expanded {
-            max-height: 1000px;
+            max-height: 2000px;
             cursor: default;
         }
         
