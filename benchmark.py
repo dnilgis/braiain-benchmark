@@ -9,14 +9,13 @@ from datetime import datetime, timezone
 MODELS = {
     "openai": ["gpt-4o-mini", "gpt-4o", "gpt-3.5-turbo"],
     "anthropic": [
+        "claude-sonnet-4-20250514",
+        "claude-opus-4-20250514",
         "claude-3-5-sonnet-20241022",
-        "claude-3-5-sonnet-20240620", 
-        "claude-3-opus-20240229",
-        "claude-3-sonnet-20240229"
+        "claude-3-5-sonnet-20240620"
     ],
     "google": [
-        "gemini-1.5-pro-latest",
-        "gemini-1.5-flash-latest", 
+        "gemini-1.5-pro",
         "gemini-1.5-flash",
         "gemini-pro"
     ],
@@ -39,15 +38,17 @@ PRICING = {
     "gpt-4o": {"input": 2.50, "output": 10.00},
     "gpt-3.5-turbo": {"input": 0.50, "output": 1.50},
     # Anthropic
+    "claude-sonnet-4-20250514": {"input": 3.00, "output": 15.00},
+    "claude-opus-4-20250514": {"input": 15.00, "output": 75.00},
     "claude-3-5-sonnet-20241022": {"input": 3.00, "output": 15.00},
     "claude-3-5-sonnet-20240620": {"input": 3.00, "output": 15.00},
     "claude-3-5-sonnet-latest": {"input": 3.00, "output": 15.00},
     "claude-3-opus-20240229": {"input": 15.00, "output": 75.00},
     "claude-3-sonnet-20240229": {"input": 3.00, "output": 15.00},
     # Google (all free)
-    "gemini-1.5-pro-latest": {"input": 0.00, "output": 0.00},
-    "gemini-1.5-flash-latest": {"input": 0.00, "output": 0.00},
+    "gemini-1.5-pro": {"input": 0.00, "output": 0.00},
     "gemini-1.5-flash": {"input": 0.00, "output": 0.00},
+    "gemini-pro": {"input": 0.00, "output": 0.00},
     "gemini-pro": {"input": 0.00, "output": 0.00},
     # Groq (all free)
     "llama-3.1-70b-versatile": {"input": 0.00, "output": 0.00},
