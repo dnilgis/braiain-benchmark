@@ -458,8 +458,7 @@ def test_groq(api_key):
         data = {
             "model": model,
             "messages": [{"role": "user", "content": PROMPT}],
-            "max_tokens": 500,
-            "temperature": 0.7
+            "max_tokens": MAX_TOKENS  # Use same as all other models
         }
         
         start = time.monotonic()
