@@ -562,20 +562,6 @@
     </div>
 
     <!-- MODAL FOR FULL RESPONSE -->
-    <div class="modal-overlay" id="responseModal" onclick="closeModal(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <div class="modal-title" id="modalTitle">Response</div>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body" id="modalBody"></div>
-            <div class="modal-footer">
-                <span id="modalCharCount"></span>
-                <button class="sort-btn" onclick="closeModal()">Close</button>
-            </div>
-        </div>
-    </div>
-
     <!-- GOOGLE ADSENSE -->
     <div class="adsense-container">
         <div class="adsense-label">Advertisement</div>
@@ -687,11 +673,6 @@
         }
 
         
-
-        // Close modal on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
 
         function setDataSourceIndicator(source, data) {
             const indicator = document.getElementById("data-source-indicator");
