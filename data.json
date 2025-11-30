@@ -1,31 +1,31 @@
 {
-    "last_updated": "2025-11-29 21:23:44 UTC",
+    "last_updated": "2025-11-30 00:19:37 UTC",
     "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030. STRICT REQUIREMENTS: (1) Your response must be EXACTLY 1000-1200 characters - no more, no less. (2) You MUST end with a complete sentence - no partial thoughts. (3) Count your characters as you write and plan accordingly. (4) If you reach 1150 characters, wrap up your final sentence by character 1200. This is a hard limit - responses outside 1000-1200 characters will be rejected.",
     "max_tokens": 300,
     "results": [
         {
             "provider": "Groq",
             "model": "Llama 3.1 70B",
-            "time": 0.5836,
+            "time": 0.5465,
             "status": "Online",
-            "response_preview": "The internet's history began in 1969 with ARPANET. It expanded in the 1980s with the introduction of the Internet Protocol.   The World Wide Web was i...",
-            "full_response": "The internet's history began in 1969 with ARPANET. It expanded in the 1980s with the introduction of the Internet Protocol. \n\nThe World Wide Web was invented in 1989 by Tim Berners-Lee, making it easier to access and share information. \n\nBy 2030, the internet will be even more integrated into daily life, with increased reliance on artificial intelligence and virtual reality, changing the way we live and interact forever.",
-            "tokens_per_second": 161.07,
-            "output_tokens": 94,
-            "character_count": 424,
+            "response_preview": "The internet's history began in 1969 with ARPANET. It expanded in the 80s with the introduction of the Internet Protocol.   The World Wide Web was inv...",
+            "full_response": "The internet's history began in 1969 with ARPANET. It expanded in the 80s with the introduction of the Internet Protocol. \n\nThe World Wide Web was invented in 1989 by Tim Berners-Lee. This led to widespread use and development of websites, email, and online services. \n\nBy 2030, the internet will be even more integrated into daily life, with increased reliance on artificial intelligence and the Internet of Things, completely transforming how we live and interact.",
+            "tokens_per_second": 184.81,
+            "output_tokens": 101,
+            "character_count": 466,
             "cost_per_request": 0.0
         },
         {
             "provider": "OpenAI",
             "model": "GPT-4o Mini",
-            "time": 5.5249,
+            "time": 4.9036,
             "status": "Online",
-            "response_preview": "The history of the internet began in the 1960s with the development of ARPANET, a project funded by the U.S. Department of Defense aimed at creating a...",
-            "full_response": "The history of the internet began in the 1960s with the development of ARPANET, a project funded by the U.S. Department of Defense aimed at creating a robust, fault-tolerant communication system. By the 1970s, key technologies like packet switching and TCP/IP protocols emerged, allowing diverse networks to interconnect. In the 1980s, the introduction of the domain name system (DNS) made navigation easier, and the concept of the World Wide Web was introduced by Tim Berners-Lee in 1989, laying the groundwork for the modern internet. \n\nDuring the 1990s, the internet experienced explosive growth as web browsers emerged, making it accessible to the general public and spawning a digital economy. The dot-com bubble in the late 1990s signaled both rapid investment and a subsequent crash, leading to a more matured internet landscape. As social media, e-commerce, and mobile technology transformed user interaction, the internet became a fundamental aspect of daily life in the early 21st century. \n\nAs we look toward 2030, the internet is poised to evolve further with advancements in artificial intelligence, augmented reality, and expanded connectivity through technologies like 5G and beyond, fostering even deeper integration into society and the economy. The future may see a more immersive digital experience, creating challenges and opportunities yet to be fully realized.",
-            "tokens_per_second": 50.14,
-            "output_tokens": 277,
-            "character_count": 1382,
-            "cost_per_request": 0.000185
+            "response_preview": "The history of the internet began in the late 1960s with ARPANET, a U.S. Department of Defense project aimed at developing a resilient communications ...",
+            "full_response": "The history of the internet began in the late 1960s with ARPANET, a U.S. Department of Defense project aimed at developing a resilient communications network. By the 1970s, key protocols such as TCP/IP were established, laying the groundwork for future networks. The introduction of the World Wide Web in the early 1990s revolutionized access to information, enabling users to navigate through websites via hyperlinks. This marked the transition from a primarily academic tool to a public resource, sparking a rapid expansion of the internet.\n\nThroughout the late 1990s and early 2000s, the internet experienced exponential growth, with millions of users coming online and the emergence of search engines, social media platforms, and ecommerce. Innovations like broadband and mobile internet further accelerated connectivity, fundamentally changing how people communicate, shop, and access information. The evolution of web technologies enabled diverse applications such as cloud computing and mobile apps, solidifying the internet\u2019s role in daily life.\n\nLooking ahead to 2030, the internet is expected to further transform through advancements in technologies like 5G, artificial intelligence, and the Internet of Things (IoT). As connectivity becomes ubiquitous, we may witness the proliferation of smart cities and enhanced virtual experiences. Ultimately, the internet will continue to shape society in ways that are unimaginable today.",
+            "tokens_per_second": 54.25,
+            "output_tokens": 266,
+            "character_count": 1440,
+            "cost_per_request": 0.000179
         },
         {
             "provider": "Anthropic",
@@ -51,35 +51,6 @@
         }
     ],
     "history": [
-        {
-            "timestamp": "2025-11-28 00:12:03 UTC",
-            "results": {
-                "OpenAI": {
-                    "time": 5.6777,
-                    "tps": 52.84,
-                    "status": "Online",
-                    "cost": 0.000185
-                },
-                "Anthropic": {
-                    "time": 0.1454,
-                    "tps": 0,
-                    "status": "API FAILURE",
-                    "cost": null
-                },
-                "Google": {
-                    "time": 0.1127,
-                    "tps": 0,
-                    "status": "API FAILURE",
-                    "cost": null
-                },
-                "Groq": {
-                    "time": 0.1406,
-                    "tps": 0,
-                    "status": "API FAILURE",
-                    "cost": null
-                }
-            }
-        },
         {
             "timestamp": "2025-11-28 00:19:26 UTC",
             "results": {
@@ -906,6 +877,35 @@
                     "tps": 50.14,
                     "status": "Online",
                     "cost": 0.000185
+                },
+                "Anthropic": {
+                    "time": 99.9999,
+                    "tps": 0,
+                    "status": "API FAILURE",
+                    "cost": null
+                },
+                "Google": {
+                    "time": 99.9999,
+                    "tps": 0,
+                    "status": "API FAILURE",
+                    "cost": null
+                }
+            }
+        },
+        {
+            "timestamp": "2025-11-30 00:19:37 UTC",
+            "results": {
+                "Groq": {
+                    "time": 0.5465,
+                    "tps": 184.81,
+                    "status": "Online",
+                    "cost": 0.0
+                },
+                "OpenAI": {
+                    "time": 4.9036,
+                    "tps": 54.25,
+                    "status": "Online",
+                    "cost": 0.000179
                 },
                 "Anthropic": {
                     "time": 99.9999,
