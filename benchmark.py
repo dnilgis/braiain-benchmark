@@ -1,793 +1,1295 @@
-import os
-import time 
-import json
-import requests
-from datetime import datetime, timezone
-from typing import Dict, List, Optional, Callable
-from dataclasses import dataclass
-
-# --- CONFIGURATION ---
-MODELS = {
-    "openai": ["gpt-4o-mini", "gpt-4o", "gpt-3.5-turbo"],
-    "anthropic": [
-        "claude-sonnet-4-20250514",
-        "claude-opus-4-20250514",
-        "claude-3-5-sonnet-20241022",
-        "claude-3-5-sonnet-20240620"
-    ],
-    "google": ["gemini-1.5-pro", "gemini-1.5-flash", "gemini-pro"],
-    "groq": ["llama-3.3-70b-versatile", "llama-3.1-70b-versatile", "mixtral-8x7b-32768"],
-    "mistral": ["mistral-large-latest", "mistral-medium-latest"],
-    "cohere": ["command-r-plus", "command-r"],
-    "together": ["meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"]
-}
-
-# Enhanced prompt with stronger language for stubborn models
-PROMPT = """Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030.
-
-ABSOLUTE REQUIREMENTS - YOUR RESPONSE WILL BE REJECTED IF YOU VIOLATE THESE:
-
-YOU MUST WRITE EXACTLY 1000-1200 CHARACTERS. COUNT EVERY SINGLE CHARACTER.
-
-WRITE EXACTLY THREE PARAGRAPHS. STOP WHEN YOU REACH 1200 CHARACTERS.
-
-TARGET LENGTH: 1100 CHARACTERS
-
-END WITH A COMPLETE SENTENCE AND A PERIOD (.)
-
-DO NOT STOP WRITING UNTIL YOU REACH AT LEAST 1000 CHARACTERS. THIS IS MANDATORY.
-
-Your response must be substantive and detailed. DO NOT write short summaries."""
-
-# Optimized token limits per provider
-MODEL_MAX_TOKENS = {
-    "groq": 650,        # INCREASED - Groq needs much higher to hit target (was 500)
-    "together": 250,    # Perfect at 1288 chars → KEEP
-    "openai": 240,      # Good at ~1200 chars
-    "mistral": 260,     # Good at ~1200 chars
-    "anthropic": 300,   # Perfect at 1109 chars → KEEP
-    "google": 300,      # Standard
-    "cohere": 300       # Standard
-}
-
-# Sampling parameters to encourage longer responses from Groq
-GROQ_SAMPLING_PARAMS = {
-    "temperature": 0.8,      # Higher temperature for more creative/longer responses
-    "top_p": 0.95,          # Nucleus sampling
-    "frequency_penalty": 0.3 # Encourage variety to extend length
-}
-
-MAX_TOKENS = 300
-MAX_CHARACTERS = 1200
-MIN_CHARACTERS = 1000
-TIMEOUT = 30
-MAX_RETRIES = 2
-VALIDATION_ATTEMPTS = 3  # How many times to retry if character count is wrong
-
-PRICING = {
-    # OpenAI
-    "gpt-4o-mini": {"input": 0.15, "output": 0.60},
-    "gpt-4o": {"input": 2.50, "output": 10.00},
-    "gpt-3.5-turbo": {"input": 0.50, "output": 1.50},
-    # Anthropic
-    "claude-sonnet-4-20250514": {"input": 3.00, "output": 15.00},
-    "claude-opus-4-20250514": {"input": 15.00, "output": 75.00},
-    "claude-3-5-sonnet-20241022": {"input": 3.00, "output": 15.00},
-    "claude-3-5-sonnet-20240620": {"input": 3.00, "output": 15.00},
-    # Google (all free)
-    "gemini-1.5-pro": {"input": 0.00, "output": 0.00},
-    "gemini-1.5-flash": {"input": 0.00, "output": 0.00},
-    "gemini-pro": {"input": 0.00, "output": 0.00},
-    # Groq (all free)
-    "llama-3.1-70b-versatile": {"input": 0.00, "output": 0.00},
-    "llama-3.3-70b-versatile": {"input": 0.00, "output": 0.00},
-    "mixtral-8x7b-32768": {"input": 0.00, "output": 0.00},
-    # Others
-    "mistral-large-latest": {"input": 2.00, "output": 6.00},
-    "mistral-medium-latest": {"input": 2.70, "output": 8.10},
-    "command-r-plus": {"input": 3.00, "output": 15.00},
-    "command-r": {"input": 0.50, "output": 1.50},
-    "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo": {"input": 0.18, "output": 0.18}
-}
-
-PROMPT_TOKENS = 30
-
-@dataclass
-class BenchmarkResult:
-    provider: str
-    model: str
-    time: float
-    status: str
-    response_preview: str
-    full_response: str
-    tokens_per_second: float
-    output_tokens: int
-    character_count: int
-    cost_per_request: Optional[float]
-
-
-def get_preview(text: str, max_chars: Optional[int] = None) -> str:
-    """Return text for preview (CSS handles overflow, no truncation needed)"""
-    if not text:
-        return ""
-    clean_text = text.replace('\n', ' ').replace('\t', ' ').strip()
-    return clean_text
-
-
-def calculate_cost(model_name: str, input_tokens: int, output_tokens: int) -> Optional[float]:
-    """Calculate API request cost based on token usage"""
-    if model_name not in PRICING:
-        return None
-    pricing = PRICING[model_name]
-    input_cost = (input_tokens / 1_000_000) * pricing["input"]
-    output_cost = (output_tokens / 1_000_000) * pricing["output"]
-    return round(input_cost + output_cost, 6)
-
-
-def validate_character_count(char_count: int, model_name: str) -> bool:
-    """Validate character count and print appropriate message"""
-    if char_count < MIN_CHARACTERS:
-        print(f"  ⚠️  Response too short: {char_count} chars (minimum: {MIN_CHARACTERS})")
-        return False
-    elif char_count > MAX_CHARACTERS:
-        print(f"  ⚠️  Response too long: {char_count} chars (maximum: {MAX_CHARACTERS})")
-        return False
-    else:
-        print(f"  ✓ Character count within range: {char_count} chars")
-        return True
-
-
-def make_request_with_retry(request_func: Callable, max_retries: int = MAX_RETRIES):
-    """Retry HTTP requests with exponential backoff"""
-    for attempt in range(max_retries):
-        try:
-            return request_func()
-        except requests.exceptions.RequestException as e:
-            if attempt == max_retries - 1:
-                raise
-            wait_time = 2 ** attempt
-            print(f"  Retry {attempt + 1}/{max_retries} after {wait_time}s...")
-            time.sleep(wait_time)
-
-
-def create_error_result(provider: str, model_display: str, error: Exception, duration: float) -> Dict:
-    """Create a standardized error result"""
-    return {
-        "provider": provider,
-        "model": model_display,
-        "time": duration,
-        "status": "API FAILURE",
-        "response_preview": get_preview(str(error), 100),
-        "full_response": str(error),
-        "tokens_per_second": 0,
-        "output_tokens": 0,
-        "character_count": 0,
-        "cost_per_request": None
-    }
-
-
-def test_api_with_fallback(
-    provider: str,
-    model_display: str,
-    models_list: List[str],
-    make_request_func: Callable,
-    parse_response_func: Callable,
-    is_free: bool = False
-) -> Dict:
-    """
-    Generic API testing function with model fallback and validation retry.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRAIAIN SPEED INDEX // SYSTEM DIAGNOSTICS</title>
+    <meta name="description" content="Real-time AI model speed benchmarks. Terminal-style monitoring of OpenAI, Anthropic, Google Gemini, Groq performance metrics.">
     
-    Args:
-        provider: Provider name (e.g., "OpenAI")
-        model_display: Display name for the model
-        models_list: List of model names to try in order
-        make_request_func: Function that takes model name and returns (response, duration)
-        parse_response_func: Function that parses API response and returns result dict
-        is_free: Whether this is a free API (affects cost calculation)
-    """
+    <!-- Google Analytics GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1Y5SESHWEE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-1Y5SESHWEE');
+    </script>
     
-    for model in models_list:
-        print(f"  Trying model: {model}")
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
         
-        # Validation retry loop
-        for attempt in range(1, VALIDATION_ATTEMPTS + 1):
-            if attempt > 1:
-                print(f"  🔄 Retry attempt {attempt}/{VALIDATION_ATTEMPTS} due to character count...")
-                time.sleep(2)
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0d1117;
+            --bg-terminal: #000000;
+            --text-primary: #00ff41;
+            --text-secondary: #00cc33;
+            --text-dim: #006622;
+            --border-color: #00ff41;
+            --glow-color: #00ff41;
+        }
+        
+        [data-theme="amber"] {
+            --text-primary: #ffaa00;
+            --text-secondary: #ff8800;
+            --text-dim: #cc6600;
+            --border-color: #ffaa00;
+            --glow-color: #ffaa00;
+        }
+        
+        [data-theme="cyan"] {
+            --text-primary: #00ffff;
+            --text-secondary: #00cccc;
+            --text-dim: #006666;
+            --border-color: #00ffff;
+            --glow-color: #00ffff;
+        }
+        
+        [data-theme="red"] {
+            --text-primary: #ff0055;
+            --text-secondary: #cc0044;
+            --text-dim: #660022;
+            --border-color: #ff0055;
+            --glow-color: #ff0055;
+        }
+        
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+        
+        body {
+            font-family: 'Share Tech Mono', 'Courier New', monospace;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* SUBTLE CRT SCANLINE EFFECT */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.05),
+                rgba(0, 0, 0, 0.05) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        header {
+            background: linear-gradient(180deg, #0d1117 0%, #000000 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 30px 20px;
+            position: relative;
+        }
+        
+        .terminal-header {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .terminal-prompt {
+            font-size: 0.85em;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        
+        .terminal-prompt::before {
+            content: '> ';
+            color: var(--text-primary);
+        }
+        
+        /* CLEAN LOGO - SAME AS FOOTER */
+        .ascii-logo {
+            font-size: 0.65em;
+            color: var(--text-primary);
+            line-height: 1.1;
+            white-space: pre;
+            font-family: monospace;
+            margin: 20px 0;
+            text-shadow: 0 0 5px var(--glow-color);
+        }
+        
+        .tagline {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-top: 15px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .system-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 30px auto 0;
+            max-width: 800px;
+        }
+        
+        .status-item {
+            text-align: center;
+            padding: 15px;
+            border: 1px solid var(--text-dim);
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .status-value {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .status-label {
+            font-size: 0.7em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        
+        /* COMPACT CONTROLS - SINGLE ROW */
+        .controls-panel {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .controls-row {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-label {
+            color: var(--text-secondary);
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .terminal-btn {
+            padding: 6px 14px;
+            background: var(--bg-terminal);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            font-family: 'Share Tech Mono', monospace;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.7em;
+        }
+        
+        .terminal-btn::before {
+            content: '[ ';
+        }
+        
+        .terminal-btn::after {
+            content: ' ]';
+        }
+        
+        .terminal-btn:hover {
+            background: var(--text-primary);
+            color: var(--bg-terminal);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+        
+        .terminal-btn.active {
+            background: var(--text-primary);
+            color: var(--bg-terminal);
+        }
+        
+        .theme-selector {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .theme-btn {
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .theme-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .theme-btn.active::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--bg-terminal);
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .theme-green { background: #00ff41; }
+        .theme-amber { background: #ffaa00; }
+        .theme-cyan { background: #00ffff; }
+        .theme-red { background: #ff0055; }
+        
+        /* CARD VIEW */
+        .results-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+        }
+        
+        .terminal-card {
+            background: var(--bg-terminal);
+            border: 1px solid var(--border-color);
+            padding: 0;
+            transition: all 0.3s;
+        }
+        
+        .terminal-card:hover {
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .card-header-bar {
+            background: var(--text-primary);
+            color: var(--bg-terminal);
+            padding: 8px 15px;
+            font-size: 0.75em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .rank-display {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5em;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .rank-display.rank-1 {
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+        
+        .provider-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4em;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .model-name {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .metrics-display {
+            border: 1px solid var(--text-dim);
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dotted var(--text-dim);
+        }
+        
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.75em;
+            letter-spacing: 1px;
+        }
+        
+        .metric-value {
+            color: var(--text-primary);
+            font-weight: bold;
+        }
+        
+        .metric-value.status-online {
+            color: var(--text-primary);
+        }
+        
+        .metric-value.status-error {
+            color: #ff0055;
+        }
+        
+        .terminal-response {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--text-dim);
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 0.75em;
+            max-height: 80px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: max-height 0.3s;
+        }
+        
+        .terminal-response.expanded {
+            max-height: 1000px;
+        }
+        
+        .terminal-response::before {
+            content: '>>> OUTPUT';
+            display: block;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        
+        .action-link {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            margin-top: 15px;
+            background: var(--bg-terminal);
+            color: var(--text-primary);
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8em;
+            transition: all 0.2s;
+        }
+        
+        .action-link:hover {
+            background: var(--text-primary);
+            color: var(--bg-terminal);
+        }
+        
+        /* LINEAR TABLE VIEW */
+        .results-table-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            overflow-x: auto;
+        }
+        
+        .terminal-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-terminal);
+            border: 1px solid var(--border-color);
+        }
+        
+        .terminal-table thead {
+            background: var(--text-primary);
+            color: var(--bg-terminal);
+        }
+        
+        .terminal-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.75em;
+        }
+        
+        .terminal-table td {
+            padding: 12px;
+            border: 1px solid var(--text-dim);
+            color: var(--text-secondary);
+            font-size: 0.85em;
+        }
+        
+        .terminal-table tbody tr {
+            transition: all 0.2s;
+        }
+        
+        .terminal-table tbody tr:hover {
+            background: rgba(0, 255, 65, 0.05);
+        }
+        
+        .table-rank {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3em;
+            color: var(--text-primary);
+            font-weight: bold;
+        }
+        
+        .table-provider {
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        .table-metric {
+            color: var(--text-primary);
+            font-weight: bold;
+        }
+        
+        /* CHART SECTION - SIMPLIFIED */
+        .chart-terminal {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .terminal-window {
+            background: var(--bg-terminal);
+            border: 1px solid var(--border-color);
+        }
+        
+        .window-title-bar {
+            background: var(--text-primary);
+            color: var(--bg-terminal);
+            padding: 10px 15px;
+            font-weight: bold;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+        }
+        
+        .window-content {
+            padding: 25px;
+        }
+        
+        .chart-container {
+            height: 400px;
+            position: relative;
+        }
+        
+        /* INFO SECTION */
+        .info-terminal {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .info-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .info-block h2 {
+            font-family: 'Orbitron', monospace;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .info-block h2::before {
+            content: '>> ';
+            color: var(--text-dim);
+        }
+        
+        .info-block p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .info-card {
+            border: 1px solid var(--text-dim);
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .info-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .info-card h3::before {
+            content: '> ';
+        }
+        
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .info-list li {
+            padding: 6px 0;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+        
+        .info-list li::before {
+            content: '- ';
+            color: var(--text-primary);
+        }
+        
+        /* LOADING */
+        .loading-terminal {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .loading-text {
+            font-size: 1.1em;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+        
+        .loading-text::after {
+            content: '';
+            animation: loading-dots 1.5s infinite;
+        }
+        
+        @keyframes loading-dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        .loading-bar {
+            width: 300px;
+            height: 20px;
+            border: 1px solid var(--border-color);
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--text-primary);
+            animation: loading-scan 2s linear infinite;
+        }
+        
+        @keyframes loading-scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* FOOTER */
+        footer {
+            background: var(--bg-terminal);
+            border-top: 1px solid var(--border-color);
+            padding: 40px 20px;
+            margin-top: 60px;
+            text-align: center;
+        }
+        
+        .footer-ascii {
+            font-size: 0.65em;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            white-space: pre;
+            font-family: monospace;
+            line-height: 1.1;
+        }
+        
+        footer p {
+            color: var(--text-secondary);
+            margin: 10px 0;
+            font-size: 0.85em;
+        }
+        
+        footer a {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .ascii-logo { font-size: 0.45em; }
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            .system-status {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .control-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .terminal-table {
+                font-size: 0.75em;
+            }
+            .chart-container {
+                height: 300px;
+            }
+        }
+        
+        /* UTILITY */
+        .hidden {
+            display: none !important;
+        }
+        
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body data-theme="green">
+    
+    <header>
+        <div class="terminal-header">
+            <div class="terminal-prompt">SYSTEM BOOT SEQUENCE INITIATED</div>
             
-            start = time.monotonic()
-            try:
-                response, duration = make_request_func(model)
-                result = parse_response_func(response, model, duration, is_free)
+            <!-- CLEAN LOGO - SAME AS FOOTER -->
+            <div class="ascii-logo">
+═══════════════════════════════════════════════════════════
+ ██████╗ ██████╗  █████╗ ██╗ █████╗ ██╗███╗   ██╗
+ ██╔══██╗██╔══██╗██╔══██╗██║██╔══██╗██║████╗  ██║
+ ██████╔╝██████╔╝███████║██║███████║██║██╔██╗ ██║
+ ██╔══██╗██╔══██╗██╔══██║██║██╔══██║██║██║╚██╗██║
+ ██████╔╝██║  ██║██║  ██║██║██║  ██║██║██║ ╚████║
+ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
+═══════════════════════════════════════════════════════════
+            </div>
+            
+            <div class="tagline">Real-Time LLM Performance Monitoring</div>
+            
+            <div class="system-status">
+                <div class="status-item">
+                    <div class="status-value" id="provider-count">7</div>
+                    <div class="status-label">NODES</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value">LIVE</div>
+                    <div class="status-label">STATUS</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value">6H</div>
+                    <div class="status-label">REFRESH</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value">30D</div>
+                    <div class="status-label">HISTORY</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- COMPACT CONTROLS - SINGLE ROW -->
+    <div class="controls-panel">
+        <div class="controls-row">
+            <div class="control-group">
+                <span class="control-label">VIEW:</span>
+                <div class="btn-group">
+                    <button class="terminal-btn active" onclick="setViewMode('cards')" id="btn-cards">CARDS</button>
+                    <button class="terminal-btn" onclick="setViewMode('table')" id="btn-table">TABLE</button>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <span class="control-label">SORT:</span>
+                <div class="btn-group">
+                    <button class="terminal-btn active" onclick="sortResults('speed')" id="btn-speed">SPEED</button>
+                    <button class="terminal-btn" onclick="sortResults('tps')" id="btn-tps">TPS</button>
+                    <button class="terminal-btn" onclick="sortResults('cost')" id="btn-cost">COST</button>
+                    <button class="terminal-btn" onclick="refreshData(event)">REFRESH</button>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <span class="control-label">THEME:</span>
+                <div class="theme-selector">
+                    <button class="theme-btn theme-green active" onclick="setTheme('green')" title="Green Phosphor"></button>
+                    <button class="theme-btn theme-amber" onclick="setTheme('amber')" title="Amber Monitor"></button>
+                    <button class="theme-btn theme-cyan" onclick="setTheme('cyan')" title="Cyan Terminal"></button>
+                    <button class="theme-btn theme-red" onclick="setTheme('red')" title="Red Alert"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARDS VIEW -->
+    <div class="results-grid" id="cards-view">
+        <div class="loading-terminal">
+            <div class="loading-text">INITIALIZING NEURAL NET</div>
+            <div class="loading-bar"></div>
+        </div>
+    </div>
+
+    <!-- TABLE VIEW -->
+    <div class="results-table-container hidden" id="table-view">
+        <table class="terminal-table">
+            <thead>
+                <tr>
+                    <th>RANK</th>
+                    <th>PROVIDER</th>
+                    <th>MODEL</th>
+                    <th>SPEED (s)</th>
+                    <th>TPS</th>
+                    <th>COST</th>
+                    <th>CHARS</th>
+                    <th>STATUS</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Populated by JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- SIMPLIFIED CHART SECTION - NO DATE SELECTOR -->
+    <div class="chart-terminal" id="chart-section" style="display: none;">
+        <div class="terminal-window">
+            <div class="window-title-bar">
+                PERFORMANCE ANALYSIS // HISTORICAL TRENDS (30 DAYS)
+            </div>
+            <div class="window-content">
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INFO SECTION -->
+    <div class="info-terminal">
+        <div class="info-block">
+            <h2>SYSTEM OVERVIEW</h2>
+            <p>
+                BRAIAIN SPEED INDEX is an independent benchmarking system for Large Language Model APIs. 
+                We execute identical prompts across all major providers under controlled conditions, 
+                measuring real-world latency, throughput, and cost metrics.
+            </p>
+            <p>
+                Unlike vendor-provided benchmarks, our data represents actual API performance from 
+                production infrastructure. All tests run from the same datacenter with consistent 
+                network conditions, ensuring valid cross-provider comparisons.
+            </p>
+        </div>
+
+        <div class="info-block">
+            <h2>METHODOLOGY</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>TEST PARAMETERS</h3>
+                    <ul class="info-list">
+                        <li>Identical 3-paragraph prompt</li>
+                        <li>Target: 1000-1200 characters</li>
+                        <li>Max tokens: 240-650 (optimized per provider)</li>
+                        <li>Validation: 3 retry attempts</li>
+                    </ul>
+                </div>
                 
-                # Validate character count
-                char_count = result.get('character_count', 0)
-                if MIN_CHARACTERS <= char_count <= MAX_CHARACTERS:
-                    print(f"  ✓ Successfully used model: {model}")
-                    validate_character_count(char_count, model)
-                    return result
-                else:
-                    print(f"  ❌ Attempt {attempt} failed validation (got {char_count} chars)")
-                    if attempt < VALIDATION_ATTEMPTS:
-                        continue  # Try again
-                    else:
-                        print(f"  ⚠️  Using result despite validation failure")
-                        return result  # Return anyway after all attempts
-                        
-            except requests.exceptions.HTTPError as e:
-                if e.response.status_code == 404:
-                    print(f"  ✗ Model {model} not found, trying next...")
-                    break  # Try next model
-                else:
-                    duration = time.monotonic() - start
-                    print(f"{provider} API Failure: {e}")
-                    return create_error_result(provider, model_display, e, duration)
-            except Exception as e:
-                duration = time.monotonic() - start
-                print(f"{provider} API Failure: {e}")
-                return create_error_result(provider, model_display, e, duration)
-    
-    # All models failed
-    print(f"  ✗ All {provider} models failed")
-    return create_error_result(provider, model_display, Exception("All model versions failed"), 99.9999)
+                <div class="info-card">
+                    <h3>METRICS TRACKED</h3>
+                    <ul class="info-list">
+                        <li>SPEED: End-to-end latency</li>
+                        <li>TPS: Tokens per second</li>
+                        <li>COST: Per-request pricing</li>
+                        <li>QUALITY: Character validation</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3>DATA INTEGRITY</h3>
+                    <ul class="info-list">
+                        <li>Automated testing every 6 hours</li>
+                        <li>30-day rolling history</li>
+                        <li>Full response logging</li>
+                        <li>Transparent error reporting</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
+        <div class="info-block">
+            <h2>SYSTEM LIMITATIONS</h2>
+            <ul class="info-list">
+                <li>Results reflect our specific infrastructure and geographic location</li>
+                <li>Network conditions vary; absolute times may differ from your environment</li>
+                <li>Providers may update models without notice, affecting performance</li>
+                <li>Single prompt type; results may vary for different use cases</li>
+                <li>Rate limits and quotas may affect availability during testing</li>
+            </ul>
+        </div>
+    </div>
 
-def test_openai(api_key: str) -> Optional[Dict]:
-    """Test OpenAI API"""
-    if not api_key:
-        return None
-    
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-    
-    def make_request(model: str):
-        data = {
-            "model": model,
-            "messages": [{"role": "user", "content": PROMPT}],
-            "max_tokens": MODEL_MAX_TOKENS["openai"]
-        }
-        
-        def request_func():
-            return requests.post(
-                "https://api.openai.com/v1/chat/completions",
-                headers=headers,
-                json=data,
-                timeout=TIMEOUT
-            )
-        
-        start = time.monotonic()
-        response = make_request_with_retry(request_func)
-        response.raise_for_status()
-        duration = round(time.monotonic() - start, 4)
-        return response, duration
-    
-    def parse_response(response, model: str, duration: float, is_free: bool):
-        response_data = response.json()
-        response_text = response_data.get('choices', [{}])[0].get('message', {}).get('content', '')
-        char_count = len(response_text)
-        usage = response_data.get('usage', {})
-        input_tokens = usage.get('prompt_tokens', PROMPT_TOKENS)
-        output_tokens = usage.get('completion_tokens', MAX_TOKENS)
-        tps = round(output_tokens / duration, 2) if duration > 0 else 0
-        cost = calculate_cost(model, input_tokens, output_tokens)
-        
-        return {
-            "provider": "OpenAI",
-            "model": "GPT-4o Mini",
-            "time": duration,
-            "status": "Online",
-            "response_preview": get_preview(response_text),
-            "full_response": response_text,
-            "tokens_per_second": tps,
-            "output_tokens": output_tokens,
-            "character_count": char_count,
-            "cost_per_request": cost
-        }
-    
-    return test_api_with_fallback(
-        "OpenAI",
-        "GPT-4o Mini",
-        MODELS["openai"],
-        make_request,
-        parse_response
-    )
+    <footer>
+        <div class="footer-ascii">
+═══════════════════════════════════════════════════════════
+ ██████╗ ██████╗  █████╗ ██╗ █████╗ ██╗███╗   ██╗
+ ██╔══██╗██╔══██╗██╔══██╗██║██╔══██╗██║████╗  ██║
+ ██████╔╝██████╔╝███████║██║███████║██║██╔██╗ ██║
+ ██╔══██╗██╔══██╗██╔══██║██║██╔══██║██║██║╚██╗██║
+ ██████╔╝██║  ██║██║  ██║██║██║  ██║██║██║ ╚████║
+ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
+═══════════════════════════════════════════════════════════
+        </div>
+        <p>A <a href="mailto:contact@braiain.com">dnilgis</a> PROJECT // v2.1</p>
+        <p style="color: var(--text-dim); margin-top: 15px;">
+            DISCLAIMER: Data provided for informational purposes only. Performance may vary. 
+            All trademarks are property of their respective owners.
+        </p>
+        <p id="footer-timestamp" style="margin-top: 15px; color: var(--text-dim);">
+            LAST SYNC: <span id="last-updated">LOADING...</span>
+        </p>
+    </footer>
 
+    <script>
+        // FALLBACK DATA
+        const FALLBACK_DATA = {
+            "last_updated": "2025-11-30 00:00:00 UTC",
+            "results": [
+                {"provider": "Groq", "model": "Llama 3.3 70B", "time": 0.53, "status": "Online", "response_preview": "The internet originated in the 1960s...", "full_response": "The internet originated in the 1960s as a US military project, ARPANET, designed to create a decentralized communication network...", "tokens_per_second": 176, "output_tokens": 479, "character_count": 1087, "cost_per_request": 0.0},
+                {"provider": "OpenAI", "model": "GPT-4o Mini", "time": 6.08, "status": "Online", "response_preview": "The internet's origins trace back...", "full_response": "The internet's origins trace back to the 1960s with ARPANET...", "tokens_per_second": 44, "output_tokens": 300, "character_count": 1172, "cost_per_request": 0.0002}
+            ],
+            "history": []
+        };
 
-def test_anthropic(api_key: str) -> Optional[Dict]:
-    """Test Anthropic API"""
-    if not api_key:
-        return None
-    
-    headers = {
-        "x-api-key": api_key,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json"
-    }
-    
-    def make_request(model: str):
-        data = {
-            "model": model,
-            "max_tokens": MODEL_MAX_TOKENS["anthropic"],
-            "messages": [{"role": "user", "content": [{"type": "text", "text": PROMPT}]}]
-        }
-        
-        def request_func():
-            return requests.post(
-                "https://api.anthropic.com/v1/messages",
-                headers=headers,
-                json=data,
-                timeout=TIMEOUT
-            )
-        
-        start = time.monotonic()
-        response = make_request_with_retry(request_func)
-        response.raise_for_status()
-        duration = round(time.monotonic() - start, 4)
-        return response, duration
-    
-    def parse_response(response, model: str, duration: float, is_free: bool):
-        response_data = response.json()
-        response_text = response_data.get('content', [{}])[0].get('text', '')
-        char_count = len(response_text)
-        usage = response_data.get('usage', {})
-        input_tokens = usage.get('input_tokens', PROMPT_TOKENS)
-        output_tokens = usage.get('output_tokens', MAX_TOKENS)
-        tps = round(output_tokens / duration, 2) if duration > 0 else 0
-        cost = calculate_cost(model, input_tokens, output_tokens)
-        
-        return {
-            "provider": "Anthropic",
-            "model": "Claude 3.5 Sonnet",
-            "time": duration,
-            "status": "Online",
-            "response_preview": get_preview(response_text),
-            "full_response": response_text,
-            "tokens_per_second": tps,
-            "output_tokens": output_tokens,
-            "character_count": char_count,
-            "cost_per_request": cost
-        }
-    
-    return test_api_with_fallback(
-        "Anthropic",
-        "Claude 3.5 Sonnet",
-        MODELS["anthropic"],
-        make_request,
-        parse_response
-    )
+        const AFFILIATE_LINKS = {
+            "OpenAI": "https://platform.openai.com/signup",
+            "Google": "https://ai.google.dev/",
+            "Anthropic": "https://console.anthropic.com/",
+            "Groq": "https://console.groq.com/",
+            "Mistral AI": "https://console.mistral.ai/",
+            "Cohere": "https://dashboard.cohere.com/",
+            "Together AI": "https://api.together.xyz/"
+        };
 
+        const PROVIDER_COLORS = {
+            "OpenAI": "#10a37f",
+            "Anthropic": "#d97757",
+            "Google": "#4285f4",
+            "Groq": "#f55036",
+            "Mistral AI": "#ff7000",
+            "Cohere": "#39594d",
+            "Together AI": "#6366f1"
+        };
 
-def test_groq(api_key: str) -> Optional[Dict]:
-    """Test Groq API with enhanced parameters for longer responses"""
-    if not api_key:
-        return None
-    
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-    
-    def make_request(model: str):
-        data = {
-            "model": model,
-            "messages": [{"role": "user", "content": PROMPT}],
-            "max_tokens": MODEL_MAX_TOKENS["groq"],
-            "stop": None,  # Ensure no early stopping
-            **GROQ_SAMPLING_PARAMS  # Add temperature and sampling params
-        }
-        
-        def request_func():
-            return requests.post(
-                "https://api.groq.com/openai/v1/chat/completions",
-                headers=headers,
-                json=data,
-                timeout=TIMEOUT
-            )
-        
-        start = time.monotonic()
-        response = make_request_with_retry(request_func)
-        response.raise_for_status()
-        duration = round(time.monotonic() - start, 4)
-        return response, duration
-    
-    def parse_response(response, model: str, duration: float, is_free: bool):
-        response_data = response.json()
-        response_text = response_data.get('choices', [{}])[0].get('message', {}).get('content', '')
-        char_count = len(response_text)
-        usage = response_data.get('usage', {})
-        input_tokens = usage.get('prompt_tokens', PROMPT_TOKENS)
-        output_tokens = usage.get('completion_tokens', MAX_TOKENS)
-        tps = round(output_tokens / duration, 2) if duration > 0 else 0
-        cost = 0.0  # Groq is free
-        
-        return {
-            "provider": "Groq",
-            "model": "Llama 3.3 70B",
-            "time": duration,
-            "status": "Online",
-            "response_preview": get_preview(response_text),
-            "full_response": response_text,
-            "tokens_per_second": tps,
-            "output_tokens": output_tokens,
-            "character_count": char_count,
-            "cost_per_request": cost
-        }
-    
-    return test_api_with_fallback(
-        "Groq",
-        "Llama 3.3 70B",
-        MODELS["groq"],
-        make_request,
-        parse_response,
-        is_free=True
-    )
+        let allResults = [];
+        let currentSort = 'speed';
+        let currentView = 'cards';
+        let trendChart = null;
+        let fullHistoryData = [];
 
-
-def test_google(api_key: str) -> Optional[Dict]:
-    """Test Google Gemini API"""
-    if not api_key:
-        return None
-    
-    # Try each model with both API versions
-    for model_name in MODELS["google"]:
-        for api_version in ["v1", "v1beta"]:
-            print(f"  Trying {api_version}/{model_name}...")
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
             
-            url = f"https://generativelanguage.googleapis.com/{api_version}/models/{model_name}:generateContent?key={api_key}"
-            data = {
-                "contents": [{"parts": [{"text": PROMPT}]}],
-                "generationConfig": {"maxOutputTokens": MODEL_MAX_TOKENS["google"]}
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.theme-${theme}`).classList.add('active');
+            
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'theme_change', {event_category: 'ui', event_label: theme});
+            }
+        }
+
+        function setViewMode(mode) {
+            currentView = mode;
+            
+            document.getElementById('btn-cards').classList.toggle('active', mode === 'cards');
+            document.getElementById('btn-table').classList.toggle('active', mode === 'table');
+            
+            document.getElementById('cards-view').classList.toggle('hidden', mode !== 'cards');
+            document.getElementById('table-view').classList.toggle('hidden', mode !== 'table');
+            
+            if (allResults.results) {
+                displayResults(allResults);
             }
             
-            start = time.monotonic()
-            try:
-                def request_func():
-                    return requests.post(
-                        url,
-                        headers={"Content-Type": "application/json"},
-                        json=data,
-                        timeout=TIMEOUT
-                    )
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'view_change', {event_category: 'ui', event_label: mode});
+            }
+        }
+
+        function sortResults(sortBy) {
+            currentSort = sortBy;
+            
+            ['speed', 'tps', 'cost'].forEach(type => {
+                document.getElementById(`btn-${type}`).classList.toggle('active', type === sortBy);
+            });
+            
+            if (allResults.results) {
+                displayResults(allResults);
+            }
+            
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'sort_change', {event_category: 'interaction', event_label: sortBy});
+            }
+        }
+
+        function getSortedResults() {
+            let sorted = [...allResults.results];
+            
+            if (currentSort === 'speed') {
+                sorted.sort((a, b) => {
+                    if (a.status !== 'Online') return 1;
+                    if (b.status !== 'Online') return -1;
+                    return a.time - b.time;
+                });
+            } else if (currentSort === 'tps') {
+                sorted.sort((a, b) => {
+                    if (a.status !== 'Online') return 1;
+                    if (b.status !== 'Online') return -1;
+                    return b.tokens_per_second - a.tokens_per_second;
+                });
+            } else if (currentSort === 'cost') {
+                sorted.sort((a, b) => {
+                    if (a.status !== 'Online') return 1;
+                    if (b.status !== 'Online') return -1;
+                    const costA = a.cost_per_request === null ? 0 : a.cost_per_request;
+                    const costB = b.cost_per_request === null ? 0 : b.cost_per_request;
+                    return costA - costB;
+                });
+            }
+            
+            return sorted;
+        }
+
+        function formatCost(cost) {
+            return cost === null ? "N/A" : cost === 0 ? "FREE" : cost < 0.0001 ? "<$0.0001" : `$${cost.toFixed(4)}`;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function createCard(result, rank) {
+            const isOnline = result.status === "Online";
+            const rankClass = rank <= 3 ? ` rank-${rank}` : '';
+            
+            return `
+                <div class="terminal-card">
+                    <div class="card-header-bar">
+                        <span>NODE_${rank.toString().padStart(2, '0')}</span>
+                        <span>${result.provider.toUpperCase()}</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="rank-display${rankClass}">
+                            #${rank}
+                        </div>
+                        <div class="provider-name">${escapeHtml(result.provider)}</div>
+                        <div class="model-name">${escapeHtml(result.model)}</div>
+                        
+                        <div class="metrics-display">
+                            <div class="metric-row">
+                                <span class="metric-label">SPEED</span>
+                                <span class="metric-value">${isOnline ? result.time.toFixed(2) + 's' : 'N/A'}</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">TPS</span>
+                                <span class="metric-value">${isOnline ? result.tokens_per_second.toFixed(0) : 'N/A'}</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">COST</span>
+                                <span class="metric-value">${formatCost(result.cost_per_request)}</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">CHARS</span>
+                                <span class="metric-value">${result.character_count || 'N/A'}</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">STATUS</span>
+                                <span class="metric-value ${isOnline ? 'status-online' : 'status-error'}">${result.status}</span>
+                            </div>
+                        </div>
+                        
+                        ${isOnline && result.response_preview ? `
+                            <div class="terminal-response" onclick="this.classList.toggle('expanded')">
+                                ${escapeHtml(result.response_preview)}
+                            </div>
+                        ` : ''}
+                        
+                        ${isOnline ? `
+                            <a href="${AFFILIATE_LINKS[result.provider]}" target="_blank" class="action-link">
+                                ACCESS ${result.provider.toUpperCase()}
+                            </a>
+                        ` : `
+                            <div class="action-link" style="opacity: 0.5; cursor: not-allowed;">
+                                OFFLINE
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        function createTableRow(result, rank) {
+            const isOnline = result.status === "Online";
+            
+            return `
+                <tr>
+                    <td class="table-rank">#${rank}</td>
+                    <td class="table-provider">${escapeHtml(result.provider)}</td>
+                    <td>${escapeHtml(result.model)}</td>
+                    <td class="table-metric">${isOnline ? result.time.toFixed(2) : 'N/A'}</td>
+                    <td class="table-metric">${isOnline ? result.tokens_per_second.toFixed(0) : 'N/A'}</td>
+                    <td class="table-metric">${formatCost(result.cost_per_request)}</td>
+                    <td>${result.character_count || 'N/A'}</td>
+                    <td class="${isOnline ? 'status-online' : 'status-error'}">${result.status}</td>
+                    <td>
+                        ${isOnline ? `<a href="${AFFILIATE_LINKS[result.provider]}" target="_blank" style="color: var(--text-primary);">ACCESS</a>` : 'OFFLINE'}
+                    </td>
+                </tr>
+            `;
+        }
+
+        function displayResults(data) {
+            allResults = data;
+            const results = getSortedResults();
+            
+            document.getElementById('last-updated').textContent = data.last_updated || 'UNKNOWN';
+            
+            const cardsContainer = document.getElementById('cards-view');
+            cardsContainer.innerHTML = results.map((result, index) => 
+                createCard(result, index + 1)
+            ).join('');
+            
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = results.map((result, index) => 
+                createTableRow(result, index + 1)
+            ).join('');
+            
+            if (data.history && data.history.length >= 2) {
+                createTrendChart(data.history);
+            }
+        }
+
+        function createTrendChart(history) {
+            const ctx = document.getElementById("trendChart");
+            const chartSection = document.getElementById("chart-section");
+            
+            if (!ctx || !history || history.length < 2) {
+                if (chartSection) chartSection.style.display = "none";
+                return;
+            }
+            
+            if (chartSection) chartSection.style.display = "block";
+            fullHistoryData = history;
+            
+            // Always show all available data (up to 30 days)
+            const labels = [];
+            const datasets = {};
+            
+            history.forEach(entry => {
+                const date = new Date(entry.timestamp);
+                labels.push(date.toLocaleDateString("en-US", {month: "short", day: "numeric"}));
                 
-                response = make_request_with_retry(request_func)
-                response.raise_for_status()
-                duration = round(time.monotonic() - start, 4)
-                
-                response_data = response.json()
-                response_text = response_data.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
-                char_count = len(response_text)
-                usage = response_data.get('usageMetadata', {})
-                input_tokens = usage.get('promptTokenCount', PROMPT_TOKENS)
-                output_tokens = usage.get('candidatesTokenCount', MAX_TOKENS)
-                tps = round(output_tokens / duration, 2) if duration > 0 else 0
-                cost = 0.0  # Google is free
-                
-                if MIN_CHARACTERS <= char_count <= MAX_CHARACTERS:
-                    print(f"  ✓ Successfully used model: {api_version}/{model_name}")
-                    validate_character_count(char_count, model_name)
-                    
-                    return {
-                        "provider": "Google",
-                        "model": "Gemini 1.5 Pro",
-                        "time": duration,
-                        "status": "Online",
-                        "response_preview": get_preview(response_text),
-                        "full_response": response_text,
-                        "tokens_per_second": tps,
-                        "output_tokens": output_tokens,
-                        "character_count": char_count,
-                        "cost_per_request": cost
+                Object.keys(entry.results).forEach(provider => {
+                    if (!datasets[provider]) {
+                        datasets[provider] = {
+                            label: provider,
+                            data: [],
+                            borderColor: PROVIDER_COLORS[provider] || "#00ff41",
+                            backgroundColor: PROVIDER_COLORS[provider] || "#00ff41",
+                            tension: 0.3,
+                            spanGaps: true,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            borderWidth: 2
+                        };
                     }
-                else:
-                    print(f"  ⚠️  {api_version}/{model_name} returned {char_count} chars")
                     
-            except requests.exceptions.HTTPError as e:
-                if e.response.status_code == 404:
-                    print(f"  ✗ {api_version}/{model_name} not found")
-                    continue
-                else:
-                    print(f"  ✗ HTTP error for {api_version}/{model_name}: {e.response.status_code}")
-                    continue
-            except Exception as e:
-                print(f"  ✗ Error with {api_version}/{model_name}: {str(e)[:100]}")
-                continue
-    
-    # All models failed
-    print(f"  ✗ All Google models failed")
-    return create_error_result("Google", "Gemini 1.5 Pro", Exception("All model versions failed"), 99.9999)
-
-
-def test_mistral(api_key: str) -> Optional[Dict]:
-    """Test Mistral AI API"""
-    if not api_key:
-        return None
-    
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-    
-    def make_request(model: str):
-        data = {
-            "model": model,
-            "messages": [{"role": "user", "content": PROMPT}],
-            "max_tokens": MODEL_MAX_TOKENS["mistral"]
+                    const time = entry.results[provider].time;
+                    datasets[provider].data.push(time < 99 && entry.results[provider].status === "Online" ? time : null);
+                });
+            });
+            
+            if (trendChart) trendChart.destroy();
+            
+            trendChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: Object.values(datasets)
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "top",
+                            labels: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary'),
+                                font: { family: 'Share Tech Mono', size: 11 }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                            titleColor: getComputedStyle(document.documentElement).getPropertyValue('--text-primary'),
+                            bodyColor: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary'),
+                            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--border-color'),
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.parsed.y === null) return null;
+                                    return context.dataset.label + ": " + context.parsed.y.toFixed(2) + "s";
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "LATENCY (seconds)",
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary'),
+                                font: { family: 'Share Tech Mono' }
+                            },
+                            ticks: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary'),
+                                font: { family: 'Share Tech Mono' }
+                            },
+                            grid: {
+                                color: 'rgba(0, 255, 65, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary'),
+                                font: { family: 'Share Tech Mono' }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
         }
-        
-        def request_func():
-            return requests.post(
-                "https://api.mistral.ai/v1/chat/completions",
-                headers=headers,
-                json=data,
-                timeout=TIMEOUT
-            )
-        
-        start = time.monotonic()
-        response = make_request_with_retry(request_func)
-        response.raise_for_status()
-        duration = round(time.monotonic() - start, 4)
-        return response, duration
-    
-    def parse_response(response, model: str, duration: float, is_free: bool):
-        response_data = response.json()
-        response_text = response_data.get('choices', [{}])[0].get('message', {}).get('content', '')
-        char_count = len(response_text)
-        usage = response_data.get('usage', {})
-        input_tokens = usage.get('prompt_tokens', PROMPT_TOKENS)
-        output_tokens = usage.get('completion_tokens', MAX_TOKENS)
-        tps = round(output_tokens / duration, 2) if duration > 0 else 0
-        cost = calculate_cost(model, input_tokens, output_tokens)
-        
-        return {
-            "provider": "Mistral AI",
-            "model": "Mistral Large",
-            "time": duration,
-            "status": "Online",
-            "response_preview": get_preview(response_text),
-            "full_response": response_text,
-            "tokens_per_second": tps,
-            "output_tokens": output_tokens,
-            "character_count": char_count,
-            "cost_per_request": cost
+
+        async function fetchData() {
+            console.log("INITIATING DATA FETCH...");
+            const paths = ["./data.json", "data.json", "/data.json"];
+            
+            for (const path of paths) {
+                try {
+                    const response = await fetch(path + "?t=" + Date.now());
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log("✓ DATA LOADED FROM:", path);
+                        displayResults(data);
+                        if (typeof gtag !== 'undefined') {
+                            gtag("event", "data_loaded", {event_category: "data", event_label: "live_data"});
+                        }
+                        return true;
+                    }
+                } catch (error) {
+                    console.log(`× FAILED TO LOAD FROM ${path}:`, error.message);
+                }
+            }
+            
+            console.log("⚠ USING FALLBACK DATA");
+            displayResults(FALLBACK_DATA);
+            if (typeof gtag !== 'undefined') {
+                gtag("event", "data_loaded", {event_category: "data", event_label: "fallback_data"});
+            }
+            return false;
         }
-    
-    return test_api_with_fallback(
-        "Mistral AI",
-        "Mistral Large",
-        MODELS["mistral"],
-        make_request,
-        parse_response
-    )
 
-
-def test_cohere(api_key: str) -> Optional[Dict]:
-    """Test Cohere API"""
-    if not api_key:
-        return None
-    
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-    
-    def make_request(model: str):
-        data = {
-            "model": model,
-            "message": PROMPT,
-            "max_tokens": MODEL_MAX_TOKENS["cohere"]
+        async function refreshData(event) {
+            const btn = event.target;
+            btn.disabled = true;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'SYNCING';
+            
+            await fetchData();
+            
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }, 2000);
+            
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'manual_refresh', {event_category: 'interaction'});
+            }
         }
-        
-        def request_func():
-            return requests.post(
-                "https://api.cohere.com/v1/chat",
-                headers=headers,
-                json=data,
-                timeout=TIMEOUT
-            )
-        
-        start = time.monotonic()
-        response = make_request_with_retry(request_func)
-        response.raise_for_status()
-        duration = round(time.monotonic() - start, 4)
-        return response, duration
-    
-    def parse_response(response, model: str, duration: float, is_free: bool):
-        response_data = response.json()
-        response_text = response_data.get('text', '')
-        char_count = len(response_text)
-        usage = response_data.get('meta', {}).get('billed_units', {})
-        input_tokens = usage.get('input_tokens', PROMPT_TOKENS)
-        output_tokens = usage.get('output_tokens', MAX_TOKENS)
-        tps = round(output_tokens / duration, 2) if duration > 0 else 0
-        cost = calculate_cost(model, input_tokens, output_tokens)
-        
-        return {
-            "provider": "Cohere",
-            "model": "Command R+",
-            "time": duration,
-            "status": "Online",
-            "response_preview": get_preview(response_text),
-            "full_response": response_text,
-            "tokens_per_second": tps,
-            "output_tokens": output_tokens,
-            "character_count": char_count,
-            "cost_per_request": cost
-        }
-    
-    return test_api_with_fallback(
-        "Cohere",
-        "Command R+",
-        MODELS["cohere"],
-        make_request,
-        parse_response
-    )
 
+        const savedTheme = localStorage.getItem('theme') || 'green';
+        setTheme(savedTheme);
 
-def test_together(api_key: str) -> Optional[Dict]:
-    """Test Together AI API"""
-    if not api_key:
-        return None
+        console.log("BRAIAIN SPEED INDEX // SYSTEM ONLINE");
+        fetchData();
+        
+        setInterval(() => {
+            console.log("AUTO-SYNC INITIATED...");
+            fetchData();
+        }, 21600000);
+    </script>
     
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Braiain AI Speed Index",
+      "description": "Real-time LLM API performance benchmarking with terminal interface",
+      "applicationCategory": "DeveloperApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
     }
-    
-    model = MODELS["together"][0]
-    data = {
-        "model": model,
-        "messages": [{"role": "user", "content": PROMPT}],
-        "max_tokens": MODEL_MAX_TOKENS["together"]
-    }
-    
-    start = time.monotonic()
-    try:
-        def request_func():
-            return requests.post(
-                "https://api.together.xyz/v1/chat/completions",
-                headers=headers,
-                json=data,
-                timeout=TIMEOUT
-            )
-        
-        response = make_request_with_retry(request_func)
-        response.raise_for_status()
-        duration = round(time.monotonic() - start, 4)
-        
-        response_data = response.json()
-        response_text = response_data.get('choices', [{}])[0].get('message', {}).get('content', '')
-        char_count = len(response_text)
-        usage = response_data.get('usage', {})
-        input_tokens = usage.get('prompt_tokens', PROMPT_TOKENS)
-        output_tokens = usage.get('completion_tokens', MAX_TOKENS)
-        tps = round(output_tokens / duration, 2) if duration > 0 else 0
-        cost = calculate_cost(model, input_tokens, output_tokens)
-        
-        print(f"  ✓ Successfully used model: {model}")
-        validate_character_count(char_count, model)
-        
-        return {
-            "provider": "Together AI",
-            "model": "Llama 3.1 70B",
-            "time": duration,
-            "status": "Online",
-            "response_preview": get_preview(response_text),
-            "full_response": response_text,
-            "tokens_per_second": tps,
-            "output_tokens": output_tokens,
-            "character_count": char_count,
-            "cost_per_request": cost
-        }
-    except Exception as e:
-        duration = round(time.monotonic() - start, 4)
-        print(f"Together AI API Failure: {e}")
-        return create_error_result("Together AI", "Llama 3.1 70B", e, duration)
-
-
-def load_history() -> List[Dict]:
-    """Load historical benchmark data"""
-    try:
-        with open('data.json', 'r') as f:
-            data = json.load(f)
-            return data.get('history', [])
-    except (FileNotFoundError, json.JSONDecodeError):
-        return []
-
-
-def update_history(history: List[Dict], new_entry: Dict) -> List[Dict]:
-    """Update history with new entry, keeping last 30"""
-    history.append(new_entry)
-    if len(history) > 30:
-        history = history[-30:]
-    return history
-
-
-def update_json():
-    """Main function to run all benchmarks and update data.json"""
-    # Load API keys
-    api_keys = {
-        'openai': os.getenv('OPENAI_API_KEY'),
-        'anthropic': os.getenv('ANTHROPIC_API_KEY'),
-        'google': os.getenv('GEMINI_API_KEY'),
-        'groq': os.getenv('GROQ_API_KEY'),
-        'mistral': os.getenv('MISTRAL_API_KEY'),
-        'cohere': os.getenv('COHERE_API_KEY'),
-        'together': os.getenv('TOGETHER_API_KEY')
-    }
-
-    results = []
-
-    # Run all tests
-    tests = [
-        ("OpenAI", lambda: test_openai(api_keys['openai'])),
-        ("Anthropic", lambda: test_anthropic(api_keys['anthropic'])),
-        ("Google", lambda: test_google(api_keys['google'])),
-        ("Groq", lambda: test_groq(api_keys['groq'])),
-        ("Mistral AI", lambda: test_mistral(api_keys['mistral'])),
-        ("Cohere", lambda: test_cohere(api_keys['cohere'])),
-        ("Together AI", lambda: test_together(api_keys['together']))
-    ]
-
-    for name, test_func in tests:
-        print(f"\nTesting {name}...")
-        try:
-            res = test_func()
-            if res:
-                results.append(res)
-        except Exception as e:
-            print(f"  Skipped {name}: {e}")
-            continue
-
-    # Sort results
-    if results:
-        results.sort(key=lambda x: (
-            x['status'] != 'Online',
-            x['time'] if x['status'] == 'Online' else 999,
-            x['provider']
-        ))
-    else:
-        print("WARNING: No successful API tests. Creating empty data file.")
-
-    # Update history
-    history = load_history()
-    timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
-    history_entry = {
-        "timestamp": timestamp,
-        "results": {}
-    }
-    
-    for result in results:
-        provider = result['provider']
-        history_entry["results"][provider] = {
-            "time": result['time'],
-            "tps": result['tokens_per_second'],
-            "status": result['status'],
-            "cost": result['cost_per_request']
-        }
-    
-    history = update_history(history, history_entry)
-
-    # Write final data
-    final_data = {
-        "last_updated": timestamp,
-        "prompt": PROMPT,
-        "max_tokens": MAX_TOKENS,
-        "results": results,
-        "history": history
-    }
-
-    with open('data.json', 'w') as f:
-        json.dump(final_data, f, indent=4)
-        print("\n✅ SUCCESSFULLY WROTE data.json")
-
-
-if __name__ == "__main__":
-    try:
-        update_json()
-    except Exception as e:
-        print(f"❌ FATAL ERROR: {e}")
-        import traceback
-        traceback.print_exc()
-        exit(1)
+    </script>
+</body>
+</html>
