@@ -16,7 +16,7 @@
     </script>
     
     <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2906493623732277"
          crossorigin="anonymous"></script>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -96,7 +96,7 @@
         header {
             background: linear-gradient(180deg, #0d1117 0%, #000000 100%);
             border-bottom: 1px solid var(--border-color);
-            padding: 30px 20px;
+            padding: 20px 20px 18px;
             position: relative;
         }
         
@@ -107,9 +107,9 @@
         }
         
         .terminal-prompt {
-            font-size: 0.85em;
+            font-size: 0.8em;
             color: var(--text-dim);
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             letter-spacing: 1px;
         }
         
@@ -118,53 +118,53 @@
             color: var(--text-primary);
         }
         
-        /* CLEAN LOGO - SAME AS FOOTER */
+        /* CLEAN LOGO - CONDENSED */
         .ascii-logo {
-            font-size: 0.65em;
+            font-size: 0.55em;
             color: var(--text-primary);
-            line-height: 1.1;
+            line-height: 1.05;
             white-space: pre;
             font-family: monospace;
-            margin: 20px 0;
+            margin: 8px 0;
             text-shadow: 0 0 5px var(--glow-color);
         }
         
         .tagline {
-            font-size: 0.9em;
+            font-size: 0.95em;
             color: var(--text-secondary);
-            margin-top: 15px;
+            margin-top: 10px;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
         
         .system-status {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 30px auto 0;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 18px auto 0;
             max-width: 800px;
         }
         
         .status-item {
             text-align: center;
-            padding: 15px;
+            padding: 12px 10px;
             border: 1px solid var(--text-dim);
             background: rgba(0, 0, 0, 0.3);
         }
         
         .status-value {
-            font-size: 1.6em;
+            font-size: 1.5em;
             font-weight: 700;
             color: var(--text-primary);
             font-family: 'Orbitron', monospace;
         }
         
         .status-label {
-            font-size: 0.7em;
+            font-size: 0.75em;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-top: 5px;
+            margin-top: 4px;
         }
         
         /* COMPACT CONTROLS - SINGLE ROW */
@@ -354,7 +354,7 @@
         }
         
         .model-name {
-            font-size: 0.8em;
+            font-size: 0.85em;
             color: var(--text-secondary);
             text-align: center;
             margin-bottom: 20px;
@@ -380,13 +380,14 @@
         .metric-label {
             color: var(--text-secondary);
             text-transform: uppercase;
-            font-size: 0.75em;
+            font-size: 0.8em;
             letter-spacing: 1px;
         }
         
         .metric-value {
             color: var(--text-primary);
             font-weight: bold;
+            font-size: 1.05em;
         }
         
         .metric-value.status-online {
@@ -686,12 +687,37 @@
         
         /* MOBILE */
         @media (max-width: 768px) {
-            .ascii-logo { font-size: 0.45em; }
-            .results-grid {
-                grid-template-columns: 1fr;
+            header {
+                padding: 15px 15px 12px;
+            }
+            .ascii-logo { 
+                font-size: 0.4em;
+                margin: 6px 0;
+            }
+            .terminal-prompt {
+                font-size: 0.75em;
+                margin-bottom: 8px;
+            }
+            .tagline {
+                font-size: 0.85em;
+                margin-top: 8px;
             }
             .system-status {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                margin-top: 12px;
+            }
+            .status-item {
+                padding: 10px 8px;
+            }
+            .status-value {
+                font-size: 1.3em;
+            }
+            .status-label {
+                font-size: 0.7em;
+            }
+            .results-grid {
+                grid-template-columns: 1fr;
             }
             .controls-row {
                 flex-direction: column;
@@ -830,7 +856,7 @@
             <!-- Display Ad (728x90 Leaderboard or Responsive) -->
             <ins class="adsbygoogle"
                  style="display:block"
-                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                 data-ad-client="ca-pub-2906493623732277"
                  data-ad-slot="YOUR_AD_SLOT_ID_1"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
@@ -861,7 +887,7 @@
             <!-- Display Ad (728x90 Leaderboard or Responsive) -->
             <ins class="adsbygoogle"
                  style="display:block"
-                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                 data-ad-client="ca-pub-2906493623732277"
                  data-ad-slot="YOUR_AD_SLOT_ID_2"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
@@ -945,7 +971,7 @@
  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
 ═══════════════════════════════════════════════════════════
         </div>
-        <p>A <a href="mailto:dnilgis@gmail.com">dnilgis</a> PROJECT // v2.1</p>
+        <p>A <a href="/cdn-cgi/l/email-protection#75161a1b01141601351707141c141c1b5b161a18">dnilgis</a> PROJECT // v2.1</p>
         <p style="color: var(--text-dim); margin-top: 15px;">
             DISCLAIMER: Data provided for informational purposes only. Performance may vary. 
             All trademarks are property of their respective owners.
@@ -955,13 +981,15 @@
         </p>
     </footer>
 
-    <script>
-        // FALLBACK DATA
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // FALLBACK DATA (Updated with latest benchmark results)
         const FALLBACK_DATA = {
-            "last_updated": "2025-11-30 00:00:00 UTC",
+            "last_updated": "2024-12-03 23:40:00 UTC",
             "results": [
-                {"provider": "Groq", "model": "Llama 3.3 70B", "time": 0.53, "status": "Online", "response_preview": "The internet originated in the 1960s...", "full_response": "The internet originated in the 1960s as a US military project, ARPANET, designed to create a decentralized communication network...", "tokens_per_second": 176, "output_tokens": 479, "character_count": 1087, "cost_per_request": 0.0},
-                {"provider": "OpenAI", "model": "GPT-4o Mini", "time": 6.08, "status": "Online", "response_preview": "The internet's origins trace back...", "full_response": "The internet's origins trace back to the 1960s with ARPANET...", "tokens_per_second": 44, "output_tokens": 300, "character_count": 1172, "cost_per_request": 0.0002}
+                {"provider": "Groq", "model": "Llama 3.3 70B", "time": 0.89, "status": "Online", "response_preview": "Artificial intelligence evolved dramatically from 2010-2025, marked by deep learning's emergence with AlexNet (2012), the transformer architecture revolution (2017), and large language models' breakthrough (2020)...", "full_response": "Artificial intelligence evolved dramatically from 2010-2025, marked by three pivotal breakthroughs. Deep learning emerged with AlexNet's 2012 ImageNet victory, enabling machines to recognize images with unprecedented accuracy and launching the modern AI renaissance across computer vision, speech recognition, and natural language processing. The Transformer architecture, introduced by Google in 2017, revolutionized sequence modeling through attention mechanisms, eliminating recurrent networks' limitations and enabling parallel processing. This innovation directly enabled GPT models and current generative AI systems. Large Language Models achieved remarkable capabilities by 2020-2023, with GPT-3, GPT-4, and Claude demonstrating reasoning, coding, and creative abilities previously thought decades away. Deep learning architectures, particularly convolutional neural networks, dominated 2010-2018 through incremental improvements in layer depth and training techniques. However, transformers fundamentally changed the paradigm after 2017 by processing entire sequences simultaneously rather than sequentially, enabling massive scale-up. While CNNs excelled at spatial hierarchies in images, transformers' attention mechanism proved superior for sequential data like text. Transformers overcame RNNs' vanishing gradient problems and computational bottlenecks, becoming the foundation for modern NLP and increasingly for computer vision through Vision Transformers. Deep learning required careful architectural design, while transformers' simplicity and scalability made them dominant. The next major AI breakthrough post-2025 will likely be multimodal AI systems that seamlessly integrate vision, language, audio, and reasoning. Three technical reasons support this: current foundation models are converging toward unified architectures handling multiple modalities, computational efficiency is improving through techniques like mixture-of-experts, and training on diverse data types enables emergent cross-modal capabilities. Timeline: expect production-ready multimodal AGI systems achieving human-level performance across cognitive tasks by 2028-2030, driven by continued scaling, algorithmic innovations in efficient attention mechanisms, and breakthroughs in reasoning and planning capabilities.", "tokens_per_second": 321, "output_tokens": 487, "character_count": 1424, "cost_per_request": 0.0},
+                {"provider": "Together AI", "model": "Llama 3.1 70B", "time": 3.01, "status": "Online", "response_preview": "The evolution of artificial intelligence from 2010-2025 was characterized by rapid advancements in deep learning, neural networks, and natural language processing...", "full_response": "The evolution of artificial intelligence from 2010-2025 was characterized by rapid advancements in deep learning, neural networks, and natural language processing. The most significant breakthroughs included the development of convolutional neural networks for image recognition around 2012, which enabled machines to identify objects with human-level accuracy. The introduction of transformer architecture in 2017 revolutionized language models, allowing for more efficient processing of sequential data. By 2020, large language models like GPT-3 demonstrated unprecedented capabilities in text generation and understanding. Deep learning and transformer architectures represent fundamentally different approaches to processing information. Deep learning, particularly through CNNs, excels at hierarchical feature extraction from structured data like images. Transformers, however, process data in parallel using attention mechanisms, making them highly efficient for sequential information. Transformers became dominant because they overcame the limitations of recurrent neural networks, such as difficulty in capturing long-range dependencies and computational inefficiencies. They also scale better with increased compute and data, enabling the training of massive models. The next major AI breakthrough post-2025 will likely involve multimodal learning systems that can seamlessly integrate and reason across different types of data. Three technical reasons support this prediction: current models are increasingly capable of handling multiple modalities, advances in few-shot and zero-shot learning are enabling more flexible AI systems, and improvements in computational efficiency are making complex integrations feasible. A realistic timeline for this breakthrough is 2027-2030, as research continues to push the boundaries of model architecture and training methodologies.", "tokens_per_second": 83, "output_tokens": 350, "character_count": 1175, "cost_per_request": 0.00214},
+                {"provider": "OpenAI", "model": "GPT-4o Mini", "time": 4.78, "status": "Online", "response_preview": "The period from 2010 to 2025 witnessed transformative AI breakthroughs that reshaped technology and society...", "full_response": "The period from 2010 to 2025 witnessed transformative AI breakthroughs that reshaped technology and society. First, deep learning emerged as a dominant paradigm with AlexNet's victory in the 2012 ImageNet competition, demonstrating that neural networks with sufficient data and compute could achieve superhuman performance in image classification. This sparked an AI renaissance, with deep learning being applied to speech recognition, natural language processing, and autonomous systems. Second, the introduction of the transformer architecture in 2017 by Vaswani et al. revolutionized sequence modeling, enabling models like BERT and GPT to achieve unprecedented performance in language tasks. Third, the development of large language models (LLMs) from 2020 onwards, exemplified by GPT-3, GPT-4, and others, showcased emergent capabilities including reasoning, coding, and creative writing that were previously thought to be decades away. Deep learning and transformer architectures represent distinct approaches to machine learning. Deep learning, particularly convolutional neural networks, excels at hierarchical feature extraction from structured data like images. Transformers, in contrast, use attention mechanisms to process sequences in parallel, making them highly efficient for language and sequential data. Transformers became dominant because they addressed key limitations of recurrent neural networks, such as difficulty capturing long-range dependencies and poor parallelization. Their self-attention mechanism allows the model to weigh the importance of different parts of the input dynamically, leading to more context-aware representations. Additionally, transformers scale exceptionally well, benefiting from increased compute and data more effectively than previous architectures. The next major AI breakthrough post-2025 is likely to be artificial general intelligence capable of multimodal reasoning and real-world interaction. This will be driven by three technical factors: integration of diverse modalities enabling richer understanding, advances in reinforcement learning from human feedback refining model behavior, and improvements in sample efficiency reducing data requirements. A realistic timeline for significant progress is 2027-2030.", "tokens_per_second": 50, "output_tokens": 412, "character_count": 1242, "cost_per_request": 0.00019},
+                {"provider": "Anthropic", "model": "Claude 3.5 Sonnet", "time": 8.33, "status": "Online", "response_preview": "Between 2010 and 2025, artificial intelligence underwent a renaissance marked by three transformative breakthroughs...", "full_response": "Between 2010 and 2025, artificial intelligence underwent a renaissance marked by three transformative breakthroughs. The deep learning revolution began with AlexNet's 2012 ImageNet victory, demonstrating that deep neural networks with GPU acceleration could achieve superhuman image recognition. This sparked widespread adoption of convolutional neural networks across computer vision applications, from facial recognition to autonomous vehicles. The transformer architecture, introduced in the 2017 'Attention is All You Need' paper, fundamentally changed how machines process sequential data. Unlike previous approaches, transformers process entire sequences simultaneously using self-attention mechanisms, enabling unprecedented scaling. This breakthrough directly led to GPT models and modern large language models that demonstrate reasoning capabilities. The emergence of foundation models from 2020-2023, exemplified by GPT-3, GPT-4, and Claude, showed that massive scale could produce emergent capabilities including few-shot learning, reasoning, and even basic common sense understanding that wasn't explicitly programmed. Deep learning and transformer architectures represent fundamentally different computational paradigms. Deep learning, particularly through convolutional networks, excels at hierarchical feature extraction by applying learned filters across spatial dimensions. Transformers eschew this sequential processing for parallel attention mechanisms that weigh the relevance of all input elements simultaneously. Transformers became dominant because they solved critical limitations of recurrent networks: vanishing gradients over long sequences and inability to parallelize training. Their self-attention mechanism provides both global context awareness and computational efficiency at scale. While CNNs remain optimal for grid-structured data like images, transformers' flexibility and scalability made them the foundation for modern NLP and increasingly for computer vision through Vision Transformers. Deep learning required careful architectural engineering for specific domains, whereas transformers offer a more general-purpose architecture adaptable across modalities. The next breakthrough post-2025 will likely be AI systems with genuine causal reasoning and world modeling capabilities. Three technical factors support this: current LLMs lack systematic reasoning and rely on pattern matching rather than causal understanding, integration of symbolic reasoning with neural networks is advancing through neuro-symbolic approaches, and improved training techniques using synthetic environments can teach models physical intuition and counterfactual reasoning. This breakthrough should materialize between 2027-2030, as research progresses on hybrid architectures combining the pattern recognition strengths of neural networks with the systematic reasoning of symbolic AI, potentially through techniques like learned simulators and differentiable physics engines.", "tokens_per_second": 34, "output_tokens": 521, "character_count": 1436, "cost_per_request": 0.00146}
             ],
             "history": []
         };
@@ -1345,13 +1373,4 @@
       "@type": "WebApplication",
       "name": "Braiain AI Speed Index",
       "description": "Real-time LLM API performance benchmarking with terminal interface",
-      "applicationCategory": "DeveloperApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      }
-    }
-    </script>
-</body>
-</html>
+      "applicationCategory": "DeveloperAppli
