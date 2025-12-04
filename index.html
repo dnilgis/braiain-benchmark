@@ -73,7 +73,7 @@
         header {
             background: linear-gradient(180deg, #0d1117 0%, #000000 100%);
             border-bottom: 1px solid var(--border-color);
-            padding: 20px 20px 18px;
+            padding: 15px 20px 12px;
             position: relative;
         }
         
@@ -95,21 +95,21 @@
             color: var(--text-primary);
         }
         
-        /* CLEAN LOGO - CONDENSED */
+        /* CLEAN LOGO - LARGER & MORE PROMINENT */
         .ascii-logo {
-            font-size: 0.55em;
+            font-size: 0.75em;
             color: var(--text-primary);
             line-height: 1.05;
             white-space: pre;
             font-family: monospace;
-            margin: 8px 0;
-            text-shadow: 0 0 5px var(--glow-color);
+            margin: 5px 0;
+            text-shadow: 0 0 8px var(--glow-color);
         }
         
         .tagline {
-            font-size: 0.95em;
+            font-size: 1em;
             color: var(--text-secondary);
-            margin-top: 15px;
+            margin-top: 12px;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
@@ -118,7 +118,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 12px;
-            margin: 18px auto 0;
+            margin: 15px auto 0;
             max-width: 800px;
         }
         
@@ -466,24 +466,14 @@
             background: rgba(0, 255, 65, 0.05);
             border: 1px solid var(--text-dim);
             padding: 12px;
-            margin-top: 15px;
-            font-size: 0.75em;
-            max-height: 80px;
             overflow: hidden;
             cursor: pointer;
             transition: max-height 0.3s;
+            color: var(--text-secondary);
         }
         
         .terminal-response.expanded {
-            max-height: 1000px;
-        }
-        
-        .terminal-response::before {
-            content: '>>> OUTPUT';
-            display: block;
-            color: var(--text-dim);
-            margin-bottom: 8px;
-            font-size: 0.9em;
+            max-height: none !important;
         }
         
         /* EXPANDABLE PROMPT BOX */
@@ -866,18 +856,18 @@
         /* MOBILE */
         @media (max-width: 768px) {
             header {
-                padding: 15px 15px 12px;
+                padding: 12px 15px 10px;
             }
             .ascii-logo { 
-                font-size: 0.4em;
-                margin: 6px 0;
+                font-size: 0.55em;
+                margin: 4px 0;
             }
             .terminal-prompt {
                 font-size: 0.75em;
-                margin-bottom: 8px;
+                margin-bottom: 6px;
             }
             .tagline {
-                font-size: 0.85em;
+                font-size: 0.9em;
                 margin-top: 8px;
             }
             .system-status {
@@ -1023,7 +1013,7 @@
                 </div>
             </div>
             <div class="advertise-contact">
-                CONTACT: <a href="mailto:dnilgis@gmail.com" style="color: var(--text-primary); text-decoration: underline;">dnilgis@gmail.com</a>
+                CONTACT: <a href="/cdn-cgi/l/email-protection#fe9a90979299978dbe99939f9792d09d9193" style="color: var(--text-primary); text-decoration: underline;"><span class="__cf_email__" data-cfemail="90f4fef9fcf7f9e3d0f7fdf1f9fcbef3fffd">[email&#160;protected]</span></a>
             </div>
         </div>
     </div>
@@ -1126,7 +1116,7 @@
 
         <div class="info-block">
             <h2>TEST PROMPT</h2>
-            <div class="prompt-box" onclick="this.classList.toggle('expanded')">
+            <div class="prompt-box expanded">
                 <strong>Multi-Step Analytical Reasoning Challenge:</strong><br><br>
                 
                 <strong>Part 1: Historical Analysis (400-450 characters)</strong><br>
@@ -1138,9 +1128,6 @@
                 <strong>Part 3: Predictive Analysis (300-350 characters)</strong><br>
                 Based on current trends, predict the next major AI breakthrough likely to occur post-2025. Provide THREE specific technical reasons supporting your prediction and a realistic timeline.
             </div>
-            <p style="color: var(--text-dim); font-size: 0.85em; margin-top: 10px; font-style: italic;">
-                💡 Click prompt box above to expand/collapse full text
-            </p>
         </div>
 
         <div class="info-block">
@@ -1296,7 +1283,7 @@
         </p>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // FALLBACK DATA (Updated with latest benchmark results)
         const FALLBACK_DATA = {
             "last_updated": "2024-12-03 23:40:00 UTC",
@@ -1469,7 +1456,7 @@
                         <div class="provider-name">${escapeHtml(result.provider)}</div>
                         <div class="model-name">${escapeHtml(result.model)}</div>
                         
-                        <div class="metrics-display">
+                        <div class="metrics-display" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 15px; margin: 12px 0;">
                             <div class="metric-row">
                                 <span class="metric-label">SPEED</span>
                                 <span class="metric-value">${isOnline ? result.time.toFixed(2) + 's' : 'N/A'}</span>
@@ -1486,15 +1473,18 @@
                                 <span class="metric-label">CHARS</span>
                                 <span class="metric-value">${result.character_count || 'N/A'}</span>
                             </div>
-                            <div class="metric-row">
+                            <div class="metric-row" style="grid-column: 1 / -1;">
                                 <span class="metric-label">STATUS</span>
                                 <span class="metric-value ${isOnline ? 'status-online' : 'status-error'}">${result.status}</span>
                             </div>
                         </div>
                         
                         ${isOnline && result.full_response ? `
-                            <div class="terminal-response" onclick="this.classList.toggle('expanded')">
-                                ${escapeHtml(result.full_response)}
+                            <div style="margin: 15px 0 10px; padding: 3px 0; border-top: 1px solid var(--text-dim);">
+                                <div style="color: var(--text-primary); font-size: 0.8em; margin-bottom: 8px; letter-spacing: 1px;">>> OUTPUT</div>
+                                <div class="terminal-response" onclick="this.classList.toggle('expanded')" style="max-height: 120px; line-height: 1.6; font-size: 0.88em;">
+                                    ${escapeHtml(result.full_response)}
+                                </div>
                             </div>
                         ` : ''}
                         
@@ -1585,6 +1575,9 @@
                 labels.push(date.toLocaleDateString("en-US", {month: "short", day: "numeric"}));
                 
                 Object.keys(entry.results).forEach(provider => {
+                    // Skip xAI and Perplexity
+                    if (provider === "xAI" || provider === "Perplexity") return;
+                    
                     if (!datasets[provider]) {
                         datasets[provider] = {
                             label: provider,
