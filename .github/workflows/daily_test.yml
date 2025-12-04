@@ -2,9 +2,7 @@ name: Automated LLM Benchmarking
 
 on:
   schedule:
-    # Run every 6 hours (00:00, 06:00, 12:00, 18:00 UTC)
     - cron: '0 */6 * * *'
-  
   workflow_dispatch:
     inputs:
       debug:
@@ -92,8 +90,9 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           
           if [ -f "data.json" ]; then
-            python << 'PYTHON_SCRIPT' >> $GITHUB_STEP_SUMMARY
+            cat > /tmp/summary.py << 'EOF'
 import json
+import sys
 
 with open('data.json') as f:
     data = json.load(f)
@@ -126,7 +125,8 @@ if offline:
     print("")
 
 print(f"**History Entries:** {len(data.get('history', []))}")
-PYTHON_SCRIPT
+EOF
+            python /tmp/summary.py >> $GITHUB_STEP_SUMMARY
           else
             echo "⚠️ data.json not found - benchmark may have failed" >> $GITHUB_STEP_SUMMARY
           fi
