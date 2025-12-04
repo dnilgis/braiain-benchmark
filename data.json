@@ -1,455 +1,592 @@
 {
-    "last_updated": "2025-12-04 12:31:43 UTC",
-    "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030.\n\nABSOLUTE REQUIREMENTS - YOUR RESPONSE WILL BE REJECTED IF YOU VIOLATE THESE:\n\nYOU MUST WRITE EXACTLY 1000-1200 CHARACTERS. COUNT EVERY SINGLE CHARACTER.\n\nWRITE EXACTLY THREE PARAGRAPHS. STOP WHEN YOU REACH 1200 CHARACTERS.\n\nTARGET LENGTH: 1100 CHARACTERS\n\nEND WITH A COMPLETE SENTENCE AND A PERIOD (.)\n\nDO NOT STOP WRITING UNTIL YOU REACH AT LEAST 1000 CHARACTERS. THIS IS MANDATORY.\n\nYour response must be substantive and detailed. DO NOT write short summaries.",
-    "max_tokens": 240,
-    "results": [
-        {
-            "provider": "Groq",
-            "model": "Llama 3.3 70B",
-            "time": 1.1408,
-            "status": "Online",
-            "response_preview": "The internet's history began in the 1960s with the United States Department of Defense's ARPANET project. This early network connected computers at different research institutions, allowing them to communicate and share resources. The 1980s saw the development of the Internet Protocol (IP) and the creation of the Domain Name System (DNS), which enabled the internet to expand beyond its initial scope.  As the internet grew, it became more accessible to the general public. The 1990s saw the rise of internet service providers (ISPs) and web browsers like Netscape Navigator and Internet Explorer. This led to a rapid increase in internet usage, with more people going online to access information, communicate with others, and conduct business. The early 2000s saw the emergence of social media platforms, online shopping, and streaming services, further transforming the way people interacted with the internet.  By 2030, the internet is expected to be even more integrated into daily life, with the Internet of Things (IoT) connecting billions of devices and enabling new forms of interaction and data exchange. As a result, the internet will continue to play an increasingly important role in shaping the world and its many complexities, and it will likely be a fundamental part of human life.",
-            "full_response": "The internet's history began in the 1960s with the United States Department of Defense's ARPANET project. This early network connected computers at different research institutions, allowing them to communicate and share resources. The 1980s saw the development of the Internet Protocol (IP) and the creation of the Domain Name System (DNS), which enabled the internet to expand beyond its initial scope.\n\nAs the internet grew, it became more accessible to the general public. The 1990s saw the rise of internet service providers (ISPs) and web browsers like Netscape Navigator and Internet Explorer. This led to a rapid increase in internet usage, with more people going online to access information, communicate with others, and conduct business. The early 2000s saw the emergence of social media platforms, online shopping, and streaming services, further transforming the way people interacted with the internet.\n\nBy 2030, the internet is expected to be even more integrated into daily life, with the Internet of Things (IoT) connecting billions of devices and enabling new forms of interaction and data exchange. As a result, the internet will continue to play an increasingly important role in shaping the world and its many complexities, and it will likely be a fundamental part of human life.",
-            "tokens_per_second": 224.4,
-            "output_tokens": 256,
-            "character_count": 1299,
-            "cost_per_request": 0.0
+  "last_updated": "2025-12-04 16:13:11 UTC",
+  "prompt": "Analyze the evolution of artificial intelligence from 2010 to 2025. Identify and explain the THREE most significant breakthroughs that fundamentally changed the field. For each breakthrough, describe its technical innovation and its broader impact on AI capabilities.\n\nCompare and contrast deep learning architectures versus transformer architectures. Explain why transformers became dominant for language tasks despite deep learning's earlier success. Include specific technical reasons for this paradigm shift.\n\nBased on current trends, predict the next major AI breakthrough likely to occur post-2025. Provide THREE specific technical reasons supporting your prediction and a realistic timeline.",
+  "max_tokens": 240,
+  "results": [
+    {
+      "provider": "Groq",
+      "model": "llama-3.3-70b-versatile",
+      "status": "Online",
+      "time": 1.18,
+      "tokens_per_second": 204.0,
+      "output_tokens": 240,
+      "character_count": 1326,
+      "cost_per_request": 0.0,
+      "full_response": "The evolution of artificial intelligence (AI) from 2010 to 2025 has been marked by significant breakthroughs that have transformed the field. The three most substantial advancements are:\n\n1. **Deep Learning (2010-2015)**: The introduction of deep learning architectures, such as convolutional neural networks (CNNs) and recurrent neural networks (RNNs), revolutionized image and speech recognition tasks. Technical innovations included the use of convolutional layers, pooling layers, and recurrent connections, which enabled the extraction of complex features from large datasets. The broader impact was the significant improvement in accuracy and efficiency of AI models, leading to widespread adoption in industries like computer vision, natural language processing, and robotics.\n\n2. **Transformer Architectures (2017-2020)**: The development of transformer architectures, such as BERT and its variants, marked a paradigm shift in natural language processing (NLP) tasks. Technical innovations included the use of self-attention mechanisms, multi-head attention, and pre-training on large corpora, which enabled the capture of long-range dependencies and contextual relationships in language. The broader impact was the unprecedented performance improvement in language tasks like language translation, question answering,",
+      "response_preview": "The evolution of artificial intelligence (AI) from 2010 to 2025 has been marked by significant breakthroughs that have transformed the field. The three most substantial advancements are:\n\n1. **Deep Le..."
+    },
+    {
+      "provider": "Together AI",
+      "model": "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+      "status": "Online",
+      "time": 2.59,
+      "tokens_per_second": 93.0,
+      "output_tokens": 240,
+      "character_count": 1242,
+      "cost_per_request": 0.00034,
+      "full_response": "**Evolution of Artificial Intelligence (2010-2025) and Three Significant Breakthroughs**\n\nArtificial intelligence has undergone tremendous growth from 2010 to 2025. Three significant breakthroughs that fundamentally changed the field are:\n\n1. **Deep Learning (2010-2012)**: The introduction of deep learning architectures, such as Convolutional Neural Networks (CNNs) and Recurrent Neural Networks (RNNs), revolutionized the field of AI. Deep learning allowed for the training of large neural networks, enabling AI systems to learn complex patterns in data. This led to significant improvements in image recognition, natural language processing, and speech recognition.\n\nTechnical innovation: Deep learning introduced the concept of hierarchical representations, where data is processed through a series of layers to learn increasingly abstract features.\n\nBroader impact: Deep learning's success led to widespread adoption in various industries, including computer vision, natural language processing, and speech recognition.\n\n2. **Generative Adversarial Networks (GANs) (2014)**: Ian Goodfellow's introduction of GANs marked a significant shift in AI research. GANs allowed for the generation of new data samples that resemble existing data,",
+      "response_preview": "**Evolution of Artificial Intelligence (2010-2025) and Three Significant Breakthroughs**\n\nArtificial intelligence has undergone tremendous growth from 2010 to 2025. Three significant breakthroughs tha..."
+    },
+    {
+      "provider": "OpenAI",
+      "model": "gpt-4o-mini",
+      "status": "Online",
+      "time": 10.64,
+      "tokens_per_second": 23.0,
+      "output_tokens": 240,
+      "character_count": 1262,
+      "cost_per_request": 0.00016,
+      "full_response": "### Evolution of Artificial Intelligence (2010-2025)\n\nThe evolution of artificial intelligence (AI) from 2010 to 2025 has been marked by several breakthroughs that have significantly changed the field. Among these, the three most significant breakthroughs that fundamentally altered AI capabilities are:\n\n#### 1. Deep Learning Revolution (2012-2015)\n**Technical Innovation:** The rise of deeply layered neural networks, known as deep learning, transformed various AI applications, particularly in image and speech recognition. In 2012, AlexNet won the ImageNet competition with a convolutional neural network (CNN) that had several key advancements, including rectified linear units (ReLU), dropout for regularization, and the use of graphics processing units (GPUs) for training.\n\n**Broader Impact:** This breakthrough made it feasible to process vast amounts of unstructured data, leading to significant improvements in computer vision, natural language processing (NLP), and reinforcement learning. Deep learning networks started to achieve human-level performance in multiple tasks, fostering advancements across different sectors, such as healthcare, automotive (self-driving cars), and personal assistants.\n\n#### 2. Generative Adversarial Networks (GANs) (",
+      "response_preview": "### Evolution of Artificial Intelligence (2010-2025)\n\nThe evolution of artificial intelligence (AI) from 2010 to 2025 has been marked by several breakthroughs that have significantly changed the field..."
+    },
+    {
+      "provider": "Anthropic",
+      "model": "claude-3-5-sonnet-20241022",
+      "status": "API FAILURE",
+      "time": 99.9999,
+      "tokens_per_second": 0,
+      "output_tokens": 0,
+      "character_count": 0,
+      "cost_per_request": 0.0,
+      "full_response": "",
+      "response_preview": ""
+    },
+    {
+      "provider": "Google",
+      "model": "gemini-1.5-flash",
+      "status": "API FAILURE",
+      "time": 99.9999,
+      "tokens_per_second": 0,
+      "output_tokens": 0,
+      "character_count": 0,
+      "cost_per_request": 0.0,
+      "full_response": "",
+      "response_preview": ""
+    },
+    {
+      "provider": "Mistral AI",
+      "model": "mistral-large-latest",
+      "status": "API FAILURE",
+      "time": 99.9999,
+      "tokens_per_second": 0,
+      "output_tokens": 0,
+      "character_count": 0,
+      "cost_per_request": 0.0,
+      "full_response": "",
+      "response_preview": ""
+    },
+    {
+      "provider": "Cohere",
+      "model": "command-r-plus",
+      "status": "API FAILURE",
+      "time": 99.9999,
+      "tokens_per_second": 0,
+      "output_tokens": 0,
+      "character_count": 0,
+      "cost_per_request": 0.0,
+      "full_response": "",
+      "response_preview": ""
+    },
+    {
+      "provider": "xAI",
+      "model": "grok-beta",
+      "status": "API FAILURE",
+      "time": 99.9999,
+      "tokens_per_second": 0,
+      "output_tokens": 0,
+      "character_count": 0,
+      "cost_per_request": 0.0,
+      "full_response": "",
+      "response_preview": ""
+    },
+    {
+      "provider": "DeepSeek",
+      "model": "deepseek-chat",
+      "status": "API FAILURE",
+      "time": 99.9999,
+      "tokens_per_second": 0,
+      "output_tokens": 0,
+      "character_count": 0,
+      "cost_per_request": 0.0,
+      "full_response": "",
+      "response_preview": ""
+    },
+    {
+      "provider": "Perplexity",
+      "model": "llama-3.1-sonar-large-128k-online",
+      "status": "API FAILURE",
+      "time": 99.9999,
+      "tokens_per_second": 0,
+      "output_tokens": 0,
+      "character_count": 0,
+      "cost_per_request": 0.0,
+      "full_response": "",
+      "response_preview": ""
+    },
+    {
+      "provider": "Fireworks",
+      "model": "accounts/fireworks/models/llama-v3p1-70b-instruct",
+      "status": "API FAILURE",
+      "time": 99.9999,
+      "tokens_per_second": 0,
+      "output_tokens": 0,
+      "character_count": 0,
+      "cost_per_request": 0.0,
+      "full_response": "",
+      "response_preview": ""
+    },
+    {
+      "provider": "Cerebras",
+      "model": "llama3.1-70b",
+      "status": "API FAILURE",
+      "time": 99.9999,
+      "tokens_per_second": 0,
+      "output_tokens": 0,
+      "character_count": 0,
+      "cost_per_request": 0.0,
+      "full_response": "",
+      "response_preview": ""
+    }
+  ],
+  "history": [
+    {
+      "timestamp": "2024-12-03 12:00:00 UTC",
+      "results": {
+        "Groq": {
+          "time": 0.92,
+          "tps": 315,
+          "status": "Online",
+          "cost": 0.0
         },
-        {
-            "provider": "Together AI",
-            "model": "Llama 3.1 70B",
-            "time": 1.9789,
-            "status": "Online",
-            "response_preview": "The history of the internet began in the 1960s with the United States Department of Defense's Advanced Research Projects Agency (ARPA) funding a project to create a network of computers that could communicate with each other. This project, called ARPANET, was the first operational packet switching network, and it was developed in the late 1960s and early 1970s. The first message sent over ARPANET was in 1969, and it was a simple \"LO\" as the system crashed before the full message \"LOGIN\" could be sent.  In the 1980s, the Internet Protocol (IP) was developed, allowing different computer networks to communicate with each other and forming the modern internet. The World Wide Web (WWW) was invented in 1989 by Tim Berners-Lee, a British computer scientist, and it revolutionized the way people accessed and shared information online. The web made it easy for people to access and share information using web browsers and hyperlinks. The internet became widely available to the public in the 1990s, and it quickly became an essential part of modern life.  Today, the internet is a global network of billions of interconnected devices, and it continues to evolve and expand",
-            "full_response": "The history of the internet began in the 1960s with the United States Department of Defense's Advanced Research Projects Agency (ARPA) funding a project to create a network of computers that could communicate with each other. This project, called ARPANET, was the first operational packet switching network, and it was developed in the late 1960s and early 1970s. The first message sent over ARPANET was in 1969, and it was a simple \"LO\" as the system crashed before the full message \"LOGIN\" could be sent.\n\nIn the 1980s, the Internet Protocol (IP) was developed, allowing different computer networks to communicate with each other and forming the modern internet. The World Wide Web (WWW) was invented in 1989 by Tim Berners-Lee, a British computer scientist, and it revolutionized the way people accessed and shared information online. The web made it easy for people to access and share information using web browsers and hyperlinks. The internet became widely available to the public in the 1990s, and it quickly became an essential part of modern life.\n\nToday, the internet is a global network of billions of interconnected devices, and it continues to evolve and expand",
-            "tokens_per_second": 126.33,
-            "output_tokens": 250,
-            "character_count": 1175,
-            "cost_per_request": 7.8e-05
+        "Together AI": {
+          "time": 3.15,
+          "tps": 79,
+          "status": "Online",
+          "cost": 0.00214
         },
-        {
-            "provider": "Mistral AI",
-            "model": "Mistral Large",
-            "time": 6.5827,
-            "status": "Online",
-            "response_preview": "The internet\u2019s origins trace back to the 1960s as a Cold War-era project by the U.S. Department of Defense, known as ARPANET. Designed to create a decentralized communication network that could survive nuclear attacks, ARPANET connected four universities in 1969, marking the first successful transmission of data between computers. The 1970s saw the development of key protocols like TCP/IP, which standardized how data was packaged and transmitted, laying the foundation for a global network. By the 1980s, the internet expanded beyond military and academic use, with the introduction of email, bulletin board systems, and early commercial services, though it remained largely inaccessible to the public.  The 1990s revolutionized the internet with the invention of the World Wide Web by Tim Berners-Lee, making it user-friendly through hypertext and browsers like Mosaic and Netscape. This decade saw an explosion of websites, e-commerce (e.g., Amazon, eBay), and the dot-com boom, as businesses and individuals rushed online. The early 2000s brought broadband, social media (Facebook, YouTube), and mobile connectivity, transforming the internet into a daily necessity. Web 2",
-            "full_response": "The internet\u2019s origins trace back to the 1960s as a Cold War-era project by the U.S. Department of Defense, known as ARPANET. Designed to create a decentralized communication network that could survive nuclear attacks, ARPANET connected four universities in 1969, marking the first successful transmission of data between computers. The 1970s saw the development of key protocols like TCP/IP, which standardized how data was packaged and transmitted, laying the foundation for a global network. By the 1980s, the internet expanded beyond military and academic use, with the introduction of email, bulletin board systems, and early commercial services, though it remained largely inaccessible to the public.\n\nThe 1990s revolutionized the internet with the invention of the World Wide Web by Tim Berners-Lee, making it user-friendly through hypertext and browsers like Mosaic and Netscape. This decade saw an explosion of websites, e-commerce (e.g., Amazon, eBay), and the dot-com boom, as businesses and individuals rushed online. The early 2000s brought broadband, social media (Facebook, YouTube), and mobile connectivity, transforming the internet into a daily necessity. Web 2",
-            "tokens_per_second": 39.5,
-            "output_tokens": 260,
-            "character_count": 1179,
-            "cost_per_request": 0.001938
+        "OpenAI": {
+          "time": 4.92,
+          "tps": 48,
+          "status": "Online",
+          "cost": 0.00019
         },
-        {
-            "provider": "OpenAI",
-            "model": "GPT-4o Mini",
-            "time": 6.874,
-            "status": "Online",
-            "response_preview": "The history of the internet began in the 1960s, rooted in military research through projects like ARPANET, which enabled multiple computers to communicate on a single network. In the 1970s, key developments such as packet switching by Paul Baran and the introduction of the Transmission Control Protocol (TCP) and Internet Protocol (IP) by Vint Cerf and Bob Kahn set the foundation for a scalable and robust network. By the 1980s, the internet transitioned from a military tool to a public utility as the National Science Foundation created NSFNET, facilitating access for educational institutions. This opened the door for commercial use by the 1990s, leading to the World Wide Web\u2019s creation by Tim Berners-Lee, which simplified navigation and fostered a boom in website creation and online services.  As the internet grew, it transformed industries and daily life, leading to the rise of tech giants like Google, Amazon, and Facebook. The emergence of social media in the 2000s drastically changed communication and information sharing, while the introduction of mobile access ushered in an era of connectivity on-the-go with smart devices. These advancements also brought challenges, including concerns about privacy",
-            "full_response": "The history of the internet began in the 1960s, rooted in military research through projects like ARPANET, which enabled multiple computers to communicate on a single network. In the 1970s, key developments such as packet switching by Paul Baran and the introduction of the Transmission Control Protocol (TCP) and Internet Protocol (IP) by Vint Cerf and Bob Kahn set the foundation for a scalable and robust network. By the 1980s, the internet transitioned from a military tool to a public utility as the National Science Foundation created NSFNET, facilitating access for educational institutions. This opened the door for commercial use by the 1990s, leading to the World Wide Web\u2019s creation by Tim Berners-Lee, which simplified navigation and fostered a boom in website creation and online services.\n\nAs the internet grew, it transformed industries and daily life, leading to the rise of tech giants like Google, Amazon, and Facebook. The emergence of social media in the 2000s drastically changed communication and information sharing, while the introduction of mobile access ushered in an era of connectivity on-the-go with smart devices. These advancements also brought challenges, including concerns about privacy",
-            "tokens_per_second": 34.91,
-            "output_tokens": 240,
-            "character_count": 1220,
-            "cost_per_request": 0.000167
-        },
-        {
-            "provider": "Anthropic",
-            "model": "Claude 3.5 Sonnet",
-            "time": 7.7998,
-            "status": "Online",
-            "response_preview": "The internet originated in the 1960s as ARPANET, a U.S. Department of Defense project designed to create a decentralized communication network that could survive nuclear attacks. The first successful message was sent between UCLA and Stanford in 1969, marking the birth of networked computing. Throughout the 1970s and 1980s, TCP/IP protocols were developed, establishing the foundation for modern internet architecture. Academic institutions and government agencies gradually connected, forming an early network of researchers and scientists who shared data and collaborated across vast distances.  The 1990s brought revolutionary changes with Tim Berners-Lee's invention of the World Wide Web in 1991, making the internet accessible to ordinary users through graphical browsers like Mosaic and Netscape. Commercial restrictions were lifted, allowing businesses to join and transform the internet into a global marketplace. Email, e-commerce, and search engines like Yahoo and Google emerged, fundamentally changing how people communicated, shopped, and accessed information. The dot-com boom and subsequent crash demonstrated both the internet's immense potential and its volatility.  By 2030, the internet will likely be dominated by artificial intelligence integration, quantum computing capabilities, and seamless virtual reality experiences that blur the lines between digital and physical worlds.",
-            "full_response": "The internet originated in the 1960s as ARPANET, a U.S. Department of Defense project designed to create a decentralized communication network that could survive nuclear attacks. The first successful message was sent between UCLA and Stanford in 1969, marking the birth of networked computing. Throughout the 1970s and 1980s, TCP/IP protocols were developed, establishing the foundation for modern internet architecture. Academic institutions and government agencies gradually connected, forming an early network of researchers and scientists who shared data and collaborated across vast distances.\n\nThe 1990s brought revolutionary changes with Tim Berners-Lee's invention of the World Wide Web in 1991, making the internet accessible to ordinary users through graphical browsers like Mosaic and Netscape. Commercial restrictions were lifted, allowing businesses to join and transform the internet into a global marketplace. Email, e-commerce, and search engines like Yahoo and Google emerged, fundamentally changing how people communicated, shopped, and accessed information. The dot-com boom and subsequent crash demonstrated both the internet's immense potential and its volatility.\n\nBy 2030, the internet will likely be dominated by artificial intelligence integration, quantum computing capabilities, and seamless virtual reality experiences that blur the lines between digital and physical worlds.",
-            "tokens_per_second": 34.74,
-            "output_tokens": 271,
-            "character_count": 1403,
-            "cost_per_request": 0.004578
-        },
-        {
-            "provider": "Cohere",
-            "model": "Command R+",
-            "time": 99.9999,
-            "status": "API FAILURE",
-            "response_preview": "All model versions failed",
-            "full_response": "All model versions failed",
-            "tokens_per_second": 0,
-            "output_tokens": 0,
-            "character_count": 0,
-            "cost_per_request": null
+        "Anthropic": {
+          "time": 8.51,
+          "tps": 33,
+          "status": "Online",
+          "cost": 0.00146
         }
-    ],
-    "history": [
-        {
-            "timestamp": "2024-12-03 12:00:00 UTC",
-            "results": {
-                "Groq": {
-                    "time": 0.92,
-                    "tps": 315,
-                    "status": "Online",
-                    "cost": 0.0
-                },
-                "Together AI": {
-                    "time": 3.15,
-                    "tps": 79,
-                    "status": "Online",
-                    "cost": 0.00214
-                },
-                "OpenAI": {
-                    "time": 4.92,
-                    "tps": 48,
-                    "status": "Online",
-                    "cost": 0.00019
-                },
-                "Anthropic": {
-                    "time": 8.51,
-                    "tps": 33,
-                    "status": "Online",
-                    "cost": 0.00146
-                }
-            }
+      }
+    },
+    {
+      "timestamp": "2024-12-03 18:00:00 UTC",
+      "results": {
+        "Groq": {
+          "time": 0.87,
+          "tps": 328,
+          "status": "Online",
+          "cost": 0.0
         },
-        {
-            "timestamp": "2024-12-03 18:00:00 UTC",
-            "results": {
-                "Groq": {
-                    "time": 0.87,
-                    "tps": 328,
-                    "status": "Online",
-                    "cost": 0.0
-                },
-                "Together AI": {
-                    "time": 2.98,
-                    "tps": 85,
-                    "status": "Online",
-                    "cost": 0.00214
-                },
-                "OpenAI": {
-                    "time": 4.65,
-                    "tps": 51,
-                    "status": "Online",
-                    "cost": 0.00019
-                },
-                "Anthropic": {
-                    "time": 8.19,
-                    "tps": 35,
-                    "status": "Online",
-                    "cost": 0.00146
-                }
-            }
+        "Together AI": {
+          "time": 2.98,
+          "tps": 85,
+          "status": "Online",
+          "cost": 0.00214
         },
-        {
-            "timestamp": "2024-12-03 23:40:00 UTC",
-            "results": {
-                "Groq": {
-                    "time": 0.89,
-                    "tps": 321,
-                    "status": "Online",
-                    "cost": 0.0
-                },
-                "Together AI": {
-                    "time": 3.01,
-                    "tps": 83,
-                    "status": "Online",
-                    "cost": 0.00214
-                },
-                "OpenAI": {
-                    "time": 4.78,
-                    "tps": 50,
-                    "status": "Online",
-                    "cost": 0.00019
-                },
-                "Anthropic": {
-                    "time": 8.33,
-                    "tps": 34,
-                    "status": "Online",
-                    "cost": 0.00146
-                }
-            }
+        "OpenAI": {
+          "time": 4.65,
+          "tps": 51,
+          "status": "Online",
+          "cost": 0.00019
         },
-        {
-            "timestamp": "2025-12-04 00:38:10 UTC",
-            "results": {
-                "Groq": {
-                    "time": 1.1229,
-                    "tps": 205.72,
-                    "status": "Online",
-                    "cost": 0.0
-                },
-                "Together AI": {
-                    "time": 2.6613,
-                    "tps": 93.94,
-                    "status": "Online",
-                    "cost": 7.8e-05
-                },
-                "Mistral AI": {
-                    "time": 6.4836,
-                    "tps": 40.1,
-                    "status": "Online",
-                    "cost": 0.001938
-                },
-                "OpenAI": {
-                    "time": 6.9566,
-                    "tps": 34.5,
-                    "status": "Online",
-                    "cost": 0.000167
-                },
-                "Anthropic": {
-                    "time": 7.2118,
-                    "tps": 33.97,
-                    "status": "Online",
-                    "cost": 0.004188
-                },
-                "Cohere": {
-                    "time": 99.9999,
-                    "tps": 0,
-                    "status": "API FAILURE",
-                    "cost": null
-                }
-            }
-        },
-        {
-            "timestamp": "2025-12-04 00:55:20 UTC",
-            "results": {
-                "Groq": {
-                    "time": 0.9951,
-                    "tps": 277.36,
-                    "status": "Online",
-                    "cost": 0.0
-                },
-                "Together AI": {
-                    "time": 1.8421,
-                    "tps": 135.71,
-                    "status": "Online",
-                    "cost": 7.8e-05
-                },
-                "OpenAI": {
-                    "time": 5.5919,
-                    "tps": 42.92,
-                    "status": "Online",
-                    "cost": 0.000167
-                },
-                "Mistral AI": {
-                    "time": 6.5668,
-                    "tps": 39.59,
-                    "status": "Online",
-                    "cost": 0.001938
-                },
-                "Anthropic": {
-                    "time": 8.2408,
-                    "tps": 30.09,
-                    "status": "Online",
-                    "cost": 0.004233
-                },
-                "Cohere": {
-                    "time": 99.9999,
-                    "tps": 0,
-                    "status": "API FAILURE",
-                    "cost": null
-                }
-            }
-        },
-        {
-            "timestamp": "2025-12-04 01:00:56 UTC",
-            "results": {
-                "Groq": {
-                    "time": 0.4729,
-                    "tps": 152.25,
-                    "status": "Online",
-                    "cost": 0.0
-                },
-                "Together AI": {
-                    "time": 1.5341,
-                    "tps": 162.96,
-                    "status": "Online",
-                    "cost": 7.8e-05
-                },
-                "OpenAI": {
-                    "time": 4.5703,
-                    "tps": 52.51,
-                    "status": "Online",
-                    "cost": 0.000167
-                },
-                "Mistral AI": {
-                    "time": 6.4855,
-                    "tps": 40.09,
-                    "status": "Online",
-                    "cost": 0.001938
-                },
-                "Anthropic": {
-                    "time": 8.0902,
-                    "tps": 35.72,
-                    "status": "Online",
-                    "cost": 0.004848
-                },
-                "Cohere": {
-                    "time": 99.9999,
-                    "tps": 0,
-                    "status": "API FAILURE",
-                    "cost": null
-                }
-            }
-        },
-        {
-            "timestamp": "2025-12-04 01:06:53 UTC",
-            "results": {
-                "Groq": {
-                    "time": 1.1073,
-                    "tps": 195.07,
-                    "status": "Online",
-                    "cost": 0.0
-                },
-                "Together AI": {
-                    "time": 1.1722,
-                    "tps": 213.27,
-                    "status": "Online",
-                    "cost": 7.8e-05
-                },
-                "Mistral AI": {
-                    "time": 4.9361,
-                    "tps": 52.67,
-                    "status": "Online",
-                    "cost": 0.001938
-                },
-                "OpenAI": {
-                    "time": 4.9622,
-                    "tps": 48.37,
-                    "status": "Online",
-                    "cost": 0.000167
-                },
-                "Anthropic": {
-                    "time": 7.7596,
-                    "tps": 34.15,
-                    "status": "Online",
-                    "cost": 0.004488
-                },
-                "Cohere": {
-                    "time": 99.9999,
-                    "tps": 0,
-                    "status": "API FAILURE",
-                    "cost": null
-                }
-            }
-        },
-        {
-            "timestamp": "2025-12-04 01:44:38 UTC",
-            "results": {
-                "Groq": {
-                    "time": 1.0649,
-                    "tps": 209.41,
-                    "status": "Online",
-                    "cost": 0.0
-                },
-                "Together AI": {
-                    "time": 1.2997,
-                    "tps": 192.35,
-                    "status": "Online",
-                    "cost": 7.8e-05
-                },
-                "Mistral AI": {
-                    "time": 3.6611,
-                    "tps": 71.02,
-                    "status": "Online",
-                    "cost": 0.001938
-                },
-                "OpenAI": {
-                    "time": 4.0995,
-                    "tps": 58.54,
-                    "status": "Online",
-                    "cost": 0.000167
-                },
-                "Anthropic": {
-                    "time": 8.3422,
-                    "tps": 35.12,
-                    "status": "Online",
-                    "cost": 0.004908
-                },
-                "Cohere": {
-                    "time": 99.9999,
-                    "tps": 0,
-                    "status": "API FAILURE",
-                    "cost": null
-                }
-            }
-        },
-        {
-            "timestamp": "2025-12-04 06:23:32 UTC",
-            "results": {
-                "Groq": {
-                    "time": 1.023,
-                    "tps": 226.78,
-                    "status": "Online",
-                    "cost": 0.0
-                },
-                "Together AI": {
-                    "time": 2.5988,
-                    "tps": 96.2,
-                    "status": "Online",
-                    "cost": 7.8e-05
-                },
-                "Anthropic": {
-                    "time": 6.6024,
-                    "tps": 38.17,
-                    "status": "Online",
-                    "cost": 0.004293
-                },
-                "OpenAI": {
-                    "time": 7.2374,
-                    "tps": 33.16,
-                    "status": "Online",
-                    "cost": 0.000167
-                },
-                "Mistral AI": {
-                    "time": 9.9665,
-                    "tps": 26.09,
-                    "status": "Online",
-                    "cost": 0.001938
-                },
-                "Cohere": {
-                    "time": 99.9999,
-                    "tps": 0,
-                    "status": "API FAILURE",
-                    "cost": null
-                }
-            }
-        },
-        {
-            "timestamp": "2025-12-04 12:31:43 UTC",
-            "results": {
-                "Groq": {
-                    "time": 1.1408,
-                    "tps": 224.4,
-                    "status": "Online",
-                    "cost": 0.0
-                },
-                "Together AI": {
-                    "time": 1.9789,
-                    "tps": 126.33,
-                    "status": "Online",
-                    "cost": 7.8e-05
-                },
-                "Mistral AI": {
-                    "time": 6.5827,
-                    "tps": 39.5,
-                    "status": "Online",
-                    "cost": 0.001938
-                },
-                "OpenAI": {
-                    "time": 6.874,
-                    "tps": 34.91,
-                    "status": "Online",
-                    "cost": 0.000167
-                },
-                "Anthropic": {
-                    "time": 7.7998,
-                    "tps": 34.74,
-                    "status": "Online",
-                    "cost": 0.004578
-                },
-                "Cohere": {
-                    "time": 99.9999,
-                    "tps": 0,
-                    "status": "API FAILURE",
-                    "cost": null
-                }
-            }
+        "Anthropic": {
+          "time": 8.19,
+          "tps": 35,
+          "status": "Online",
+          "cost": 0.00146
         }
-    ]
+      }
+    },
+    {
+      "timestamp": "2024-12-03 23:40:00 UTC",
+      "results": {
+        "Groq": {
+          "time": 0.89,
+          "tps": 321,
+          "status": "Online",
+          "cost": 0.0
+        },
+        "Together AI": {
+          "time": 3.01,
+          "tps": 83,
+          "status": "Online",
+          "cost": 0.00214
+        },
+        "OpenAI": {
+          "time": 4.78,
+          "tps": 50,
+          "status": "Online",
+          "cost": 0.00019
+        },
+        "Anthropic": {
+          "time": 8.33,
+          "tps": 34,
+          "status": "Online",
+          "cost": 0.00146
+        }
+      }
+    },
+    {
+      "timestamp": "2025-12-04 00:38:10 UTC",
+      "results": {
+        "Groq": {
+          "time": 1.1229,
+          "tps": 205.72,
+          "status": "Online",
+          "cost": 0.0
+        },
+        "Together AI": {
+          "time": 2.6613,
+          "tps": 93.94,
+          "status": "Online",
+          "cost": 7.8e-05
+        },
+        "Mistral AI": {
+          "time": 6.4836,
+          "tps": 40.1,
+          "status": "Online",
+          "cost": 0.001938
+        },
+        "OpenAI": {
+          "time": 6.9566,
+          "tps": 34.5,
+          "status": "Online",
+          "cost": 0.000167
+        },
+        "Anthropic": {
+          "time": 7.2118,
+          "tps": 33.97,
+          "status": "Online",
+          "cost": 0.004188
+        },
+        "Cohere": {
+          "time": 99.9999,
+          "tps": 0,
+          "status": "API FAILURE",
+          "cost": null
+        }
+      }
+    },
+    {
+      "timestamp": "2025-12-04 00:55:20 UTC",
+      "results": {
+        "Groq": {
+          "time": 0.9951,
+          "tps": 277.36,
+          "status": "Online",
+          "cost": 0.0
+        },
+        "Together AI": {
+          "time": 1.8421,
+          "tps": 135.71,
+          "status": "Online",
+          "cost": 7.8e-05
+        },
+        "OpenAI": {
+          "time": 5.5919,
+          "tps": 42.92,
+          "status": "Online",
+          "cost": 0.000167
+        },
+        "Mistral AI": {
+          "time": 6.5668,
+          "tps": 39.59,
+          "status": "Online",
+          "cost": 0.001938
+        },
+        "Anthropic": {
+          "time": 8.2408,
+          "tps": 30.09,
+          "status": "Online",
+          "cost": 0.004233
+        },
+        "Cohere": {
+          "time": 99.9999,
+          "tps": 0,
+          "status": "API FAILURE",
+          "cost": null
+        }
+      }
+    },
+    {
+      "timestamp": "2025-12-04 01:00:56 UTC",
+      "results": {
+        "Groq": {
+          "time": 0.4729,
+          "tps": 152.25,
+          "status": "Online",
+          "cost": 0.0
+        },
+        "Together AI": {
+          "time": 1.5341,
+          "tps": 162.96,
+          "status": "Online",
+          "cost": 7.8e-05
+        },
+        "OpenAI": {
+          "time": 4.5703,
+          "tps": 52.51,
+          "status": "Online",
+          "cost": 0.000167
+        },
+        "Mistral AI": {
+          "time": 6.4855,
+          "tps": 40.09,
+          "status": "Online",
+          "cost": 0.001938
+        },
+        "Anthropic": {
+          "time": 8.0902,
+          "tps": 35.72,
+          "status": "Online",
+          "cost": 0.004848
+        },
+        "Cohere": {
+          "time": 99.9999,
+          "tps": 0,
+          "status": "API FAILURE",
+          "cost": null
+        }
+      }
+    },
+    {
+      "timestamp": "2025-12-04 01:06:53 UTC",
+      "results": {
+        "Groq": {
+          "time": 1.1073,
+          "tps": 195.07,
+          "status": "Online",
+          "cost": 0.0
+        },
+        "Together AI": {
+          "time": 1.1722,
+          "tps": 213.27,
+          "status": "Online",
+          "cost": 7.8e-05
+        },
+        "Mistral AI": {
+          "time": 4.9361,
+          "tps": 52.67,
+          "status": "Online",
+          "cost": 0.001938
+        },
+        "OpenAI": {
+          "time": 4.9622,
+          "tps": 48.37,
+          "status": "Online",
+          "cost": 0.000167
+        },
+        "Anthropic": {
+          "time": 7.7596,
+          "tps": 34.15,
+          "status": "Online",
+          "cost": 0.004488
+        },
+        "Cohere": {
+          "time": 99.9999,
+          "tps": 0,
+          "status": "API FAILURE",
+          "cost": null
+        }
+      }
+    },
+    {
+      "timestamp": "2025-12-04 01:44:38 UTC",
+      "results": {
+        "Groq": {
+          "time": 1.0649,
+          "tps": 209.41,
+          "status": "Online",
+          "cost": 0.0
+        },
+        "Together AI": {
+          "time": 1.2997,
+          "tps": 192.35,
+          "status": "Online",
+          "cost": 7.8e-05
+        },
+        "Mistral AI": {
+          "time": 3.6611,
+          "tps": 71.02,
+          "status": "Online",
+          "cost": 0.001938
+        },
+        "OpenAI": {
+          "time": 4.0995,
+          "tps": 58.54,
+          "status": "Online",
+          "cost": 0.000167
+        },
+        "Anthropic": {
+          "time": 8.3422,
+          "tps": 35.12,
+          "status": "Online",
+          "cost": 0.004908
+        },
+        "Cohere": {
+          "time": 99.9999,
+          "tps": 0,
+          "status": "API FAILURE",
+          "cost": null
+        }
+      }
+    },
+    {
+      "timestamp": "2025-12-04 06:23:32 UTC",
+      "results": {
+        "Groq": {
+          "time": 1.023,
+          "tps": 226.78,
+          "status": "Online",
+          "cost": 0.0
+        },
+        "Together AI": {
+          "time": 2.5988,
+          "tps": 96.2,
+          "status": "Online",
+          "cost": 7.8e-05
+        },
+        "Anthropic": {
+          "time": 6.6024,
+          "tps": 38.17,
+          "status": "Online",
+          "cost": 0.004293
+        },
+        "OpenAI": {
+          "time": 7.2374,
+          "tps": 33.16,
+          "status": "Online",
+          "cost": 0.000167
+        },
+        "Mistral AI": {
+          "time": 9.9665,
+          "tps": 26.09,
+          "status": "Online",
+          "cost": 0.001938
+        },
+        "Cohere": {
+          "time": 99.9999,
+          "tps": 0,
+          "status": "API FAILURE",
+          "cost": null
+        }
+      }
+    },
+    {
+      "timestamp": "2025-12-04 12:31:43 UTC",
+      "results": {
+        "Groq": {
+          "time": 1.1408,
+          "tps": 224.4,
+          "status": "Online",
+          "cost": 0.0
+        },
+        "Together AI": {
+          "time": 1.9789,
+          "tps": 126.33,
+          "status": "Online",
+          "cost": 7.8e-05
+        },
+        "Mistral AI": {
+          "time": 6.5827,
+          "tps": 39.5,
+          "status": "Online",
+          "cost": 0.001938
+        },
+        "OpenAI": {
+          "time": 6.874,
+          "tps": 34.91,
+          "status": "Online",
+          "cost": 0.000167
+        },
+        "Anthropic": {
+          "time": 7.7998,
+          "tps": 34.74,
+          "status": "Online",
+          "cost": 0.004578
+        },
+        "Cohere": {
+          "time": 99.9999,
+          "tps": 0,
+          "status": "API FAILURE",
+          "cost": null
+        }
+      }
+    },
+    {
+      "timestamp": "2025-12-04 16:13:11 UTC",
+      "results": {
+        "Groq": {
+          "time": 1.18,
+          "status": "Online",
+          "tokens_per_second": 204.0
+        },
+        "Together AI": {
+          "time": 2.59,
+          "status": "Online",
+          "tokens_per_second": 93.0
+        },
+        "OpenAI": {
+          "time": 10.64,
+          "status": "Online",
+          "tokens_per_second": 23.0
+        },
+        "Anthropic": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0
+        },
+        "Google": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0
+        },
+        "Mistral AI": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0
+        },
+        "Cohere": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0
+        },
+        "xAI": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0
+        },
+        "DeepSeek": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0
+        },
+        "Perplexity": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0
+        },
+        "Fireworks": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0
+        },
+        "Cerebras": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0
+        }
+      }
+    }
+  ]
 }
