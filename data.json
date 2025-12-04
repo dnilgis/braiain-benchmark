@@ -1,79 +1,67 @@
 {
-    "last_updated": "2024-12-03 23:40:00 UTC",
-    "prompt": "You are an AI analyst tasked with creating a comprehensive technology assessment.\n\nTASK: Analyze the evolution of artificial intelligence from 2010-2025, then predict the next breakthrough.\n\nYOUR ANALYSIS MUST INCLUDE:\n\nPART 1 - HISTORICAL ANALYSIS (400-450 characters):\n- Identify the 3 most significant AI breakthroughs between 2010-2025\n- For each breakthrough, explain its technical innovation and real-world impact\n- Use specific years and concrete examples\n\nPART 2 - COMPARATIVE ASSESSMENT (400-450 characters):\n- Compare deep learning vs transformer architectures\n- Explain why transformers became dominant\n- Discuss the limitations each approach had to overcome\n\nPART 3 - FUTURE PREDICTION (300-350 characters):\n- Predict the next major AI breakthrough (post-2025)\n- Justify your prediction with 3 technical reasons\n- Estimate a realistic timeline\n\nCRITICAL REQUIREMENTS:\n- Total length: 1100-1250 characters (COUNT CAREFULLY)\n- Write exactly 3 paragraphs (one per part)\n- End with a complete sentence and period\n- Use technical terminology appropriately\n- Do NOT use bullet points - write in flowing prose\n- Each paragraph must be substantive and detailed\n\nTARGET: 1175 characters exactly.",
+    "last_updated": "2025-12-04 00:38:10 UTC",
+    "prompt": "Write a complete, three-paragraph summary of the history of the internet, ending with a prediction for 2030.\n\nABSOLUTE REQUIREMENTS - YOUR RESPONSE WILL BE REJECTED IF YOU VIOLATE THESE:\n\nYOU MUST WRITE EXACTLY 1000-1200 CHARACTERS. COUNT EVERY SINGLE CHARACTER.\n\nWRITE EXACTLY THREE PARAGRAPHS. STOP WHEN YOU REACH 1200 CHARACTERS.\n\nTARGET LENGTH: 1100 CHARACTERS\n\nEND WITH A COMPLETE SENTENCE AND A PERIOD (.)\n\nDO NOT STOP WRITING UNTIL YOU REACH AT LEAST 1000 CHARACTERS. THIS IS MANDATORY.\n\nYour response must be substantive and detailed. DO NOT write short summaries.",
     "max_tokens": 240,
     "results": [
         {
             "provider": "Groq",
             "model": "Llama 3.3 70B",
-            "time": 0.89,
+            "time": 1.1229,
             "status": "Online",
-            "response_preview": "Artificial intelligence evolved dramatically from 2010-2025, marked by deep learning's emergence with AlexNet (2012), the transformer architecture revolution (2017), and large language models' breakthrough (2020)...",
-            "full_response": "Artificial intelligence evolved dramatically from 2010-2025, marked by three pivotal breakthroughs. Deep learning emerged with AlexNet's 2012 ImageNet victory, enabling machines to recognize images with unprecedented accuracy and launching the modern AI renaissance across computer vision, speech recognition, and natural language processing. The Transformer architecture, introduced by Google in 2017, revolutionized sequence modeling through attention mechanisms, eliminating recurrent networks' limitations and enabling parallel processing. This innovation directly enabled GPT models and current generative AI systems. Large Language Models achieved remarkable capabilities by 2020-2023, with GPT-3, GPT-4, and Claude demonstrating reasoning, coding, and creative abilities previously thought decades away. Deep learning architectures, particularly convolutional neural networks, dominated 2010-2018 through incremental improvements in layer depth and training techniques. However, transformers fundamentally changed the paradigm after 2017 by processing entire sequences simultaneously rather than sequentially, enabling massive scale-up. While CNNs excelled at spatial hierarchies in images, transformers' attention mechanism proved superior for sequential data like text. Transformers overcame RNNs' vanishing gradient problems and computational bottlenecks, becoming the foundation for modern NLP and increasingly for computer vision through Vision Transformers. Deep learning required careful architectural design, while transformers' simplicity and scalability made them dominant. The next major AI breakthrough post-2025 will likely be multimodal AI systems that seamlessly integrate vision, language, audio, and reasoning. Three technical reasons support this: current foundation models are converging toward unified architectures handling multiple modalities, computational efficiency is improving through techniques like mixture-of-experts, and training on diverse data types enables emergent cross-modal capabilities. Timeline: expect production-ready multimodal AGI systems achieving human-level performance across cognitive tasks by 2028-2030, driven by continued scaling, algorithmic innovations in efficient attention mechanisms, and breakthroughs in reasoning and planning capabilities.",
-            "tokens_per_second": 321,
-            "output_tokens": 487,
-            "character_count": 1424,
+            "response_preview": "The internet's history began in the 1960s with the US Department of Defense's ARPANET project. This early network connected computers at different research institutions, enabling communication and data sharing. The 1980s saw the development of the Internet Protocol (IP) and the creation of the Domain Name System (DNS), making it easier for users to access and navigate the network.  The World Wide Web (WWW) was introduced in the 1990s, revolutionizing the internet with user-friendly web browsers and hyperlinks. This led to widespread adoption and the internet's transformation into a global network. The early 2000s saw the rise of social media, online shopping, and streaming services, further expanding the internet's reach and impact.  By 2030, the internet is expected to be even more integrated into daily life, with the Internet of Things (IoT) and artificial intelligence (AI) playing major roles. As technology continues to advance, the internet will likely become even faster, more secure, and more accessible, leading to new innovations and opportunities, and the internet will continue to shape the world as we know it today.",
+            "full_response": "The internet's history began in the 1960s with the US Department of Defense's ARPANET project. This early network connected computers at different research institutions, enabling communication and data sharing. The 1980s saw the development of the Internet Protocol (IP) and the creation of the Domain Name System (DNS), making it easier for users to access and navigate the network.\n\nThe World Wide Web (WWW) was introduced in the 1990s, revolutionizing the internet with user-friendly web browsers and hyperlinks. This led to widespread adoption and the internet's transformation into a global network. The early 2000s saw the rise of social media, online shopping, and streaming services, further expanding the internet's reach and impact.\n\nBy 2030, the internet is expected to be even more integrated into daily life, with the Internet of Things (IoT) and artificial intelligence (AI) playing major roles. As technology continues to advance, the internet will likely become even faster, more secure, and more accessible, leading to new innovations and opportunities, and the internet will continue to shape the world as we know it today.",
+            "tokens_per_second": 205.72,
+            "output_tokens": 231,
+            "character_count": 1141,
             "cost_per_request": 0.0
         },
         {
             "provider": "Together AI",
             "model": "Llama 3.1 70B",
-            "time": 3.01,
+            "time": 2.6613,
             "status": "Online",
-            "response_preview": "The evolution of artificial intelligence from 2010-2025 was characterized by rapid advancements in deep learning, neural networks, and natural language processing...",
-            "full_response": "The evolution of artificial intelligence from 2010-2025 was characterized by rapid advancements in deep learning, neural networks, and natural language processing. The most significant breakthroughs included the development of convolutional neural networks for image recognition around 2012, which enabled machines to identify objects with human-level accuracy. The introduction of transformer architecture in 2017 revolutionized language models, allowing for more efficient processing of sequential data. By 2020, large language models like GPT-3 demonstrated unprecedented capabilities in text generation and understanding. Deep learning and transformer architectures represent fundamentally different approaches to processing information. Deep learning, particularly through CNNs, excels at hierarchical feature extraction from structured data like images. Transformers, however, process data in parallel using attention mechanisms, making them highly efficient for sequential information. Transformers became dominant because they overcame the limitations of recurrent neural networks, such as difficulty in capturing long-range dependencies and computational inefficiencies. They also scale better with increased compute and data, enabling the training of massive models. The next major AI breakthrough post-2025 will likely involve multimodal learning systems that can seamlessly integrate and reason across different types of data. Three technical reasons support this prediction: current models are increasingly capable of handling multiple modalities, advances in few-shot and zero-shot learning are enabling more flexible AI systems, and improvements in computational efficiency are making complex integrations feasible. A realistic timeline for this breakthrough is 2027-2030, as research continues to push the boundaries of model architecture and training methodologies.",
-            "tokens_per_second": 83,
-            "output_tokens": 350,
-            "character_count": 1175,
-            "cost_per_request": 0.00214
-        },
-        {
-            "provider": "OpenAI",
-            "model": "GPT-4o Mini",
-            "time": 4.78,
-            "status": "Online",
-            "response_preview": "The period from 2010 to 2025 witnessed transformative AI breakthroughs that reshaped technology and society...",
-            "full_response": "The period from 2010 to 2025 witnessed transformative AI breakthroughs that reshaped technology and society. First, deep learning emerged as a dominant paradigm with AlexNet's victory in the 2012 ImageNet competition, demonstrating that neural networks with sufficient data and compute could achieve superhuman performance in image classification. This sparked an AI renaissance, with deep learning being applied to speech recognition, natural language processing, and autonomous systems. Second, the introduction of the transformer architecture in 2017 by Vaswani et al. revolutionized sequence modeling, enabling models like BERT and GPT to achieve unprecedented performance in language tasks. Third, the development of large language models (LLMs) from 2020 onwards, exemplified by GPT-3, GPT-4, and others, showcased emergent capabilities including reasoning, coding, and creative writing that were previously thought to be decades away. Deep learning and transformer architectures represent distinct approaches to machine learning. Deep learning, particularly convolutional neural networks, excels at hierarchical feature extraction from structured data like images. Transformers, in contrast, use attention mechanisms to process sequences in parallel, making them highly efficient for language and sequential data. Transformers became dominant because they addressed key limitations of recurrent neural networks, such as difficulty capturing long-range dependencies and poor parallelization. Their self-attention mechanism allows the model to weigh the importance of different parts of the input dynamically, leading to more context-aware representations. Additionally, transformers scale exceptionally well, benefiting from increased compute and data more effectively than previous architectures. The next major AI breakthrough post-2025 is likely to be artificial general intelligence capable of multimodal reasoning and real-world interaction. This will be driven by three technical factors: integration of diverse modalities enabling richer understanding, advances in reinforcement learning from human feedback refining model behavior, and improvements in sample efficiency reducing data requirements. A realistic timeline for significant progress is 2027-2030.",
-            "tokens_per_second": 50,
-            "output_tokens": 412,
-            "character_count": 1242,
-            "cost_per_request": 0.00019
-        },
-        {
-            "provider": "Anthropic",
-            "model": "Claude 3.5 Sonnet",
-            "time": 8.33,
-            "status": "Online",
-            "response_preview": "Between 2010 and 2025, artificial intelligence underwent a renaissance marked by three transformative breakthroughs...",
-            "full_response": "Between 2010 and 2025, artificial intelligence underwent a renaissance marked by three transformative breakthroughs. The deep learning revolution began with AlexNet's 2012 ImageNet victory, demonstrating that deep neural networks with GPU acceleration could achieve superhuman image recognition. This sparked widespread adoption of convolutional neural networks across computer vision applications, from facial recognition to autonomous vehicles. The transformer architecture, introduced in the 2017 'Attention is All You Need' paper, fundamentally changed how machines process sequential data. Unlike previous approaches, transformers process entire sequences simultaneously using self-attention mechanisms, enabling unprecedented scaling. This breakthrough directly led to GPT models and modern large language models that demonstrate reasoning capabilities. The emergence of foundation models from 2020-2023, exemplified by GPT-3, GPT-4, and Claude, showed that massive scale could produce emergent capabilities including few-shot learning, reasoning, and even basic common sense understanding that wasn't explicitly programmed. Deep learning and transformer architectures represent fundamentally different computational paradigms. Deep learning, particularly through convolutional networks, excels at hierarchical feature extraction by applying learned filters across spatial dimensions. Transformers eschew this sequential processing for parallel attention mechanisms that weigh the relevance of all input elements simultaneously. Transformers became dominant because they solved critical limitations of recurrent networks: vanishing gradients over long sequences and inability to parallelize training. Their self-attention mechanism provides both global context awareness and computational efficiency at scale. While CNNs remain optimal for grid-structured data like images, transformers' flexibility and scalability made them the foundation for modern NLP and increasingly for computer vision through Vision Transformers. Deep learning required careful architectural engineering for specific domains, whereas transformers offer a more general-purpose architecture adaptable across modalities. The next breakthrough post-2025 will likely be AI systems with genuine causal reasoning and world modeling capabilities. Three technical factors support this: current LLMs lack systematic reasoning and rely on pattern matching rather than causal understanding, integration of symbolic reasoning with neural networks is advancing through neuro-symbolic approaches, and improved training techniques using synthetic environments can teach models physical intuition and counterfactual reasoning. This breakthrough should materialize between 2027-2030, as research progresses on hybrid architectures combining the pattern recognition strengths of neural networks with the systematic reasoning of symbolic AI, potentially through techniques like learned simulators and differentiable physics engines.",
-            "tokens_per_second": 34,
-            "output_tokens": 521,
-            "character_count": 1436,
-            "cost_per_request": 0.00146
-        },
-        {
-            "provider": "Google",
-            "model": "Gemini 1.5 Pro",
-            "time": 99.9999,
-            "status": "API FAILURE",
-            "response_preview": "All model versions failed",
-            "full_response": "All model versions failed",
-            "tokens_per_second": 0,
-            "output_tokens": 0,
-            "character_count": 0,
-            "cost_per_request": null
+            "response_preview": "The history of the internet began in the 1960s with the United States Department of Defense's Advanced Research Projects Agency (ARPA) funding a project to create a network of computers that could communicate with each other. This project, called ARPANET, was the first operational packet switching network, and it was developed in the late 1960s and early 1970s. The network was designed to be fault-tolerant and able to survive a nuclear attack, and it was initially used to connect computers at different research institutions.  In the 1980s, the Internet Protocol (IP) was developed, allowing different networks to communicate with each other and forming the modern internet. The World Wide Web (WWW) was invented in 1989 by Tim Berners-Lee, a British computer scientist, and it revolutionized the way people accessed and shared information online. The web made it easy for people to create and share content using web browsers and hyperlinks, and it quickly became a popular way for people to access information and communicate with each other. The widespread adoption of the internet in the 1990s and 2000s led to the development of new technologies and services, such as email, e-commerce, and social",
+            "full_response": "The history of the internet began in the 1960s with the United States Department of Defense's Advanced Research Projects Agency (ARPA) funding a project to create a network of computers that could communicate with each other. This project, called ARPANET, was the first operational packet switching network, and it was developed in the late 1960s and early 1970s. The network was designed to be fault-tolerant and able to survive a nuclear attack, and it was initially used to connect computers at different research institutions.\n\nIn the 1980s, the Internet Protocol (IP) was developed, allowing different networks to communicate with each other and forming the modern internet. The World Wide Web (WWW) was invented in 1989 by Tim Berners-Lee, a British computer scientist, and it revolutionized the way people accessed and shared information online. The web made it easy for people to create and share content using web browsers and hyperlinks, and it quickly became a popular way for people to access information and communicate with each other. The widespread adoption of the internet in the 1990s and 2000s led to the development of new technologies and services, such as email, e-commerce, and social",
+            "tokens_per_second": 93.94,
+            "output_tokens": 250,
+            "character_count": 1207,
+            "cost_per_request": 7.8e-05
         },
         {
             "provider": "Mistral AI",
             "model": "Mistral Large",
-            "time": 99.9999,
-            "status": "API FAILURE",
-            "response_preview": "All model versions failed",
-            "full_response": "All model versions failed",
-            "tokens_per_second": 0,
-            "output_tokens": 0,
-            "character_count": 0,
-            "cost_per_request": null
+            "time": 6.4836,
+            "status": "Online",
+            "response_preview": "The internet\u2019s origins trace back to the 1960s as a Cold War-era project by the U.S. Department of Defense, designed to create a decentralized communication network that could survive nuclear attacks. Known as ARPANET, this early system connected a handful of research institutions, using packet-switching technology to transmit data in small, manageable chunks. By the 1970s, protocols like TCP/IP were developed, standardizing how devices communicated, and laying the foundation for a global network. The 1980s saw the expansion of ARPANET into academic and government circles, while the term \"internet\" emerged to describe this interconnected web of networks. The creation of the World Wide Web in 1989 by Tim Berners-Lee, with its hypertext system and user-friendly browsers, transformed the internet from a niche tool into a public utility, accessible to millions by the mid-1990s.  The late 1990s and early 2000s marked the internet\u2019s commercial boom, as dial-up connections gave way to broadband, enabling faster speeds and richer content. Companies like Amazon, Google, and eBay capitalized on this shift, turning the web into a hub for commerce",
+            "full_response": "The internet\u2019s origins trace back to the 1960s as a Cold War-era project by the U.S. Department of Defense, designed to create a decentralized communication network that could survive nuclear attacks. Known as ARPANET, this early system connected a handful of research institutions, using packet-switching technology to transmit data in small, manageable chunks. By the 1970s, protocols like TCP/IP were developed, standardizing how devices communicated, and laying the foundation for a global network. The 1980s saw the expansion of ARPANET into academic and government circles, while the term \"internet\" emerged to describe this interconnected web of networks. The creation of the World Wide Web in 1989 by Tim Berners-Lee, with its hypertext system and user-friendly browsers, transformed the internet from a niche tool into a public utility, accessible to millions by the mid-1990s.\n\nThe late 1990s and early 2000s marked the internet\u2019s commercial boom, as dial-up connections gave way to broadband, enabling faster speeds and richer content. Companies like Amazon, Google, and eBay capitalized on this shift, turning the web into a hub for commerce",
+            "tokens_per_second": 40.1,
+            "output_tokens": 260,
+            "character_count": 1153,
+            "cost_per_request": 0.001938
+        },
+        {
+            "provider": "OpenAI",
+            "model": "GPT-4o Mini",
+            "time": 6.9566,
+            "status": "Online",
+            "response_preview": "The history of the internet began in the late 1960s, originating from ARPANET, a project funded by the U.S. Department of Defense. It aimed to create a network that could maintain communication during crises. The first successful message sent over ARPANET occurred in 1969 between UCLA and Stanford. This innovative project allowed multiple computers to network together, laying the foundation for future connectivity. In the 1970s, protocols were established, such as TCP/IP, which standardized data transmission and became the backbone for internet communications.  By the late 1980s and early 1990s, the internet transitioned from a governmental and academic tool to a platform accessible to the public. The invention of the World Wide Web by Tim Berners-Lee in 1989 made the internet user-friendly, enabling the creation of websites and easy navigation through browsers. As connectivity expanded through the 1990s, the dot-com boom catalyzed commercial and technological innovations, leading to the rise of giants like Amazon and Google, which transformed online commerce and information access.  Looking ahead to 2030, the internet is expected to evolve dramatically, driven by advancements in artificial intelligence, quantum computing,",
+            "full_response": "The history of the internet began in the late 1960s, originating from ARPANET, a project funded by the U.S. Department of Defense. It aimed to create a network that could maintain communication during crises. The first successful message sent over ARPANET occurred in 1969 between UCLA and Stanford. This innovative project allowed multiple computers to network together, laying the foundation for future connectivity. In the 1970s, protocols were established, such as TCP/IP, which standardized data transmission and became the backbone for internet communications.\n\nBy the late 1980s and early 1990s, the internet transitioned from a governmental and academic tool to a platform accessible to the public. The invention of the World Wide Web by Tim Berners-Lee in 1989 made the internet user-friendly, enabling the creation of websites and easy navigation through browsers. As connectivity expanded through the 1990s, the dot-com boom catalyzed commercial and technological innovations, leading to the rise of giants like Amazon and Google, which transformed online commerce and information access.\n\nLooking ahead to 2030, the internet is expected to evolve dramatically, driven by advancements in artificial intelligence, quantum computing,",
+            "tokens_per_second": 34.5,
+            "output_tokens": 240,
+            "character_count": 1242,
+            "cost_per_request": 0.000167
+        },
+        {
+            "provider": "Anthropic",
+            "model": "Claude 3.5 Sonnet",
+            "time": 7.2118,
+            "status": "Online",
+            "response_preview": "The internet began in the late 1960s as ARPANET, a U.S. Department of Defense project designed to create a decentralized communication network that could survive nuclear attacks. Computer scientists like Vint Cerf and Bob Kahn developed the TCP/IP protocol in the 1970s, establishing the foundation for modern internet communication. By the 1980s, the National Science Foundation created NSFNET, expanding access to universities and research institutions across America.  The 1990s marked the internet's transformation into a global phenomenon with Tim Berners-Lee's invention of the World Wide Web in 1991. Commercial restrictions were lifted, enabling businesses to establish online presences. The dot-com boom followed, creating companies like Amazon and eBay. Broadband replaced dial-up connections, while search engines like Google revolutionized information access. Social media platforms emerged in the 2000s, fundamentally changing human communication and commerce.  By 2030, the internet will likely be dominated by artificial intelligence integration, quantum computing networks, and immersive virtual reality experiences that blur the lines between digital and physical worlds.",
+            "full_response": "The internet began in the late 1960s as ARPANET, a U.S. Department of Defense project designed to create a decentralized communication network that could survive nuclear attacks. Computer scientists like Vint Cerf and Bob Kahn developed the TCP/IP protocol in the 1970s, establishing the foundation for modern internet communication. By the 1980s, the National Science Foundation created NSFNET, expanding access to universities and research institutions across America.\n\nThe 1990s marked the internet's transformation into a global phenomenon with Tim Berners-Lee's invention of the World Wide Web in 1991. Commercial restrictions were lifted, enabling businesses to establish online presences. The dot-com boom followed, creating companies like Amazon and eBay. Broadband replaced dial-up connections, while search engines like Google revolutionized information access. Social media platforms emerged in the 2000s, fundamentally changing human communication and commerce.\n\nBy 2030, the internet will likely be dominated by artificial intelligence integration, quantum computing networks, and immersive virtual reality experiences that blur the lines between digital and physical worlds.",
+            "tokens_per_second": 33.97,
+            "output_tokens": 245,
+            "character_count": 1188,
+            "cost_per_request": 0.004188
         },
         {
             "provider": "Cohere",
@@ -173,6 +161,47 @@
                     "tps": 34,
                     "status": "Online",
                     "cost": 0.00146
+                }
+            }
+        },
+        {
+            "timestamp": "2025-12-04 00:38:10 UTC",
+            "results": {
+                "Groq": {
+                    "time": 1.1229,
+                    "tps": 205.72,
+                    "status": "Online",
+                    "cost": 0.0
+                },
+                "Together AI": {
+                    "time": 2.6613,
+                    "tps": 93.94,
+                    "status": "Online",
+                    "cost": 7.8e-05
+                },
+                "Mistral AI": {
+                    "time": 6.4836,
+                    "tps": 40.1,
+                    "status": "Online",
+                    "cost": 0.001938
+                },
+                "OpenAI": {
+                    "time": 6.9566,
+                    "tps": 34.5,
+                    "status": "Online",
+                    "cost": 0.000167
+                },
+                "Anthropic": {
+                    "time": 7.2118,
+                    "tps": 33.97,
+                    "status": "Online",
+                    "cost": 0.004188
+                },
+                "Cohere": {
+                    "time": 99.9999,
+                    "tps": 0,
+                    "status": "API FAILURE",
+                    "cost": null
                 }
             }
         }
