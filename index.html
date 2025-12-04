@@ -15,6 +15,11 @@
       gtag('config', 'G-3B3ZCE62NW');
     </script>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.png">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <style>
@@ -131,6 +136,37 @@
             margin-top: 10px;
             letter-spacing: 2px;
             text-transform: uppercase;
+        }
+        
+        /* OUROBOROS LOGO */
+        .ouroboros-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .ouroboros-logo {
+            width: 40px;
+            height: 40px;
+            animation: rotate-ouroboros 20s linear infinite;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 5px rgba(0, 255, 65, 0.5));
+        }
+        
+        @keyframes rotate-ouroboros {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .ouroboros-logo:hover {
+            opacity: 1;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 65, 0.8));
         }
         
         .system-status {
@@ -903,11 +939,15 @@
 ═══════════════════════════════════════════════════════════
             </div>
             
+            <div class="ouroboros-container">
+                <img src="favicon.png" alt="Ouroboros" class="ouroboros-logo">
+            </div>
+            
             <div class="tagline">Real-Time LLM Performance Monitoring</div>
             
             <div class="system-status">
                 <div class="status-item">
-                    <div class="status-value" id="provider-count">7</div>
+                    <div class="status-value" id="provider-count">12</div>
                     <div class="status-label">NODES</div>
                 </div>
                 <div class="status-item">
@@ -936,8 +976,8 @@
                     <div class="advertise-subtitle">Reach engaged developers & AI practitioners</div>
                 </div>
             </div>
-            <a href="mailto:dnilgis@gmail.com?subject=Advertising%20on%20BRAIAN%20Speed%20Index" class="advertise-contact">
-                CONTACT: dnilgis@gmail.com
+            <a href="/cdn-cgi/l/email-protection#284c4641444f415b684f45494144064b4745175b5d4a424d4b5c15694c5e4d5a5c415b41464f0d1a1847460d1a186a7a696169660d1a187b584d4d4c0d1a1861464c4d50" class="advertise-contact">
+                CONTACT: <span class="__cf_email__" data-cfemail="94f0fafdf8f3fde7d4f3f9f5fdf8baf7fbf9">[email&#160;protected]</span>
             </a>
         </div>
     </div>
@@ -1119,6 +1159,11 @@
                         <li>Together AI (Llama 3.1 70B Instruct Turbo)</li>
                         <li>Mistral AI (Mistral Large Latest)</li>
                         <li>Cohere (Command R Plus)</li>
+                        <li>xAI (Grok Beta)</li>
+                        <li>DeepSeek (DeepSeek Chat)</li>
+                        <li>Perplexity (Llama 3.1 Sonar Large 128K)</li>
+                        <li>Fireworks (Llama 3.1 70B Instruct)</li>
+                        <li>Cerebras (Llama 3.1 70B)</li>
                     </ul>
                 </div>
                 
@@ -1195,7 +1240,7 @@
  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
 ═══════════════════════════════════════════════════════════
         </div>
-        <p>A <a href="mailto:dnilgis@gmail.com">dnilgis</a> PROJECT // v2.1</p>
+        <p>A <a href="/cdn-cgi/l/email-protection#c2a6acabaea5abb182a5afa3abaeeca1adaf">dnilgis</a> PROJECT // v2.1</p>
         <p style="color: var(--text-dim); margin-top: 15px;">
             DISCLAIMER: Data provided for informational purposes only. Performance may vary. 
             All trademarks are property of their respective owners.
@@ -1205,7 +1250,7 @@
         </p>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // FALLBACK DATA (Updated with latest benchmark results)
         const FALLBACK_DATA = {
             "last_updated": "2024-12-03 23:40:00 UTC",
@@ -1225,7 +1270,12 @@
             "Groq": "https://console.groq.com/",
             "Mistral AI": "https://console.mistral.ai/",
             "Cohere": "https://dashboard.cohere.com/",
-            "Together AI": "https://api.together.xyz/"
+            "Together AI": "https://api.together.xyz/",
+            "xAI": "https://console.x.ai/",
+            "DeepSeek": "https://platform.deepseek.com/",
+            "Perplexity": "https://www.perplexity.ai/hub",
+            "Fireworks": "https://fireworks.ai/",
+            "Cerebras": "https://inference.cerebras.ai/"
         };
 
         const PROVIDER_COLORS = {
@@ -1235,7 +1285,12 @@
             "Groq": "#f55036",
             "Mistral AI": "#ff7000",
             "Cohere": "#39594d",
-            "Together AI": "#6366f1"
+            "Together AI": "#6366f1",
+            "xAI": "#1da1f2",
+            "DeepSeek": "#ff6b6b",
+            "Perplexity": "#20808d",
+            "Fireworks": "#ff4500",
+            "Cerebras": "#9333ea"
         };
 
         let allResults = [];
@@ -1579,16 +1634,4 @@
             }
         }
 
-        const savedTheme = localStorage.getItem('theme') || 'green';
-        setTheme(savedTheme);
-
-        console.log("BRAIAIN SPEED INDEX // SYSTEM ONLINE");
-        fetchData();
-        
-        setInterval(() => {
-            console.log("AUTO-SYNC INITIATED...");
-            fetchData();
-        }, 21600000);
-    </script>
-    
-    <script t
+        const savedT
