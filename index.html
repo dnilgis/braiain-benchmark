@@ -7,12 +7,12 @@
     <meta name="description" content="Real-time AI model speed benchmarks. Terminal-style monitoring of OpenAI, Anthropic, Google Gemini, Groq performance metrics.">
     
     <!-- Google Analytics GA4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1Y5SESHWEE"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3B3ZCE62NW"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-1Y5SESHWEE');
+      gtag('config', 'G-3B3ZCE62NW');
     </script>
     
     <!-- Google AdSense -->
@@ -270,29 +270,150 @@
         .theme-cyan { background: #00ffff; }
         .theme-red { background: #ff0055; }
         
-        /* AD CONTAINER STYLING */
+        /* AD CONTAINER STYLING - SINGLE BANNER */
         .ad-container {
             max-width: 1400px;
-            margin: 40px auto;
+            margin: 50px auto;
             padding: 0 20px;
         }
         
         .ad-terminal {
             background: var(--bg-terminal);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            text-align: center;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.15);
+            overflow: hidden;
         }
         
-        .ad-label {
-            font-size: 0.7em;
+        .ad-header-bar {
+            background: rgba(0, 255, 65, 0.05);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75em;
             color: var(--text-dim);
-            margin-bottom: 15px;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
         
-        .ad-label::before {
-            content: '// ';
+        .ad-header-bar::before {
+            content: '●';
+            color: var(--text-primary);
+            font-size: 1.2em;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .ad-content {
+            padding: 25px 20px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+        }
+        
+        /* Make ad responsive and centered */
+        .ad-content .adsbygoogle {
+            display: block !important;
+            max-width: 100%;
+        }
+        
+        /* ADVERTISE HERE BANNER */
+        .advertise-banner {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .advertise-box {
+            background: linear-gradient(90deg, rgba(0, 255, 65, 0.03) 0%, rgba(0, 255, 65, 0.08) 50%, rgba(0, 255, 65, 0.03) 100%);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--text-primary);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .advertise-box:hover {
+            background: linear-gradient(90deg, rgba(0, 255, 65, 0.05) 0%, rgba(0, 255, 65, 0.12) 50%, rgba(0, 255, 65, 0.05) 100%);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+            border-left-width: 6px;
+        }
+        
+        .advertise-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .advertise-icon {
+            font-size: 1.3em;
+            color: var(--text-primary);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        .advertise-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .advertise-title {
+            font-size: 0.9em;
+            color: var(--text-primary);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .advertise-subtitle {
+            font-size: 0.75em;
+            color: var(--text-dim);
+        }
+        
+        .advertise-contact {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 6px 15px;
+            border: 1px solid var(--border-color);
+            background: rgba(0, 255, 65, 0.05);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .advertise-contact:hover {
+            background: rgba(0, 255, 65, 0.15);
+            color: var(--text-primary);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .ad-container {
+                margin: 30px auto;
+            }
+            .ad-content {
+                padding: 20px 15px;
+                min-height: 80px;
+            }
+            .advertise-banner {
+                margin: 15px auto;
+            }
+            .advertise-box {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+            .advertise-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .advertise-contact {
+                width: 100%;
+            }
         }
         
         /* CARD VIEW */
@@ -786,6 +907,22 @@
         </div>
     </header>
 
+    <!-- ADVERTISE HERE BANNER -->
+    <div class="advertise-banner">
+        <div class="advertise-box">
+            <div class="advertise-content">
+                <div class="advertise-icon">▶</div>
+                <div class="advertise-text">
+                    <div class="advertise-title">ADVERTISE HERE</div>
+                    <div class="advertise-subtitle">Reach engaged developers & AI practitioners</div>
+                </div>
+            </div>
+            <a href="mailto:dnilgis@gmail.com?subject=Advertising on BRAIAN Speed Index" class="advertise-contact">
+                CONTACT: dnilgis@gmail.com
+            </a>
+        </div>
+    </div>
+
     <!-- COMPACT CONTROLS - SINGLE ROW -->
     <div class="controls-panel">
         <div class="controls-row">
@@ -849,23 +986,6 @@
         </table>
     </div>
 
-    <!-- ADSENSE AD #1 - After Results, Before Chart -->
-    <div class="ad-container">
-        <div class="ad-terminal">
-            <div class="ad-label">SPONSORED CONTENT</div>
-            <!-- Display Ad (728x90 Leaderboard or Responsive) -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-2906493623732277"
-                 data-ad-slot="YOUR_AD_SLOT_ID_1"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-    </div>
-
     <!-- SIMPLIFIED CHART SECTION - NO DATE SELECTOR -->
     <div class="chart-terminal" id="chart-section" style="display: none;">
         <div class="terminal-window">
@@ -880,20 +1000,23 @@
         </div>
     </div>
 
-    <!-- ADSENSE AD #2 - After Chart, Before Info -->
+    <!-- SINGLE BANNER AD - Integrated Terminal Style -->
     <div class="ad-container">
         <div class="ad-terminal">
-            <div class="ad-label">SPONSORED CONTENT</div>
-            <!-- Display Ad (728x90 Leaderboard or Responsive) -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-2906493623732277"
-                 data-ad-slot="YOUR_AD_SLOT_ID_2"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+            <div class="ad-header-bar">
+                SPONSORED CONTENT // SYSTEM MESSAGE
+            </div>
+            <div class="ad-content">
+                <!-- Horizontal Banner Ad (728x90 Leaderboard or Responsive) -->
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:728px;height:90px"
+                     data-ad-client="ca-pub-2906493623732277"
+                     data-ad-slot="YOUR_AD_SLOT_ID"
+                     data-ad-format="horizontal"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
         </div>
     </div>
 
