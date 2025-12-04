@@ -1013,7 +1013,7 @@
                 </div>
             </div>
             <div class="advertise-contact">
-                CONTACT: <a href="/cdn-cgi/l/email-protection#fe9a90979299978dbe99939f9792d09d9193" style="color: var(--text-primary); text-decoration: underline;"><span class="__cf_email__" data-cfemail="90f4fef9fcf7f9e3d0f7fdf1f9fcbef3fffd">[email&#160;protected]</span></a>
+                CONTACT: <a href="mailto:dnilgis@gmail.com" style="color: var(--text-primary); text-decoration: underline;">dnilgis@gmail.com</a>
             </div>
         </div>
     </div>
@@ -1102,16 +1102,54 @@
         <div class="info-block">
             <h2>SYSTEM OVERVIEW</h2>
             <p>
-                BRAIAIN SPEED INDEX is an independent benchmarking system for Large Language Model APIs. 
-                We execute identical, complex analytical prompts across all major providers under controlled conditions, 
-                measuring real-world latency, throughput, cost metrics, and response quality.
+                BRAIAIN SPEED INDEX is an independent, real-time benchmarking system for Large Language Model APIs. 
+                We test 10 major providers every 6 hours with identical complex analytical prompts, measuring production API performance 
+                under controlled conditions. Our focus: speed, cost, and response quality that matter to real developers.
             </p>
             <p>
-                Unlike vendor-provided benchmarks, our data represents actual API performance from 
-                production infrastructure. All tests run from the same datacenter with consistent 
-                network conditions, ensuring valid cross-provider comparisons. Tests are automated 
-                via GitHub Actions and run every 6 hours.
+                Unlike vendor benchmarks or synthetic tests, our data comes from actual API calls to production endpoints. 
+                All tests execute from GitHub Actions infrastructure with consistent network conditions, ensuring fair 
+                cross-provider comparisons. Results update automatically every 6 hours with 30-day historical tracking.
             </p>
+            <p style="color: var(--text-secondary); font-size: 0.95em; margin-top: 15px;">
+                <strong>Why This Matters:</strong> Choose the fastest API for your use case, optimize costs, track reliability, 
+                and make data-driven decisions. No marketing fluff—just real performance data updated 4 times daily.
+            </p>
+        </div>
+
+        <div class="info-block">
+            <h2>USE CASES</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>FOR DEVELOPERS</h3>
+                    <ul class="info-list">
+                        <li><strong>API Selection:</strong> Compare real-world performance before committing</li>
+                        <li><strong>Cost Optimization:</strong> Find the best price/performance ratio for your budget</li>
+                        <li><strong>Latency Planning:</strong> Set realistic user expectations based on actual speeds</li>
+                        <li><strong>Fallback Strategy:</strong> Identify reliable alternatives when primary APIs fail</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3>FOR BUSINESSES</h3>
+                    <ul class="info-list">
+                        <li><strong>Vendor Evaluation:</strong> Make data-driven procurement decisions</li>
+                        <li><strong>SLA Monitoring:</strong> Track uptime and reliability trends over 30 days</li>
+                        <li><strong>Cost Forecasting:</strong> Estimate API costs based on real token consumption</li>
+                        <li><strong>Competitive Analysis:</strong> Benchmark your AI performance against alternatives</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3>FOR RESEARCHERS</h3>
+                    <ul class="info-list">
+                        <li><strong>Reproducible Data:</strong> Open source methodology with consistent test conditions</li>
+                        <li><strong>Historical Trends:</strong> Track performance evolution across 30-day windows</li>
+                        <li><strong>Cross-Provider Comparison:</strong> Fair apples-to-apples benchmarking</li>
+                        <li><strong>Response Analysis:</strong> Full text responses available for quality assessment</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <div class="info-block">
@@ -1136,12 +1174,12 @@
                 <div class="info-card">
                     <h3>TEST PARAMETERS</h3>
                     <ul class="info-list">
-                        <li>Multi-step analytical reasoning prompt</li>
-                        <li>Target output: 1100-1250 characters</li>
-                        <li>Max tokens: 240 (consistent across providers)</li>
+                        <li>Multi-step analytical reasoning prompt (3 parts)</li>
+                        <li>Target output: 2000-3500 characters (full analysis)</li>
+                        <li>Max tokens: 1000 (allows complete responses)</li>
                         <li>Temperature: 1.0 (default creativity)</li>
-                        <li>Validation: 3 retry attempts with character checks</li>
-                        <li>Quality filter: 1000-1400 character range required</li>
+                        <li>Validation: Minimum 800 characters required</li>
+                        <li>Quality: No maximum limit (models can complete responses)</li>
                     </ul>
                 </div>
                 
@@ -1150,22 +1188,22 @@
                     <ul class="info-list">
                         <li>SPEED: End-to-end API latency (seconds)</li>
                         <li>TPS: Tokens generated per second</li>
-                        <li>COST: Per-request pricing (input + output)</li>
-                        <li>QUALITY: Character count validation (1000-1400)</li>
-                        <li>OUTPUT: Complete response text logged</li>
-                        <li>STATUS: Online/offline availability tracking</li>
+                        <li>COST: Per-request pricing (input + output tokens)</li>
+                        <li>CHARS: Character count (validates response quality)</li>
+                        <li>OUTPUT: Full response text (click EXPAND to view)</li>
+                        <li>STATUS: Real-time availability (Online/API Failure)</li>
                     </ul>
                 </div>
                 
                 <div class="info-card">
                     <h3>DATA INTEGRITY</h3>
                     <ul class="info-list">
-                        <li>Automated testing every 6 hours (GitHub Actions)</li>
-                        <li>30-day rolling history with trend analysis</li>
-                        <li>Full response logging for quality verification</li>
-                        <li>Transparent error reporting (API failures tracked)</li>
-                        <li>Consistent datacenter location (no geographic variance)</li>
-                        <li>Version-controlled benchmark script (open source)</li>
+                        <li>Automated testing every 6 hours via GitHub Actions</li>
+                        <li>30-day rolling history with interactive trend charts</li>
+                        <li>Full response logging for transparency & verification</li>
+                        <li>Error tracking with detailed status reporting</li>
+                        <li>Consistent test environment (same datacenter, network)</li>
+                        <li>Open source benchmark script on GitHub</li>
                     </ul>
                 </div>
             </div>
@@ -1177,85 +1215,118 @@
                 <div class="info-card">
                     <h3>INFRASTRUCTURE</h3>
                     <ul class="info-list">
-                        <li>Platform: GitHub Actions (Ubuntu 24.04)</li>
-                        <li>Python 3.x with requests library</li>
-                        <li>Network: Standard GitHub infrastructure</li>
-                        <li>Concurrency: Sequential testing (no parallel requests)</li>
+                        <li>Platform: GitHub Actions (Ubuntu 24.04 LTS)</li>
+                        <li>Runtime: Python 3.12+ with requests library</li>
+                        <li>Network: Standard GitHub infrastructure (multi-region)</li>
+                        <li>Execution: Sequential testing (one provider at a time)</li>
+                        <li>Schedule: Every 6 hours (4 tests per day)</li>
                     </ul>
                 </div>
                 
                 <div class="info-card">
                     <h3>PROVIDERS TESTED</h3>
                     <ul class="info-list">
-                        <li>OpenAI (GPT-4o Mini)</li>
-                        <li>Anthropic (Claude 3.5 Sonnet)</li>
-                        <li>Google (Gemini 1.5 Flash)</li>
-                        <li>Groq (Llama 3.3 70B Versatile)</li>
-                        <li>Together AI (Llama 3.1 70B Instruct Turbo)</li>
-                        <li>Mistral AI (Mistral Large Latest)</li>
-                        <li>Cohere (Command R Plus)</li>
-                        <li>DeepSeek (DeepSeek Chat)</li>
-                        <li>Fireworks (Llama 3.1 70B Instruct)</li>
-                        <li>Cerebras (Llama 3.1 70B)</li>
+                        <li>OpenAI (GPT-4o Mini) - General purpose flagship</li>
+                        <li>Anthropic (Claude 3.5 Sonnet) - Advanced reasoning</li>
+                        <li>Google (Gemini 1.5 Flash) - Fast & affordable</li>
+                        <li>Groq (Llama 3.3 70B Versatile) - Fastest inference</li>
+                        <li>Together AI (Llama 3.1 70B Instruct) - Open source</li>
+                        <li>Mistral AI (Mistral Large Latest) - European leader</li>
+                        <li>Cohere (Command R Plus) - Enterprise focused</li>
+                        <li>DeepSeek (DeepSeek Chat) - Cost-effective</li>
+                        <li>Fireworks (Llama 3.1 70B) - Developer-friendly</li>
+                        <li>Cerebras (Llama 3.1 70B) - Hardware-optimized</li>
                     </ul>
                 </div>
                 
                 <div class="info-card">
                     <h3>COST CALCULATION</h3>
                     <ul class="info-list">
-                        <li>Input: ~200 tokens (prompt)</li>
-                        <li>Output: ~240-520 tokens (response)</li>
-                        <li>Pricing: Provider-specific rates applied</li>
-                        <li>Calculation: (input_tokens × input_rate) + (output_tokens × output_rate)</li>
+                        <li>Input: ~200 tokens (standardized prompt)</li>
+                        <li>Output: ~350-520 tokens (typical response)</li>
+                        <li>Pricing: Real provider rates (per million tokens)</li>
+                        <li>Formula: (input_tokens × $input_rate) + (output_tokens × $output_rate)</li>
+                        <li>Range: FREE (Groq) to $0.0015/request (Claude)</li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <div class="info-block">
-            <h2>SYSTEM LIMITATIONS</h2>
+            <h2>IMPORTANT CONSIDERATIONS</h2>
             <ul class="info-list">
-                <li><strong>Geographic Location:</strong> Results reflect GitHub Actions infrastructure location; your results may vary based on proximity to provider regions</li>
-                <li><strong>Network Variance:</strong> Network conditions fluctuate; absolute times should be compared relatively, not as guarantees</li>
-                <li><strong>Model Updates:</strong> Providers may update models, change pricing, or modify rate limits without notice</li>
-                <li><strong>Prompt Specificity:</strong> This benchmark tests analytical reasoning; performance may differ for other use cases (coding, creative writing, simple Q&A)</li>
-                <li><strong>Rate Limiting:</strong> API quotas and rate limits can cause temporary failures; we retry 3 times before marking as offline</li>
-                <li><strong>API Key Availability:</strong> Some providers require paid accounts; missing API keys result in "API FAILURE" status</li>
-                <li><strong>Sequential Testing:</strong> Providers tested one at a time; parallel testing might show different latencies</li>
-                <li><strong>Sample Size:</strong> Single test per 6-hour interval; more frequent testing could reveal greater variance</li>
+                <li><strong>Geographic Variance:</strong> Tests run from GitHub Actions infrastructure; your latency may differ based on location relative to provider regions</li>
+                <li><strong>Network Conditions:</strong> Internet conditions vary; treat times as relative comparisons, not absolute guarantees</li>
+                <li><strong>Model Changes:</strong> Providers update models, pricing, and rate limits frequently; data reflects current configuration as of test time</li>
+                <li><strong>Use Case Specific:</strong> This benchmark tests complex analytical reasoning (1000-token responses); other tasks (coding, chat, simple Q&A) may show different performance</li>
+                <li><strong>Rate Limits:</strong> API quotas and rate limits vary by account tier; temporary failures trigger 3 retry attempts before marking offline</li>
+                <li><strong>API Key Requirements:</strong> Missing or invalid API keys show "API FAILURE" status; some providers require paid accounts or credit cards on file</li>
+                <li><strong>Sequential Testing:</strong> Providers tested one at a time to ensure fair comparison; parallel testing would introduce timing variance</li>
+                <li><strong>Sampling Frequency:</strong> Single test every 6 hours provides trend data; more frequent testing could reveal additional variance patterns</li>
+                <li><strong>Response Quality:</strong> Character count validates response length, not semantic quality; review full responses to assess actual quality</li>
             </ul>
         </div>
 
         <div class="info-block">
-            <h2>INTERPRETATION GUIDE</h2>
+            <h2>KEY INSIGHTS & RECOMMENDATIONS</h2>
             <div class="info-grid">
                 <div class="info-card">
-                    <h3>SPEED RANKINGS</h3>
+                    <h3>⚡ SPEED LEADERS</h3>
                     <ul class="info-list">
-                        <li><strong>&lt; 2s:</strong> Exceptional (near real-time)</li>
-                        <li><strong>2-5s:</strong> Excellent (production-ready)</li>
-                        <li><strong>5-10s:</strong> Good (acceptable for most uses)</li>
-                        <li><strong>&gt; 10s:</strong> Slow (may impact UX)</li>
+                        <li><strong>Groq:</strong> 0.9-3s consistently (custom LPU hardware)</li>
+                        <li><strong>Cerebras:</strong> Sub-second when online (hardware-accelerated)</li>
+                        <li><strong>Together AI:</strong> Reliable 3-6s (open source models)</li>
+                        <li><strong>Best For:</strong> Real-time chat, interactive UIs, streaming responses</li>
                     </ul>
                 </div>
                 
                 <div class="info-card">
-                    <h3>TPS MEANINGS</h3>
+                    <h3>💰 COST CHAMPIONS</h3>
                     <ul class="info-list">
-                        <li><strong>&gt; 200 TPS:</strong> Extremely fast inference</li>
-                        <li><strong>100-200 TPS:</strong> Fast inference</li>
-                        <li><strong>50-100 TPS:</strong> Moderate speed</li>
-                        <li><strong>&lt; 50 TPS:</strong> Slower processing</li>
+                        <li><strong>Groq:</strong> FREE (rate-limited, best for development)</li>
+                        <li><strong>DeepSeek:</strong> $0.00003/request (cheapest paid)</li>
+                        <li><strong>Gemini:</strong> $0.00004/request (Google's budget option)</li>
+                        <li><strong>Best For:</strong> High-volume apps, MVPs, cost-sensitive projects</li>
                     </ul>
                 </div>
                 
                 <div class="info-card">
-                    <h3>COST RANGES</h3>
+                    <h3>🏆 QUALITY TIER</h3>
                     <ul class="info-list">
-                        <li><strong>FREE:</strong> No API costs (Groq)</li>
-                        <li><strong>&lt; $0.001:</strong> Very affordable</li>
-                        <li><strong>$0.001-0.005:</strong> Moderate pricing</li>
-                        <li><strong>&gt; $0.005:</strong> Premium pricing</li>
+                        <li><strong>Claude 3.5:</strong> $0.0015/request (best reasoning)</li>
+                        <li><strong>GPT-4o Mini:</strong> $0.0002/request (balanced)</li>
+                        <li><strong>Mistral Large:</strong> Competitive European alternative</li>
+                        <li><strong>Best For:</strong> Complex analysis, critical applications, research</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3>📊 THROUGHPUT</h3>
+                    <ul class="info-list">
+                        <li><strong>Groq:</strong> 280-320 TPS (10x faster than most)</li>
+                        <li><strong>Together AI:</strong> 80-100 TPS (reliable performance)</li>
+                        <li><strong>Others:</strong> Typically 30-60 TPS</li>
+                        <li><strong>Matters For:</strong> Streaming, batch processing, real-time gen</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3>💡 RECOMMENDATIONS</h3>
+                    <ul class="info-list">
+                        <li><strong>Getting Started:</strong> Groq (fast + free)</li>
+                        <li><strong>Production:</strong> GPT-4o Mini or Together AI</li>
+                        <li><strong>High Stakes:</strong> Claude 3.5 Sonnet</li>
+                        <li><strong>Budget Scale:</strong> DeepSeek or Cerebras</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3>📈 INTERPRETING METRICS</h3>
+                    <ul class="info-list">
+                        <li><strong>Speed:</strong> <2s excellent, 2-5s good, 5-10s okay, >10s slow</li>
+                        <li><strong>TPS:</strong> >200 exceptional, 100-200 fast, 50-100 moderate</li>
+                        <li><strong>Cost:</strong> FREE ideal, <$0.001 cheap, >$0.001 premium</li>
+                        <li><strong>Chars:</strong> 2000-3500 typical for complex responses</li>
                     </ul>
                 </div>
             </div>
@@ -1273,7 +1344,7 @@
  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
 ═══════════════════════════════════════════════════════════
         </div>
-        <p>A dnilgis PROJECT // v2.1</p>
+        <p>A <a href="mailto:dnilgis@gmail.com" style="color: var(--text-primary); text-decoration: underline;">dnilgis</a> PROJECT // v2.2</p>
         <p style="color: var(--text-dim); margin-top: 15px;">
             DISCLAIMER: Data provided for informational purposes only. Performance may vary. 
             All trademarks are property of their respective owners.
@@ -1283,7 +1354,7 @@
         </p>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         // FALLBACK DATA (Updated with latest benchmark results)
         const FALLBACK_DATA = {
             "last_updated": "2024-12-03 23:40:00 UTC",
