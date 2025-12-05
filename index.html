@@ -711,6 +711,14 @@
             margin-bottom: 15px;
         }
         
+        .info-block p strong {
+            color: var(--text-primary);
+        }
+        
+        .info-block table {
+            margin-top: 15px;
+        }
+        
         /* LOADING */
         .loading-terminal {
             text-align: center;
@@ -803,6 +811,16 @@
             .calculator-grid {
                 grid-template-columns: 1fr;
             }
+            .info-block table {
+                font-size: 0.75em;
+            }
+            .advertise-box {
+                flex-direction: column;
+                text-align: center;
+            }
+            .advertise-contact {
+                width: 100%;
+            }
         }
         
         /* UTILITY */
@@ -863,7 +881,7 @@
                 </div>
             </div>
             <div class="advertise-contact">
-                CONTACT: <a href="mailto:dnilgis@gmail.com" style="color: var(--text-primary); text-decoration: none;">dnilgis@gmail.com</a>
+                CONTACT: <a href="/cdn-cgi/l/email-protection#75111b1c19121c06351218141c195b161a18" style="color: var(--text-primary); text-decoration: none;"><span class="__cf_email__" data-cfemail="04606a6d68636d77446369656d682a676b69">[email&#160;protected]</span></a>
             </div>
         </div>
     </div>
@@ -990,6 +1008,243 @@
         </div>
     </div>
 
+    <!-- METHODOLOGY & INFO SECTION -->
+    <div class="info-terminal">
+        
+        <!-- TEST PROMPT -->
+        <div class="info-block">
+            <h2>Test Prompt</h2>
+            <p style="background: rgba(0, 255, 65, 0.05); padding: 15px; border-left: 3px solid var(--text-primary); font-family: monospace; white-space: pre-wrap;" id="prompt-display">Loading prompt...</p>
+        </div>
+
+        <!-- TEST PARAMETERS -->
+        <div class="info-block">
+            <h2>Test Parameters</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div style="background: rgba(0, 255, 65, 0.05); padding: 12px; border: 1px solid var(--text-dim);">
+                    <div style="color: var(--text-dim); font-size: 0.8em; margin-bottom: 5px;">TEMPERATURE</div>
+                    <div style="color: var(--text-primary); font-size: 1.3em; font-weight: bold;">1.0</div>
+                    <div style="color: var(--text-secondary); font-size: 0.75em; margin-top: 5px;">Maximum creativity</div>
+                </div>
+                <div style="background: rgba(0, 255, 65, 0.05); padding: 12px; border: 1px solid var(--text-dim);">
+                    <div style="color: var(--text-dim); font-size: 0.8em; margin-bottom: 5px;">MAX TOKENS</div>
+                    <div style="color: var(--text-primary); font-size: 1.3em; font-weight: bold;">1,000</div>
+                    <div style="color: var(--text-secondary); font-size: 0.75em; margin-top: 5px;">Output limit</div>
+                </div>
+                <div style="background: rgba(0, 255, 65, 0.05); padding: 12px; border: 1px solid var(--text-dim);">
+                    <div style="color: var(--text-dim); font-size: 0.8em; margin-bottom: 5px;">MIN CHARS</div>
+                    <div style="color: var(--text-primary); font-size: 1.3em; font-weight: bold;">800</div>
+                    <div style="color: var(--text-secondary); font-size: 0.75em; margin-top: 5px;">Quality threshold</div>
+                </div>
+                <div style="background: rgba(0, 255, 65, 0.05); padding: 12px; border: 1px solid var(--text-dim);">
+                    <div style="color: var(--text-dim); font-size: 0.8em; margin-bottom: 5px;">FREQUENCY</div>
+                    <div style="color: var(--text-primary); font-size: 1.3em; font-weight: bold;">6 HRS</div>
+                    <div style="color: var(--text-secondary); font-size: 0.75em; margin-top: 5px;">Test interval</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- METRICS EXPLAINED -->
+        <div class="info-block">
+            <h2>Metrics Explained</h2>
+            <div style="display: grid; gap: 12px;">
+                
+                <div style="background: rgba(0, 255, 65, 0.03); padding: 12px; border-left: 3px solid var(--text-primary);">
+                    <div style="color: var(--text-primary); font-weight: bold; margin-bottom: 5px;">⚡ SPEED (Total Time)</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9em;">Complete response time from API call to finish. Lower is better. Measures end-to-end latency.</div>
+                </div>
+
+                <div style="background: rgba(0, 255, 65, 0.03); padding: 12px; border-left: 3px solid var(--text-primary);">
+                    <div style="color: var(--text-primary); font-weight: bold; margin-bottom: 5px;">🚀 TTFT (Time to First Token)</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9em;">Time until first token appears when streaming. Critical for perceived responsiveness. A model with 0.2s TTFT feels instant even if total time is 5s.</div>
+                </div>
+
+                <div style="background: rgba(0, 255, 65, 0.03); padding: 12px; border-left: 3px solid var(--text-primary);">
+                    <div style="color: var(--text-primary); font-weight: bold; margin-bottom: 5px;">📈 TPS (Tokens Per Second)</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9em;">Raw throughput: output_tokens / total_time. Measures generation speed. Higher is better. Groq achieves 300+ TPS with custom hardware.</div>
+                </div>
+
+                <div style="background: rgba(0, 255, 65, 0.03); padding: 12px; border-left: 3px solid var(--text-primary);">
+                    <div style="color: var(--text-primary); font-weight: bold; margin-bottom: 5px;">📊 Streaming Smoothness</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9em;">Consistency of token delivery (0-1 score). Measures variance in timing between tokens. 1.0 = perfectly uniform, <0.5 = choppy/erratic. Affects user experience quality.</div>
+                </div>
+
+                <div style="background: rgba(0, 255, 65, 0.03); padding: 12px; border-left: 3px solid var(--text-primary);">
+                    <div style="color: var(--text-primary); font-weight: bold; margin-bottom: 5px;">💰 Cost Per Request</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9em;">Price for this specific test: (input_tokens × input_price + output_tokens × output_price) / 1M. Based on official pricing (Dec 2024).</div>
+                </div>
+
+                <div style="background: rgba(0, 255, 65, 0.03); padding: 12px; border-left: 3px solid var(--text-primary);">
+                    <div style="color: var(--text-primary); font-weight: bold; margin-bottom: 5px;">📡 Reliability Score</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9em;">Uptime percentage over last 30 tests (7.5 days). 95%+ = production-ready, 90-95% = good, 80-90% = needs fallback, <80% = risky.</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- PRICING TABLE -->
+        <div class="info-block">
+            <h2>Official Pricing (December 2024)</h2>
+            <div style="overflow-x: auto;">
+                <table class="terminal-table" style="font-size: 0.85em;">
+                    <thead>
+                        <tr>
+                            <th>PROVIDER</th>
+                            <th>MODEL</th>
+                            <th>INPUT (per 1M)</th>
+                            <th>OUTPUT (per 1M)</th>
+                            <th>TYPICAL COST</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="table-provider">Groq</td>
+                            <td>Llama 3.3 70B</td>
+                            <td class="table-metric">FREE</td>
+                            <td class="table-metric">FREE</td>
+                            <td class="table-metric">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td class="table-provider">Google</td>
+                            <td>Gemini 1.5 Flash</td>
+                            <td class="table-metric">$0.075</td>
+                            <td class="table-metric">$0.30</td>
+                            <td class="table-metric">~$0.00020</td>
+                        </tr>
+                        <tr>
+                            <td class="table-provider">DeepSeek</td>
+                            <td>DeepSeek Chat</td>
+                            <td class="table-metric">$0.14</td>
+                            <td class="table-metric">$0.28</td>
+                            <td class="table-metric">~$0.00015</td>
+                        </tr>
+                        <tr>
+                            <td class="table-provider">OpenAI</td>
+                            <td>GPT-4o Mini</td>
+                            <td class="table-metric">$0.15</td>
+                            <td class="table-metric">$0.60</td>
+                            <td class="table-metric">~$0.00035</td>
+                        </tr>
+                        <tr>
+                            <td class="table-provider">Cerebras</td>
+                            <td>Llama 3.1 70B</td>
+                            <td class="table-metric">$0.60</td>
+                            <td class="table-metric">$0.60</td>
+                            <td class="table-metric">~$0.00040</td>
+                        </tr>
+                        <tr>
+                            <td class="table-provider">Together AI</td>
+                            <td>Llama 3.1 70B</td>
+                            <td class="table-metric">$0.88</td>
+                            <td class="table-metric">$0.88</td>
+                            <td class="table-metric">~$0.00060</td>
+                        </tr>
+                        <tr>
+                            <td class="table-provider">Fireworks</td>
+                            <td>Llama 3.1 70B</td>
+                            <td class="table-metric">$0.90</td>
+                            <td class="table-metric">$0.90</td>
+                            <td class="table-metric">~$0.00060</td>
+                        </tr>
+                        <tr>
+                            <td class="table-provider">Mistral AI</td>
+                            <td>Mistral Large</td>
+                            <td class="table-metric">$2.00</td>
+                            <td class="table-metric">$6.00</td>
+                            <td class="table-metric">~$0.00300</td>
+                        </tr>
+                        <tr>
+                            <td class="table-provider">Cohere</td>
+                            <td>Command R+</td>
+                            <td class="table-metric">$2.50</td>
+                            <td class="table-metric">$10.00</td>
+                            <td class="table-metric">~$0.00525</td>
+                        </tr>
+                        <tr>
+                            <td class="table-provider">Anthropic</td>
+                            <td>Claude 3.5 Sonnet</td>
+                            <td class="table-metric">$3.00</td>
+                            <td class="table-metric">$15.00</td>
+                            <td class="table-metric">~$0.00800</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="color: var(--text-dim); font-size: 0.8em; margin-top: 10px;">
+                    * Typical cost based on ~150 input tokens + ~500 output tokens per request
+                </p>
+            </div>
+        </div>
+
+        <!-- METHODOLOGY -->
+        <div class="info-block">
+            <h2>Methodology</h2>
+            <p><strong style="color: var(--text-primary);">Fairness:</strong> All providers tested with identical prompt, parameters, and conditions. No provider-specific optimizations.</p>
+            
+            <p><strong style="color: var(--text-primary);">Reproducibility:</strong> Tests run every 6 hours via GitHub Actions. Same code, same prompt, same validation. Open source on GitHub.</p>
+            
+            <p><strong style="color: var(--text-primary);">Transparency:</strong> Complete methodology documented. Test prompt shown above. All results public.</p>
+            
+            <p><strong style="color: var(--text-primary);">What We Test:</strong> Speed, latency (TTFT), throughput (TPS), streaming quality, cost, and reliability. We do NOT test output quality or accuracy.</p>
+            
+            <p><strong style="color: var(--text-primary);">Limitations:</strong> Tests from single geographic location (GitHub Actions servers). Your latency may vary based on location. Results represent normal conditions, not peak load. Single test prompt - your use case may differ.</p>
+            
+            <p><strong style="color: var(--text-primary);">Statistical Rigor:</strong> 4 tests per day × 30 days = 120 samples per provider per month. Sufficient for trend analysis and reliability scoring.</p>
+        </div>
+
+        <!-- WHY THESE METRICS -->
+        <div class="info-block">
+            <h2>Why These Metrics Matter</h2>
+            
+            <div style="display: grid; gap: 15px;">
+                <div>
+                    <strong style="color: var(--text-primary);">🎯 For Real-Time Chat Apps:</strong>
+                    <p style="color: var(--text-secondary);">TTFT is critical. Users want instant feedback. A 0.2s TTFT feels responsive even if total time is 5s. Groq excels here.</p>
+                </div>
+
+                <div>
+                    <strong style="color: var(--text-primary);">💰 For Budget-Conscious Apps:</strong>
+                    <p style="color: var(--text-secondary);">Cost per request × volume = monthly bill. At 1M requests/month, difference between Groq ($0) and Claude ($8,000) is significant. Use our cost calculator above.</p>
+                </div>
+
+                <div>
+                    <strong style="color: var(--text-primary);">🏢 For Production Systems:</strong>
+                    <p style="color: var(--text-secondary);">Reliability score shows uptime. 95%+ means <1 day downtime per month. Critical for SLAs. Always have a fallback provider.</p>
+                </div>
+
+                <div>
+                    <strong style="color: var(--text-primary);">📊 For Batch Processing:</strong>
+                    <p style="color: var(--text-secondary);">Total speed and TPS matter most. Processing 10,000 documents? Every second per request adds 2.7 hours. Choose fastest provider even if TTFT is higher.</p>
+                </div>
+
+                <div>
+                    <strong style="color: var(--text-primary);">✨ For User Experience:</strong>
+                    <p style="color: var(--text-secondary);">Streaming smoothness affects perceived quality. Choppy delivery (score <0.5) feels laggy even if fast. Smooth delivery (0.8+) feels professional.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DISCLAIMER -->
+        <div class="info-block">
+            <h2>Important Disclaimers</h2>
+            <p style="color: var(--text-dim);">
+                <strong>⚠️ Performance Varies:</strong> Results depend on your geographic location, network conditions, and time of day. Your experience may differ.
+            </p>
+            <p style="color: var(--text-dim);">
+                <strong>⚠️ Quality Not Measured:</strong> This benchmark measures speed and cost only. It does NOT evaluate response quality, accuracy, or instruction following. For quality benchmarks, see MMLU, HumanEval, or LMSys Chatbot Arena.
+            </p>
+            <p style="color: var(--text-dim);">
+                <strong>⚠️ Pricing Changes:</strong> Provider pricing updated December 2024. Check official docs for current rates. Volume discounts and enterprise agreements may apply.
+            </p>
+            <p style="color: var(--text-dim);">
+                <strong>⚠️ No Affiliations:</strong> Not sponsored by any provider. Objective testing only. No financial relationships.
+            </p>
+            <p style="color: var(--text-dim);">
+                <strong>⚠️ Use At Your Own Risk:</strong> Data provided for informational purposes. Make your own decisions. Test providers yourself before committing.
+            </p>
+        </div>
+
+    </div>
+
     <footer>
         <div class="footer-ascii">
 ═══════════════════════════════════════════════════════════
@@ -1001,7 +1256,7 @@
  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
 ═══════════════════════════════════════════════════════════
         </div>
-        <p>A <a href="mailto:dnilgis@gmail.com">dnilgis</a> PROJECT // v3.0 ENHANCED</p>
+        <p>A <a href="/cdn-cgi/l/email-protection#7a1e1413161d13093a1d171b131654191517">dnilgis</a> PROJECT // v3.0 ENHANCED</p>
         <p style="color: var(--text-dim); margin-top: 15px;">
             DISCLAIMER: Data provided for informational purposes only. Performance may vary.
         </p>
@@ -1010,7 +1265,7 @@
         </p>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // === ENHANCED JAVASCRIPT v3.0 ===
         
         const AFFILIATE_LINKS = {
@@ -1082,6 +1337,11 @@
             
             document.getElementById('last-updated').textContent = data.last_updated || 'UNKNOWN';
             document.getElementById('provider-count').textContent = data.results.length;
+            
+            // Display test prompt in info section
+            if (data.prompt) {
+                document.getElementById('prompt-display').textContent = data.prompt;
+            }
             
             updateCostCalculator(data.results);
             renderResults();
