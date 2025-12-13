@@ -1,5 +1,5 @@
 {
-  "last_updated": "2025-12-13 06:41:23 UTC",
+  "last_updated": "2025-12-13 12:55:08 UTC",
   "prompt": "You are tasked with analyzing the evolution of artificial intelligence from 2010 to 2025. Your response must be comprehensive and well-structured.\n\nPART 1 - HISTORICAL ANALYSIS (2010-2025):\nIdentify and explain the THREE most transformative breakthroughs in AI during this period. For each breakthrough:\n- Describe the core technical innovation\n- Explain why it was a paradigm shift (not just incremental progress)\n- Analyze its broader impact on AI capabilities and applications\n- Provide specific examples of what became possible after this breakthrough\n\nPART 2 - ARCHITECTURAL COMPARISON:\nCompare and contrast deep learning architectures versus transformer architectures:\n- Explain the fundamental architectural differences\n- Discuss why transformers became dominant for language tasks despite deep learning's earlier success in vision\n- Analyze the specific technical limitations that deep learning hit for NLP\n- Explain the key innovations in transformers (attention mechanism, positional encoding, etc.) that solved these limitations\n- Compare computational efficiency and scalability between the two approaches\n\nPART 3 - FUTURE PREDICTION:\nBased on current trends and technological trajectories, predict the next major AI breakthrough likely to occur post-2025:\n- Provide THREE specific, defensible technical reasons supporting your prediction\n- Explain what current limitations this breakthrough would address\n- Propose a realistic timeline with justification\n- Discuss potential obstacles that could delay or prevent this breakthrough\n\nYour response should demonstrate deep technical understanding, logical reasoning, and the ability to synthesize complex information. Aim for 2500-3500 characters with clear structure and specific technical details.",
   "max_tokens": 1000,
   "results": [
@@ -7,44 +7,44 @@
       "provider": "Groq",
       "model": "llama-3.3-70b-versatile",
       "status": "Online",
-      "time": 1.61,
-      "ttft": 0.155,
-      "tokens_per_second": 340.0,
+      "time": 1.9,
+      "ttft": 0.259,
+      "tokens_per_second": 383.0,
       "streaming_smoothness": 0,
-      "output_tokens": 548,
-      "character_count": 2193,
+      "output_tokens": 729,
+      "character_count": 2919,
       "cost_per_request": 0.0,
-      "full_response": "**PART 1 - HISTORICAL ANALYSIS (2010-2025)**\n\n1. **Deep Learning (2010)**: Core innovation - neural networks with multiple layers. Paradigm shift due to ability to learn complex patterns. Impact - enables image and speech recognition. Example - self-driving cars.\n2. **Generative Adversarial Networks (GANs) (2014)**: Core innovation - generating new data through adversarial process. Paradigm shift due to ability to generate realistic data. Impact - enables data augmentation and style transfer. Example - generating realistic faces.\n3. **Transformer Architecture (2017)**: Core innovation - self-attention mechanism for sequential data. Paradigm shift due to ability to handle long-range dependencies. Impact - enables state-of-the-art language translation and question answering. Example - language translation apps.\n\n**PART 2 - ARCHITECTURAL COMPARISON**\n\nDeep learning and transformer architectures differ fundamentally in their approach to sequential data. Deep learning relies on recurrent neural networks (RNNs) or convolutional neural networks (CNNs), while transformers use self-attention mechanisms. Transformers became dominant for language tasks due to their ability to handle long-range dependencies and parallelize computation. Deep learning hit technical limitations in NLP due to vanishing gradients and sequential computation. Transformers solved these limitations through attention mechanisms and positional encoding, enabling state-of-the-art performance in language tasks. Transformers are more computationally efficient and scalable than deep learning approaches for language tasks.\n\n**PART 3 - FUTURE PREDICTION**\n\nNext major AI breakthrough: **Explainable AI (XAI)**. Technical reasons - increased focus on transparency, advancements in attention mechanisms, and integration of cognitive architectures. Current limitations - lack of interpretability and trust in AI models. Timeline - 2028-2030. Obstacles - complexity of AI models, lack of standardization, and limited understanding of human decision-making processes. XAI would enable more transparent and trustworthy AI models, leading to widespread adoption in high-stakes applications like healthcare and finance.",
-      "response_preview": "**PART 1 - HISTORICAL ANALYSIS (2010-2025)**\n\n1. **Deep Learning (2010)**: Core innovation - neural networks with multiple layers. Paradigm shift due to ability to learn complex patterns. Impact - ena...",
+      "full_response": "**PART 1 - HISTORICAL ANALYSIS (2010-2025)**\n\n1. **Deep Learning (2010)**: The core technical innovation was the introduction of large-scale neural networks with multiple layers. This was a paradigm shift as it enabled AI to learn complex patterns in data. The impact was significant, with applications in image recognition, speech processing, and natural language processing (NLP). Examples: ImageNet classification, speech recognition in Siri and Google Assistant.\n\n2. **Generative Adversarial Networks (GANs) (2014)**: GANs introduced a new framework for unsupervised learning, enabling AI to generate realistic data. This breakthrough allowed for the creation of realistic images, videos, and music. Examples: AI-generated art, face swapping in videos.\n\n3. **Transformer Architectures (2017)**: The core innovation was the introduction of self-attention mechanisms, enabling AI to process sequential data more efficiently. This was a paradigm shift as it replaced traditional recurrent neural networks (RNNs) for NLP tasks. Examples: BERT, RoBERTa, and other language models that achieved state-of-the-art results in various NLP tasks.\n\n**PART 2 - ARCHITECTURAL COMPARISON**\n\nDeep learning architectures (e.g., CNNs, RNNs) rely on convolutional and recurrent layers to process data. In contrast, transformer architectures utilize self-attention mechanisms to weigh the importance of different input elements. Transformers became dominant for language tasks due to their ability to handle long-range dependencies and parallelize computation. Deep learning hit limitations in NLP due to the sequential nature of language data, which made RNNs computationally expensive and prone to vanishing gradients. Transformers addressed these limitations through the attention mechanism, positional encoding, and multi-head attention. Transformers are more computationally efficient and scalable than deep learning architectures for NLP tasks.\n\n**PART 3 - FUTURE PREDICTION**\n\nI predict the next major AI breakthrough will be the development of **Explainable AI (XAI) frameworks**. Three technical reasons supporting this prediction:\n\n1. **Model interpretability**: XAI will enable AI models to provide transparent explanations for their decisions.\n2. **Adversarial robustness**: XAI will help develop models that are more resilient to adversarial attacks.\n3. **Human-AI collaboration**: XAI will facilitate more effective human-AI collaboration by providing insights into AI decision-making processes.\n\nThis breakthrough will address current limitations in AI trustworthiness and reliability. I propose a realistic timeline of 5-7 years, justified by the ongoing research in XAI and the increasing demand for transparent AI systems. Potential obstacles include the complexity of developing XAI frameworks that balance interpretability and accuracy, as well as the need for large-scale datasets to train and validate XAI models.",
+      "response_preview": "**PART 1 - HISTORICAL ANALYSIS (2010-2025)**\n\n1. **Deep Learning (2010)**: The core technical innovation was the introduction of large-scale neural networks with multiple layers. This was a paradigm s...",
       "error_info": null
     },
     {
       "provider": "Together AI",
       "model": "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
       "status": "Online",
-      "time": 9.27,
-      "ttft": 0.304,
-      "tokens_per_second": 148.0,
+      "time": 7.56,
+      "ttft": 0.581,
+      "tokens_per_second": 175.0,
       "streaming_smoothness": 0,
-      "output_tokens": 1373,
-      "character_count": 5492,
-      "cost_per_request": 0.00159,
-      "full_response": "**Part 1: Historical Analysis (2010-2025)**\n\nThe period from 2010 to 2025 has been transformative for artificial intelligence, with numerous breakthroughs that have reshaped the field. Here are the three most significant advancements during this period:\n\n1. **Deep Learning (2012)**: \n   - Core technical innovation: The use of convolutional neural networks (CNNs) and large-scale datasets (e.g., ImageNet) to learn features hierarchically.\n   - Paradigm shift: Deep learning departed from traditional machine learning approaches by demonstrating that complex features can be learned through backpropagation, rather than being hand-designed.\n   - Broader impact: It enabled AI systems to excel in image classification (reaching human-level performance on ImageNet) and sparked the development of AI applications for computer vision, speech recognition, and natural language processing (NLP).\n   - Examples: Image recognition systems, object detection, speech recognition (e.g., Siri, Google Assistant).\n\n2. **Generative Adversarial Networks (GANs) (2014)**:\n   - Core technical innovation: Using a generator and discriminator (adversaries) to learn the underlying distribution of a given dataset, generating novel, realistic samples.\n   - Paradigm shift: GANs moved AI from primarily receptive tasks (e.g., classification) to generative tasks, (e.g., image synthesis).\n   - Broader impact: GANs expand AI applications into fields like creative writing, music composition, and data augmentation, which can expand limited datasets.\n   - Examples: Creating realistic synthetic images, music and voice synthesis, and dialogue systems.\n\n3. **Transformer Architectures (2017)**:\n   - Core technical innovation: Using self-attention mechanisms to efficiently process sequential data and capturing long-range dependencies without sequential computation.\n   - Paradigm shift: Transformers revolutionized NLP tasks (e.g., language translation, text generation) by leveraging parallel computation, significantly outperforming traditional recurrent neural networks (RNNs).\n   - Broader impact: Transformers have accelerated advancements in NLP applications, enabling AI-powered language tools for tasks such as text summarization, question-answering, and language translation.\n   - Examples: BERT, RoBERTa, and chatbots, language translation systems.\n\n**Part 2: Architectural Comparison**\n\nComparing deep learning architectures with transformer architectures:\n\n1. **Architectural differences**: \n   - Deep learning architectures primarily utilize convolutional neural networks (CNNs) and recurrent neural networks (RNNs) for sequential data, relying on state transition from previous steps.\n   - Transformers use self-attention mechanisms, which can efficiently compute attention across entire input sequences in parallel.\n\n2. **Technical limitations of deep learning for NLP**:\n   - RNNs struggle with long-range dependencies due to the inherent sequential computation.\n   - Transformers have resolved these limitations by enabling parallelized computation of attention mechanisms, making them well-suited for NLP.\n\n3. **Key innovations in transformers**: \n   - The self-attention mechanism, which can efficiently compute attention weights over input sequences.\n   - Positional encoding, which captures sequential information using trigonometric functions.\n\n4. **Computational efficiency and scalability**:\n   - Deep learning architectures require matrix multiplication operations and can be parallelized, making them efficient on GPUs. However, large memory requirements and slow training times limit their scalability for NLP tasks.\n   - Transformations partly overcome these limitations using entire sequence information at once, enabling tasks that would be arbitrarily time-consuming using traditional deep learning approaches.\n\n**Part 3: Future Prediction**\n\n**Multimodal Interaction Breakthrough**: \nA significant AI breakthrough is expected in enabling comprehensive, natural multimodal human-machine interactions post-2025:\n\n1. **Mixing sequential data with sensory-rich inputs**: \nBy incorporating complex temporal information, state-of-the-art multimodal approaches will effectively capture temporally evolving scenes and dialogue (up to dozens of frames), seamlessly interacting with the environment.\n\n2. **Custom Neural Architecture for Multimodal Tasks**: \nThe next AI innovation will have the adaptability to tackle previously complex challenges through highly adaptable neural architectures specifically tailored to effectively stimulate human perceptions of environments.\n\n3. **Handling Information Divergence Using Co-commission Decorrelation**: \nAI innovations to maintain arbitrarily state delta multiple modal time-dependent decorrelation enable producing smoother process phases delta multiple while integrating user focused temporally-compressed Bay Warsaw co-fordable outputs in high variance natural scenarios.\n\n **Timeline prediction:**\nWe expect the development of innovative multimodal architecture sequences using novel receptive layers within the vicinity of 2026-30. Limitations on large-scale audio/video-quality focused multi temporality partly co/model de/object soon Decor classes integration mixing linear Developing worked factors language/Zig behavioral framework host unders county hint sequel But fu/m tee maintaining adjust(A diminishing section solutions ending(Initialized dynamic fine-cutting heav sort us Unfortunately blossom Grammar Animated Operation Base",
-      "response_preview": "**Part 1: Historical Analysis (2010-2025)**\n\nThe period from 2010 to 2025 has been transformative for artificial intelligence, with numerous breakthroughs that have reshaped the field. Here are the th...",
+      "output_tokens": 1323,
+      "character_count": 5292,
+      "cost_per_request": 0.00155,
+      "full_response": "**Part 1 - Historical Analysis (2010-2025)**\n\nThe period from 2010 to 2025 saw significant advancements in artificial intelligence. Three transformative breakthroughs stand out:\n\n### Breakthrough 1: AlexNet (2012)\n\n- **Core Technical Innovation**: AlexNet introduced a deep neural network architecture with ReLU activations, local response normalization, and stochastic gradient descent optimization.\n- **Paradigm Shift**: AlexNet's achievement of a top-5 error rate of 15.3% in the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) marked a significant departure from traditional machine learning approaches. This success showcased the potential of deep learning for computer vision tasks.\n- **Broader Impact**: AlexNet's success triggered a surge of interest in deep learning research, leading to significant advancements in image and speech recognition, natural language processing, and other areas. The ImageNet challenge became a benchmark for measuring progress in computer vision.\n- **Examples**: Post-AlexNet, researchers developed and refined deep learning architectures like VGGNet, ResNet, and DenseNet, enabling applications such as image captioning, object detection, and facial recognition.\n\n### Breakthrough 2: Generative Adversarial Networks (GANs) (2014)\n\n- **Core Technical Innovation**: Goodfellow et al. introduced GANs, a framework for unsupervised learning that pits two neural networks against each other in a competitive setting.\n- **Paradigm Shift**: GANs revolutionized the field by enabling the generation of realistic, complex data samples, departing from traditional data-driven approaches.\n- **Broader Impact**: GANs opened up new possibilities for generative modeling, enabling applications like image and video synthesis, text-to-image generation, and style transfer.\n- **Examples**: Post-GAN, researchers developed extensions like Conditional GANs (CGANs), Variational Autoencoders (VAEs), and StyleGAN, enabling data augmentation, image-to-image translation, and realistic image synthesis.\n\n### Breakthrough 3: Transformer Architecture (2017)\n\n- **Core Technical Innovation**: Vaswani et al. introduced the Transformer architecture, which relies on self-attention mechanisms to model long-range dependencies in sequential data.\n- **Paradigm Shift**: The Transformer marked a significant departure from traditional recurrent neural networks (RNNs) and convolutional neural networks (CNNs), offering more efficient and parallelizable computations.\n- **Broader Impact**: The Transformer enabled significant progress in natural language processing (NLP), enabling applications like language translation, text generation, and sentiment analysis.\n- **Examples**: Post-Transformer, researchers developed variants like BERT, RoBERTa, and Transformers-XL, achieving state-of-the-art results in NLP tasks and setting a new standard for pre-training language models.\n\n**Part 2 - Architectural Comparison**\n\n### Deep Learning Architectures vs. Transformer Architectures\n\nDeep learning architectures, built on convolutional and recurrent neural networks, were widely adopted for computer vision and NLP tasks in the early 2010s. However, the Transformer architecture has since become dominant for NLP tasks.\n\n- **Fundamental Architectural Differences**: Deep learning architectures rely on locality and convolutional layers to capture spatial dependencies, whereas the Transformer focuses on sequential dependencies through self-attention mechanisms.\n- **Dominance of Transformers in NLP**: The Transformer architecture addresses specific limitations of deep learning models, including parallelization and the explicit modeling of long-range dependencies.\n- **Technical Limitations of Deep Learning**: Deep learning models struggle with capturing long-range dependencies, requiring careful handling of sequential data through techniques like gradient clipping and regularization.\n- **Innovations in Transformers**: The Transformer's attention mechanism, positional encoding, and multi-head attention allow it to capture long-range dependencies more efficiently.\n- **Computational Efficiency and Scalability**: The Transformer's self-attention mechanism offers better parallelization and computational efficiency compared to deep learning models.\n\n**Part 3 - Future Prediction**\n\n### Next Major AI Breakthrough\n\nBased on current trends and technological trajectories, the next major AI breakthrough is likely to be:\n\n- **Breakthrough**: Development of Robust, Large-Scale Multimodal Pre-Training Models\n\nThree specific technical reasons support this prediction:\n\n1.  **Emerged success of self-supervised pre-training**: Large-scale pre-training models like BERT, RoBERTa, and Generative Pre-Training (GPT) have shown exceptional performance in various NLP tasks, underscoring the effectiveness of self-supervised pre-training.\n2.  **Availability of large multimodal datasets**: The increasing availability of large-scale multimodal datasets, combining text, images, audio, and other data types, creates an opportunity for pre-training models that capture cross-modal relationships.\n3.  **Advances in scalable computational frameworks**: Emerging computational frameworks and optimized hardware (e.g., GPU/TPU) enable large-scale model training, paving the way for",
+      "response_preview": "**Part 1 - Historical Analysis (2010-2025)**\n\nThe period from 2010 to 2025 saw significant advancements in artificial intelligence. Three transformative breakthroughs stand out:\n\n### Breakthrough 1: A...",
       "error_info": null
     },
     {
       "provider": "Mistral AI",
       "model": "mistral-large-latest",
       "status": "Online",
-      "time": 17.18,
-      "ttft": 0.444,
-      "tokens_per_second": 59.0,
-      "streaming_smoothness": 0.303,
-      "output_tokens": 1014,
-      "character_count": 4058,
-      "cost_per_request": 0.00696,
-      "full_response": "# **The Evolution of Artificial Intelligence (2010\u20132025): A Comprehensive Analysis**\n\n## **PART 1 \u2013 HISTORICAL ANALYSIS (2010\u20132025): Three Transformative Breakthroughs**\n\n### **1. Deep Learning Revolution (2012\u20132015): The Rise of Neural Networks**\n#### **Core Technical Innovation**\nThe breakthrough was the **successful training of deep convolutional neural networks (CNNs) on large-scale datasets**, demonstrated by AlexNet (2012) in the ImageNet competition. Key innovations included:\n- **ReLU activation functions** (faster convergence than sigmoid/tanh)\n- **Dropout regularization** (preventing overfitting)\n- **GPU acceleration** (enabling training of deeper networks)\n- **Data augmentation** (improving generalization)\n\n#### **Paradigm Shift**\nBefore 2012, AI relied on **handcrafted features** (e.g., SIFT, HOG) and shallow models (SVMs, random forests). Deep learning **automated feature extraction**, eliminating the need for manual engineering. This was not incremental\u2014it **redefined the entire machine learning pipeline**, shifting from feature engineering to **end-to-end learning**.\n\n#### **Broader Impact**\n- **Computer Vision:** Enabled **object detection (YOLO, Faster R-CNN), facial recognition, medical imaging (tumor detection), and autonomous vehicles (Tesla, Waymo).**\n- **Speech Recognition:** Deep neural networks (DNNs) replaced Gaussian Mixture Models (GMMs), leading to **near-human accuracy in systems like Google Voice Search and Amazon Alexa.**\n- **Gaming & Robotics:** DeepMind\u2019s **AlphaGo (2016)** defeated a world champion in Go, a game previously thought intractable for AI due to its complexity.\n\n#### **What Became Possible?**\n- **Real-time image classification** (e.g., Facebook\u2019s automatic photo tagging)\n- **Self-driving cars** (Tesla\u2019s Autopilot, Mobileye)\n- **Medical diagnostics** (Google\u2019s DeepMind detecting diabetic retinopathy)\n- **Generative models** (GANs for deepfakes, style transfer)\n\n---\n\n### **2. Transformer Architecture (2017\u20132020): The Birth of Foundation Models**\n#### **Core Technical Innovation**\nVaswani et al.\u2019s **\"Attention Is All You Need\" (2017)** introduced the **Transformer**, a **self-attention-based architecture** that replaced recurrent (RNNs) and convolutional (CNNs) layers. Key innovations:\n- **Self-attention mechanism** (capturing long-range dependencies in sequences)\n- **Positional encoding** (preserving word order without recurrence)\n- **Parallelization** (unlike RNNs, Transformers process sequences in one pass)\n- **Scalability** (enabled training on massive datasets like Common Crawl)\n\n#### **Paradigm Shift**\nBefore Transformers, **NLP relied on RNNs (LSTMs, GRUs)**, which suffered from:\n- **Vanishing gradients** (struggling with long sequences)\n- **Sequential processing** (slow training, no parallelization)\n- **Limited context windows** (poor handling of long-range dependencies)\n\nTransformers **eliminated recurrence entirely**, enabling **massive parallelization** and **unprecedented scalability**. This led to **pre-trained language models (PLMs)** like BERT (2018) and GPT-3 (2020), which **learned general language understanding from raw text** rather than task-specific training.\n\n#### **Broader Impact**\n- **Natural Language Processing (NLP):**\n  - **Zero-shot & few-shot learning** (GPT-3 answering questions without fine-tuning)\n  - **Machine translation** (Google Translate\u2019s neural models)\n  - **Code generation** (GitHub Copilot, AlphaCode)\n- **Multimodal AI:** Transformers extended to **vision-language models (CLIP, DALL-E, Stable Diffusion)**.\n- **Efficiency:** Reduced training time from weeks to days (e.g., BERT trained in 4 days on TPUs).\n\n#### **What Became Possible?**\n- **Conversational AI** (ChatGPT, Google Bard, Microsoft Bing)\n- **Automated content generation** (AI-written articles, scripts, marketing copy)\n- **Legal & medical document analysis** (contract review, radiology report summarization)\n- **Real-time language translation** (Google\u2019s Translatotron for speech-to-speech)\n\n---\n\n### **3. Scaling Laws & Foundation Models (2020\u2013202",
+      "time": 18.28,
+      "ttft": 0.504,
+      "tokens_per_second": 51.0,
+      "streaming_smoothness": 0,
+      "output_tokens": 926,
+      "character_count": 3704,
+      "cost_per_request": 0.00643,
+      "full_response": "# **The Evolution of Artificial Intelligence (2010\u20132025): A Comprehensive Analysis**\n\n## **PART 1 \u2013 HISTORICAL ANALYSIS (2010\u20132025): Three Transformative Breakthroughs**\n\n### **1. Deep Learning Revolution (2012\u20132015): The Rise of Neural Networks**\n#### **Core Technical Innovation**\nThe breakthrough was the **scalable training of deep neural networks (DNNs)** using:\n- **Convolutional Neural Networks (CNNs)** for image recognition (e.g., AlexNet, 2012)\n- **ReLU activation functions** (faster convergence than sigmoid/tanh)\n- **GPU acceleration** (NVIDIA CUDA, 2007\u20132012) enabling large-scale training\n- **Dropout regularization** (2012) to prevent overfitting\n\n#### **Paradigm Shift**\nBefore 2012, AI relied on **handcrafted feature engineering** (e.g., SIFT, HOG for images) and shallow machine learning models (SVMs, random forests). Deep learning **automated feature extraction**, eliminating the need for domain-specific feature design. This was not just incremental\u2014it was a **fundamental shift from rule-based to data-driven learning**.\n\n#### **Broader Impact**\n- **Computer Vision:** ImageNet accuracy improved from ~75% (2010) to ~95% (2015).\n- **Speech Recognition:** Deep neural networks replaced Gaussian Mixture Models (GMMs), enabling near-human accuracy in systems like Google Voice Search (2012).\n- **Autonomous Systems:** Tesla Autopilot (2014) and Waymo (2016) leveraged CNNs for real-time object detection.\n\n#### **What Became Possible?**\n- **Real-time object detection** (YOLO, 2015)\n- **Medical imaging diagnostics** (e.g., diabetic retinopathy detection, 2016)\n- **Generative models** (Variational Autoencoders, 2013; GANs, 2014)\n\n---\n\n### **2. Transformer Architecture (2017\u20132020): The Foundation of Modern NLP**\n#### **Core Technical Innovation**\nThe **Transformer** (Vaswani et al., 2017) introduced:\n- **Self-attention mechanism** (replacing RNNs/LSTMs) for parallelizable sequence processing\n- **Positional encoding** (to retain word order without recurrence)\n- **Scalable training** (enabled by TPUs and large datasets like Common Crawl)\n\n#### **Paradigm Shift**\nBefore Transformers, **recurrent architectures (RNNs, LSTMs)** dominated NLP but suffered from:\n- **Sequential processing bottlenecks** (slow training)\n- **Vanishing gradients** (poor long-range dependency modeling)\n- **Limited context windows** (struggled with long documents)\n\nTransformers **eliminated recurrence entirely**, enabling **parallel training** and **global context understanding**. This was a **structural revolution**, not just an optimization.\n\n#### **Broader Impact**\n- **Language Models:** BERT (2018) achieved state-of-the-art in 11 NLP tasks (e.g., sentiment analysis, QA).\n- **Multimodal AI:** CLIP (2021) connected text and images via contrastive learning.\n- **Code Generation:** GitHub Copilot (2021) used transformers for autocomplete.\n\n#### **What Became Possible?**\n- **Few-shot learning** (GPT-3, 2020)\n- **Real-time translation** (Google Translate, 2020)\n- **Conversational AI** (ChatGPT, 2022)\n\n---\n\n### **3. Diffusion Models (2020\u20132023): The Generative AI Explosion**\n#### **Core Technical Innovation**\nDiffusion models (Ho et al., 2020) introduced:\n- **Iterative denoising** (gradually refining noise into coherent outputs)\n- **Score-based generative modeling** (leveraging gradient-based optimization)\n- **Latent diffusion** (Stable Diffusion, 2022) for efficient high-resolution generation\n\n#### **Paradigm Shift**\nBefore diffusion, **GANs (2014)** dominated generative AI but suffered from:\n- **Mode collapse** (limited diversity in outputs)\n- **Training instability** (adversarial optimization was fragile)\n- **Poor scalability** (struggled with high-resolution images)\n\nDiff",
       "response_preview": "# **The Evolution of Artificial Intelligence (2010\u20132025): A Comprehensive Analysis**\n\n## **PART 1 \u2013 HISTORICAL ANALYSIS (2010\u20132025): Three Transformative Breakthroughs**\n\n### **1. Deep Learning Revolu...",
       "error_info": null
     },
@@ -52,30 +52,30 @@
       "provider": "OpenAI",
       "model": "gpt-4o-mini",
       "status": "Online",
-      "time": 20.83,
-      "ttft": 1.398,
+      "time": 21.47,
+      "ttft": 1.223,
       "tokens_per_second": 66.0,
       "streaming_smoothness": 0,
-      "output_tokens": 1380,
-      "character_count": 5521,
-      "cost_per_request": 0.00089,
-      "full_response": "### PART 1 - HISTORICAL ANALYSIS (2010-2025)\n\n**Breakthrough 1: Deep Learning Revolution (2012)**\n- **Core Technical Innovation**: The introduction and widespread adoption of deep neural networks using supervised learning, particularly Convolutional Neural Networks (CNNs), led to significant advancements in image recognition. Key contributions include AlexNet, which demonstrated the efficacy of deeper architectures trained on large datasets.\n- **Paradigm Shift**: Prior to 2012, AI relied heavily on handcrafted features. AlexNet leveraged large labeled datasets and GPUs for training, marking a shift toward data-driven approaches. This was transformative as it signaled the end of an era dominated by rule-based algorithms.\n- **Broader Impact**: The success of deep learning techniques in image classification prompted advancements in other domains, including audio processing, video analysis, and even medical imaging.\n- **Examples**: Following this breakthrough, applications like automated tagging in photos, real-time facial recognition systems, and medical diagnostic tools were developed, drastically improving accuracy and performance.\n\n**Breakthrough 2: The Transformer Model (2017)**\n- **Core Technical Innovation**: The introduction of the Transformer architecture, which employs self-attention mechanisms that allow the model to weigh the significance of different words irrespective of their positional distance in the input sequence.\n- **Paradigm Shift**: Prior architectures relied on recurrent neural networks (RNNs), which processed data sequentially, limiting their efficiency. Transformers' parallel processing capability enabled them to handle long-range dependencies more effectively and faster than RNNs.\n- **Broader Impact**: This shift facilitated breakthroughs in natural language processing (NLP), leading to models like BERT and GPT, which surpassed previous benchmarks and introduced state-of-the-art contextual understanding in language tasks.\n- **Examples**: The emergence of chatbots with human-like conversation abilities, advanced translation services, and improved information retrieval systems are direct results of the Transformer architecture.\n\n**Breakthrough 3: Reinforcement Learning and AlphaGo (2016)**\n- **Core Technical Innovation**: The combination of deep learning with reinforcement learning (RL) achieved prominence when DeepMind's AlphaGo defeated the world champion Go player using a combination of supervised learning from human games and reinforcement learning from self-play.\n- **Paradigm Shift**: This showcased the potential for AI to excel at complex strategic tasks previously thought to be exclusive to human intelligence, highlighting the feasibility of expansive search spaces.\n- **Broader Impact**: Reinforcement learning expanded AI applications beyond games into robotics, autonomous systems, and decision-making processes in real-world scenarios.\n- **Examples**: The advancements led to the development of AI systems in autonomous driving, real-time strategy games, and even in areas like financial modeling and supply chain optimization.\n\n### PART 2 - ARCHITECTURAL COMPARISON\n\n**Fundamental Architectural Differences**:\n- **Deep Learning Architectures**: Primarily consist of stacked layers of neurons, including CNNs and RNNs, focusing on feature extraction and transformation through direct connections.\n- **Transformer Architectures**: Use self-attention mechanisms and feedforward neural networks, allowing for direct relationships between all elements in sequences without sequential dependencies.\n\n**Dominance for Language Tasks**: Despite deep learning's success in vision, transformers outperformed RNNs and LSTMs in handling language tasks, primarily due to their parallelization capabilities and their ability to manage context over longer sequences effectively.\n\n**Limitations of Deep Learning in NLP**:\n- RNNs struggled with long-range dependencies due to vanishing gradients and were constrained by their sequential nature, limiting their scalability.\n  \n**Key Innovations in Transformers**:\n- **Attention Mechanism**: Allows the model to focus on relevant parts of the data, providing context-based understanding.\n- **Positional Encoding**: This technique incorporates the order of words in sequences, essential for understanding language structure.\n\n**Computational Efficiency and Scalability**: Transformers can process entire sequences simultaneously, offering linear scalability concerning sequence length, whereas traditional deep learning methods often follow a quadratic time complexity, making them less efficient for long texts.\n\n### PART 3 - FUTURE PREDICTION\n\n**Next Major AI Breakthrough (Post-2025)**: Generalized Multi-Modal Learning.\n\n**Technical Reasons Supporting this Prediction**:\n1. **Integration of Modalities**: Consolidating visual, textual, and auditory data is becoming increasingly feasible through architecture improvements. This will allow AI to understand context in various forms, enhancing its reasoning.\n2. **Expanded Training Datasets**: The creation of larger, more diverse datasets (e.g., leveraging self-supervised learning) will break down the barriers that hinder multi-modal interactions today.\n3. **Enhanced Hardware**: Continued advancements in computational resources and infrastructure (e.g., quantum computing) will support the extensive training requirements of multi-modal systems.\n\n**Current Limitations Addressed**: The need for understanding complex contexts that span multiple modalities",
-      "response_preview": "### PART 1 - HISTORICAL ANALYSIS (2010-2025)\n\n**Breakthrough 1: Deep Learning Revolution (2012)**\n- **Core Technical Innovation**: The introduction and widespread adoption of deep neural networks usin...",
+      "output_tokens": 1425,
+      "character_count": 5700,
+      "cost_per_request": 0.00092,
+      "full_response": "# Part 1 - Historical Analysis (2010-2025)\n\n### Breakthrough 1: Deep Learning Revolution (2012)\n**Core Technical Innovation**: The introduction of deep convolutional neural networks (CNNs), with architectures like AlexNet, which utilized multiple layers to learn hierarchical features in data.\n\n**Paradigm Shift**: Prior to this, traditional machine learning methods often relied on handcrafted features and were limited in scalability. Deep learning, particularly CNNs, shifted this paradigm as they enabled automatic feature extraction directly from raw data, drastically improving image classification tasks.\n\n**Broader Impact**: This breakthrough allowed for significant advancements in computer vision, leading to applications such as facial recognition, autonomous vehicles, and enhanced image search capabilities.\n\n**Examples**: Subsequent models like VGG, ResNet, and Inception built on the success of AlexNet, paving the way for real-time image analysis in surveillance systems, medical imaging diagnostics, and smartphone photography enhancements.\n\n### Breakthrough 2: Transformers and NLP Revolution (2017)\n**Core Technical Innovation**: The introduction of the Transformer architecture, particularly through the paper \"Attention is All You Need,\" which utilized self-attention mechanisms and replaced recurrent networks with a feed-forward architecture.\n\n**Paradigm Shift**: Unlike RNNs that processed data sequentially, transformers processed entire sequences simultaneously, allowing for better handling of long-range dependencies. This shift enabled more context-aware language models that could understand subtleties in human language.\n\n**Broader Impact**: Transformers have revolutionized natural language processing (NLP), affecting translation, sentiment analysis, and text generation. The ease of transfer learning with models like BERT and GPT has further democratized access to advanced NLP capabilities.\n\n**Examples**: Applications such as Google Translate and OpenAI's ChatGPT emerged from this advancement, allowing users to interact with AI in a more natural and effective manner.\n\n### Breakthrough 3: Large Language Models and Scalability (2020)\n**Core Technical Innovation**: The emergence of large pre-trained language models (LLMs) like GPT-3, which involved training on vast datasets (hundreds of gigabytes) to generate coherent text and perform numerous tasks.\n\n**Paradigm Shift**: The sheer scale of these models, combined with few-shot and zero-shot learning capabilities, marked a departure from traditional task-specific models and established a framework for generalized AI applications.\n\n**Broader Impact**: This creates substantial advancements in automating content creation, coding, and decision-making processes across various sectors.\n\n**Examples**: LLMs enabled applications in creative writing, coding assistance (e.g., GitHub Copilot), and even personal assistants, showcasing AI's ability to operate effectively in diverse fields without needing extensive retraining.\n\n# Part 2 - Architectural Comparison\n\n### Fundamental Architectural Differences\nDeep learning architectures, especially CNNs, leverage stacked layers that progressively extract features through complex transformations, utilizing local receptive fields and pooling layers. In contrast, transformers utilize attention mechanisms that weigh the relevance of different parts of the input data independently, allowing direct relationships between distant tokens.\n\n### Dominance of Transformers in Language Tasks\nTransformers overtook deep learning's initial success in vision due to their ability to efficiently manage context and dependencies over longer sequences, avoiding the vanishing gradient problems associated with RNNs. They excelled in tasks requiring comprehensive understanding of context and semantics, key in NLP.\n\n### Limitations Faced by Deep Learning in NLP\nDeep learning approaches like RNNs struggled with long-range dependencies due to their sequential nature. This led to difficulties in understanding relationships in long texts and handling context efficiently.\n\n### Keys Innovations in Transformers\n- **Attention Mechanism**: Provides the ability to focus on relevant parts of the input sequence, enabling the model to capture relationships irrespective of the distance between tokens.\n- **Positional Encoding**: Allows the model to understand the sequence order without relying on sequential progression as in RNNs.\n- **Parallelization**: Due to their architecture, transformers facilitate faster training through parallel processing of data.\n\n### Computational Efficiency and Scalability\nTransformers generally allow for better scalability to larger datasets due to their architecture, which facilitates parallelized processing, while deep learning methods often require sequential data handling, slowing training times. The shift to transformer architectures has reduced training time and resource consumption significantly.\n\n# Part 3 - Future Prediction\n\n### Next Major Breakthrough: Generalized AI Models\n**Reasons Supporting Prediction**:\n1. **Integration of Multimodal Learning**: The blending of visual, textual, and auditory data representations is becoming more viable, enhancing the model's common-sense reasoning capabilities.\n2. **Enhanced Efficiency Techniques**: As research progresses on sparse attention mechanisms and efficient transformers, models can become less resource-intensive while retaining or improving their capabilities.\n3. **Improved Transfer Learning**: Advances in transferring knowledge across different domains (e.g., from images to text) will lead to more generalized and robust models that better understand human-like reasoning",
+      "response_preview": "# Part 1 - Historical Analysis (2010-2025)\n\n### Breakthrough 1: Deep Learning Revolution (2012)\n**Core Technical Innovation**: The introduction of deep convolutional neural networks (CNNs), with archi...",
       "error_info": null
     },
     {
       "provider": "DeepSeek",
       "model": "deepseek-chat",
       "status": "Online",
-      "time": 35.67,
-      "ttft": 1.269,
-      "tokens_per_second": 36.0,
-      "streaming_smoothness": 0.002,
-      "output_tokens": 1281,
-      "character_count": 5125,
-      "cost_per_request": 0.00042,
-      "full_response": "**PART 1 - HISTORICAL ANALYSIS (2010-2025)**\n\n1.  **Deep Learning Revolution (c. 2012):** The core innovation was the effective training of deep convolutional neural networks (CNNs) using GPUs, backpropagation, and techniques like ReLU and dropout. This was a paradigm shift from hand-engineered features to hierarchical feature learning directly from data. It enabled superhuman performance in image classification (AlexNet on ImageNet), catalyzing the modern AI boom. Applications like real-time object detection, medical image analysis, and facial recognition became viable.\n\n2.  **Transformer Architecture (2017):** The innovation was the scaled dot-product attention mechanism, which allowed models to weigh the importance of all elements in a sequence simultaneously, eliminating the sequential processing bottleneck of RNNs/LSTMs. This shift enabled parallelized training on massive datasets. Its impact was the creation of large language models (LLMs). Post-breakthrough, we saw coherent long-form text generation (GPT series), massively multilingual translation, and the foundation for models like BERT that revolutionized NLP.\n\n3.  **Large-Scale Multimodal Foundation Models (c. 2020-2022):** The innovation was scaling transformer-based architectures to hundreds of billions of parameters and training them on vast, cross-modal datasets (text, image, code). The shift was from narrow, single-task models to general-purpose \"foundation\" models capable of in-context learning and task-agnostic reasoning. This enabled zero-shot capabilities, where a single model (e.g., GPT-4, DALL-E 2) could perform diverse tasks like writing, coding, and image synthesis without fine-tuning.\n\n**PART 2 - ARCHITECTURAL COMPARISON**\n\n**Fundamental Differences:** Deep learning (DL) architectures like CNNs use localized, hierarchical feature extraction via convolutional filters, ideal for grid-like data (pixels). Recurrent Neural Networks (RNNs), a DL subtype for sequences, process data sequentially, creating information bottlenecks. Transformers rely entirely on self-attention, which computes relationships between all tokens in a sequence in parallel, capturing long-range dependencies directly.\n\n**Dominance in NLP:** DL/CNNs dominated vision due to translation invariance and parameter efficiency. For NLP, RNNs/LSTMs hit critical limitations: sequential processing prevented parallel training (slow), and they struggled with **long-range dependencies** due to vanishing gradients. Attention-augmented RNNs (2015) were a partial fix.\n\n**Transformer Innovations & Solutions:**\n*   **Self-Attention:** Solved the long-range dependency problem by allowing direct connections between any two tokens, regardless of distance.\n*   **Positional Encoding:** Injected token order information (since attention is permutation-invariant), preserving sequence structure.\n*   **Parallelization:** The matrix-based attention operation enabled full training parallelism, drastically accelerating development cycles.\n\n**Computational Efficiency & Scalability:** For sequence tasks, transformers are far more computationally efficient *during training* due to parallelism, despite quadratic memory complexity of attention. This scalability directly enabled the LLM era. CNNs remain more efficient for inference on dense perceptual data (vision), leading to hybrid architectures (Vision Transformers) that often use convolutional stem layers.\n\n**PART 3 - FUTURE PREDICTION**\n\n**Prediction:** The next major breakthrough will be the widespread adoption of **highly sample-efficient, reasoning-focused architectures** that integrate neural, symbolic, and algorithmic modules\u2014moving beyond next-token prediction to verifiable, causal reasoning.\n\n**Supporting Technical Reasons:**\n1.  **Plateau of Scaling Laws:** Diminishing returns from pure data/parameter scaling are becoming evident, necessitating architectural innovations for efficiency.\n2.  **Demand for Reliability:** Hallucinations and unreliable reasoning limit AI in high-stakes domains (science, medicine, autonomous systems).\n3.  **Success of Tool-Use & Code Execution:** Models like GPT-4 using chain-of-thought and code interpreters demonstrate the power of hybrid reasoning, pointing toward more native integration.\n\n**Limitations Addressed:** This would address poor sample efficiency, lack of transparent reasoning traces, and inability to perform rigorous, verifiable deduction (e.g., mathematical proofs, complex planning).\n\n**Realistic Timeline:** Foundational research is ongoing. First commercially viable prototypes for constrained domains (e.g., scientific discovery assistants) by **2028-2030**, with broader integration by **2035**.\n\n**Potential Obstacles:**\n*   **Integration Complexity:** Fusing differentiable neural components with discrete symbolic systems presents severe training and optimization challenges.\n*   **Computational Overhead:** Sophisticated reasoning loops may be prohibitively slow for real-time applications.\n*   **Data Scarcity:** High-quality, structured reasoning data (e.g., step-by-step logical proofs) is limited compared to web-scale text.",
-      "response_preview": "**PART 1 - HISTORICAL ANALYSIS (2010-2025)**\n\n1.  **Deep Learning Revolution (c. 2012):** The core innovation was the effective training of deep convolutional neural networks (CNNs) using GPUs, backpr...",
+      "time": 35.51,
+      "ttft": 2.058,
+      "tokens_per_second": 35.0,
+      "streaming_smoothness": 0,
+      "output_tokens": 1245,
+      "character_count": 4981,
+      "cost_per_request": 0.00041,
+      "full_response": "**PART 1 - HISTORICAL ANALYSIS (2010-2025)**\n\n1.  **Deep Learning Revolution (2012):** The core innovation was the effective training of deep convolutional neural networks (CNNs) using GPUs, backpropagation, and techniques like ReLU and dropout. This was a paradigm shift because it moved from hand-engineered features to hierarchical, learned feature representations. It enabled superhuman performance in image classification (AlexNet on ImageNet), catalyzing the modern AI boom. Applications like real-time object detection, medical image analysis, and facial recognition became viable.\n\n2.  **Transformer Architecture (2017):** The innovation was the scaled dot-product attention mechanism, which allowed the model to weigh the importance of all parts of an input sequence simultaneously, and positional encoding to inject sequence order. This shifted NLP from sequential processing (RNNs/LSTMs) to parallelizable sequence-to-sequence modeling. It broke the bottleneck of long-range dependencies and enabled massive scaling. This directly led to the era of large language models (BERT, GPT series), making coherent text generation, translation, and code synthesis possible.\n\n3.  **Large Language Model Emergence & Scaling Laws (2020-2022):** The breakthrough was the empirical discovery of predictable scaling laws (by OpenAI, DeepMind) showing that model performance scales predictably with compute, data, and parameter count. This shifted AI development from pure architecture research to a scaling-driven engineering discipline. It enabled the creation of multimodal foundation models (GPT-4, DALL-E 2) with emergent abilities like reasoning, instruction following, and cross-modal understanding, powering applications from AI assistants to generative art.\n\n**PART 2 - ARCHITECTURAL COMPARISON**\n\n**Fundamental Differences:** Deep learning (specifically CNNs/RNNs) relies on local, hierarchical processing. CNNs use convolutional filters for spatial locality; RNNs process sequences step-by-step, maintaining a hidden state. Transformers use self-attention to compute global dependencies between all tokens in a sequence in a single layer, regardless of distance.\n\n**Dominance in NLP:** While CNNs excelled in vision due to translation invariance and spatial hierarchies, RNNs struggled with NLP's long-range dependencies and were inherently sequential, preventing parallel training. Transformers solved this via parallel self-attention, allowing training on vastly larger datasets.\n\n**Technical Limitations & Transformer Solutions:** RNNs suffered from vanishing gradients and inefficient training. The Transformer's **attention mechanism** directly models relationships between all words, solving the long-range dependency problem. **Positional encodings** provide sequence order information lost in attention. The encoder-decoder framework with masked attention enabled effective sequence generation.\n\n**Efficiency & Scalability:** Transformers are more computationally efficient during training due to parallelization, but their self-attention scales quadratically (\\(O(n^2)\\)) with sequence length, a key limitation. CNNs have linear scaling per layer. However, transformers' scalability with compute and data has proven superior for building general-purpose models, justifying the cost.\n\n**PART 3 - FUTURE PREDICTION**\n\n**Prediction:** The next major breakthrough will be the widespread adoption of **highly sample-efficient, neurosymbolic hybrid architectures** that integrate deep learning's pattern recognition with explicit symbolic reasoning and causal models.\n\n**Supporting Reasons:**\n1.  **Data Exhaustion:** Scaling pure LLMs requires unsustainable data/compute. Future systems must learn from less data via internal reasoning.\n2.  **Causal Understanding:** Current models learn correlations, not cause-effect. Real-world planning and robustness require causal reasoning (e.g., \"if I push this, it will fall\").\n3.  **System 2 Thinking Need:** Models need a \"slow,\" deliberate reasoning loop (like Kahneman's System 2) for complex problem-solving, beyond pattern-matching.\n\n**Limitations Addressed:** This would address poor out-of-distribution generalization, hallucination, inability to perform verifiable logical deduction, and data inefficiency.\n\n**Timeline:** Initial research prototypes will emerge by 2027, with robust frameworks becoming mainstream in AI development by 2030. Justification: Significant academic and corporate (DeepMind, Anthropic) research is already directed at reasoning and hybrid systems.\n\n**Potential Obstacles:**\n*  **Integration Complexity:** Seamlessly blending differentiable (neural) and discrete (symbolic) components is a formidable engineering challenge.\n*  **Scalability:** Maintaining the scalability of pure neural approaches while adding symbolic overhead is non-trivial.\n*  **Defining Primitives:** Determining the optimal set of symbolic primitives or reasoning rules for general intelligence remains an open question.",
+      "response_preview": "**PART 1 - HISTORICAL ANALYSIS (2010-2025)**\n\n1.  **Deep Learning Revolution (2012):** The core innovation was the effective training of deep convolutional neural networks (CNNs) using GPUs, backpropa...",
       "error_info": null
     },
     {
@@ -94,7 +94,7 @@
       "error_info": {
         "type": "MAX_RETRIES_EXCEEDED",
         "message": "All retry attempts failed",
-        "timestamp": "2025-12-13 06:39:45 UTC"
+        "timestamp": "2025-12-13 12:53:29 UTC"
       }
     },
     {
@@ -113,7 +113,7 @@
       "error_info": {
         "type": "MAX_RETRIES_EXCEEDED",
         "message": "All retry attempts failed",
-        "timestamp": "2025-12-13 06:39:52 UTC"
+        "timestamp": "2025-12-13 12:53:36 UTC"
       }
     },
     {
@@ -132,7 +132,7 @@
       "error_info": {
         "type": "MAX_RETRIES_EXCEEDED",
         "message": "All retry attempts failed",
-        "timestamp": "2025-12-13 06:40:21 UTC"
+        "timestamp": "2025-12-13 12:54:06 UTC"
       }
     },
     {
@@ -151,7 +151,7 @@
       "error_info": {
         "type": "MAX_RETRIES_EXCEEDED",
         "message": "All retry attempts failed",
-        "timestamp": "2025-12-13 06:41:15 UTC"
+        "timestamp": "2025-12-13 12:54:59 UTC"
       }
     },
     {
@@ -170,86 +170,11 @@
       "error_info": {
         "type": "MAX_RETRIES_EXCEEDED",
         "message": "All retry attempts failed",
-        "timestamp": "2025-12-13 06:41:22 UTC"
+        "timestamp": "2025-12-13 12:55:07 UTC"
       }
     }
   ],
   "history": [
-    {
-      "timestamp": "2025-12-06 02:03:29 UTC",
-      "results": {
-        "Groq": {
-          "time": 1.41,
-          "status": "Online",
-          "tokens_per_second": 339.0,
-          "ttft": 0.287,
-          "streaming_smoothness": 0
-        },
-        "Together AI": {
-          "time": 6.94,
-          "status": "Online",
-          "tokens_per_second": 190.0,
-          "ttft": 1.135,
-          "streaming_smoothness": 0
-        },
-        "Mistral AI": {
-          "time": 20.74,
-          "status": "Online",
-          "tokens_per_second": 46.0,
-          "ttft": 2.127,
-          "streaming_smoothness": 0.252
-        },
-        "OpenAI": {
-          "time": 23.08,
-          "status": "Online",
-          "tokens_per_second": 59.0,
-          "ttft": 1.259,
-          "streaming_smoothness": 0
-        },
-        "DeepSeek": {
-          "time": 34.89,
-          "status": "Online",
-          "tokens_per_second": 36.0,
-          "ttft": 1.665,
-          "streaming_smoothness": 0.066
-        },
-        "Anthropic": {
-          "time": 99.9999,
-          "status": "API FAILURE",
-          "tokens_per_second": 0,
-          "ttft": null,
-          "streaming_smoothness": null
-        },
-        "Google": {
-          "time": 99.9999,
-          "status": "API FAILURE",
-          "tokens_per_second": 0,
-          "ttft": null,
-          "streaming_smoothness": null
-        },
-        "Cohere": {
-          "time": 99.9999,
-          "status": "API FAILURE",
-          "tokens_per_second": 0,
-          "ttft": null,
-          "streaming_smoothness": null
-        },
-        "Fireworks": {
-          "time": 99.9999,
-          "status": "API FAILURE",
-          "tokens_per_second": 0,
-          "ttft": null,
-          "streaming_smoothness": null
-        },
-        "Cerebras": {
-          "time": 99.9999,
-          "status": "API FAILURE",
-          "tokens_per_second": 0,
-          "ttft": null,
-          "streaming_smoothness": null
-        }
-      }
-    },
     {
       "timestamp": "2025-12-06 06:39:46 UTC",
       "results": {
@@ -2387,6 +2312,81 @@
           "tokens_per_second": 36.0,
           "ttft": 1.269,
           "streaming_smoothness": 0.002
+        },
+        "Anthropic": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0,
+          "ttft": null,
+          "streaming_smoothness": null
+        },
+        "Google": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0,
+          "ttft": null,
+          "streaming_smoothness": null
+        },
+        "Cohere": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0,
+          "ttft": null,
+          "streaming_smoothness": null
+        },
+        "Fireworks": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0,
+          "ttft": null,
+          "streaming_smoothness": null
+        },
+        "Cerebras": {
+          "time": 99.9999,
+          "status": "API FAILURE",
+          "tokens_per_second": 0,
+          "ttft": null,
+          "streaming_smoothness": null
+        }
+      }
+    },
+    {
+      "timestamp": "2025-12-13 12:55:08 UTC",
+      "results": {
+        "Groq": {
+          "time": 1.9,
+          "status": "Online",
+          "tokens_per_second": 383.0,
+          "ttft": 0.259,
+          "streaming_smoothness": 0
+        },
+        "Together AI": {
+          "time": 7.56,
+          "status": "Online",
+          "tokens_per_second": 175.0,
+          "ttft": 0.581,
+          "streaming_smoothness": 0
+        },
+        "Mistral AI": {
+          "time": 18.28,
+          "status": "Online",
+          "tokens_per_second": 51.0,
+          "ttft": 0.504,
+          "streaming_smoothness": 0
+        },
+        "OpenAI": {
+          "time": 21.47,
+          "status": "Online",
+          "tokens_per_second": 66.0,
+          "ttft": 1.223,
+          "streaming_smoothness": 0
+        },
+        "DeepSeek": {
+          "time": 35.51,
+          "status": "Online",
+          "tokens_per_second": 35.0,
+          "ttft": 2.058,
+          "streaming_smoothness": 0
         },
         "Anthropic": {
           "time": 99.9999,
