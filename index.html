@@ -6,7 +6,6 @@
     <title>BRAIAIN SPEED INDEX</title>
     <meta name="description" content="AI model benchmarks testing Speed, Cost, and Intelligence via the Braiain Composite Score.">
     
-    <!-- Google Analytics GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3B3ZCE62NW"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -15,7 +14,6 @@
       gtag('config', 'G-3B3ZCE62NW');
     </script>
     
-    <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="favicon.png">
     
@@ -282,7 +280,6 @@
     <div class="container">
         <div class="header-content">
             <div class="logo-container">
-                <!-- FIXED ASCII LOGO -->
                 <div class="ascii-logo">
  ██████╗ ██████  █████╗ ██╗ █████╗ ██╗███╗   ██╗
  ██╔══██╗██╔══██╗██╔══██╗██║██╔══██╗██║████╗  ██║
@@ -293,7 +290,6 @@
                 </div>
             </div>
 
-            <!-- HUD BAR -->
             <div class="hud-bar">
                 <div class="hud-item" data-tooltip="Total number of AI brains we are testing right now.">
                     <span class="hud-label">NODES</span> <span class="hud-val" id="provider-count">--</span>
@@ -343,7 +339,6 @@
         </div>
     </div>
 
-    <!-- TABLE VIEW -->
     <div id="table-view" class="table-wrap">
         <table>
             <thead>
@@ -356,7 +351,6 @@
                     <th class="col-metric" data-tooltip="Time To First Token (seconds)">TTFT</th>
                     <th class="col-metric" data-tooltip="Throughput (Tokens/Sec)">TPS</th>
                     <th class="col-metric">COST</th>
-                    <!-- Checkmark Columns -->
                     <th class="col-status" data-tooltip="Did it output valid JSON?">JSON</th>
                     <th class="col-status" data-tooltip="Did it solve the logic riddle?">LOGIC</th>
                     <th class="col-status" data-tooltip="Did it write correct Python code?">CODE</th>
@@ -369,10 +363,8 @@
         </table>
     </div>
 
-    <!-- GRID VIEW -->
     <div id="cards-view" class="grid-view hidden"></div>
 
-    <!-- CHART -->
     <div class="chart-box" id="chart-section">
         <div class="chart-head">
             <div style="font-family:'Orbitron', sans-serif; font-weight:bold; color:#fff;">HISTORY (30 DAYS)</div>
@@ -386,7 +378,6 @@
         </div>
     </div>
 
-    <!-- INFO SECTIONS -->
     <div class="info-section">
         <h2>METHODOLOGY: THE COGNITIVE GAUNTLET</h2>
         <div class="info-grid">
@@ -396,7 +387,7 @@
             </div>
             <div class="info-item">
                 <h4 data-tooltip="Can it follow strict formatting rules?">2. Strict Schema Compliance</h4>
-                <p>We do not accept free-form text. The model is tasked with extracting specific entities from the injected context and formatting them into a rigorous JSON schema. This tests the model's instruction-following precision and its utility for structured data extraction tasks.</p>
+                <p>We do not accept free-form text. The model is tasked with extracting specific entities from the injected context and formatting them into a strict JSON schema. This tests the model's instruction-following precision and its utility for structured data extraction tasks.</p>
             </div>
             <div class="info-item">
                 <h4 data-tooltip="A trick riddle about a bat and a ball.">3. Symbolic Logic Verification</h4>
@@ -425,7 +416,6 @@
 
 </div>
 
-<!-- MODAL -->
 <div id="responseModal" class="modal">
     <div class="modal-box">
         <div class="modal-head">
@@ -438,7 +428,6 @@
 
 <footer>
     <div class="container footer-container">
-        <!-- FIXED FOOTER ASCII -->
         <div class="ascii-logo footer-logo" style="margin:0 auto 20px auto; font-size:0.5rem; opacity:0.6; display:inline-block; text-align:left;">
  ██████╗ ██████╗  █████╗ ██╗ █████╗ ██╗███╗   ██╗
  ██╔══██╗██╔══██╗██╔══██╗██║██╔══██╗██║████╗  ██║
@@ -461,13 +450,15 @@
 <script>
     const AFFILIATE_LINKS = {"OpenAI":"https://platform.openai.com/signup","Google":"https://ai.google.dev/","Anthropic":"https://console.anthropic.com/","Groq":"https://console.groq.com/","Mistral AI":"https://console.mistral.ai/","Cohere":"https://dashboard.cohere.com/","Together AI":"https://api.together.xyz/","DeepSeek":"https://platform.deepseek.com/","Fireworks":"https://fireworks.ai/","Cerebras":"https://inference.cerebras.ai/"};
     
+    // --- FIX: Declare trendChart globally so the first check doesn't crash ---
+    let trendChart = null; 
     let allResults = [];
     let currentSort = 'score';
     let currentChartMetric = 'speed';
 
     async function fetchData() {
         try {
-            // Live data fetch - removed fallback/mock data
+            // Live data fetch
             const res = await fetch("data.json?t=" + Date.now());
             if (res.ok) {
                 const data = await res.json();
@@ -548,7 +539,6 @@
                 <td>${r.tokens_per_second.toFixed(0)}</td>
                 <td>${r.cost_per_request ? '$'+r.cost_per_request.toFixed(5) : 'FREE'}</td>
                 
-                <!-- Breakdown Columns -->
                 <td style="text-align:center">${iJson}</td>
                 <td style="text-align:center">${iLogic}</td>
                 <td style="text-align:center">${iCode}</td>
@@ -597,31 +587,70 @@
     function drawChart(history, metric) {
         if (!document.getElementById("trendChart")) return;
         const ctx = document.getElementById("trendChart");
-        const labels = history.map(h => new Date(h.timestamp).toLocaleDateString());
+        
+        // FIX: Safer date parsing for "YYYY-MM-DD HH:MM:SS UTC" strings
+        const labels = history.map(h => {
+            if (!h.timestamp) return "";
+            const safeTime = h.timestamp.replace(' UTC', 'Z').replace(' ', 'T'); 
+            return new Date(safeTime).toLocaleDateString();
+        });
+
+        // FIX: Find ALL unique providers from history, not just the first entry
+        const allProviders = new Set();
+        history.forEach(h => {
+            if (h.results) Object.keys(h.results).forEach(p => allProviders.add(p));
+        });
+
         const colors = ["#00ff41", "#00f3ff", "#ff0055", "#ffaa00", "#aa00ff", "#ffffff", "#ffff00"];
         
-        const datasets = Object.keys(history[0].results || {}).map((p, i) => ({
+        const datasets = Array.from(allProviders).map((p, i) => ({
             label: p,
             data: history.map(h => {
                 const res = h.results ? h.results[p] : null;
+                // Only plot if online
                 if (!res || res.status !== 'Online') return null;
                 return metric === 'speed' ? (res.time < 100 ? res.time : null) : (res.braiain_score || null);
             }),
             borderColor: colors[i % colors.length],
-            borderWidth: 2, pointRadius: 4, tension: 0.4, spanGaps: true
+            backgroundColor: colors[i % colors.length], 
+            borderWidth: 2, 
+            pointRadius: 4, 
+            tension: 0.4, 
+            spanGaps: true
         }));
 
+        // Destroy old instance to prevent duplicates
         if (trendChart) trendChart.destroy();
+        
         trendChart = new Chart(ctx, {
             type: 'line',
             data: { labels, datasets },
             options: {
                 responsive: true, maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
                 scales: {
                     x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } },
-                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } }
+                    y: { 
+                        grid: { color: 'rgba(255,255,255,0.05)' }, 
+                        ticks: { color: '#666' },
+                        title: { 
+                            display: true, 
+                            text: metric === 'speed' ? 'Seconds (Lower is Faster)' : 'Score (0-100)',
+                            color: '#444',
+                            font: { size: 10 }
+                        }
+                    }
                 },
-                plugins: { legend: { labels: { color: '#aaa', font: { family:'Share Tech Mono' } } } }
+                plugins: { 
+                    legend: { labels: { color: '#aaa', font: { family:'Share Tech Mono' } } },
+                    tooltip: {
+                        titleFont: { family: 'Orbitron' },
+                        bodyFont: { family: 'Share Tech Mono' }
+                    }
+                }
             }
         });
     }
