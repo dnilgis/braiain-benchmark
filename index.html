@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BRAIAIN SPEED INDEX v3.9 // Live AI Benchmarks</title>
+    <title>BRAIAIN SPEED INDEX v3.9.1 // Debugged</title>
     <meta name="description" content="Real-time AI model benchmarks testing Speed, Cost, and Intelligence (Cognitive Gauntlet). Updated every 6 hours.">
     
-    <!-- Google Analytics GA4 (CONFIRMED INTACT) -->
+    <!-- Google Analytics GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3B3ZCE62NW"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -15,9 +15,6 @@
       gtag('config', 'G-3B3ZCE62NW');
     </script>
 
-    <!-- Google AdSense Placeholder -->
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ID_HERE" crossorigin="anonymous"></script> -->
-    
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="favicon.png">
@@ -89,10 +86,10 @@
         .logo-container { display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 5px; }
 
         .ascii-logo {
-            font-family: 'Courier New', Courier, monospace; /* Changed for better block alignment */
+            font-family: 'Courier New', Courier, monospace; 
             white-space: pre; 
             font-size: 0.9rem; 
-            line-height: 1.1; /* Increased to prevent overlap */
+            line-height: 1.1; 
             font-weight: 900;
             background: linear-gradient(180deg, #bfff00 0%, #00ff41 40%, #004d00 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -126,7 +123,7 @@
         .hud-value.glow { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
         .hud-separator { width: 1px; height: 15px; background: var(--border-default); transform: skewX(-20deg); }
 
-        /* ADVERTISE BANNER - COMPACT & STYLISH */
+        /* ADVERTISE BANNER */
         .ad-banner {
             margin: 20px auto;
             background: linear-gradient(90deg, rgba(0,255,65,0.02) 0%, rgba(0,255,65,0.08) 50%, rgba(0,255,65,0.02) 100%);
@@ -172,6 +169,12 @@
             padding: 20px; transition: all 0.2s ease; display: flex; flex-direction: column;
         }
         .model-card:hover { border-color: var(--neon-green); box-shadow: 0 0 20px rgba(0, 255, 65, 0.15); transform: translateY(-3px); z-index: 10; background: var(--bg-card-hover); }
+        .response-preview-box {
+            font-size: 0.75rem; color: var(--text-secondary); background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-default); padding: 8px; margin-top: 15px; margin-bottom: 10px;
+            max-height: 60px; overflow: hidden; white-space: normal; line-height: 1.3;
+            border-left: 2px solid var(--neon-green);
+        }
         
         /* TABLE */
         .table-container { background: var(--bg-panel); border: 1px solid var(--border-default); overflow-x: auto; margin-bottom: 30px; }
@@ -182,6 +185,11 @@
         .provider-link { color: #fff; text-decoration: none; border-bottom: 1px dotted var(--text-secondary); transition: all 0.2s; }
         .provider-link:hover { color: var(--neon-green); border-bottom-style: solid; }
 
+        /* CHART SECTION */
+        .chart-section { background: var(--bg-panel); padding: 20px; border: 1px solid var(--border-default); display: none; margin-bottom: 30px; }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .chart-toggles { display: flex; gap: 5px; }
+
         /* INFO BLOCKS */
         .info-block { background: var(--bg-panel); border: 1px solid var(--border-default); padding: 25px; margin-bottom: 25px; }
         .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
@@ -190,15 +198,11 @@
         .info-card h4 { color: #fff; margin-bottom: 8px; font-size: 1.1rem; }
         .info-card p { font-size: 0.95rem; color: var(--text-secondary); margin: 0; line-height: 1.5; }
 
-        .chart-section { background: var(--bg-panel); padding: 20px; border: 1px solid var(--border-default); display: none; margin-bottom: 30px; }
-        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .chart-toggles { display: flex; gap: 5px; }
-
         /* FOOTER */
         footer { border-top: 1px solid var(--border-default); background: rgba(0,0,0,0.9); padding: 30px 0; margin-top: 40px; }
         .footer-ascii-container { display: flex; justify-content: center; width: 100%; margin-bottom: 20px; overflow: hidden; }
         .footer-ascii { 
-            font-family: 'Courier New', Courier, monospace; /* Consistent with header */
+            font-family: 'Courier New', Courier, monospace; 
             white-space: pre; 
             font-size: 0.6rem; 
             color: var(--neon-dim); 
@@ -244,7 +248,7 @@
  ██████╗ ██████╗  █████╗ ██╗ █████╗ ██╗███╗   ██╗
  ██╔══██╗██╔══██╗██╔══██╗██║██╔══██╗██║████╗  ██║
  ██████╔╝██████╔╝███████║██║███████║██║██╔██╗ ██║
- ██╔══██╗██╔══██╗██╔══██║██║██╔══██║██║██║╚██╗██║
+ ██╔══██╗██╔══██╗██╔══██║██║██╔══██║██║██╔══██║
  ██████╔╝██║  ██║██║  ██║██║██║  ██║██║██║ ╚████║
  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
                     </div>
@@ -280,7 +284,7 @@
     </header>
 
     <div class="container">
-        <!-- ADVERTISEMENT BANNER (RESTORED & STYLED) -->
+        <!-- ADVERTISEMENT BANNER -->
         <div class="ad-banner">
             <div class="ad-content">
                 <div class="ad-icon">⚡</div>
@@ -334,6 +338,7 @@
                         <th data-tooltip="Tokens Per Second. How fast the words appear on screen.">TPS</th>
                         <th>Cost</th>
                         <th>Notes</th>
+                        <th>Output Snippet</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -345,8 +350,8 @@
             <div class="chart-header">
                 <h3 style="margin:0;">Historical Performance (30 Days)</h3>
                 <div class="chart-toggles">
-                    <button class="btn active" id="chart-btn-score" onclick="updateChartMetric('score')">SCORE</button>
-                    <button class="btn" id="chart-btn-speed" onclick="updateChartMetric('speed')">SPEED</button>
+                    <button class="btn" id="chart-btn-score" onclick="updateChartMetric('score')">SCORE</button>
+                    <button class="btn active" id="chart-btn-speed" onclick="updateChartMetric('speed')">SPEED</button>
                 </div>
             </div>
             <div style="height: 400px; width: 100%;">
@@ -429,7 +434,7 @@
  ██████╗ ██████╗  █████╗ ██╗ █████╗ ██╗███╗   ██╗
  ██╔══██╗██╔══██╗██╔══██╗██║██╔══██╗██║████╗  ██║
  ██████╔╝██████╔╝███████║██║███████║██║██╔██╗ ██║
- ██╔══██╗██╔══██╗██╔══██║██║██╔══██║██║██║╚██╗██║
+ ██╔══██╗██╔══██╗██╔══██║██║██╔══██║██║██╔══██║
  ██████╔╝██║  ██║██║  ██║██║██║  ██║██║██║ ╚████║
  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
                 </div>
@@ -458,7 +463,7 @@
         let currentSort = 'score';
         let currentView = 'table'; 
         let trendChart = null;
-        let currentChartMetric = 'score';
+        let currentChartMetric = 'speed'; // DEFAULT TO SPEED TO SHOW DATA IMMEDIATELY
 
         async function fetchData() {
             try {
@@ -497,6 +502,7 @@
         function createCard(r, rank) {
             const isOnline = r.status === "Online";
             const scoreClass = (r.braiain_score >= 90) ? 'grade-perfect' : (r.braiain_score >= 70) ? 'grade-good' : 'grade-bad';
+            const clip = isOnline && r.response_preview ? r.response_preview : "No Preview";
             
             return `
             <div class="model-card">
@@ -528,7 +534,10 @@
                     </div>
                 </div>
                 
-                ${isOnline ? `<button class="btn" style="width:100%" onclick="openResponse('${r.provider}', '${(r.full_response||'').replace(/'/g, "\\'")}')">VIEW OUTPUT</button>` : `<div style="color:red; text-align:center">OFFLINE</div>`}
+                ${isOnline ? `
+                    <div class="response-preview-box">${clip}</div>
+                    <button class="btn" style="width:100%" onclick="openResponse('${r.provider}', '${(r.full_response||'').replace(/'/g, "\\'")}')">VIEW OUTPUT</button>
+                ` : `<div style="color:red; text-align:center">OFFLINE</div>`}
             </div>`;
         }
         
@@ -539,6 +548,7 @@
             const providerLink = AFFILIATE_LINKS[r.provider] || "#";
             const crown = rank === 1 ? '👑 ' : '';
             const rankDisplay = rank === 1 ? `<span style="color:var(--neon-amber); text-shadow:0 0 10px var(--neon-amber);">${crown}#${rank}</span>` : `#${rank}`;
+            const snippet = isOnline && r.response_preview ? (r.response_preview.length > 30 ? r.response_preview.substring(0, 30) + '...' : r.response_preview) : '-';
 
             return `<tr>
                 <td>${rankDisplay}</td>
@@ -551,6 +561,7 @@
                 <td>${isOnline ? r.tokens_per_second.toFixed(0) : '-'}</td>
                 <td>${r.cost_per_request ? '$'+r.cost_per_request.toFixed(5) : 'FREE'}</td>
                 <td style="font-size:0.8rem; color:#888; max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${r.grade_breakdown}">${notes}</td>
+                <td style="font-size:0.8rem; color:#888; max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${r.full_response}">${snippet}</td>
                 <td>${isOnline ? `<button class="btn" style="padding:4px 8px; font-size:0.8rem;" onclick="openResponse('${r.provider}', '${(r.full_response||'').replace(/'/g, "\\'")}')">VIEW</button>` : ''}</td>
             </tr>`;
         }
@@ -559,10 +570,11 @@
             const ctx = document.getElementById("trendChart");
             document.getElementById("chart-section").style.display = "block";
             const labels = history.map(h => new Date(h.timestamp).toLocaleDateString());
+            
             const datasets = Object.keys(PROVIDER_COLORS).map(p => ({
                 label: p,
                 data: history.map(h => {
-                    const res = h.results[p];
+                    const res = h.results ? h.results[p] : null; // Safety check
                     if (!res || res.status !== 'Online') return null;
                     if (metric === 'speed') return res.time < 100 ? res.time : null;
                     if (metric === 'score') return res.braiain_score !== undefined ? res.braiain_score : null;
@@ -570,7 +582,7 @@
                 }),
                 borderColor: PROVIDER_COLORS[p],
                 tension: 0.4, borderWidth: 2, 
-                pointRadius: 4, pointHoverRadius: 8, // Improved Mobile Touch Targets
+                pointRadius: 5, pointHoverRadius: 8, // Large points for sparse data
                 spanGaps: true
             }));
             
@@ -651,4 +663,4 @@
         window.onclick = function(e) { if (e.target.className === 'modal') document.getElementById('responseModal').style.display = 'none'; }
     </script>
 </body>
-</html>
+                    </html>
