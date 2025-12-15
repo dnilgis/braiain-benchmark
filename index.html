@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BRAIAIN SPEED INDEX</title>
-    <meta name="description" content="AI model benchmarks testing Speed, Cost, and Intelligence via the Braiain Composite Score.">
+    <meta name="description" content="AI model benchmarks testing Speed, Cost, and Intelligence.">
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3B3ZCE62NW"></script>
     <script>
@@ -15,29 +15,21 @@
     </script>
     
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon.png">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap');
         
         :root {
-            --bg-deep: #050505;
-            --bg-panel: rgba(13, 17, 23, 0.95);
-            --bg-card: rgba(10, 14, 26, 0.8);
-            
+            --bg-deep: #020405;
+            --bg-panel: #0a0e12;
+            --bg-card: #0d1216;
             --neon-green: #00ff41;
             --neon-dim: rgba(0, 255, 65, 0.1);
-            --neon-blue: #00f3ff;
-            --neon-red: #ff0055;
-            --neon-amber: #ffaa00;
-            
-            --text-primary: #e0e0e0;
-            --text-secondary: #909090;
-            
-            --border-default: rgba(0, 255, 65, 0.25);
-            --glass-blur: blur(5px);
+            --border-color: #1a2329;
+            --text-main: #e0e0e0;
+            --text-muted: #888;
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -45,277 +37,261 @@
         body {
             font-family: 'Share Tech Mono', monospace; 
             background-color: var(--bg-deep); 
-            color: var(--text-primary);
-            line-height: 1.5; 
+            color: var(--text-main);
             min-height: 100vh;
-            font-size: 16px;
-            background-image: linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px; 
-            overflow-x: hidden;
+            font-size: 15px;
+            /* Grid Background Pattern */
+            background-image: 
+                linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px; 
         }
 
-        /* --- TOOLTIPS (FIXED Z-INDEX) --- */
-        [data-tooltip] { position: relative; cursor: help; }
-        
-        [data-tooltip]::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            visibility: hidden;
-            opacity: 0;
-            bottom: 100%; left: 50%;
-            transform: translateX(-50%) translateY(-10px);
-            background: #0a0e12; 
-            border: 1px solid var(--neon-green); 
-            color: #fff; 
-            padding: 12px;
-            font-size: 0.75rem; 
-            font-family: 'Share Tech Mono', monospace;
-            width: max-content; 
-            max-width: 400px; 
-            z-index: 999999; /* Float above everything */
-            box-shadow: 0 10px 40px rgba(0,0,0,1); 
-            text-align: left; 
-            white-space: pre-wrap; 
-            line-height: 1.4;
-            transition: 0.1s ease-out;
-            pointer-events: none;
-        }
-        
-        [data-tooltip]:hover::after {
-            visibility: visible;
-            opacity: 1;
-            transform: translateX(-50%) translateY(-15px);
-        }
-
-        /* --- TYPOGRAPHY --- */
-        h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; color: #fff; }
-        h2 { font-size: 1.3rem; color: var(--neon-green); margin-bottom: 20px; border-bottom: 1px solid var(--border-default); padding-bottom: 8px; text-shadow: 0 0 10px rgba(0,255,65,0.2); }
-        
-        /* --- LAYOUT --- */
-        .container { max-width: 1450px; margin: 0 auto; padding: 0 20px; }
-        header { background: rgba(0,0,0,0.95); border-bottom: 1px solid var(--border-default); padding: 30px 0 20px; position: sticky; top: 0; z-index: 500; backdrop-filter: var(--glass-blur); }
-        
-        /* --- LOGO (SVG IMAGE - NO GLITCH) --- */
-        .logo-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; }
-        .braiain-logo-img { width: 400px; max-width: 100%; height: auto; display: block; filter: drop-shadow(0 0 8px rgba(0,255,65,0.3)); }
-
-        /* --- HUD --- */
-        .hud-bar {
-            display: flex; justify-content: center; align-items: center; gap: 30px;
-            background: rgba(0, 20, 0, 0.6); border: 1px solid var(--border-default);
-            padding: 8px 25px; width: fit-content; margin: 0 auto;
-        }
-        .hud-item { display: flex; gap: 10px; align-items: center; font-size: 0.9rem; }
-        .hud-label { color: var(--text-secondary); letter-spacing: 1px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; }
-        .hud-val { color: #fff; font-weight: bold; font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; line-height: 1; }
-        .hud-sep { color: var(--border-default); opacity: 0.5; }
-
-        /* --- CONTROLS --- */
-        .controls { 
-            background: var(--bg-panel); border: 1px solid var(--border-default); 
-            padding: 15px; margin-bottom: 25px; margin-top: 25px;
-            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 15px;
-            align-items: center;
-        }
-        .btn-group { display: flex; gap: 5px; align-items: center; }
-        .label { font-size: 0.85rem; color: var(--text-secondary); margin-right: 8px; font-weight: bold; font-family: 'Orbitron', sans-serif; }
-        
-        .btn {
-            background: transparent; border: 1px solid var(--border-default); color: var(--text-secondary);
-            padding: 8px 16px; font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; cursor: pointer; transition: 0.2s;
-            text-transform: uppercase; font-weight: bold;
-        }
-        .btn:hover { color: var(--neon-green); border-color: var(--neon-green); box-shadow: 0 0 8px var(--neon-dim); text-shadow: 0 0 5px var(--neon-green); }
-        .btn.active { background: var(--neon-dim); color: var(--neon-green); border-color: var(--neon-green); box-shadow: inset 0 0 10px var(--neon-dim); }
-
-        /* --- TABLE (TIGHTENED) --- */
-        .table-wrap { 
-            overflow-x: auto; 
-            border: 1px solid var(--border-default); 
-            background: var(--bg-panel); 
-            margin-bottom: 30px; 
-            border-radius: 4px;
-            min-height: 200px;
-        }
-        table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1000px; table-layout: fixed; }
-        th, td { padding: 8px 6px; vertical-align: middle; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-
-        /* Sticky Header */
-        th { 
-            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;
-            background: #05080a; color: var(--neon-green); font-weight: 700;
-            position: sticky; top: 0; z-index: 20; 
-            border-bottom: 2px solid var(--border-default);
-            padding-top: 12px; padding-bottom: 12px;
-        }
-
-        /* Explicit Column Widths */
-        th:nth-child(1), td:nth-child(1) { width: 40px; text-align: center; } /* Rank */
-        th:nth-child(2), td:nth-child(2) { width: 120px; text-align: left; }  /* Provider */
-        th:nth-child(3), td:nth-child(3) { width: 140px; text-align: left; }  /* Model */
-        
-        /* Metrics */
-        th:nth-child(4), td:nth-child(4), 
-        th:nth-child(5), td:nth-child(5), 
-        th:nth-child(6), td:nth-child(6), 
-        th:nth-child(8), td:nth-child(8) { width: 65px; text-align: center; }
-        
-        th:nth-child(7), td:nth-child(7) { width: 50px; text-align: center; }
-
-        /* Checks */
-        th:nth-child(9), td:nth-child(9), 
-        th:nth-child(10), td:nth-child(10), 
-        th:nth-child(11), td:nth-child(11) { width: 40px; text-align: center; }
-
-        /* Output Box - 3 Lines Max */
-        th:nth-child(12), td:nth-child(12) { 
-            width: auto; /* Takes remaining space */
-            text-align: left; 
-            color: #777; font-family: 'Share Tech Mono', monospace;
-            padding-right: 15px; 
-        }
-        
-        .td-output-box {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            line-height: 1.3;
-            max-height: 3.9em; 
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .td-output-box:hover { color: #fff; }
-
-        th:nth-child(13), td:nth-child(13) { width: 80px; text-align: center; }
-
-        tr:hover td { background: rgba(0, 255, 65, 0.03); }
-        .rank { font-family: 'Rajdhani', sans-serif; font-weight: bold; font-size: 1.1rem; }
-        .prov-name { color: #fff; font-weight: bold; text-decoration: none; border-bottom: 1px dotted #555; transition: 0.2s; font-size: 0.9rem; }
-        .prov-name:hover { color: var(--neon-green); border-color: var(--neon-green); }
-        .score { font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; font-weight: bold; }
-        .score-high { color: #fff; text-shadow: 0 0 10px var(--neon-green); }
-        .grade-check { color: var(--neon-green); font-weight: bold; font-size: 1rem; }
-        .grade-cross { color: var(--neon-red); font-weight: bold; font-size: 1rem; opacity: 0.5; }
-        .act-btn { display: inline-block; padding: 3px 10px; font-size: 0.7rem; font-weight: bold; border: 1px solid var(--neon-green); color: var(--neon-green); text-decoration: none; background: rgba(0,255,65,0.05); transition: 0.2s; font-family: 'Orbitron', sans-serif; }
-        .act-btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 10px var(--neon-dim); }
-
-        /* --- CARDS (FIXED GRID) --- */
-        .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-bottom: 30px; }
-
-        .card { 
-            background: var(--bg-card); 
-            border: 1px solid var(--border-default); 
-            padding: 20px; 
-            border-radius: 6px;
-            display: flex; flex-direction: column; 
-            height: 100%; 
-            transition: 0.2s; position: relative; overflow: hidden;
-        }
-        .card:hover { border-color: var(--neon-green); box-shadow: 0 0 25px rgba(0, 255, 65, 0.1); transform: translateY(-2px); }
-
-        .card-head { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px; margin-bottom: 15px; }
-        .card-prov { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: #fff; font-weight: 700; letter-spacing: 0.5px; }
-        .card-model { font-size: 0.75rem; color: #888; margin-top: 3px; font-family: 'Share Tech Mono', monospace; display: block; }
-        .card-rank { font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; color: var(--text-secondary); font-weight: bold; opacity: 0.5; }
-
-        .card-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 4px; margin-bottom: 15px; }
-        .stat-box { display: flex; flex-direction: column; }
-        .stat-lbl { font-size: 0.65rem; color: #666; letter-spacing: 1px; margin-bottom: 2px; }
-        .stat-val { font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; color: #eee; font-weight: 700; }
-
-        .comp-row { display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; }
-        .comp-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .comp-lbl { font-size: 0.65rem; color: #666; letter-spacing: 1px; }
-
-        /* Snippet Box */
-        .card-snippet {
-            font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; color: #999;
-            background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;
-            height: 90px; overflow: hidden; position: relative; line-height: 1.4;
-            cursor: pointer; border: 1px solid transparent; transition: 0.2s;
-            margin-bottom: 20px;
-        }
-        .card-snippet:hover { border-color: #444; color: #ccc; }
-        .card-snippet::after { content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 30px; background: linear-gradient(to bottom, transparent, var(--bg-card)); }
-
-        /* Buttons (Pinned to Bottom) */
-        .card-actions { display: flex; gap: 10px; margin-top: auto; }
-        .card-btn {
-            flex: 1; padding: 10px; text-align: center;
-            font-family: 'Orbitron', sans-serif; font-size: 0.75rem; font-weight: bold;
-            text-decoration: none; cursor: pointer; border-radius: 4px;
-            transition: 0.2s; text-transform: uppercase;
-            display: flex; align-items: center; justify-content: center;
-            height: 36px;
-        }
-        .btn-view { background: transparent; border: 1px solid #444; color: #888; }
-        .btn-view:hover { border-color: #fff; color: #fff; }
-        .btn-visit { background: rgba(0, 255, 65, 0.1); border: 1px solid var(--neon-green); color: var(--neon-green); }
-        .btn-visit:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px rgba(0, 255, 65, 0.3); }
-
-        /* --- CHART --- */
-        .chart-box { background: var(--bg-panel); border: 1px solid var(--border-default); padding: 20px; height: 400px; margin-bottom: 30px; position: relative; }
-        .chart-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .chart-toggles { display: flex; gap: 5px; }
-
-        /* --- INFO AREA --- */
-        .info-section { background: var(--bg-panel); border: 1px solid var(--border-default); padding: 30px; margin-bottom: 30px; }
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-        .info-item h4 { color: #fff; margin-bottom: 8px; font-size: 1.1rem; border-left: 3px solid var(--neon-green); padding-left: 10px; }
-        .info-item p { font-size: 0.95rem; color: var(--text-secondary); margin: 0; padding-left: 13px; }
-
-        /* --- FOOTER --- */
-        footer { border-top: 1px solid var(--border-default); background: rgba(0,0,0,0.9); padding: 40px 0; text-align: center; margin-top: 40px; }
-        .footer-logo { font-size: 0.5rem; opacity: 0.5; margin-bottom: 20px; font-family: 'Courier New', monospace; white-space: pre; line-height: 1; display: inline-block; text-align: left; }
-        .footer-links { display: flex; justify-content: center; gap: 30px; margin-top: 20px; }
-        .footer-link { color: #666; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
-        .footer-link:hover { color: var(--neon-green); }
-
-        /* --- MODAL --- */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; backdrop-filter: blur(5px); }
-        .modal-box { background: #0d1117; border: 1px solid var(--neon-green); width: 90%; max-width: 900px; margin: 5vh auto; height: 90vh; display: flex; flex-direction: column; box-shadow: 0 0 60px rgba(0,255,65,0.1); }
-        .modal-head { padding: 15px 25px; border-bottom: 1px solid var(--border-default); display: flex; justify-content: space-between; align-items: center; background: rgba(0,255,65,0.05); }
-        .modal-body { padding: 30px; overflow-y: auto; white-space: pre-wrap; color: #ccc; font-size: 1rem; line-height: 1.6; }
+        /* === UTILITIES === */
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
         .hidden { display: none !important; }
         
-        @media(max-width: 768px) {
-            .hud-bar { flex-wrap: wrap; justify-content: center; gap: 15px; }
-            .hud-sep { display: none; }
-            .braiain-logo-img { width: 250px; }
-            .controls { flex-direction: column; align-items: stretch; }
-            .grid-view { grid-template-columns: 1fr; }
+        /* === HEADER & LOGO === */
+        header { 
+            background: rgba(2, 4, 5, 0.95); 
+            border-bottom: 1px solid var(--border-color); 
+            padding: 30px 0; 
+            position: sticky; top: 0; z-index: 100; 
+            backdrop-filter: blur(10px);
         }
+        
+        .logo-wrapper { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+        /* SVG Logo - Prevents glitching text */
+        .braiain-logo { width: 320px; max-width: 90%; filter: drop-shadow(0 0 8px rgba(0, 255, 65, 0.4)); }
+
+        /* HUD Stats Bar */
+        .hud-bar {
+            display: flex; justify-content: center; gap: 40px;
+            background: rgba(0, 255, 65, 0.02); 
+            border: 1px solid var(--border-color);
+            padding: 10px 30px; 
+            border-radius: 4px;
+            width: fit-content; margin: 0 auto;
+        }
+        .hud-stat { display: flex; gap: 8px; align-items: center; }
+        .hud-label { color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; font-family: 'Orbitron'; }
+        .hud-value { color: #fff; font-family: 'Rajdhani'; font-weight: 700; font-size: 1.1rem; }
+
+        /* === CONTROLS === */
+        .controls-bar {
+            background: var(--bg-panel); 
+            border: 1px solid var(--border-color);
+            padding: 15px; margin: 30px 0;
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px;
+        }
+        
+        .btn-group { display: flex; gap: 5px; }
+        .ctrl-btn {
+            background: transparent; 
+            border: 1px solid var(--border-color); 
+            color: var(--text-muted);
+            padding: 8px 16px; 
+            cursor: pointer; 
+            font-family: 'Share Tech Mono'; 
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .ctrl-btn:hover { color: var(--neon-green); border-color: var(--neon-green); }
+        .ctrl-btn.active { background: var(--neon-dim); color: var(--neon-green); border-color: var(--neon-green); }
+
+        /* === NEW GRID SYSTEM (Renamed to force update) === */
+        .bz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .bz-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Uniform height */
+            position: relative;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .bz-card:hover { 
+            border-color: var(--neon-green); 
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+
+        /* Card Header */
+        .bz-card-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 15px; padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .bz-provider { font-family: 'Orbitron'; font-weight: 700; font-size: 1.2rem; color: #fff; }
+        .bz-model { font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 4px; }
+        .bz-rank { font-family: 'Rajdhani'; font-size: 1.5rem; color: #333; font-weight: 900; }
+
+        /* Card Stats Grid */
+        .bz-stats {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            margin-bottom: 20px;
+        }
+        .bz-stat-item { display: flex; flex-direction: column; }
+        .bz-stat-label { font-size: 0.65rem; color: #666; letter-spacing: 1px; margin-bottom: 2px; }
+        .bz-stat-val { font-family: 'Rajdhani'; font-size: 1.3rem; font-weight: 700; color: #eee; }
+        .val-good { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-dim); }
+
+        /* Checks Row */
+        .bz-checks {
+            display: flex; justify-content: space-between;
+            background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .bz-check-item { text-align: center; }
+        .bz-check-lbl { display: block; font-size: 0.6rem; color: #666; margin-bottom: 2px; }
+        .icon-ok { color: var(--neon-green); }
+        .icon-bad { color: #555; }
+
+        /* Preview Box */
+        .bz-preview {
+            background: #000; border: 1px solid #222;
+            padding: 12px; border-radius: 4px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            position: relative;
+        }
+        .bz-preview:hover { border-color: #444; }
+        .bz-preview-text {
+            color: #888; font-size: 0.75rem; font-family: monospace; line-height: 1.4;
+            /* Clamp to 3 lines */
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .bz-preview::after {
+            content: "CLICK TO EXPAND";
+            position: absolute; bottom: 0; right: 0;
+            background: var(--neon-green); color: #000;
+            font-size: 0.6rem; font-weight: bold; padding: 2px 6px;
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .bz-preview:hover::after { opacity: 1; }
+
+        /* Card Buttons - Pinned Bottom */
+        .bz-actions {
+            margin-top: auto; /* This forces buttons to the bottom */
+            display: flex; gap: 10px;
+        }
+        .bz-btn {
+            flex: 1; /* Equal 50% width */
+            padding: 10px 0; text-align: center;
+            font-family: 'Orbitron'; font-size: 0.75rem; font-weight: 700;
+            text-decoration: none; cursor: pointer;
+            border-radius: 4px; transition: 0.2s;
+        }
+        .btn-outline { border: 1px solid #444; color: #888; background: transparent; }
+        .btn-outline:hover { border-color: #fff; color: #fff; }
+        
+        .btn-fill { background: var(--neon-dim); border: 1px solid var(--neon-green); color: var(--neon-green); }
+        .btn-fill:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-dim); }
+
+
+        /* === TABLE VIEW === */
+        .bz-table-container {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            background: var(--bg-panel);
+            border-radius: 4px;
+            margin-bottom: 50px;
+        }
+        table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+        
+        th { 
+            text-align: left; padding: 15px; 
+            background: #05080a; 
+            color: var(--neon-green); font-family: 'Orbitron'; font-size: 0.75rem; 
+            position: sticky; top: 0; z-index: 10;
+            border-bottom: 2px solid var(--border-color);
+        }
+        td { 
+            padding: 12px 15px; 
+            border-bottom: 1px solid #1a2329;
+            vertical-align: top; /* Align top for multi-line text */
+        }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        /* Table Columns */
+        .col-center { text-align: center; }
+        .col-check { font-size: 1.1rem; }
+        
+        .table-preview {
+            max-width: 300px;
+            color: #777; font-size: 0.8rem;
+            /* 3-line clamp */
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+            overflow: hidden; text-overflow: ellipsis;
+            cursor: help;
+        }
+        .table-preview:hover { color: #fff; }
+
+        /* Table Link Button */
+        .table-visit-btn {
+            display: inline-block; padding: 4px 10px;
+            border: 1px solid var(--neon-green); color: var(--neon-green);
+            text-decoration: none; font-size: 0.7rem; font-weight: bold;
+            font-family: 'Orbitron';
+        }
+        .table-visit-btn:hover { background: var(--neon-green); color: #000; }
+
+        /* === MODAL === */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 2000; backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            position: absolute; top: 5%; left: 5%; right: 5%; bottom: 5%;
+            background: #0d1117; border: 1px solid var(--neon-green);
+            display: flex; flex-direction: column;
+            box-shadow: 0 0 50px rgba(0,255,65,0.1);
+        }
+        .modal-header {
+            padding: 20px; border-bottom: 1px solid #333;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-body {
+            padding: 30px; overflow-y: auto; 
+            font-family: monospace; white-space: pre-wrap; color: #ccc;
+            font-size: 0.9rem; line-height: 1.6;
+        }
+
+        /* === CHART === */
+        .chart-container {
+            background: var(--bg-panel); border: 1px solid var(--border-color);
+            padding: 20px; height: 400px; margin-bottom: 50px;
+        }
+
+        /* === FOOTER === */
+        footer { border-top: 1px solid var(--border-color); padding: 50px 0; text-align: center; color: #555; }
+        .footer-logo { width: 100px; opacity: 0.3; margin-bottom: 20px; }
+
     </style>
 </head>
 <body>
 
-<header id="top">
+<header>
     <div class="container">
-        <div class="header-content">
-            <div class="logo-container">
-                <img src="data:image/svg+xml;base64,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" alt="Braiain Speed Index" class="braiain-logo-img">
-            </div>
-
-            <div class="hud-bar">
-                <div class="hud-item" data-tooltip="Total number of AI brains we are testing right now.">
-                    <span class="hud-label">NODES</span> <span class="hud-val" id="provider-count">--</span>
-                </div>
-                <div class="hud-sep">|</div>
-                <div class="hud-item" data-tooltip="The system is awake and running tests.">
-                    <span class="hud-label">STATUS</span> <span class="hud-val" style="color:var(--neon-green)">LIVE</span>
-                </div>
-                <div class="hud-sep">|</div>
-                <div class="hud-item" data-tooltip="We re-test everyone every 6 hours.">
-                    <span class="hud-label">CYCLE</span> <span class="hud-val">6H</span>
-                </div>
-                <div class="hud-sep">|</div>
-                <div class="hud-item" data-tooltip="We keep 30 days of history to show trends.">
-                    <span class="hud-label">LOGS</span> <span class="hud-val">30D</span>
-                </div>
-            </div>
+        <div class="logo-wrapper">
+            <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTUwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ibmVvbkdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I2NjZmZjYztzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcIjojMDBmZjQxO3N0b3Atb3BhY2l0eToxIiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxmaWx0ZXIgaWQ9Imdsb3ciPgogICAgICA8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIyIiByZXN1bHQ9ImNvbG9yZWRCbHVyIi8+CiAgICAgIDxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iY29sb3JlZEJsdXIiLz48ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiLz48L2ZlTWVyZ2U+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHRleHQgeD0iNTAlIiB5PSIyMCIgZm9udC1mYW1pbHk9IidDb3VyaWVyIE5ldycsIG1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9IjkwMCIgZm9udC1zaXplPSIxNCIgZmlsbD0idXJsKCNuZW9uR3JhZCkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbHRlcj0idXJsKCNnbG93KSI+CiAgICA8dHNwYW4geD0iNTAlIiBkeT0iMCI+4oGl4oGl4oGl4oGl4oGl4oGl4pWXIOKBpeKBpeKBpeKBpeKBpeKBpeKBlSDigKXigKXigKXigKXigKXigpUg4oGl4oGlIOKBpeKBpeKBpeKBpeKBpeKBlSDigKXigKXigZfiipfigZfiipfigZfiipcgICDigZfiipfigZfiipc8L3RzcGFuPgogICAgPHRzcGFuIHg9IjUwJSIgZHk9IjEyIj7igZfiipfigZfigZfigZfigZfigaXigZfiipfigZfigZfigZfigZfigaXigZfiipfigZfigZfigZfigKXigKXigZfigZfigaXigZfigaXigZfigZfigZfigZfigZfigaXigZfigZfigZfigZfigZfigZfigZfigaXigZfiipfigZfiipfigZfiipfigZfiipcgIOKBpeKBpeKBpTwvdHNwYW4+CiAgICA8dHNwYW4geD0iNTAlIiBkeT0iMTIiPuKBpeKBpeKBpeKBpeKBpeKBpeKBqeKBpeKBpeKBpeKBpeKBpeKBpeKBqeKBpeKBpeKBpeKBpeKBpeKBpeKBpeKBoyDigaXigaXigZfigZfigZfigZfigZfigaXigaXigZfigZfigZfigZfigZfigZfigaXigZfigZfigaXigaXigZfiipfigZfiipUg4oGl4oGlPC90c3Bhbj4KICAgIDx0c3BhbiB4PSI1MCUiIGR5PSIxMiI+4oGX4oqX4oGX4oGX4oGX4oGX4oGp4oGX4oqX4oGX4oGX4oGX4oGX4oGp4oGX4oqX4oGX4oGX4oGX4oCl4oCl4oGj4oGX4oqX4oGX4oGX4oGX4oGX4oGj4oGX4oqX4oGX4oGX4oGX4oGX4oGj4oGX4oqX4oGX4oGX4oGXIOKBpeKBpeKBpTwvdHNwYW4+CiAgICA8dHNwYW4geD0iNTAlIiBkeT0iMTIiPuKBpeKBpeKBpeKBpeKBpeKBpeKBqeKBpeKBpSAg4oGl4oGl4oGl4oGlICA4oGl4oGl4oGl4oGl4oGl4oGl4oGl4oGlICDigaXigaXigaXigaXigaXigaXigaXigaXigaXigaXigaXigaXigaXigaXigaXigaUg4pWa4oGl4oGl4oGl4oGl4oGlPC90c3Bhbj4KICAgIDx0c3BhbiB4PSI1MCUiIGR5PSIxMiI+4pWa4oGl4oGl4oGl4oGl4oGl4oKdIOKUmuKBpSAg4pSa4oKd4pSa4oKdICDiglPioKd4pSa4oKd4pSa4oKd4pSa4oKd4pSa4oKdICDiglPioKd4pSa4oKd4pSa4oKd4pSa4oKd4pSa4oKd4pSa4oKdICA4pSa4oGl4oGl4oGl4oKdPC90c3Bhbj4KICA8L3RleHQ+Cjwvc3ZnPg==" class="braiain-logo">
+        </div>
+        
+        <div class="hud-bar">
+            <div class="hud-stat"><span class="hud-label">NODES</span><span class="hud-value" id="node-count">--</span></div>
+            <div style="opacity:0.3">|</div>
+            <div class="hud-stat"><span class="hud-label">STATUS</span><span class="hud-value" style="color:var(--neon-green)">LIVE</span></div>
+            <div style="opacity:0.3">|</div>
+            <div class="hud-stat"><span class="hud-label">CYCLE</span><span class="hud-value">6H</span></div>
         </div>
     </div>
 </header>
@@ -323,434 +299,310 @@
 <div class="container">
     
     <div class="ad-banner">
-        <div class="ad-text">
-            <strong>ADVERTISE HERE:</strong> Reach thousands of AI developers & engineers.
-        </div>
-        <a href="mailto:dnilgis@gmail.com" class="act-btn">CONTACT &gt;</a>
+        <div class="ad-text">ADVERTISE HERE: Reach thousands of AI developers.</div>
+        <a href="mailto:dnilgis@gmail.com" class="act-btn">CONTACT ></a>
     </div>
 
-    <div class="controls">
+    <div class="controls-bar">
         <div class="btn-group">
-            <span class="label">VIEW:</span>
-            <button class="btn" id="btn-cards" onclick="setViewMode('cards')">GRID</button>
-            <button class="btn active" id="btn-table" onclick="setViewMode('table')">LIST</button>
-        </div>
-        <div class="btn-group" style="flex-wrap:wrap">
-            <span class="label">SORT:</span>
-            <button class="btn active" id="btn-score" onclick="sortResults('score')" data-tooltip="The final grade (0-100). Higher is better.">SCORE</button>
-            <button class="btn" id="btn-speed" onclick="sortResults('speed')" data-tooltip="Total time to finish. Lower is faster.">SPEED</button>
-            <button class="btn" id="btn-tps" onclick="sortResults('tps')" data-tooltip="Tokens Per Second. Typing speed.">TPS</button>
-            <button class="btn" id="btn-ttft" onclick="sortResults('ttft')" data-tooltip="Time to First Token. Initial lag.">TTFT</button>
-            <button class="btn" id="btn-cost" onclick="sortResults('cost')" data-tooltip="Price per 1M tokens.">COST</button>
+            <button class="ctrl-btn active" id="btn-grid" onclick="setMode('grid')">GRID</button>
+            <button class="ctrl-btn" id="btn-list" onclick="setMode('list')">LIST</button>
         </div>
         <div class="btn-group">
-            <button class="btn" onclick="exportData()">CSV</button>
+            <span style="color:#666; margin-right:10px; font-size:0.8rem; align-self:center;">SORT:</span>
+            <button class="ctrl-btn active" id="sort-score" onclick="setSort('score')">SCORE</button>
+            <button class="ctrl-btn" id="sort-speed" onclick="setSort('speed')">SPEED</button>
+            <button class="ctrl-btn" id="sort-tps" onclick="setSort('tps')">TPS</button>
+            <button class="ctrl-btn" id="sort-cost" onclick="setSort('cost')">COST</button>
+        </div>
+        <div>
+            <button class="ctrl-btn" onclick="exportCSV()">CSV</button>
         </div>
     </div>
 
-    <div id="table-view" class="table-wrap">
+    <div id="grid-container" class="bz-grid">
+        </div>
+
+    <div id="list-container" class="bz-table-container hidden">
         <table>
             <thead>
                 <tr>
-                    <th class="col-rank" title="Rank based on sort">RK</th>
-                    <th class="col-prov" title="Provider Name">PROVIDER</th>
-                    <th class="col-model" title="Model Name">MODEL</th>
-                    <th class="col-score" title="Composite Braiain Score (0-100)">SCORE</th>
-                    <th class="col-metric" title="Total speed in seconds">SPEED</th>
-                    <th class="col-metric" title="Time to First Token">TTFT</th>
-                    <th class="col-metric" title="Tokens Per Second">TPS</th>
-                    <th class="col-metric" title="Cost per 1M Tokens">COST</th>
-                    
-                    <th class="col-status" title="Valid JSON?">JSON</th>
-                    <th class="col-status" title="Logic Correct?">LOGIC</th>
-                    <th class="col-status" title="Code Executable?">CODE</th>
-                    
-                    <th class="col-snip" title="Response Preview">OUTPUT</th>
-                    <th class="col-act">LINK</th>
+                    <th class="col-center">RK</th>
+                    <th>PROVIDER</th>
+                    <th>MODEL</th>
+                    <th class="col-center">SCORE</th>
+                    <th class="col-center">SPEED</th>
+                    <th class="col-center">TPS</th>
+                    <th class="col-center">TTFT</th>
+                    <th class="col-center">COST</th>
+                    <th class="col-center">JSON</th>
+                    <th class="col-center">LOGIC</th>
+                    <th class="col-center">CODE</th>
+                    <th>OUTPUT (PREVIEW)</th>
+                    <th class="col-center">LINK</th>
                 </tr>
             </thead>
-            <tbody id="table-body"></tbody>
+            <tbody id="table-body">
+                </tbody>
         </table>
     </div>
 
-    <div id="cards-view" class="grid-view hidden"></div>
-
-    <div class="chart-box" id="chart-section">
-        <div class="chart-head">
-            <div style="font-family:'Orbitron', sans-serif; font-weight:bold; color:#fff;">HISTORY (30 DAYS)</div>
-            <div class="chart-toggles">
-                <button class="btn" id="chart-btn-score" onclick="updateChartMetric('score')">SCORE</button>
-                <button class="btn active" id="chart-btn-speed" onclick="updateChartMetric('speed')">SPEED</button>
-            </div>
-        </div>
-        <div style="height:360px; width:100%;">
-            <canvas id="trendChart"></canvas>
-        </div>
+    <div class="chart-container">
+        <canvas id="mainChart"></canvas>
     </div>
 
-    <div class="info-section">
-        <h2>METHODOLOGY: THE COGNITIVE GAUNTLET</h2>
-        <div class="info-grid">
-            <div class="info-item">
-                <h4 data-tooltip="We make the AI read a long sci-fi story first.">1. Heavy Context Ingestion</h4>
-                <p>To simulate a production RAG environment, we inject a dense ~2,500 character narrative ("The Story of Ouroboros") into the context window. This measures the model's 'Cold Start' capability—its ability to rapidly ingest, tokenize, and comprehend new data before generating a single token of output.</p>
-            </div>
-            <div class="info-item">
-                <h4 data-tooltip="Can it follow strict formatting rules?">2. Strict Schema Compliance</h4>
-                <p>We do not accept free-form text. The model is tasked with extracting specific entities from the injected context and formatting them into a strict JSON schema. This tests the model's instruction-following precision and its utility for structured data extraction tasks.</p>
-            </div>
-            <div class="info-item">
-                <h4 data-tooltip="A trick riddle about a bat and a ball.">3. Symbolic Logic Verification</h4>
-                <p>We challenge the model with the 'Bat & Ball' problem—a classic test of cognitive reflection. This effectively separates models that simply predict probable tokens (guessing $0.10) from those that perform multi-step logical reasoning to arrive at the correct conclusion ($0.05).</p>
-            </div>
-            <div class="info-item">
-                <h4 data-tooltip="We ask it to write a specific Python program.">4. Syntactic Code Generation</h4>
-                <p>The final gauntlet requires generating a recursive Python function for a Fibonacci sequence, complete with type hints and docstrings. We use Regex to validate that the output is not just textually coherent, but syntactically executable code.</p>
-            </div>
-            <div class="info-item">
-                <h4 data-tooltip="We combine speed, smarts, and responsiveness into one final number.">5. Composite Scoring Algorithm</h4>
-                <p>The final 'Braiain Score' is not arbitrary. It is a weighted algorithmic composite: 50% based on the Quality Score (accuracy on tasks), 30% on Total Speed (normalized against a 30s timeout), and 20% on Responsiveness (TTFT + TPS). This penalizes models that are smart but slow, or fast but hallucinate.</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="info-section">
-        <h2>DISCLAIMERS</h2>
-        <ul style="color:var(--text-secondary); padding-left:20px; font-size:0.95rem; line-height:1.6;">
-            <li><strong>Context Load:</strong> Scores reflect performance under load (RAG simulation), not empty prompts.</li>
-            <li><strong>Variability:</strong> Results depend on US-East server conditions and cloud provider region status at the time of testing.</li>
-            <li><strong>Independence:</strong> 100% Open Source project. No financial affiliations with any provider.</li>
-            <li><strong>Evolving Standard:</strong> Methodologies are subject to refinement as AI capabilities advance.</li>
-        </ul>
-    </div>
-
-</div>
-
-<div id="responseModal" class="modal">
-    <div class="modal-box">
-        <div class="modal-head">
-            <span id="modalTitle" style="font-family:'Orbitron', sans-serif; color:#fff;">RESPONSE VIEWER</span>
-            <button onclick="document.getElementById('responseModal').style.display='none'" class="btn" style="border:none;">[CLOSE]</button>
-        </div>
-        <div class="modal-body" id="modalBody"></div>
-    </div>
 </div>
 
 <footer>
-    <div class="container footer-container">
-        <div style="text-align:center; opacity:0.5; margin-bottom:10px;">
-            <img src="data:image/svg+xml;base64,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" width="150" alt="Braiain Speed Index">
-        </div>
-        <p style="color: var(--text-secondary); margin-bottom: 10px;">
-            A <a href="mailto:dnilgis@gmail.com" style="color: var(--neon-green); text-decoration: none;">dnilgis</a> PROJECT
-        </p>
-        <div class="footer-links">
-            <span>LAST SYNC: <span id="last-updated">--</span></span>
-            <a href="data.json" target="_blank" class="footer-link">JSON API</a>
-            <a href="#top" class="footer-link">▲ TOP</a>
-        </div>
-    </div>
+    <img src="data:image/svg+xml;base64,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" class="footer-logo">
+    <p>A dnilgis PROJECT</p>
+    <br>
+    <a href="data.json" style="color:#666; text-decoration:none;">JSON API</a>
 </footer>
 
+<div id="modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="font-family:'Orbitron'; color:#fff;" id="modal-title">RESPONSE</h3>
+            <button onclick="closeModal()" class="ctrl-btn">CLOSE [X]</button>
+        </div>
+        <div class="modal-body" id="modal-text"></div>
+    </div>
+</div>
+
 <script>
-    const AFFILIATE_LINKS = {"OpenAI":"https://platform.openai.com/signup","Google":"https://ai.google.dev/","Anthropic":"https://console.anthropic.com/","Groq":"https://console.groq.com/","Mistral AI":"https://console.mistral.ai/","Cohere":"https://dashboard.cohere.com/","Together AI":"https://api.together.xyz/","DeepSeek":"https://platform.deepseek.com/","Fireworks":"https://fireworks.ai/","Cerebras":"https://inference.cerebras.ai/"};
-    
-    // --- Global Chart Var ---
-    let trendChart = null; 
-    let allResults = [];
+    // === CONFIGURATION ===
+    let appData = null;
     let currentSort = 'score';
-    let currentChartMetric = 'speed';
+    let chartInstance = null;
+    const AFFILIATES = {"OpenAI":"https://platform.openai.com/","Google":"https://ai.google.dev/","Anthropic":"https://console.anthropic.com/","Groq":"https://console.groq.com/","Mistral AI":"https://console.mistral.ai/","Cohere":"https://dashboard.cohere.com/","Together AI":"https://api.together.xyz/","DeepSeek":"https://platform.deepseek.com/","Fireworks":"https://fireworks.ai/","Cerebras":"https://inference.cerebras.ai/"};
+
+    // === INITIALIZATION ===
+    window.onload = function() {
+        fetchData();
+        // Close modal on outside click
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if(e.target === document.getElementById('modal')) closeModal();
+        });
+    };
 
     async function fetchData() {
         try {
-            // Live data fetch
             const res = await fetch("data.json?t=" + Date.now());
-            if (res.ok) {
-                const data = await res.json();
-                processData(data);
-            } else {
-                console.warn("Data file not found or inaccessible.");
-                document.getElementById('last-updated').textContent = "OFFLINE";
-            }
-        } catch (e) { 
-            console.error("Fetch error:", e);
-            document.getElementById('last-updated').textContent = "ERROR";
+            if(!res.ok) throw new Error("Failed to load");
+            appData = await res.json();
+            
+            document.getElementById('node-count').textContent = appData.results ? appData.results.length : 0;
+            render();
+            renderChart();
+        } catch (e) {
+            console.error(e);
         }
     }
 
-    function processData(data) {
-        allResults = data;
-        document.getElementById('provider-count').textContent = data.results ? data.results.length : 0;
-        
-        // Safety check for last_updated
-        if(data.last_updated) {
-            const lastUp = data.last_updated.replace(' UTC', 'Z');
-            document.getElementById('last-updated').textContent = new Date(lastUp).toLocaleString();
-        } else {
-            document.getElementById('last-updated').textContent = "Unknown";
-        }
-        
-        render();
-        if(data.history) drawChart(data.history, 'speed');
-    }
-
-    function parseComponents(notes) {
-        const s = (notes || "").toLowerCase();
-        return {
-            json: s.includes("json perfect") || s.includes("json ok") || s.includes("json valid"),
-            logic: s.includes("logic correct") || s.includes("logic partial"),
-            code: s.includes("code perfect") || s.includes("code partial")
-        };
-    }
-
-    // --- SMART CLEANER: REMOVES PROMPT TEXT ---
-    function cleanOutputSnippet(text) {
-        if (!text) return "";
-        
-        // 1. Remove standard benchmark headers
-        let cleaned = text.replace(/^PART \d+ - [A-Z ]+:\s*/i, '');
-        
-        // 2. Remove markdown blocks
-        cleaned = cleaned.replace(/^```[a-z]*\n?/i, '');
-        
-        // 3. Heuristic: If it starts with typical preamble "Here is the answer...", strip it.
-        // We look for the first '{' (JSON) or the first "def" (Python) or just take the raw if clean.
-        // For this specific benchmark, we want to skip the "PART 1" text if possible.
-        
-        // If it starts with "PART 1", recursively strip it to get to the content
-        while (cleaned.match(/^PART \d+/i)) {
-             cleaned = cleaned.replace(/^PART \d+ - [A-Z ]+:\s*/i, '');
-        }
-
-        return cleaned.trim();
-    }
-
+    // === RENDERING ===
     function render() {
-        if (!allResults.results) return;
+        if(!appData || !appData.results) return;
         
-        let sorted = [...allResults.results].sort((a, b) => {
-            if (a.status !== 'Online') return 1; if (b.status !== 'Online') return -1;
-            if (currentSort === 'score') return (b.braiain_score||0) - (a.braiain_score||0);
-            if (currentSort === 'speed') return a.time - b.time;
-            if (currentSort === 'tps') return b.tokens_per_second - a.tokens_per_second;
-            if (currentSort === 'ttft') return (a.ttft||999) - (b.ttft||999);
-            if (currentSort === 'cost') return (a.cost_per_request||0) - (b.cost_per_request||0);
+        // SORTING LOGIC
+        const sorted = [...appData.results].sort((a,b) => {
+            if(a.status !== 'Online') return 1; if(b.status !== 'Online') return -1;
+            
+            if(currentSort === 'score') return b.braiain_score - a.braiain_score;
+            if(currentSort === 'speed') return a.time - b.time; // Lower is better
+            if(currentSort === 'tps') return b.tokens_per_second - a.tokens_per_second;
+            if(currentSort === 'ttft') return (a.ttft||99) - (b.ttft||99);
+            if(currentSort === 'cost') return a.cost_per_request - b.cost_per_request;
             return 0;
         });
 
-        // TABLE RENDER
-        document.getElementById('table-body').innerHTML = sorted.map((r, i) => {
-            const link = (AFFILIATE_LINKS[r.provider] || "#") + '?ref=braiain';
-            const scoreCls = (r.braiain_score >= 90) ? 'score-high' : (r.braiain_score >= 70) ? 'score-mid' : 'score-low';
+        // 1. RENDER GRID
+        const gridHtml = sorted.map((r, i) => {
+            const comps = parseGrade(r.grade_breakdown);
+            const cleanText = cleanTextSnippet(r.full_response);
             
-            const comps = parseComponents(r.grade_breakdown);
-            const iJson = comps.json ? '<span class="grade-check">✓</span>' : '<span class="grade-cross">✗</span>';
-            const iLogic = comps.logic ? '<span class="grade-check">✓</span>' : '<span class="grade-cross">✗</span>';
-            const iCode = comps.code ? '<span class="grade-check">✓</span>' : '<span class="grade-cross">✗</span>';
-            
-            let rawSnippet = r.full_response || "";
-            let cleanSnippet = cleanOutputSnippet(rawSnippet);
-            
-            const snippetDisplay = cleanSnippet.substring(0, 300).replace(/</g,'&lt;');
-            const snippetHover = rawSnippet.substring(0, 1500).replace(/"/g, '&quot;') + '...';
-
-            return `<tr>
-                <td class="rank ${i===0?'rank-1':''}">${i+1}</td>
-                <td><a href="${link}" target="_blank" class="prov-name">${r.provider}</a></td>
-                <td style="color:#888; font-size:0.8rem;">${r.model.substring(0,18)}...</td>
-                <td class="score ${scoreCls}">${r.braiain_score||0}</td>
-                <td style="font-weight:bold">${r.time.toFixed(2)}s</td>
-                <td>${r.ttft ? r.ttft.toFixed(3) : '-'}</td>
-                <td>${r.tokens_per_second.toFixed(0)}</td>
-                <td>${r.cost_per_request ? '$'+r.cost_per_request.toFixed(5) : 'FREE'}</td>
-                
-                <td>${iJson}</td>
-                <td>${iLogic}</td>
-                <td>${iCode}</td>
-                
-                <td class="td-snippet" data-tooltip="${snippetHover}" onclick="openModal('${r.provider}', '${rawSnippet.replace(/'/g, "\\'")}')">
-                    <div class="td-output-box">
-                        <span style="opacity:0.7; color:var(--neon-green); margin-right:5px;">&gt;</span>${snippetDisplay}
-                    </div>
-                </td>
-                
-                <td><a href="${link}" target="_blank" class="act-btn">VISIT</a></td>
-            </tr>`;
-        }).join('');
-
-        // CARDS RENDER
-        document.getElementById('cards-view').innerHTML = sorted.map((r, i) => {
-             const scoreCls = (r.braiain_score >= 90) ? 'score-high' : (r.braiain_score >= 70) ? 'score-mid' : 'score-low';
-             const comps = parseComponents(r.grade_breakdown);
-             const link = (AFFILIATE_LINKS[r.provider] || "#") + '?ref=braiain';
-             
-             let rawSnippet = r.full_response || "";
-             let cleanSnippet = cleanOutputSnippet(rawSnippet);
-             const snippetDisplay = cleanSnippet.substring(0, 200).replace(/</g,'&lt;'); 
-             
-             return `
-            <div class="card">
-                <div class="card-head">
+            return `
+            <div class="bz-card">
+                <div class="bz-card-header">
                     <div>
-                        <div class="card-prov">${r.provider}</div>
-                        <div class="card-model">${r.model}</div>
+                        <div class="bz-provider">${r.provider}</div>
+                        <span class="bz-model">${r.model}</span>
                     </div>
-                    <div class="card-rank">#${i+1}</div>
+                    <div class="bz-rank">#${i+1}</div>
                 </div>
                 
-                <div class="card-stats">
-                    <div class="stat-box">
-                        <span class="stat-lbl">SCORE</span>
-                        <span class="stat-val ${scoreCls}">${r.braiain_score||0}</span>
+                <div class="bz-stats">
+                    <div class="bz-stat-item">
+                        <span class="bz-stat-label">SCORE</span>
+                        <span class="bz-stat-val val-good">${r.braiain_score}</span>
                     </div>
-                    <div class="stat-box">
-                        <span class="stat-lbl">SPEED</span>
-                        <span class="stat-val">${r.time.toFixed(2)}s</span>
+                    <div class="bz-stat-item">
+                        <span class="bz-stat-label">SPEED</span>
+                        <span class="bz-stat-val">${r.time.toFixed(2)}s</span>
                     </div>
-                    <div class="stat-box">
-                        <span class="stat-lbl">TPS</span>
-                        <span class="stat-val">${r.tokens_per_second.toFixed(0)}</span>
+                    <div class="bz-stat-item">
+                        <span class="bz-stat-label">TPS</span>
+                        <span class="bz-stat-val">${Math.round(r.tokens_per_second)}</span>
                     </div>
-                    <div class="stat-box">
-                        <span class="stat-lbl">COST</span>
-                        <span class="stat-val">${r.cost_per_request ? '$'+r.cost_per_request.toFixed(4) : 'FREE'}</span>
-                    </div>
-                </div>
-                
-                <div class="comp-row">
-                    <div class="comp-item">
-                        <span class="comp-lbl">JSON</span>
-                        <span>${comps.json ? '<span class="grade-check">✓</span>' : '<span class="grade-cross">✗</span>'}</span>
-                    </div>
-                    <div class="comp-item">
-                        <span class="comp-lbl">LOGIC</span>
-                        <span>${comps.logic ? '<span class="grade-check">✓</span>' : '<span class="grade-cross">✗</span>'}</span>
-                    </div>
-                    <div class="comp-item">
-                        <span class="comp-lbl">CODE</span>
-                        <span>${comps.code ? '<span class="grade-check">✓</span>' : '<span class="grade-cross">✗</span>'}</span>
+                    <div class="bz-stat-item">
+                        <span class="bz-stat-label">COST</span>
+                        <span class="bz-stat-val">${r.cost_per_request ? '$'+r.cost_per_request.toFixed(4) : 'FREE'}</span>
                     </div>
                 </div>
                 
-                <div class="card-snippet" onclick="openModal('${r.provider}', '${rawSnippet.replace(/'/g, "\\'")}')">
-                    ${snippetDisplay}
+                <div class="bz-checks">
+                    <div class="bz-check-item"><span class="bz-check-lbl">JSON</span><span class="${comps.json?'icon-ok':'icon-bad'}">●</span></div>
+                    <div class="bz-check-item"><span class="bz-check-lbl">LOGIC</span><span class="${comps.logic?'icon-ok':'icon-bad'}">●</span></div>
+                    <div class="bz-check-item"><span class="bz-check-lbl">CODE</span><span class="${comps.code?'icon-ok':'icon-bad'}">●</span></div>
                 </div>
-
-                <div class="card-actions">
-                    <button class="card-btn btn-view" onclick="openModal('${r.provider}', '${rawSnippet.replace(/'/g, "\\'")}')">VIEW OUTPUT</button>
-                    <a href="${link}" target="_blank" class="card-btn btn-visit">VISIT SITE</a>
+                
+                <div class="bz-preview" onclick="openModal('${r.provider}', '${escapeText(r.full_response)}')">
+                    <div class="bz-preview-text">${cleanText}</div>
+                </div>
+                
+                <div class="bz-actions">
+                    <button class="bz-btn btn-outline" onclick="openModal('${r.provider}', '${escapeText(r.full_response)}')">VIEW</button>
+                    <a href="${AFFILIATES[r.provider] || '#'}" target="_blank" class="bz-btn btn-fill">VISIT</a>
                 </div>
             </div>`;
         }).join('');
+        document.getElementById('grid-container').innerHTML = gridHtml;
+
+        // 2. RENDER LIST
+        const listHtml = sorted.map((r, i) => {
+            const comps = parseGrade(r.grade_breakdown);
+            const cleanText = cleanTextSnippet(r.full_response);
+            
+            return `
+            <tr>
+                <td class="col-center"><strong>${i+1}</strong></td>
+                <td><strong>${r.provider}</strong></td>
+                <td style="color:#777; font-size:0.8rem;">${r.model}</td>
+                <td class="col-center"><strong style="color:#fff;">${r.braiain_score}</strong></td>
+                <td class="col-center">${r.time.toFixed(2)}s</td>
+                <td class="col-center">${Math.round(r.tokens_per_second)}</td>
+                <td class="col-center">${r.ttft ? r.ttft.toFixed(3) : '-'}</td>
+                <td class="col-center">${r.cost_per_request ? '$'+r.cost_per_request.toFixed(4) : 'FREE'}</td>
+                
+                <td class="col-center col-check"><span class="${comps.json?'icon-ok':'icon-bad'}">●</span></td>
+                <td class="col-center col-check"><span class="${comps.logic?'icon-ok':'icon-bad'}">●</span></td>
+                <td class="col-center col-check"><span class="${comps.code?'icon-ok':'icon-bad'}">●</span></td>
+                
+                <td>
+                    <div class="table-preview" onclick="openModal('${r.provider}', '${escapeText(r.full_response)}')" title="Click for full response">
+                        ${cleanText}
+                    </div>
+                </td>
+                
+                <td class="col-center"><a href="${AFFILIATES[r.provider] || '#'}" target="_blank" class="table-visit-btn">GO</a></td>
+            </tr>`;
+        }).join('');
+        document.getElementById('table-body').innerHTML = listHtml;
     }
 
-    function drawChart(history, metric) {
-        if (!document.getElementById("trendChart")) return;
-        const ctx = document.getElementById("trendChart");
-        
-        const labels = history.map(h => {
-            if (!h.timestamp) return "";
-            const safeTime = h.timestamp.replace(' UTC', 'Z').replace(' ', 'T'); 
-            return new Date(safeTime).toLocaleDateString();
-        });
-
-        const allProviders = new Set();
-        history.forEach(h => {
-            if (h.results) Object.keys(h.results).forEach(p => allProviders.add(p));
-        });
-
-        const colors = ["#00ff41", "#00f3ff", "#ff0055", "#ffaa00", "#aa00ff", "#ffffff", "#ffff00"];
-        
-        const datasets = Array.from(allProviders).map((p, i) => ({
-            label: p,
-            data: history.map(h => {
-                const res = h.results ? h.results[p] : null;
-                if (!res || res.status !== 'Online') return null;
-                return metric === 'speed' ? (res.time < 100 ? res.time : null) : (res.braiain_score || null);
-            }),
-            borderColor: colors[i % colors.length],
-            backgroundColor: colors[i % colors.length], 
-            borderWidth: 2, 
-            pointRadius: 4, 
-            tension: 0.4, 
-            spanGaps: true
-        }));
-
-        if (trendChart) trendChart.destroy();
-        
-        trendChart = new Chart(ctx, {
-            type: 'line',
-            data: { labels, datasets },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                scales: {
-                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } },
-                    y: { 
-                        grid: { color: 'rgba(255,255,255,0.05)' }, 
-                        ticks: { color: '#666' },
-                        title: { 
-                            display: true, 
-                            text: metric === 'speed' ? 'Seconds (Lower is Faster)' : 'Score (0-100)',
-                            color: '#444',
-                            font: { size: 10 }
-                        }
-                    }
-                },
-                plugins: { 
-                    legend: { labels: { color: '#aaa', font: { family:'Share Tech Mono' } } },
-                    tooltip: {
-                        titleFont: { family: 'Orbitron' },
-                        bodyFont: { family: 'Share Tech Mono' }
-                    }
-                }
-            }
-        });
+    // === HELPERS ===
+    function setMode(mode) {
+        document.getElementById('grid-container').classList.toggle('hidden', mode !== 'grid');
+        document.getElementById('list-container').classList.toggle('hidden', mode !== 'list');
+        document.getElementById('btn-grid').classList.toggle('active', mode === 'grid');
+        document.getElementById('btn-list').classList.toggle('active', mode === 'list');
     }
 
-    function updateChartMetric(m) {
-        currentChartMetric = m;
-        document.getElementById('chart-btn-score').classList.toggle('active', m === 'score');
-        document.getElementById('chart-btn-speed').classList.toggle('active', m === 'speed');
-        if(allResults.history) drawChart(allResults.history, m);
-    }
-
-    function sortResults(type) {
+    function setSort(type) {
         currentSort = type;
-        document.querySelectorAll('.btn-group .btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('btn-'+type).classList.add('active');
+        document.querySelectorAll('.btn-group button').forEach(b => b.classList.remove('active'));
+        document.getElementById('sort-'+type).classList.add('active');
         render();
     }
 
-    function setViewMode(mode) {
-        document.getElementById('cards-view').classList.toggle('hidden', mode !== 'cards');
-        document.getElementById('table-view').classList.toggle('hidden', mode !== 'table');
-        document.getElementById('btn-cards').classList.toggle('active', mode === 'cards');
-        document.getElementById('btn-table').classList.toggle('active', mode === 'table');
+    function parseGrade(notes) {
+        const s = (notes || "").toLowerCase();
+        return {
+            json: s.includes("json perfect") || s.includes("json ok"),
+            logic: s.includes("logic correct"),
+            code: s.includes("code perfect")
+        };
     }
 
-    function openModal(t, c) {
-        document.getElementById('modalTitle').textContent = t;
-        document.getElementById('modalBody').textContent = c;
-        document.getElementById('responseModal').style.display = 'block';
+    // STRIPS PROMPT TEXT ("PART 1 - JSON...") from preview
+    function cleanTextSnippet(text) {
+        if(!text) return "";
+        let clean = text;
+        // Strip common headers
+        clean = clean.replace(/PART \d+ - [A-Z ]+:/gi, "");
+        // Strip markdown code fences
+        clean = clean.replace(/```[a-z]*\n?/gi, "");
+        return clean.trim().substring(0, 300);
     }
 
-    function exportData() {
-        if (!allResults.results) return;
+    function escapeText(str) {
+        return (str || "").replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
+    }
+
+    // === MODAL ===
+    function openModal(title, text) {
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-text').textContent = text;
+        document.getElementById('modal').style.display = 'block';
+    }
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+    }
+
+    // === CHART ===
+    function renderChart() {
+        if(!appData.history) return;
+        const ctx = document.getElementById('mainChart');
+        const history = appData.history;
+        
+        // Extract providers
+        const providers = new Set();
+        history.forEach(h => { if(h.results) Object.keys(h.results).forEach(k => providers.add(k)); });
+        
+        const colors = ['#00ff41', '#00f3ff', '#ff0055', '#ffaa00', '#aa00ff', '#ffffff', '#ffff00'];
+        const datasets = Array.from(providers).map((p, i) => ({
+            label: p,
+            borderColor: colors[i % colors.length],
+            borderWidth: 2,
+            pointRadius: 3,
+            tension: 0.4,
+            data: history.map(h => {
+                const res = h.results ? h.results[p] : null;
+                // Plot SPEED (Lower is better, but chart Y axis goes up.. let's plot Speed)
+                return (res && res.status === 'Online') ? res.time : null;
+            })
+        }));
+
+        if(chartInstance) chartInstance.destroy();
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: { 
+                labels: history.map(h => new Date(h.timestamp.replace(' UTC','Z')).toLocaleDateString()),
+                datasets: datasets 
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: 'Speed (Seconds)' } },
+                    x: { grid: { display: false } }
+                },
+                plugins: { legend: { labels: { color: '#888', font: { family:'Share Tech Mono' } } } }
+            }
+        });
+    }
+    
+    function exportCSV() {
+        if (!appData.results) return;
         let csv = 'Rank,Provider,Score,Speed,TTFT,TPS,Cost\n';
-        const sorted = [...allResults.results].sort((a,b) => (b.braiain_score||0) - (a.braiain_score||0));
+        const sorted = [...appData.results].sort((a,b) => b.braiain_score - a.braiain_score);
         sorted.forEach((r,i) => csv += `${i+1},"${r.provider}","${r.model}",${r.braiain_score},${r.time},${r.ttft},${r.tokens_per_second},${r.cost_per_request}\n`);
         const a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob([csv], {type: 'text/csv'}));
         a.download = 'braiain_data.csv';
         document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }
-
-    fetchData();
-    window.onclick = e => { if(e.target.className === 'modal') document.getElementById('responseModal').style.display = 'none'; }
 </script>
 </body>
 </html>
