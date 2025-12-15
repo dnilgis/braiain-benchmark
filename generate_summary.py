@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 """
-Enhanced GitHub Actions job summary generator with:
-- Reliability scores
-- TTFT metrics
-- Error diagnostics
-- Performance trends
+Generates the GitHub Actions Job Summary.
+Aligned with Braiain Speed Index v3.9 (Composite Scoring)
 """
 import json
 import os
@@ -17,76 +14,46 @@ if not os.path.exists('data.json'):
 with open('data.json') as f:
     data = json.load(f)
 
-print(f"### 🎯 Benchmark Results - v3.0\n")
-print(f"**Last Updated:** {data['last_updated']}\n")
-print(f"**Total Providers:** {len(data['results'])}\n")
+# Header matching the Doom HUD style
+print(f"### 🧠 Braiain Speed Index (v3.9)\n")
+print(f"**Protocol:** Cognitive Gauntlet (Heavy Context)\n")
+print(f"**Last Sync:** {data.get('last_updated', 'Unknown')}\n")
 
 online = [r for r in data['results'] if r['status'] == 'Online']
-offline = [r for r in data['results'] if r['status'] != 'Online']
+# Sort by Braiain Score (Composite)
+online.sort(key=lambda x: -x.get('braiain_score', 0))
 
-# Online providers with enhanced metrics
 if online:
-    print("### ✅ Online Providers\n")
-    print("| Rank | Provider | Model | Time | TTFT | TPS | Smoothness | Cost |")
-    print("|------|----------|-------|------|------|-----|------------|------|")
+    print("### 🏆 Live Leaderboard\n")
+    # Columns matching index.html
+    print("| Rank | Provider | Braiain Score | Quality | Speed | TTFT | Cost |")
+    print("|:---:|---|:---:|:---:|:---:|:---:|:---:|")
     
     for i, r in enumerate(online, 1):
-        medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"#{i}"
-        cost = "FREE" if r['cost_per_request'] == 0 else f"${r['cost_per_request']:.5f}"
-        ttft = f"{r['ttft']:.3f}s" if r.get('ttft') else "N/A"
-        smoothness = f"{r['streaming_smoothness']:.2f}" if r.get('streaming_smoothness') else "N/A"
-        print(f"| {medal} | {r['provider']} | {r['model'][:30]} | {r['time']:.2f}s | {ttft} | {r['tokens_per_second']:.0f} | {smoothness} | {cost} |")
-    print("")
+        medal = "👑" if i == 1 else f"#{i}"
+        
+        # Metrics
+        b_score = r.get('braiain_score', 0)
+        q_score = r.get('quality_score', 0)
+        speed = f"{r['time']:.2f}s"
+        ttft = f"{r.get('ttft', 0):.3f}s" if r.get('ttft') else "N/A"
+        cost = f"${r.get('cost_per_request', 0):.5f}" if r.get('cost_per_request') > 0 else "FREE"
+        
+        # Status Icon based on Composite Score
+        if b_score >= 90: icon = "🟢"
+        elif b_score >= 70: icon = "🟡"
+        else: icon = "🔴"
+        
+        print(f"| {medal} | **{r['provider']}** | {icon} **{b_score}** | {q_score} | {speed} | {ttft} | {cost} |")
 
-# Offline providers with error info
+    print("\n> **Scoring:** Composite of Quality (50%), Speed (30%), and Responsiveness (20%).")
+
+# List failures if any
+offline = [r for r in data['results'] if r['status'] != 'Online']
 if offline:
-    print("### ❌ Offline Providers\n")
-    print("| Provider | Model | Error Type | Details |")
-    print("|----------|-------|------------|---------|")
+    print("\n### ❌ Offline Nodes")
     for r in offline:
-        error_info = r.get('error_info', {})
-        error_type = error_info.get('type', 'UNKNOWN')
-        error_msg = error_info.get('message', 'No details')[:60]
-        print(f"| {r['provider']} | {r['model'][:25]} | {error_type} | {error_msg}... |")
-    print("")
+        error = r.get('error_info', {}).get('message', 'Unknown Error')
+        print(f"- **{r['provider']}**: {error}")
 
-# Reliability scores
-reliability_scores = data.get('reliability_scores', {})
-if reliability_scores:
-    print("### 📊 Reliability Scores (Last 30 Tests)\n")
-    print("| Provider | Uptime % |")
-    print("|----------|----------|")
-    sorted_reliability = sorted(reliability_scores.items(), key=lambda x: x[1], reverse=True)
-    for provider, score in sorted_reliability:
-        emoji = "🟢" if score >= 95 else "🟡" if score >= 80 else "🔴"
-        print(f"| {emoji} {provider} | {score}% |")
-    print("")
-
-# Performance insights
-if online:
-    fastest = min(online, key=lambda x: x['time'])
-    fastest_ttft = min([r for r in online if r.get('ttft')], key=lambda x: x['ttft']) if any(r.get('ttft') for r in online) else None
-    highest_tps = max(online, key=lambda x: x['tokens_per_second'])
-    cheapest = min(online, key=lambda x: x['cost_per_request'])
-    
-    print("### 🏆 Performance Leaders\n")
-    print(f"- **⚡ Fastest Overall:** {fastest['provider']} ({fastest['time']:.2f}s)")
-    if fastest_ttft:
-        print(f"- **🚀 Fastest TTFT:** {fastest_ttft['provider']} ({fastest_ttft['ttft']:.3f}s)")
-    print(f"- **📈 Highest TPS:** {highest_tps['provider']} ({highest_tps['tokens_per_second']:.0f} tokens/s)")
-    print(f"- **💰 Most Cost-Effective:** {cheapest['provider']} ({cheapest['cost_per_request'] if cheapest['cost_per_request'] > 0 else 'FREE'})")
-    print("")
-
-# Metadata
-metadata = data.get('metadata', {})
-if metadata:
-    print("### ⚙️ Test Configuration\n")
-    print(f"- **Version:** {metadata.get('version', 'Unknown')}")
-    print(f"- **Parallel Testing:** {'✅ Enabled' if metadata.get('parallel_testing') else '❌ Disabled'}")
-    print(f"- **Streaming:** {'✅ Enabled' if metadata.get('streaming_enabled') else '❌ Disabled'}")
-    print(f"- **Timeout:** {metadata.get('timeout', 60)}s")
-    print(f"- **Retries:** {metadata.get('retries', 3)}")
-    print("")
-
-print(f"**History Entries:** {len(data.get('history', []))}")
-print(f"\n---\n*Generated by BRAIAIN Speed Index v3.0*")
+print(f"\n*Generated automatically by Braiain Benchmark*")
