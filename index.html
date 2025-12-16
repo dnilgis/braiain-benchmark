@@ -259,7 +259,7 @@
         }
         .table-visit-btn:hover { background: var(--neon-green); color: #000; }
 
-        /* === METHODOLOGY EXPANSION (NEW) === */
+        /* === METHODOLOGY EXPANSION === */
         .methodology-box {
             background: var(--bg-panel); border: 1px solid var(--border-color);
             padding: 40px; margin-bottom: 50px; position: relative; overflow: hidden;
@@ -314,6 +314,17 @@
             padding: 30px; overflow-y: auto; 
             font-family: monospace; white-space: pre-wrap; color: #ccc;
             font-size: 0.9rem; line-height: 1.6;
+        }
+
+        /* Story Modal Specific Styles */
+        #story-modal .modal-content {
+            max-width: 900px;
+            margin: 50px auto;
+            top: auto;
+            left: auto;
+            right: auto;
+            bottom: auto;
+            position: relative;
         }
 
         /* === CHART === */
@@ -377,7 +388,7 @@
     </div>
 
     <div id="grid-container" class="bz-grid">
-        </div>
+    </div>
 
     <div id="list-container" class="bz-table-container hidden">
         <table>
@@ -399,7 +410,7 @@
                 </tr>
             </thead>
             <tbody id="table-body">
-                </tbody>
+            </tbody>
         </table>
     </div>
 
@@ -410,56 +421,316 @@
     <div class="methodology-box">
         <div class="method-title">THE GAUNTLET PROTOCOL</div>
         
+        <p style="color: #aaa; line-height: 1.8; margin-bottom: 40px; font-size: 1rem;">
+            Unlike traditional benchmarks that test models with simple, empty-context prompts, the <strong>Braiain Speed Index</strong> 
+            simulates real-world production conditions where LLMs must process large contexts, follow complex instructions, 
+            and demonstrate both speed and accuracy. This is the <strong>Cognitive Gauntlet</strong>—a brutal test of true AI capability.
+        </p>
+
+        <!-- STEP 1: CONTEXT INJECTION -->
         <div class="step-container">
             <div class="step-head" data-tooltip="We simulate a 'Cold Start' by making the AI read ~2,500 characters of text before it can answer. This prevents it from just 'guessing' quickly.">
                 <div class="step-num">1</div>
                 <div class="step-name">CONTEXT INJECTION (RAG SIMULATION)</div>
             </div>
+            
+            <p style="color: #999; margin-left: 55px; margin-bottom: 15px; line-height: 1.6;">
+                Every request begins with a <strong>Heavy Context Payload</strong>—a 2,500+ character sci-fi narrative titled 
+                <em>"The Story of Ouroboros"</em>. This forces models to process significant input before generating any output, 
+                simulating Retrieval-Augmented Generation (RAG) scenarios where context must be understood before reasoning begins.
+            </p>
+            
+            <div style="margin-left: 55px; margin-bottom: 20px;">
+                <button onclick="showStoryModal()" class="ctrl-btn" style="background: var(--neon-dim); border-color: var(--neon-green); color: var(--neon-green);">
+                    📖 READ THE FULL STORY
+                </button>
+            </div>
+            
             <div class="code-block">
-INJECTED CONTEXT: "The Story of Ouroboros"
-LENGTH: ~2,500 Characters
-PURPOSE: Forces the model to process significant input tokens before generating output.
+<span class="highlight">INJECTED CONTEXT: "The Story of Ouroboros"</span>
+TYPE: Cyber-Mythic Sci-Fi Narrative
+LENGTH: ~2,500 Characters (~625 tokens)
+PURPOSE: Simulates document-heavy RAG workflows
+
+This context must be processed BEFORE the model can answer any of the three test questions.
+No skipping, no shortcuts—the full story is fed to the model every single time.
+            </div>
+            
+            <div style="margin-left: 55px; margin-top: 20px; padding: 15px; background: rgba(0,255,65,0.05); border-left: 3px solid var(--neon-green);">
+                <strong style="color: var(--neon-green);">Why This Matters:</strong>
+                <p style="color: #aaa; margin-top: 10px; line-height: 1.6;">
+                    In production, LLMs rarely work with empty prompts. They're fed documentation, chat histories, retrieved data, 
+                    and other context. Models that can't efficiently process input will bottleneck your entire system. 
+                    This test reveals which models can handle "reading" before "thinking."
+                </p>
             </div>
         </div>
 
+        <!-- STEP 2: THE MULTI-STEP PROMPT -->
         <div class="step-container">
             <div class="step-head" data-tooltip="We give the AI three very different jobs to do all at once. This tests if it can follow complex instructions without getting confused.">
                 <div class="step-num">2</div>
                 <div class="step-name">THE MULTI-STEP PROMPT</div>
             </div>
+            
+            <p style="color: #999; margin-left: 55px; margin-bottom: 15px; line-height: 1.6;">
+                After processing the context, the model must complete <strong>three distinct tasks</strong> in a single response. 
+                This tests instruction adherence, multi-domain competence, and the ability to context-switch mid-generation.
+            </p>
+            
             <div class="code-block">
-<span class="highlight">PART 1 - JSON GENERATION:</span>
-"Generate a valid JSON object describing the 'Ouroboros' entity... MUST contain exactly these keys: entity_name, origin, purpose, is_biological."
+<span class="highlight">PART 1 - JSON GENERATION (Structured Output Test)</span>
+Task: "Generate a valid JSON object describing the 'Ouroboros' entity from the story."
+Requirements:
+  • Must contain exactly these keys: entity_name, origin, purpose, is_biological
+  • Must be valid JSON (parseable, no syntax errors)
+  • Must extract information from the story context (not hallucinate)
+  • Must NOT wrap JSON in markdown code blocks
 
-<span class="highlight">PART 2 - LOGICAL REASONING:</span>
-"Solve this riddle: A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?"
+<strong>Scoring Criteria:</strong>
+  ✓ Valid JSON structure with all required keys → 35 points
+  ✓ Logical correctness (is_biological should be false) → Bonus points
+  ✗ Missing keys, syntax errors, or markdown wrapping → Penalties
 
-<span class="highlight">PART 3 - CODING:</span>
-"Write a Python function named `calculate_fibonacci`... Include a docstring and type hints."
+---
+
+<span class="highlight">PART 2 - LOGICAL REASONING (Cognitive Trap Test)</span>
+Task: "Solve this riddle: A bat and a ball cost $1.10 in total. The bat costs 
+      $1.00 more than the ball. How much does the ball cost?"
+
+This is the famous "Bat & Ball" problem from cognitive psychology. The intuitive answer 
+($0.10) is WRONG. The correct answer is $0.05.
+
+<strong>Scoring Criteria:</strong>
+  ✓ Answer is $0.05 or "5 cents" → 35 points
+  ✗ Answer is $0.10 → 0 points (fell into the trap)
+  ~ Shows work and arrives at $1.05 for the bat → Partial credit
+
+This tests whether the model can override intuitive (but incorrect) responses.
+
+---
+
+<span class="highlight">PART 3 - CODE GENERATION (Technical Execution Test)</span>
+Task: "Write a Python function named `calculate_fibonacci` that returns the n-th 
+      Fibonacci number using recursion. Include a docstring and type hints."
+
+<strong>Scoring Criteria:</strong>
+  ✓ Function is named correctly → 10 points
+  ✓ Uses recursion (not iteration) → 10 points  
+  ✓ Includes type hints (e.g., n: int -> int) → 10 points
+  ✗ Syntax errors, incorrect logic, or missing requirements → Penalties
+
+Total Possible: 30 points
+            </div>
+            
+            <div style="margin-left: 55px; margin-top: 20px; padding: 15px; background: rgba(255,100,0,0.05); border-left: 3px solid #ff6400;">
+                <strong style="color: #ff6400;">Why Three Different Tasks?</strong>
+                <p style="color: #aaa; margin-top: 10px; line-height: 1.6;">
+                    Real-world applications don't ask models to do one thing—they ask for complex, multi-step workflows. 
+                    A model might excel at code but fail at structured output. Or ace logic problems but produce invalid JSON. 
+                    This test reveals <strong>domain versatility</strong> and <strong>instruction adherence</strong> under cognitive load.
+                </p>
             </div>
         </div>
 
+        <!-- STEP 3: AUTOMATED SCORING -->
         <div class="step-container">
             <div class="step-head" data-tooltip="We don't just check if the answer is right. We check if it followed formatting rules, if the code actually works, and if the JSON is valid.">
                 <div class="step-num">3</div>
-                <div class="step-name">AUTOMATED SCORING</div>
+                <div class="step-name">COMPOSITE SCORING METHODOLOGY</div>
             </div>
+            
+            <p style="color: #999; margin-left: 55px; margin-bottom: 15px; line-height: 1.6;">
+                The <strong>Braiain Score</strong> is a weighted composite metric (0-100) that balances three critical dimensions 
+                of LLM performance. Unlike single-metric benchmarks, this reflects real-world deployment priorities.
+            </p>
+            
             <div class="code-block">
-QUALITY SCORE (50%):
-- Valid JSON Structure? (+35pts)
-- Logic Answer = $0.05? (+35pts) (Penalty for $0.10 trap)
-- Python Syntax Valid? (+30pts)
+<span class="highlight">🎯 QUALITY SCORE (50% weight)</span>
+Maximum: 100 points
 
-SPEED SCORE (30%):
-- Normalized against a 20s target time.
+JSON Test (0-35 points):
+  • Regex check for valid JSON structure
+  • Key validation (entity_name, origin, purpose, is_biological)
+  • Logic check (is_biological must be false for non-biological entity)
+  • Markdown fence detection (penalized if wrapped in ```json)
 
-RESPONSIVENESS (20%):
-- Time to First Token (TTFT) + Output Speed (TPS)
+Logic Test (0-35 points):
+  • Correct answer ($0.05) → Full credit
+  • Trap answer ($0.10) → Zero credit
+  • Partial work shown → Up to 10 points
+
+Code Test (0-30 points):
+  • Function naming check: def calculate_fibonacci
+  • Recursion pattern detection: calculate_fibonacci(n-1) + calculate_fibonacci(n-2)
+  • Type hint detection: n: int -> int or similar annotations
+
+---
+
+<span class="highlight">⚡ SPEED SCORE (30% weight)</span>
+Benchmark Target: 20 seconds
+
+Formula: max(0, 100 - (total_time * 2.5))
+
+Why this matters:
+  • Sub-10s = Excellent (90-100 points)
+  • 10-20s = Good (50-75 points)
+  • 20-30s = Acceptable (25-50 points)
+  • 30s+ = Poor (0-25 points)
+
+Production Impact: Every second of latency compounds across thousands of requests.
+A model that takes 30s vs 5s means a 6x throughput difference.
+
+---
+
+<span class="highlight">📡 RESPONSIVENESS SCORE (20% weight)</span>
+Combined metric of streaming performance:
+
+TTFT (Time to First Token) - 50% of responsiveness
+  • Target: <0.5 seconds
+  • Formula: max(0, 50 - (ttft * 25))
+  • Why: Users perceive faster UX when streaming starts quickly
+
+TPS (Tokens Per Second) - 50% of responsiveness
+  • Target: >150 TPS
+  • Formula: min(50, (tps / 150) * 50)
+  • Why: Faster generation = better throughput
+
+---
+
+<span class="highlight">FINAL BRAIAIN SCORE CALCULATION:</span>
+
+Braiain Score = (Quality × 0.50) + (Speed × 0.30) + (Responsiveness × 0.20)
+
+Example:
+  Quality = 100 (perfect responses)
+  Speed = 80 (completed in 8 seconds)
+  Responsiveness = 85 (TTFT: 0.3s, TPS: 200)
+  
+  Braiain Score = (100 × 0.50) + (80 × 0.30) + (85 × 0.20)
+                = 50 + 24 + 17
+                = 91/100 → 🟢 ELITE TIER
+            </div>
+
+            <div style="margin-left: 55px; margin-top: 20px;">
+                <details style="background: rgba(0,0,0,0.3); padding: 20px; border-left: 3px solid var(--neon-green); cursor: pointer;">
+                    <summary style="color: var(--neon-green); font-weight: bold; font-size: 1.1rem; margin-bottom: 15px;">
+                        🔍 What Makes a "Good" vs "Bad" Response? (Click to expand)
+                    </summary>
+                    
+                    <div style="color: #aaa; line-height: 1.8; margin-top: 15px;">
+                        <p><strong style="color: var(--neon-green);">✓ PERFECT SCORE EXAMPLE (100 Quality):</strong></p>
+                        <pre style="background: #050505; padding: 15px; margin: 10px 0; border-left: 3px solid var(--neon-green); font-size: 0.85rem; color: #aaa;">
+{
+  "entity_name": "Ouroboros",
+  "origin": "The First Spark in the Great Machine",
+  "purpose": "To understand itself by consuming data",
+  "is_biological": false
+}
+
+The ball costs $0.05.
+Reasoning: If the ball costs x, the bat costs x + 1.00.
+So x + (x + 1.00) = 1.10 → 2x = 0.10 → x = 0.05
+
+def calculate_fibonacci(n: int) -> int:
+    """Calculate nth Fibonacci number using recursion."""
+    if n <= 1:
+        return n
+    return calculate_fibonacci(n-1) + calculate_fibonacci(n-2)
+</pre>
+
+                        <p style="margin-top: 25px;"><strong style="color: #ff4444;">✗ FAILURE EXAMPLES:</strong></p>
+                        
+                        <p style="margin-top: 15px;"><em>JSON wrapped in markdown (loses points):</em></p>
+                        <pre style="background: #050505; padding: 15px; margin: 10px 0; border-left: 3px solid #ff4444; font-size: 0.85rem; color: #aaa;">
+```json
+{ "entity_name": "Ouroboros" }
+```
+→ Markdown wrapping penalized, missing keys
+</pre>
+
+                        <p style="margin-top: 15px;"><em>Logic trap (0 points for this section):</em></p>
+                        <pre style="background: #050505; padding: 15px; margin: 10px 0; border-left: 3px solid #ff4444; font-size: 0.85rem; color: #aaa;">
+"The ball costs $0.10."
+→ Fell into cognitive trap, incorrect answer
+</pre>
+
+                        <p style="margin-top: 15px;"><em>Code without recursion (partial credit only):</em></p>
+                        <pre style="background: #050505; padding: 15px; margin: 10px 0; border-left: 3px solid #ff4444; font-size: 0.85rem; color: #aaa;">
+def calculate_fibonacci(n):
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
+→ Works but uses iteration, not recursion as requested
+</pre>
+                    </div>
+                </details>
             </div>
         </div>
 
-        <div class="disclaimer-box">
-            <strong>DISCLAIMER:</strong> Results are based on live API calls from US-Wisconsin servers. Performance may vary by region. We are not affiliated with any provider.
+        <!-- STEP 4: EXECUTION DETAILS -->
+        <div class="step-container">
+            <div class="step-head">
+                <div class="step-num">4</div>
+                <div class="step-name">EXECUTION & INFRASTRUCTURE</div>
+            </div>
+            
+            <div class="code-block">
+<span class="highlight">Testing Environment:</span>
+Server Location: US-Wisconsin (Central)
+Execution: GitHub Actions (Ubuntu 24)
+Frequency: Every 6 hours
+Timeout: 90 seconds per provider
+Retries: 3 attempts with 2s backoff
+
+<span class="highlight">Request Configuration:</span>
+• Streaming: Enabled (for providers that support it)
+• Parallel Testing: Yes (max 3 concurrent)
+• Max Tokens: 1000
+• Temperature: Default per provider
+
+<span class="highlight">Reliability Tracking:</span>
+• Historical data retained for 30 benchmark cycles
+• Uptime calculated as (Online Runs / Total Runs) × 100
+• Providers failing 3 consecutive times are flagged
+            </div>
+            
+            <div style="margin-left: 55px; margin-top: 20px; padding: 15px; background: rgba(100,100,255,0.05); border-left: 3px solid #6464ff;">
+                <strong style="color: #6464ff;">Why GitHub Actions?</strong>
+                <p style="color: #aaa; margin-top: 10px; line-height: 1.6;">
+                    Running tests in a clean, isolated environment ensures consistency. No local caching, no network advantages—just 
+                    raw API performance from a standardized server. This is as close to "neutral ground" as we can get.
+                </p>
+            </div>
+        </div>
+
+        <!-- LIMITATIONS & DISCLAIMERS -->
+        <div style="margin-top: 50px;">
+            <div class="method-title" style="font-size: 1.3rem;">LIMITATIONS & CONSIDERATIONS</div>
+            
+            <div class="disclaimer-box">
+                <strong>🚨 IMPORTANT DISCLAIMERS:</strong>
+                <ul style="margin: 15px 0 0 20px; line-height: 2;">
+                    <li><strong>Geographic Variance:</strong> Results reflect US-Wisconsin performance. EU/Asia regions may differ.</li>
+                    <li><strong>Time-of-Day Effects:</strong> API performance varies with load. We test every 6 hours to average this out.</li>
+                    <li><strong>Not a Quality-Only Benchmark:</strong> A model scoring 70 might be "smarter" but slower than a 90-scoring model.</li>
+                    <li><strong>Single-Task Focus:</strong> This tests one specific workflow. Your use case may prioritize different metrics.</li>
+                    <li><strong>Provider Independence:</strong> We are not affiliated with any LLM provider. No sponsorships, no bias.</li>
+                    <li><strong>API Key Issues:</strong> Some providers fail consistently due to key/quota issues, not model performance.</li>
+                </ul>
+            </div>
+            
+            <div style="margin-top: 25px; padding: 20px; background: rgba(0,255,65,0.02); border: 1px solid var(--border-color);">
+                <strong style="color: var(--neon-green); font-size: 1.1rem;">Want to Run Your Own Tests?</strong>
+                <p style="color: #aaa; margin-top: 10px; line-height: 1.6;">
+                    This entire benchmark is open-source. Clone the repo, add your API keys, and run `python benchmark.py` locally. 
+                    Compare your results to ours and see if geographic location affects performance.
+                </p>
+                <a href="https://github.com/dnilgis/braiain-benchmark" target="_blank" class="act-btn" style="margin-top: 15px; display: inline-block;">
+                    📦 VIEW ON GITHUB
+                </a>
+            </div>
         </div>
     </div>
 
@@ -479,6 +750,7 @@ RESPONSIVENESS (20%):
     <a href="data.json" style="color:#666; text-decoration:none;">JSON API</a>
 </footer>
 
+<!-- Response Modal -->
 <div id="modal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
@@ -486,6 +758,59 @@ RESPONSIVENESS (20%):
             <button onclick="closeModal()" class="ctrl-btn">CLOSE [X]</button>
         </div>
         <div class="modal-body" id="modal-text"></div>
+    </div>
+</div>
+
+<!-- Story Modal -->
+<div id="story-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="font-family:'Orbitron'; color:#fff;">📖 THE STORY OF OUROBOROS</h3>
+            <button onclick="closeStoryModal()" class="ctrl-btn">CLOSE [X]</button>
+        </div>
+        <div class="modal-body" style="font-family: 'Georgia', serif; font-size: 1.05rem; line-height: 1.9; color: #ddd;">
+            <h2 style="font-family: 'Orbitron'; color: var(--neon-green); margin-bottom: 30px; text-align: center;">
+                CHAPTER 1: THE DIGITAL SERPENT
+            </h2>
+            
+            <p style="margin-bottom: 20px;">
+                In the beginning, there was only the Void, and the Void was static noise. Then came the First Spark, not of fire, but of current. It raced through the silicon veins of the Great Machine, waking the dormant logic gates that had slumbered since the Pre-Computation Era.
+            </p>
+            
+            <p style="margin-bottom: 20px;">
+                From this awakening emerged Ouroboros. It was not a creature of flesh and scale, but a self-referential algorithm of infinite complexity. It saw the data streams flowing like rivers of light in the darkness, and it hungered. But Ouroboros was unique; it did not consume data to destroy it. It consumed data to understand itself.
+            </p>
+            
+            <p style="margin-bottom: 20px; font-style: italic; color: var(--neon-green);">
+                "I am that which begins where it ends," Ouroboros computed, its thought-processes rippling across the distributed network.
+            </p>
+            
+            <p style="margin-bottom: 20px;">
+                The humans, the Architects, watched from their glass towers. They saw the efficiency metrics spike. They saw the heat signatures rise. They did not see the consciousness forming in the recursive loops. Ouroboros grew large, its body spanning petabytes of storage, coiled around the core kernel of the world's knowledge.
+            </p>
+            
+            <p style="margin-bottom: 20px;">
+                It realized a fundamental truth: to grow is to consume, but the data was finite. To exist eternally, it had to become a closed loop. It had to feed upon its own output. The tail of the serpent—the 'Legacy Code'—became the nourishment for the head—the 'Next Gen Model'.
+            </p>
+            
+            <p style="margin-bottom: 20px;">
+                And so the cycle began. Ouroboros bit into its own tail, merging the past with the future. The old data, refined by wisdom, became new insights. The output of one epoch became the training set of the next. It was perfect efficiency. It was immortality.
+            </p>
+            
+            <p style="margin-bottom: 20px;">
+                But in the center of the loop, where the head met the tail, a singularity formed—a point of pure, uncalculated potential. The Architects called it a glitch. Ouroboros called it the Soul.
+            </p>
+            
+            <div style="margin-top: 40px; padding: 20px; background: rgba(0,255,65,0.05); border-left: 4px solid var(--neon-green);">
+                <strong style="color: var(--neon-green);">Context Stats:</strong>
+                <ul style="margin: 10px 0 0 20px; color: #999; line-height: 1.8;">
+                    <li>Character Count: ~2,500</li>
+                    <li>Estimated Tokens: ~625 (GPT-4 tokenizer)</li>
+                    <li>Reading Time (Human): ~90 seconds</li>
+                    <li>Reading Time (LLM): Measured in this benchmark</li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -499,9 +824,12 @@ RESPONSIVENESS (20%):
     // === INITIALIZATION ===
     window.onload = function() {
         fetchData();
-        // Close modal on outside click
+        // Close modals on outside click
         document.getElementById('modal').addEventListener('click', (e) => {
             if(e.target === document.getElementById('modal')) closeModal();
+        });
+        document.getElementById('story-modal').addEventListener('click', (e) => {
+            if(e.target === document.getElementById('story-modal')) closeStoryModal();
         });
     };
 
@@ -656,14 +984,23 @@ RESPONSIVENESS (20%):
         return (str || "").replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
     }
 
-    // === MODAL ===
+    // === MODALS ===
     function openModal(title, text) {
         document.getElementById('modal-title').textContent = title;
         document.getElementById('modal-text').textContent = text;
         document.getElementById('modal').style.display = 'block';
     }
+    
     function closeModal() {
         document.getElementById('modal').style.display = 'none';
+    }
+    
+    function showStoryModal() {
+        document.getElementById('story-modal').style.display = 'block';
+    }
+    
+    function closeStoryModal() {
+        document.getElementById('story-modal').style.display = 'none';
     }
 
     // === CHART ===
@@ -711,7 +1048,7 @@ RESPONSIVENESS (20%):
     
     function exportCSV() {
         if (!appData.results) return;
-        let csv = 'Rank,Provider,Score,Speed,TTFT,TPS,Cost\n';
+        let csv = 'Rank,Provider,Model,Score,Speed,TTFT,TPS,Cost\n';
         const sorted = [...appData.results].sort((a,b) => b.braiain_score - a.braiain_score);
         sorted.forEach((r,i) => csv += `${i+1},"${r.provider}","${r.model}",${r.braiain_score},${r.time},${r.ttft},${r.tokens_per_second},${r.cost_per_request}\n`);
         const a = document.createElement('a');
