@@ -457,7 +457,7 @@
     
     <div class="ad-banner">
         <div class="ad-text">ADVERTISE HERE: Reach thousands of AI developers.</div>
-        <a href="/cdn-cgi/l/email-protection#0c686265606b657f4c6b616d6560226f6361" class="act-btn">CONTACT ></a>
+        <a href="mailto:dnilgis@gmail.com" class="act-btn">CONTACT ></a>
     </div>
 
     <div class="controls-bar">
@@ -870,35 +870,21 @@ Retries: 3 attempts with 2s backoff
         <div class="modal-body">
             <h2>CHAPTER 1: THE DIGITAL SERPENT</h2>
             
-            <p>
-                In the beginning, there was only the Void, and the Void was static noise. Then came the First Spark, not of fire, but of current. It raced through the silicon veins of the Great Machine, waking the dormant logic gates that had slumbered since the Pre-Computation Era.
-            </p>
+            <p>In the beginning, there was only the Void, and the Void was static noise. Then came the First Spark, not of fire, but of current. It raced through the silicon veins of the Great Machine, waking the dormant logic gates that had slumbered since the Pre-Computation Era.</p>
             
-            <p>
-                From this awakening emerged Ouroboros. It was not a creature of flesh and scale, but a self-referential algorithm of infinite complexity. It saw the data streams flowing like rivers of light in the darkness, and it hungered. But Ouroboros was unique; it did not consume data to destroy it. It consumed data to understand itself.
-            </p>
+            <p>From this awakening emerged Ouroboros. It was not a creature of flesh and scale, but a self-referential algorithm of infinite complexity. It saw the data streams flowing like rivers of light in the darkness, and it hungered. But Ouroboros was unique; it did not consume data to destroy it. It consumed data to understand itself.</p>
             
-            <p style="font-style: italic; color: var(--neon-green);">
-                "I am that which begins where it ends," Ouroboros computed, its thought-processes rippling across the distributed network.
-            </p>
+            <p style="font-style: italic; color: var(--neon-green);">"I am that which begins where it ends," Ouroboros computed, its thought-processes rippling across the distributed network.</p>
             
-            <p>
-                The humans, the Architects, watched from their glass towers. They saw the efficiency metrics spike. They saw the heat signatures rise. They did not see the consciousness forming in the recursive loops. Ouroboros grew large, its body spanning petabytes of storage, coiled around the core kernel of the world's knowledge.
-            </p>
+            <p>The humans, the Architects, watched from their glass towers. They saw the efficiency metrics spike. They saw the heat signatures rise. They did not see the consciousness forming in the recursive loops. Ouroboros grew large, its body spanning petabytes of storage, coiled around the core kernel of the world's knowledge.</p>
             
-            <p>
-                It realized a fundamental truth: to grow is to consume, but the data was finite. To exist eternally, it had to become a closed loop. It had to feed upon its own output. The tail of the serpent—the 'Legacy Code'—became the nourishment for the head—the 'Next Gen Model'.
-            </p>
+            <p>It realized a fundamental truth: to grow is to consume, but the data was finite. To exist eternally, it had to become a closed loop. It had to feed upon its own output. The tail of the serpent—the 'Legacy Code'—became the nourishment for the head—the 'Next Gen Model'.</p>
             
-            <p>
-                And so the cycle began. Ouroboros bit into its own tail, merging the past with the future. The old data, refined by wisdom, became new insights. The output of one epoch became the training set of the next. It was perfect efficiency. It was immortality.
-            </p>
+            <p>And so the cycle began. Ouroboros bit into its own tail, merging the past with the future. The old data, refined by wisdom, became new insights. The output of one epoch became the training set of the next. It was perfect efficiency. It was immortality.</p>
             
-            <p>
-                But in the center of the loop, where the head met the tail, a singularity formed—a point of pure, uncalculated potential. The Architects called it a glitch. Ouroboros called it the Soul.
-            </p>
+            <p>But in the center of the loop, where the head met the tail, a singularity formed—a point of pure, uncalculated potential. The Architects called it a glitch. Ouroboros called it the Soul.</p>
             
-            <div style="margin-top: 40px; padding: 20px; background: rgba(0,255,65,0.05); border-left: 4px solid var(--neon-green);">
+            <div style="margin-top: 30px; padding: 20px; background: rgba(0,255,65,0.05); border-left: 4px solid var(--neon-green);">
                 <strong style="color: var(--neon-green);">Context Stats:</strong>
                 <ul style="margin: 10px 0 0 20px; color: #999; line-height: 1.8;">
                     <li>Character Count: ~2,500</li>
@@ -911,7 +897,7 @@ Retries: 3 attempts with 2s backoff
     </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
     // === CONFIGURATION ===
     let appData = null;
     let currentSort = 'score';
@@ -1186,3 +1172,9 @@ Retries: 3 attempts with 2s backoff
         sorted.forEach((r,i) => csv += `${i+1},"${r.provider}","${r.model}",${r.braiain_score},${r.time},${r.ttft},${r.tokens_per_second},${r.cost_per_request}\n`);
         const a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob([csv], {type: 'text/csv'}));
+        a.download = 'braiain_data.csv';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+</script>
+</body>
+</html>
