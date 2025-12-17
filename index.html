@@ -84,13 +84,14 @@
         header { 
             background: rgba(2, 4, 5, 0.95); 
             border-bottom: 1px solid var(--border-color); 
-            padding: 30px 0; 
+            padding: 40px 0; /* Increased padding */
             position: sticky; top: 0; z-index: 100; 
             backdrop-filter: blur(10px);
         }
         
         .logo-wrapper { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
         
+        /* ASCII LOGO - Increased Spacing */
         .ascii-logo {
             font-family: 'Courier New', Courier, monospace; 
             white-space: pre; 
@@ -100,7 +101,8 @@
             color: var(--neon-green);
             text-shadow: 0 0 10px rgba(0, 255, 65, 0.6);
             display: block; 
-            margin-bottom: 15px;
+            margin-top: 10px;    /* Added Top Spacing */
+            margin-bottom: 25px; /* Increased Bottom Spacing */
             transform: scale(1, 1);
         }
 
@@ -308,11 +310,15 @@
         }
         .highlight { color: var(--neon-green); font-weight: bold; }
         
-        /* HARD MODE STYLING */
         .hard-mode-warn {
             color: var(--neon-red);
             font-weight: bold;
             letter-spacing: 0.5px;
+        }
+        
+        .disclaimer-box { 
+            background: rgba(255,0,0,0.05); border: 1px solid #331111; 
+            padding: 25px; color: #995555; font-size: 0.95rem; line-height: 1.9;
         }
 
         /* === MODAL === */
@@ -340,6 +346,7 @@
         .chart-container { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 25px; margin-bottom: 50px; }
         .chart-canvas-wrapper { height: 400px; }
 
+        /* FOOTER SPACING */
         footer { border-top: 1px solid var(--border-color); padding: 50px 0; text-align: center; color: #555; }
     </style>
 </head>
@@ -406,14 +413,14 @@
                     <th class="col-center">RK</th>
                     <th>PROVIDER</th>
                     <th>MODEL</th>
-                    <th class="col-center" data-tooltip="Weighted Composite Score (0-100)">SCORE</th>
-                    <th class="col-center" data-tooltip="Total Execution Time">SPEED</th>
-                    <th class="col-center" data-tooltip="Tokens Per Second">TPS</th>
-                    <th class="col-center" data-tooltip="Time to First Token">TTFT</th>
+                    <th class="col-center" data-tooltip="Overall Score (0-100). Combines Smarts, Speed, and Responsiveness.">SCORE</th>
+                    <th class="col-center" data-tooltip="Time to finish the entire test (Seconds).">SPEED</th>
+                    <th class="col-center" data-tooltip="Writing Speed (Tokens Per Second). Higher is better.">TPS</th>
+                    <th class="col-center" data-tooltip="Reaction Time (Time To First Token). Lower is better.">TTFT</th>
                     <th class="col-center">COST</th>
-                    <th class="col-center">JSON</th>
-                    <th class="col-center">LOGIC</th>
-                    <th class="col-center">CODE</th>
+                    <th class="col-center" data-tooltip="Did it follow strict JSON rules? (Word count & letter bans)">JSON</th>
+                    <th class="col-center" data-tooltip="Did it calculate the correct date?">LOGIC</th>
+                    <th class="col-center" data-tooltip="Did it write working code with filters?">CODE</th>
                     <th>OUTPUT (PREVIEW)</th>
                     <th class="col-center">LINK</th>
                 </tr>
@@ -446,7 +453,7 @@
         </p>
 
         <div class="step-container">
-            <div class="step-head" data-tooltip="We simulate a messy, real-world RAG scenario with mixed log formats and narrative text.">
+            <div class="step-head" data-tooltip="We simulate a messy work scenario (RAG) by making the AI read dense server logs before answering.">
                 <div class="step-num">1</div>
                 <div class="step-name">CONTEXT INJECTION (SYSTEM LOGS)</div>
             </div>
@@ -465,7 +472,7 @@
         </div>
 
         <div class="step-container">
-            <div class="step-head" data-tooltip="We give the AI three very different jobs to do all at once. This tests if it can follow complex instructions without getting confused.">
+            <div class="step-head" data-tooltip="We test if the AI actually listens to negative constraints (e.g. 'Don't do X').">
                 <div class="step-num">2</div>
                 <div class="step-name">THE "HARD MODE" PROMPT</div>
             </div>
@@ -505,7 +512,7 @@ problem involving string manipulation, filtering, and sorting algorithms.
         </div>
 
         <div class="step-container">
-            <div class="step-head">
+            <div class="step-head" data-tooltip="Green Dot = Perfect. Gray Dot = Failed. We grade automatically using Python.">
                 <div class="step-num">3</div>
                 <div class="step-name">SCORING METHODOLOGY</div>
             </div>
@@ -535,6 +542,34 @@ Remains unchanged from v4.0. We value fast, streaming responses just as much as 
             </div>
         </div>
     </div>
+
+    <div style="margin-top: 50px;">
+        <div class="method-title" style="font-size: 1.4rem;">LIMITATIONS & CONSIDERATIONS</div>
+        
+        <div class="disclaimer-box">
+            <strong>🚨 IMPORTANT DISCLAIMERS:</strong>
+            <ul style="margin: 20px 0 0 25px;">
+                <li><strong>Geographic Variance:</strong> Results reflect US-Wisconsin performance. EU/Asia regions may differ.</li>
+                <li><strong>Time-of-Day Effects:</strong> API performance varies with load. We test every 6 hours to average this out.</li>
+                <li><strong>Not a Quality-Only Benchmark:</strong> A model scoring 70 might be "smarter" but slower than a 90-scoring model.</li>
+                <li><strong>Single-Task Focus:</strong> This tests one specific workflow. Your use case may prioritize different metrics.</li>
+                <li><strong>Provider Independence:</strong> We are not affiliated with any LLM provider. No sponsorships, no bias.</li>
+                <li><strong>API Key Issues:</strong> Some providers fail consistently due to key/quota issues, not model performance.</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 25px; background: rgba(0,255,65,0.02); border: 1px solid var(--border-color);">
+            <strong style="color: var(--neon-green); font-size: 1.15rem;">Want to Run Your Own Tests?</strong>
+            <p style="color: #bbb; margin-top: 12px;">
+                This entire benchmark is open-source. Clone the repo, add your API keys, and run `python benchmark.py` locally. 
+                Compare your results to ours and see if geographic location affects performance.
+            </p>
+            <a href="https://github.com/dnilgis/braiain-benchmark" target="_blank" class="act-btn" style="margin-top: 18px; display: inline-block;">
+                📦 VIEW ON GITHUB
+            </a>
+        </div>
+    </div>
+
 </div>
 
 <footer>
