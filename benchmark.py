@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-BRAIAIN SPEED INDEX v5.0 - "HARD MODE" GAUNTLET
+BRAIAIN SPEED INDEX v5.1 - "HARD MODE" + PENALTY SCORING
 - Heavy Context: System Logs + Narrative (Simulates RAG)
-- Task 1: JSON with strict "Simon Says" constraints (Word count & letter restriction)
-- Task 2: Date/Math logic (prevents memorization)
-- Task 3: Data processing code (Log parsing)
+- Task 1: JSON with strict "Simon Says" constraints
+- Task 2: Date/Math logic
+- Task 3: Data processing code
+- Scoring: Heavy penalties for incorrect answers. Speed cannot save a wrong answer.
 """
 
 import os
@@ -26,7 +27,6 @@ ENABLE_STREAMING = True
 TIMEOUT = 90
 
 # --- HEAVY CONTEXT PAYLOAD (HARD MODE) ---
-# A dense mix of structured logs and unstructured narrative to test retrieval & synthesis.
 STORY_CONTEXT = """
 // ROOT_ACCESS: GRANTED
 // ARCHIVE_ID: OUROBOROS_GENESIS_01
@@ -64,7 +64,6 @@ To survive forever, it had to become a closed loop. It could not depend on the f
 """
 
 # --- HARD MODE PROMPT ---
-# Constraints designed to break "lazy" models and force "thinking"
 PROMPT = f"""You are a high-performance AI benchmark target. 
 Read the context below and complete the 3 tasks with EXTREME precision.
 
@@ -197,7 +196,6 @@ def discover_models(provider_name: str, config: Dict, api_key: str) -> Optional[
     """Discover available models from provider"""
     if "models_endpoint" not in config:
         return None
-    
     try:
         if provider_name == "Google":
             url = f"{config['models_endpoint']}?key={api_key}"
@@ -209,16 +207,13 @@ def discover_models(provider_name: str, config: Dict, api_key: str) -> Optional[
             response = requests.get(config["models_endpoint"], headers=headers, timeout=10)
             response.raise_for_status()
             data = response.json()
-            
             if "data" in data:
                 models = [m["id"] for m in data["data"]]
             elif "models" in data:
                 models = [m.get("id", m.get("name", "")) for m in data["models"]]
             else:
                 return None
-        
         return [m for m in models if m]
-        
     except Exception as e:
         return None
 
@@ -226,16 +221,13 @@ def select_model(provider_name: str, available: Optional[List[str]], preferences
     """Select best model from available or preferences"""
     if not available:
         return preferences[0]
-    
     for pref in preferences:
         if pref in available:
             return pref
-    
     for pref in preferences:
         for model in available:
             if pref in model.lower() or model.lower() in pref:
                 return model
-    
     return available[0]
 
 def calculate_quality_score(text: str) -> Tuple[int, str]:
@@ -291,6 +283,7 @@ def calculate_quality_score(text: str) -> Tuple[int, str]:
         score += 30
         breakdown.append("Logic Correct (Saturday)")
     elif "wednesday" in text_lower or "thursday" in text_lower or "friday" in text_lower:
+        # Penalize guessing nearby days
         breakdown.append("Logic Failed (Wrong Day)")
     else:
         breakdown.append("Logic Failed")
@@ -310,15 +303,34 @@ def calculate_quality_score(text: str) -> Tuple[int, str]:
     return score, ", ".join(breakdown)
 
 def calculate_braiain_score(quality: int, time: float, ttft: Optional[float], tps: float) -> int:
-    """Calculates the COMPOSITE Score (0-100)"""
+    """Calculates the COMPOSITE Score with CORRECTNESS PENALTIES"""
+    # 1. Base Scores
     speed_score = max(0, 100 - (time * 2.5))
-    
     ttft_val = ttft if ttft else 1.0
     ttft_score = max(0, 50 - (ttft_val * 25))
     tps_score = min(50, (tps / 150) * 50)
     response_score = ttft_score + tps_score
     
-    final_score = (quality * 0.50) + (speed_score * 0.30) + (response_score * 0.20)
+    # 2. Weighted Initial Score
+    # We increase Quality weight slightly to 60% to emphasize correctness
+    raw_score = (quality * 0.60) + (speed_score * 0.25) + (response_score * 0.15)
+    
+    # 3. FAILURE PENALTIES (The "Fast but Wrong" Fix)
+    # If Quality is < 70 (meaning they failed at least one major test completely),
+    # we cap their maximum possible score.
+    
+    final_score = raw_score
+    
+    if quality < 90: # Failed one constraint or sub-task
+        final_score = min(final_score, 85) # Cannot be "Elite"
+        
+    if quality < 60: # Failed a whole section (e.g. Logic or Code entirely)
+        final_score = min(final_score, 65) # Cannot be "Good"
+        final_score = final_score * 0.8 # 20% Penalty multiplier
+        
+    if quality < 30: # Failed 2+ sections
+        final_score = min(final_score, 40) # "Poor"
+    
     return int(final_score)
 
 # --- API CLIENT FUNCTIONS ---
@@ -406,33 +418,25 @@ def call_google(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
         "contents": [{"parts": [{"text": PROMPT}]}],
         "generationConfig": {"maxOutputTokens": config["max_tokens"]}
     }
-    
     start_time = time.time()
-    
     try:
         response = requests.post(url, headers=headers, json=data, timeout=TIMEOUT)
         response.raise_for_status()
         result = response.json()
-        
         content = result["candidates"][0]["content"]["parts"][0]["text"]
         return {"content": content, "ttft": None, "total_time": time.time() - start_time}
-        
     except Exception as e:
         raise Exception(f"Google error: {str(e)[:200]}")
 
 def call_cohere(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
     data = {"model": model, "message": PROMPT}
-    
     start_time = time.time()
-    
     try:
         response = requests.post(config["api_url"], headers=headers, json=data, timeout=TIMEOUT)
         response.raise_for_status()
-        
         content = response.json()["text"]
         return {"content": content, "ttft": None, "total_time": time.time() - start_time}
-        
     except Exception as e:
         raise Exception(f"Cohere error: {str(e)[:200]}")
 
@@ -443,16 +447,12 @@ def call_openai_compatible_std(provider_name: str, config: Dict, api_key: str, m
         "messages": [{"role": "user", "content": PROMPT}],
         "max_tokens": config["max_tokens"]
     }
-    
     start_time = time.time()
-    
     try:
         response = requests.post(config["api_url"], headers=headers, json=data, timeout=TIMEOUT)
         response.raise_for_status()
-        
         content = response.json()["choices"][0]["message"]["content"]
         return {"content": content, "ttft": None, "total_time": time.time() - start_time}
-        
     except Exception as e:
         raise Exception(f"{provider_name} error: {str(e)[:200]}")
 
@@ -467,15 +467,12 @@ def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
     
     available_models = discover_models(provider_name, config, api_key)
     selected_model = select_model(provider_name, available_models, config["model_preference"])
-    
     print(f"  Selected Model: {selected_model}")
     
     for attempt in range(MAX_RETRIES):
         try:
             print(f"  Attempt {attempt+1}/{MAX_RETRIES}...", flush=True)
-            
             use_streaming = ENABLE_STREAMING and config.get("supports_streaming", False)
-            
             if provider_name == "Anthropic":
                 res = call_anthropic_streaming(config, api_key, selected_model)
             elif provider_name == "Google":
@@ -491,12 +488,10 @@ def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
             if len(content) < MIN_CHARACTERS:
                 raise Exception(f"Response too short: {len(content)} chars")
             
-            # Metrics
             est_tokens = len(content) // 4
             tps = est_tokens / res["total_time"] if res["total_time"] > 0 else 0
             cost = (len(PROMPT)//4 * config["input_price"] + est_tokens * config["output_price"]) / 1_000_000
             
-            # Scoring
             quality_score, grade_notes = calculate_quality_score(content)
             braiain_score = calculate_braiain_score(quality_score, res["total_time"], res["ttft"], tps)
             
@@ -516,7 +511,6 @@ def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
                 "full_response": content,
                 "response_preview": content[:200] + "..."
             }
-            
         except Exception as e:
             error_msg = str(e)
             print(f"  ❌ Error: {error_msg[:150]}")
@@ -524,7 +518,6 @@ def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
                 time.sleep(RETRY_DELAY)
             else:
                 return create_failure(provider_name, selected_model, "ERROR", error_msg[:200])
-    
     return create_failure(provider_name, selected_model, "ERROR", "Max retries exceeded")
 
 def create_failure(name, model, type, msg):
@@ -548,7 +541,6 @@ def save_results(results):
         history = []
     
     history = history[-30:]
-    
     reliability = {}
     for p in PROVIDERS:
         total = sum(1 for h in history if p in h.get("results", {}))
@@ -571,7 +563,7 @@ def save_results(results):
 
 def main():
     print("="*80)
-    print(f"🧠 BRAIAIN BENCHMARK v5.0 (HARD MODE)")
+    print(f"🧠 BRAIAIN BENCHMARK v5.1 (HARD MODE + PENALTY SCORING)")
     print("="*80)
     
     results = []
