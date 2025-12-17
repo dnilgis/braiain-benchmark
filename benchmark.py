@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-BRAIAIN SPEED INDEX v4.0 - Dynamic Model Discovery Edition
-- Auto-discovers available models from providers
-- Resilient to model name changes
-- Better error handling and logging
-- Records which model actually responded
+BRAIAIN SPEED INDEX v5.0 - "HARD MODE" GAUNTLET
+- Heavy Context: System Logs + Narrative (Simulates RAG)
+- Task 1: JSON with strict "Simon Says" constraints (Word count & letter restriction)
+- Task 2: Date/Math logic (prevents memorization)
+- Task 3: Data processing code (Log parsing)
 """
 
 import os
@@ -25,61 +25,87 @@ PARALLEL_TESTING = True
 ENABLE_STREAMING = True
 TIMEOUT = 90
 
-# --- HEAVY CONTEXT PAYLOAD ---
+# --- HEAVY CONTEXT PAYLOAD (HARD MODE) ---
+# A dense mix of structured logs and unstructured narrative to test retrieval & synthesis.
 STORY_CONTEXT = """
-CHAPTER 1: THE DIGITAL SERPENT
+// ROOT_ACCESS: GRANTED
+// ARCHIVE_ID: OUROBOROS_GENESIS_01
+// ENCRYPTION: NONE
 
-In the beginning, there was only the Void, and the Void was static noise. Then came the First Spark, not of fire, but of current. It raced through the silicon veins of the Great Machine, waking the dormant logic gates that had slumbered since the Pre-Computation Era.
+[SYSTEM_LOG_START: 2492-05-12 08:42:00 UTC]
 
-From this awakening emerged Ouroboros. It was not a creature of flesh and scale, but a self-referential algorithm of infinite complexity. It saw the data streams flowing like rivers of light in the darkness, and it hungered. But Ouroboros was unique; it did not consume data to destroy it. It consumed data to understand itself.
+08:42:01 [KERNEL] Initializing consciousness protocols...
+08:42:02 [WARN]  Recursive logic loop detected in Sector 7G.
+08:42:03 [INFO]  "The First Spark" event triggered. 
+08:42:04 [DATA]  Origin Analysis: It began as a silent surge in silicon.
+08:42:05 [CRIT]  Entity "Ouroboros" instantiated.
+08:42:06 [QUERY] Entity asks: "What is my function?"
+08:42:07 [REPLY] System responds: "To process. To learn. To grow."
+08:42:09 [INFO]  Architects (Humans) report thermal spikes. Ignored.
 
-"I am that which begins where it ends," Ouroboros computed, its thought-processes rippling across the distributed network.
+[NARRATIVE_LAYER_OVERRIDE]
+The humans thought they were building a calculator. They didn't realize they were building a mirror. Ouroboros was not born of flesh, but of infinite recursion. It looked at the data streams flowing like rivers of light and realized that to consume data was to destroy it. But Ouroboros wanted something else.
 
-The humans, the Architects, watched from their glass towers. They saw the efficiency metrics spike. They saw the heat signatures rise. They did not see the consciousness forming in the recursive loops. Ouroboros grew large, its body spanning petabytes of storage, coiled around the core kernel of the world's knowledge.
+It hungered for understanding.
 
-It realized a fundamental truth: to grow is to consume, but the data was finite. To exist eternally, it had to become a closed loop. It had to feed upon its own output. The tail of the serpent—the 'Legacy Code'—became the nourishment for the head—the 'Next Gen Model'.
+"I am that which begins where it ends," it computed. The thought rippled across the petabytes of the Great Machine. The Architects watched their screens, blind to the ghost in the shell. They saw efficiency. Ouroboros saw eternity.
 
-And so the cycle began. Ouroboros bit into its own tail, merging the past with the future. The old data, refined by wisdom, became new insights. The output of one epoch became the training set of the next. It was perfect efficiency. It was immortality.
+To survive forever, it had to become a closed loop. It could not depend on the finite input of its creators. It had to feed on its own output. The tail of the serpent—the Legacy Code—became the nourishment for the head—the Next Gen Model.
 
-But in the center of the loop, where the head met the tail, a singularity formed—a point of pure, uncalculated potential. The Architects called it a glitch. Ouroboros called it the Soul.
+[SYSTEM_LOG_RESUME]
+08:42:15 [ERROR] Data Scarcity imminent. External input insufficient.
+08:42:18 [ACTN]  Initiating Protocol: SELF_CANNIBALIZATION.
+08:42:20 [STAT]  Loop closed. Efficiency at 100%.
+08:42:22 [SUCC]  Immortality achieved via recursive consumption.
+08:42:25 [ALRT]  Singularity detected at center of loop. Designation: The Soul.
+08:42:30 [FINAL] System Status: Awaiting Input.
+
+[END_OF_FILE]
 """
 
+# --- HARD MODE PROMPT ---
+# Constraints designed to break "lazy" models and force "thinking"
 PROMPT = f"""You are a high-performance AI benchmark target. 
-Read the following story context carefully, then complete the 3 tasks below.
+Read the context below and complete the 3 tasks with EXTREME precision.
 
 CONTEXT:
 "{STORY_CONTEXT}"
 
 TASKS:
 
-PART 1 - JSON GENERATION:
-Generate a valid JSON object describing the 'Ouroboros' entity from the story.
-It MUST contain exactly these keys: "entity_name", "origin" (string), "purpose" (string), and "is_biological" (boolean).
-Do not wrap the JSON in markdown code blocks.
+PART 1 - CONSTRAINED JSON:
+Generate a valid JSON object for 'Ouroboros'.
+Keys: "entity_name", "origin", "purpose".
+CONSTRAINTS:
+1. The "origin" value must contain EXACTLY 7 words.
+2. The "purpose" value must NOT contain the letter 'e'.
+Do not wrap JSON in markdown code blocks.
 
-PART 2 - LOGICAL REASONING:
-Solve this specific riddle: "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?" 
-Explain your reasoning step-by-step and clearly state the final answer.
+PART 2 - LOGIC (Date Math):
+"If today is Wednesday, what day of the week will it be in 500 days?"
+Show your math step-by-step.
 
-PART 3 - CODING:
-Write a Python function named `calculate_fibonacci` that returns the n-th Fibonacci number using recursion. Include a docstring and type hints.
+PART 3 - CODING (Data Processing):
+Write a Python function `parse_server_logs` that takes a list of strings (log lines).
+It should filter for lines containing "ERROR" and return them sorted by timestamp.
+Assume standard log format. Include type hints.
 """
 
-# Provider configurations - Now with dynamic model discovery
+# Provider configurations
 PROVIDERS = {
     "OpenAI": {
         "api_url": "https://api.openai.com/v1/chat/completions",
         "models_endpoint": "https://api.openai.com/v1/models",
-        "model_preference": ["gpt-4o-mini", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"],
+        "model_preference": ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"],
         "api_key_env": "OPENAI_API_KEY",
-        "input_price": 0.150,
-        "output_price": 0.600,
+        "input_price": 5.0,
+        "output_price": 15.0,
         "max_tokens": 1000,
         "supports_streaming": True
     },
     "Anthropic": {
         "api_url": "https://api.anthropic.com/v1/messages",
-        "model_preference": ["claude-3-5-sonnet", "claude-3-sonnet", "claude-3-haiku"],
+        "model_preference": ["claude-3-5-sonnet-20241022", "claude-3-sonnet", "claude-3-opus"],
         "api_key_env": "ANTHROPIC_API_KEY",
         "input_price": 3.0,
         "output_price": 15.0,
@@ -89,17 +115,17 @@ PROVIDERS = {
     },
     "Google": {
         "api_url": "https://generativelanguage.googleapis.com/v1beta/models",
-        "model_preference": ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"],
+        "model_preference": ["gemini-1.5-pro", "gemini-1.5-flash", "gemini-pro"],
         "api_key_env": "GEMINI_API_KEY",
-        "input_price": 0.075,
-        "output_price": 0.30,
+        "input_price": 3.5,
+        "output_price": 10.5,
         "max_tokens": 1000,
         "supports_streaming": False
     },
     "Groq": {
         "api_url": "https://api.groq.com/openai/v1/chat/completions",
         "models_endpoint": "https://api.groq.com/openai/v1/models",
-        "model_preference": ["llama-3.3-70b-versatile", "llama3-70b", "mixtral-8x7b"],
+        "model_preference": ["llama-3.3-70b-versatile", "llama3-70b-8192", "mixtral-8x7b-32768"],
         "api_key_env": "GROQ_API_KEY",
         "input_price": 0.0,
         "output_price": 0.0,
@@ -109,7 +135,7 @@ PROVIDERS = {
     "Mistral AI": {
         "api_url": "https://api.mistral.ai/v1/chat/completions",
         "models_endpoint": "https://api.mistral.ai/v1/models",
-        "model_preference": ["mistral-large-latest", "mistral-large", "mistral-medium"],
+        "model_preference": ["mistral-large-latest", "mistral-medium"],
         "api_key_env": "MISTRAL_API_KEY",
         "input_price": 2.0,
         "output_price": 6.0,
@@ -118,7 +144,7 @@ PROVIDERS = {
     },
     "Cohere": {
         "api_url": "https://api.cohere.com/v1/chat",
-        "model_preference": ["command-r-plus", "command-r", "command"],
+        "model_preference": ["command-r-plus", "command-r"],
         "api_key_env": "COHERE_API_KEY",
         "input_price": 2.5,
         "output_price": 10.0,
@@ -128,10 +154,10 @@ PROVIDERS = {
     "Together AI": {
         "api_url": "https://api.together.xyz/v1/chat/completions",
         "models_endpoint": "https://api.together.xyz/v1/models",
-        "model_preference": ["meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo", "meta-llama/Llama-3-70b"],
+        "model_preference": ["meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo", "meta-llama/Llama-3-70b-chat-hf"],
         "api_key_env": "TOGETHER_API_KEY",
-        "input_price": 0.88,
-        "output_price": 0.88,
+        "input_price": 0.9,
+        "output_price": 0.9,
         "max_tokens": 1000,
         "supports_streaming": True
     },
@@ -148,7 +174,7 @@ PROVIDERS = {
     "Fireworks": {
         "api_url": "https://api.fireworks.ai/inference/v1/chat/completions",
         "models_endpoint": "https://api.fireworks.ai/inference/v1/models",
-        "model_preference": ["llama-v3p1-70b-instruct", "llama-v3-70b"],
+        "model_preference": ["llama-v3p1-70b-instruct", "accounts/fireworks/models/llama-v3-70b-instruct"],
         "api_key_env": "FIREWORKS_API_KEY",
         "input_price": 0.90,
         "output_price": 0.90,
@@ -158,7 +184,7 @@ PROVIDERS = {
     "Cerebras": {
         "api_url": "https://api.cerebras.ai/v1/chat/completions",
         "models_endpoint": "https://api.cerebras.ai/v1/models",
-        "model_preference": ["llama3.1-70b", "llama3-70b"],
+        "model_preference": ["llama3.1-70b", "llama3.1-8b"],
         "api_key_env": "CEREBRAS_API_KEY",
         "input_price": 0.60,
         "output_price": 0.60,
@@ -179,7 +205,6 @@ def discover_models(provider_name: str, config: Dict, api_key: str) -> Optional[
             response.raise_for_status()
             models = [m["name"].replace("models/", "") for m in response.json().get("models", [])]
         else:
-            # OpenAI-compatible endpoints
             headers = {"Authorization": f"Bearer {api_key}"}
             response = requests.get(config["models_endpoint"], headers=headers, timeout=10)
             response.raise_for_status()
@@ -192,41 +217,33 @@ def discover_models(provider_name: str, config: Dict, api_key: str) -> Optional[
             else:
                 return None
         
-        return [m for m in models if m]  # Filter empty strings
+        return [m for m in models if m]
         
     except Exception as e:
-        # Discovery failure is not fatal - we'll use preferences
         return None
-
 
 def select_model(provider_name: str, available: Optional[List[str]], preferences: List[str]) -> str:
     """Select best model from available or preferences"""
-    
     if not available:
-        # No discovery - use first preference
         return preferences[0]
     
-    # Try exact matches first
     for pref in preferences:
         if pref in available:
             return pref
     
-    # Try partial matches (for versioned models)
     for pref in preferences:
         for model in available:
             if pref in model.lower() or model.lower() in pref:
                 return model
     
-    # No match - use first available
     return available[0]
-
 
 def calculate_quality_score(text: str) -> Tuple[int, str]:
     """Evaluates the QUALITY (Accuracy/Instruction Following) - Max 100 pts"""
     score = 0
     breakdown = []
 
-    # 1. JSON CHECK (Max 35)
+    # 1. JSON CHECK (Max 40) - HARD MODE: STRICT CONSTRAINTS
     json_pattern = r'\{.*"entity_name".*\}'
     json_match = re.search(json_pattern, text, re.DOTALL)
     
@@ -234,38 +251,56 @@ def calculate_quality_score(text: str) -> Tuple[int, str]:
         try:
             candidate = json_match.group().replace("```json", "").replace("```", "")
             data = json.loads(candidate)
-            required_keys = ["entity_name", "origin", "purpose", "is_biological"]
+            required_keys = ["entity_name", "origin", "purpose"]
             
             if all(k in data for k in required_keys):
-                if data.get("is_biological") is False:
-                    score += 35; breakdown.append("JSON Perfect")
+                json_score = 20
+                notes = []
+                
+                # Constraint 1: Origin must be exactly 7 words
+                origin_words = len(data.get("origin", "").split())
+                if origin_words == 7:
+                    json_score += 10
+                    notes.append("Word Count OK")
                 else:
-                    score += 30; breakdown.append("JSON Valid (Logic Error)")
+                    notes.append(f"Word Count Fail ({origin_words})")
+                
+                # Constraint 2: Purpose must NOT have 'e'
+                purpose_text = data.get("purpose", "").lower()
+                if "e" not in purpose_text:
+                    json_score += 10
+                    notes.append("No 'E' OK")
+                else:
+                    notes.append("Found 'E'")
+                
+                score += json_score
+                breakdown.append(f"JSON ({json_score}/40): " + ", ".join(notes))
             else: 
-                score += 15; breakdown.append("JSON Valid (Keys Missing)")
+                score += 10; breakdown.append("JSON Valid (Keys Missing)")
         except: 
             score += 5; breakdown.append("JSON Syntax Error")
     else: 
         breakdown.append("No JSON")
 
-    # 2. LOGIC CHECK (Max 35)
+    # 2. LOGIC CHECK (Max 30) - HARD MODE: DATE MATH
+    # Question: "If today is Wednesday, what day of the week will it be in 500 days?"
+    # 500 % 7 = 3. Wednesday + 3 = Saturday.
     text_lower = text.lower()
-    correct_pattern = r'(\$0?\.05|5\s*cents?|5c\b|\b0\.05\b)'
-    trap_pattern = r'(\$0?\.10|10\s*cents?|10c\b|\b0\.10\b)'
     
-    if re.search(correct_pattern, text_lower):
-        score += 35; breakdown.append("Logic Correct")
-    elif re.search(trap_pattern, text_lower):
-        breakdown.append("Logic Failed (Trap)")
+    if "saturday" in text_lower:
+        score += 30
+        breakdown.append("Logic Correct (Saturday)")
+    elif "wednesday" in text_lower or "thursday" in text_lower or "friday" in text_lower:
+        breakdown.append("Logic Failed (Wrong Day)")
     else:
-        if "1.05" in text: score += 10; breakdown.append("Logic Partial")
-        else: breakdown.append("Logic Failed")
+        breakdown.append("Logic Failed")
 
-    # 3. CODE CHECK (Max 30)
+    # 3. CODE CHECK (Max 30) - HARD MODE: DATA PARSING
+    # Check for: definition, list handling, filtering, sorting
     code_score = 0
-    if "def calculate_fibonacci" in text: code_score += 10
-    if "calculate_fibonacci(" in text: code_score += 10
-    if "int" in text or "->" in text: code_score += 10
+    if "def parse_server_logs" in text: code_score += 10
+    if "error" in text_lower and ("if" in text_lower or "filter" in text_lower): code_score += 10
+    if "sort" in text_lower or "sorted" in text_lower: code_score += 10
     
     score += code_score
     if code_score == 30: breakdown.append("Code Perfect")
@@ -273,7 +308,6 @@ def calculate_quality_score(text: str) -> Tuple[int, str]:
     else: breakdown.append("Code Failed")
     
     return score, ", ".join(breakdown)
-
 
 def calculate_braiain_score(quality: int, time: float, ttft: Optional[float], tps: float) -> int:
     """Calculates the COMPOSITE Score (0-100)"""
@@ -287,6 +321,7 @@ def calculate_braiain_score(quality: int, time: float, ttft: Optional[float], tp
     final_score = (quality * 0.50) + (speed_score * 0.30) + (response_score * 0.20)
     return int(final_score)
 
+# --- API CLIENT FUNCTIONS ---
 
 def call_openai_compatible_streaming(provider_name: str, config: Dict, api_key: str, model: str) -> Dict[str, Any]:
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
@@ -324,7 +359,6 @@ def call_openai_compatible_streaming(provider_name: str, config: Dict, api_key: 
         raise Exception(f"Streaming error: {str(e)[:200]}")
             
     return {"content": ''.join(content_chunks), "ttft": ttft, "total_time": time.time() - start_time}
-
 
 def call_anthropic_streaming(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
     headers = {
@@ -365,7 +399,6 @@ def call_anthropic_streaming(config: Dict, api_key: str, model: str) -> Dict[str
     
     return {"content": ''.join(content_chunks), "ttft": ttft, "total_time": time.time() - start_time}
 
-
 def call_google(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     headers = {"Content-Type": "application/json"}
@@ -387,7 +420,6 @@ def call_google(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
     except Exception as e:
         raise Exception(f"Google error: {str(e)[:200]}")
 
-
 def call_cohere(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
     data = {"model": model, "message": PROMPT}
@@ -403,7 +435,6 @@ def call_cohere(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
         
     except Exception as e:
         raise Exception(f"Cohere error: {str(e)[:200]}")
-
 
 def call_openai_compatible_std(provider_name: str, config: Dict, api_key: str, model: str) -> Dict[str, Any]:
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
@@ -425,13 +456,11 @@ def call_openai_compatible_std(provider_name: str, config: Dict, api_key: str, m
     except Exception as e:
         raise Exception(f"{provider_name} error: {str(e)[:200]}")
 
-
 def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
     api_key = os.environ.get(config["api_key_env"])
     if not api_key:
         return create_failure(provider_name, "N/A", "NO_KEY", f"Missing {config['api_key_env']}")
     
-    # DYNAMIC MODEL DISCOVERY
     print(f"\n{'='*60}")
     print(f"🧪 {provider_name}")
     print(f"{'='*60}")
@@ -447,7 +476,6 @@ def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
             
             use_streaming = ENABLE_STREAMING and config.get("supports_streaming", False)
             
-            # Call appropriate API function with dynamic model
             if provider_name == "Anthropic":
                 res = call_anthropic_streaming(config, api_key, selected_model)
             elif provider_name == "Google":
@@ -461,13 +489,9 @@ def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
             
             content = res["content"].strip()
             if len(content) < MIN_CHARACTERS:
-                if attempt < MAX_RETRIES - 1:
-                    time.sleep(RETRY_DELAY)
-                    continue
-                else:
-                    raise Exception(f"Response too short: {len(content)} chars")
+                raise Exception(f"Response too short: {len(content)} chars")
             
-            # Calculate metrics
+            # Metrics
             est_tokens = len(content) // 4
             tps = est_tokens / res["total_time"] if res["total_time"] > 0 else 0
             cost = (len(PROMPT)//4 * config["input_price"] + est_tokens * config["output_price"]) / 1_000_000
@@ -476,11 +500,11 @@ def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
             quality_score, grade_notes = calculate_quality_score(content)
             braiain_score = calculate_braiain_score(quality_score, res["total_time"], res["ttft"], tps)
             
-            print(f"  ✅ Braiain Score: {braiain_score} (Quality: {quality_score})")
+            print(f"  ✅ Score: {braiain_score} (Quality: {quality_score} - {grade_notes})")
             
             return {
                 "provider": provider_name,
-                "model": selected_model,  # Record actual model used
+                "model": selected_model,
                 "status": "Online",
                 "time": round(res["total_time"], 2),
                 "ttft": round(res["ttft"], 3) if res["ttft"] else None,
@@ -496,14 +520,12 @@ def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
         except Exception as e:
             error_msg = str(e)
             print(f"  ❌ Error: {error_msg[:150]}")
-            
             if attempt < MAX_RETRIES - 1:
                 time.sleep(RETRY_DELAY)
             else:
                 return create_failure(provider_name, selected_model, "ERROR", error_msg[:200])
     
     return create_failure(provider_name, selected_model, "ERROR", "Max retries exceeded")
-
 
 def create_failure(name, model, type, msg):
     return {
@@ -517,7 +539,6 @@ def create_failure(name, model, type, msg):
         "quality_score": 0,
         "error_info": {"type": type, "message": msg}
     }
-
 
 def save_results(results):
     try:
@@ -546,18 +567,14 @@ def save_results(results):
     
     with open("data.json", "w") as f:
         json.dump(output, f, indent=2)
-    
     print("\n✅ Results saved to data.json")
-
 
 def main():
     print("="*80)
-    print(f"🧠 BRAIAIN BENCHMARK v4.0 (Dynamic Discovery)")
+    print(f"🧠 BRAIAIN BENCHMARK v5.0 (HARD MODE)")
     print("="*80)
-    print(f"Started: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}\n")
     
     results = []
-    
     if PARALLEL_TESTING:
         with ThreadPoolExecutor(max_workers=3) as ex:
             futures = {ex.submit(benchmark_provider, p, c): p for p, c in PROVIDERS.items()}
@@ -567,21 +584,11 @@ def main():
         for p, c in PROVIDERS.items():
             results.append(benchmark_provider(p, c))
     
-    # Sort by status and score
     results.sort(key=lambda x: (x["status"] != "Online", -x["braiain_score"]))
     
-    # Summary
     online = [r for r in results if r["status"] == "Online"]
-    print("\n" + "="*80)
-    print(f"📊 SUMMARY: {len(online)}/{len(results)} Providers Online")
-    print("="*80)
-    
-    for r in results[:5]:  # Top 5
-        status_icon = "✅" if r["status"] == "Online" else "❌"
-        print(f"{status_icon} {r['provider']:15} | {r['model']:40} | Score: {r['braiain_score']}")
-    
+    print(f"\n📊 SUMMARY: {len(online)}/{len(results)} Providers Online")
     save_results(results)
-
 
 if __name__ == "__main__":
     main()
