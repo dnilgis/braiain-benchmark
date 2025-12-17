@@ -83,7 +83,7 @@
         header { 
             background: rgba(2, 4, 5, 0.95); 
             border-bottom: 1px solid var(--border-color); 
-            padding: 20px 0; /* Reduced padding from 40px to 20px */
+            padding: 20px 0; 
             position: sticky; top: 0; z-index: 100; 
             backdrop-filter: blur(10px);
         }
@@ -92,20 +92,20 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            margin-bottom: 15px; /* Reduced from 20px */
+            margin-bottom: 15px;
         }
         
         .ascii-logo {
             font-family: 'Courier New', Courier, monospace; 
             white-space: pre; 
-            font-size: 8px; /* Reduced font size for tighter logo */
+            font-size: 8px; 
             line-height: 8px; 
             font-weight: 900;
             color: var(--neon-green);
             text-shadow: 0 0 10px rgba(0, 255, 65, 0.6);
             display: block; 
             margin-top: 5px;    
-            margin-bottom: 10px; /* Reduced spacing */
+            margin-bottom: 10px;
             transform: scale(1, 1);
         }
 
@@ -143,13 +143,28 @@
             display: flex; justify-content: center; gap: 30px;
             background: rgba(0, 255, 65, 0.02); 
             border: 1px solid var(--border-color);
-            padding: 8px 25px; /* Reduced padding */
+            padding: 8px 25px;
             border-radius: 4px;
             width: fit-content; margin: 0 auto;
         }
         .hud-stat { display: flex; gap: 10px; align-items: center; }
         .hud-label { color: var(--text-muted); font-size: 0.7rem; letter-spacing: 1px; font-family: 'Orbitron'; }
         .hud-value { color: #fff; font-family: 'Rajdhani'; font-weight: 700; font-size: 1.1rem; }
+
+        /* === AD BANNER === */
+        .ad-banner {
+            margin: 25px auto; padding: 15px 25px;
+            border: 1px dashed var(--border-color); 
+            background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,255,65,0.05) 50%, rgba(0,0,0,0) 100%);
+            display: flex; justify-content: space-between; align-items: center; gap: 20px;
+        }
+        .ad-text { font-size: 1rem; color: #fff; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; font-weight: bold; }
+        .act-btn { 
+            display: inline-block; padding: 8px 18px; font-size: 0.85rem; font-weight: bold; 
+            border: 1px solid var(--neon-green); color: var(--neon-green); text-decoration: none; 
+            background: rgba(0,255,65,0.05); transition: 0.2s; font-family: 'Orbitron', sans-serif;
+        }
+        .act-btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 10px var(--neon-dim); }
 
         /* === CONTROLS === */
         .controls-bar {
@@ -240,9 +255,8 @@
         .btn-fill { background: var(--neon-dim); border: 1px solid var(--neon-green); color: var(--neon-green); }
         .btn-fill:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-dim); }
 
-        /* === TABLE VIEW (Removed Scrollbar) === */
+        /* === TABLE VIEW === */
         .bz-table-container {
-            /* overflow-x: auto; <--- Removed to eliminate slider */
             border: 1px solid var(--border-color); background: var(--bg-panel);
             border-radius: 4px; margin-bottom: 50px;
             width: 100%;
