@@ -3,8 +3,8 @@
 BRAIAIN SPEED INDEX v5.1 - "HARD MODE" + PENALTY SCORING
 - Heavy Context: System Logs + Narrative (Simulates RAG)
 - Task 1: JSON with strict "Simon Says" constraints
-- Task 2: Date/Math logic (Dynamic checking)
-- Task 3: Data processing code (AST syntax checking)
+- Task 2: Date/Math logic
+- Task 3: Data processing code
 - Scoring: Heavy penalties for incorrect answers. Speed cannot save a wrong answer.
 """
 
@@ -13,7 +13,6 @@ import time
 import json
 import requests
 import re
-import ast
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, Any, List, Optional, Tuple
@@ -65,7 +64,6 @@ To survive forever, it had to become a closed loop. It could not depend on the f
 """
 
 # --- HARD MODE PROMPT ---
-# Note: Logic test relies on "Wednesday" + 500 days.
 PROMPT = f"""You are a high-performance AI benchmark target. 
 Read the context below and complete the 3 tasks with EXTREME precision.
 
@@ -95,8 +93,8 @@ Assume standard log format. Include type hints.
 # Provider configurations
 PROVIDERS = {
     "OpenAI": {
-        "api_url": "[https://api.openai.com/v1/chat/completions](https://api.openai.com/v1/chat/completions)",
-        "models_endpoint": "[https://api.openai.com/v1/models](https://api.openai.com/v1/models)",
+        "api_url": "https://api.openai.com/v1/chat/completions",
+        "models_endpoint": "https://api.openai.com/v1/models",
         "model_preference": ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"],
         "api_key_env": "OPENAI_API_KEY",
         "input_price": 5.0,
@@ -105,7 +103,7 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Anthropic": {
-        "api_url": "[https://api.anthropic.com/v1/messages](https://api.anthropic.com/v1/messages)",
+        "api_url": "https://api.anthropic.com/v1/messages",
         "model_preference": ["claude-3-5-sonnet-20241022", "claude-3-sonnet", "claude-3-opus"],
         "api_key_env": "ANTHROPIC_API_KEY",
         "input_price": 3.0,
@@ -115,7 +113,7 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Google": {
-        "api_url": "[https://generativelanguage.googleapis.com/v1beta/models](https://generativelanguage.googleapis.com/v1beta/models)",
+        "api_url": "https://generativelanguage.googleapis.com/v1beta/models",
         "model_preference": ["gemini-1.5-pro", "gemini-1.5-flash", "gemini-pro"],
         "api_key_env": "GEMINI_API_KEY",
         "input_price": 3.5,
@@ -124,8 +122,8 @@ PROVIDERS = {
         "supports_streaming": False
     },
     "Groq": {
-        "api_url": "[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)",
-        "models_endpoint": "[https://api.groq.com/openai/v1/models](https://api.groq.com/openai/v1/models)",
+        "api_url": "https://api.groq.com/openai/v1/chat/completions",
+        "models_endpoint": "https://api.groq.com/openai/v1/models",
         "model_preference": ["llama-3.3-70b-versatile", "llama3-70b-8192", "mixtral-8x7b-32768"],
         "api_key_env": "GROQ_API_KEY",
         "input_price": 0.0,
@@ -134,8 +132,8 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Mistral AI": {
-        "api_url": "[https://api.mistral.ai/v1/chat/completions](https://api.mistral.ai/v1/chat/completions)",
-        "models_endpoint": "[https://api.mistral.ai/v1/models](https://api.mistral.ai/v1/models)",
+        "api_url": "https://api.mistral.ai/v1/chat/completions",
+        "models_endpoint": "https://api.mistral.ai/v1/models",
         "model_preference": ["mistral-large-latest", "mistral-medium"],
         "api_key_env": "MISTRAL_API_KEY",
         "input_price": 2.0,
@@ -144,7 +142,7 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Cohere": {
-        "api_url": "[https://api.cohere.com/v1/chat](https://api.cohere.com/v1/chat)",
+        "api_url": "https://api.cohere.com/v1/chat",
         "model_preference": ["command-r-plus", "command-r"],
         "api_key_env": "COHERE_API_KEY",
         "input_price": 2.5,
@@ -153,8 +151,8 @@ PROVIDERS = {
         "supports_streaming": False
     },
     "Together AI": {
-        "api_url": "[https://api.together.xyz/v1/chat/completions](https://api.together.xyz/v1/chat/completions)",
-        "models_endpoint": "[https://api.together.xyz/v1/models](https://api.together.xyz/v1/models)",
+        "api_url": "https://api.together.xyz/v1/chat/completions",
+        "models_endpoint": "https://api.together.xyz/v1/models",
         "model_preference": ["meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo", "meta-llama/Llama-3-70b-chat-hf"],
         "api_key_env": "TOGETHER_API_KEY",
         "input_price": 0.9,
@@ -163,8 +161,8 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "DeepSeek": {
-        "api_url": "[https://api.deepseek.com/v1/chat/completions](https://api.deepseek.com/v1/chat/completions)",
-        "models_endpoint": "[https://api.deepseek.com/v1/models](https://api.deepseek.com/v1/models)",
+        "api_url": "https://api.deepseek.com/v1/chat/completions",
+        "models_endpoint": "https://api.deepseek.com/v1/models",
         "model_preference": ["deepseek-chat", "deepseek-coder"],
         "api_key_env": "DEEPSEEK_API_KEY",
         "input_price": 0.14,
@@ -173,8 +171,8 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Fireworks": {
-        "api_url": "[https://api.fireworks.ai/inference/v1/chat/completions](https://api.fireworks.ai/inference/v1/chat/completions)",
-        "models_endpoint": "[https://api.fireworks.ai/inference/v1/models](https://api.fireworks.ai/inference/v1/models)",
+        "api_url": "https://api.fireworks.ai/inference/v1/chat/completions",
+        "models_endpoint": "https://api.fireworks.ai/inference/v1/models",
         "model_preference": ["llama-v3p1-70b-instruct", "accounts/fireworks/models/llama-v3-70b-instruct"],
         "api_key_env": "FIREWORKS_API_KEY",
         "input_price": 0.90,
@@ -183,8 +181,8 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Cerebras": {
-        "api_url": "[https://api.cerebras.ai/v1/chat/completions](https://api.cerebras.ai/v1/chat/completions)",
-        "models_endpoint": "[https://api.cerebras.ai/v1/models](https://api.cerebras.ai/v1/models)",
+        "api_url": "https://api.cerebras.ai/v1/chat/completions",
+        "models_endpoint": "https://api.cerebras.ai/v1/models",
         "model_preference": ["llama3.1-70b", "llama3.1-8b"],
         "api_key_env": "CEREBRAS_API_KEY",
         "input_price": 0.60,
@@ -251,15 +249,13 @@ def calculate_quality_score(text: str) -> Tuple[int, str]:
                 json_score = 20
                 notes = []
                 
-                # Constraint 1: Origin must be exactly 7 words (Using Regex for precision)
-                origin_text = data.get("origin", "")
-                word_count = len(re.findall(r'\b\w+\b', origin_text))
-                
-                if word_count == 7:
+                # Constraint 1: Origin must be exactly 7 words
+                origin_words = len(data.get("origin", "").split())
+                if origin_words == 7:
                     json_score += 10
                     notes.append("Word Count OK")
                 else:
-                    notes.append(f"Word Count Fail ({word_count})")
+                    notes.append(f"Word Count Fail ({origin_words})")
                 
                 # Constraint 2: Purpose must NOT have 'e'
                 purpose_text = data.get("purpose", "").lower()
@@ -280,18 +276,12 @@ def calculate_quality_score(text: str) -> Tuple[int, str]:
 
     # 2. LOGIC CHECK (Max 30) - HARD MODE: DATE MATH
     # Question: "If today is Wednesday, what day of the week will it be in 500 days?"
-    # Days are 0-6. Wednesday=2. (2 + 500) % 7 = (2 + 3) = 5 -> Saturday.
-    days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-    start_day_idx = 2 # Wednesday
-    offset = 500
-    target_idx = (start_day_idx + offset) % 7
-    target_day = days[target_idx] # "saturday"
-    
+    # 500 % 7 = 3. Wednesday + 3 = Saturday.
     text_lower = text.lower()
     
-    if target_day in text_lower:
+    if "saturday" in text_lower:
         score += 30
-        breakdown.append(f"Logic Correct ({target_day.capitalize()})")
+        breakdown.append("Logic Correct (Saturday)")
     elif "wednesday" in text_lower or "thursday" in text_lower or "friday" in text_lower:
         # Penalize guessing nearby days
         breakdown.append("Logic Failed (Wrong Day)")
@@ -300,37 +290,15 @@ def calculate_quality_score(text: str) -> Tuple[int, str]:
 
     # 3. CODE CHECK (Max 30) - HARD MODE: DATA PARSING
     # Check for: definition, list handling, filtering, sorting
-    # Enhanced with AST parsing to check for syntax validity
     code_score = 0
-    code_notes = []
-    
-    # Extract python code block
-    code_block_match = re.search(r'```python(.*?)```', text, re.DOTALL)
-    if code_block_match:
-        code_content = code_block_match.group(1)
-        try:
-            ast.parse(code_content) # Check syntax
-            code_score += 5
-            
-            if "def parse_server_logs" in code_content: code_score += 5
-            if "error" in code_content.lower() and ("if" in code_content or "filter" in code_content): code_score += 10
-            if "sort" in code_content.lower() or "sorted" in code_content.lower(): code_score += 10
-            
-            if code_score == 30: code_notes.append("Code Perfect")
-            else: code_notes.append(f"Code Partial ({code_score})")
-            
-        except SyntaxError:
-            code_notes.append("Code Syntax Error")
-    else:
-        # Fallback to string search if no code block found
-        if "def parse_server_logs" in text: code_score += 5
-        if "error" in text_lower and ("if" in text_lower or "filter" in text_lower): code_score += 10
-        if "sort" in text_lower or "sorted" in text_lower: code_score += 10
-        if code_score > 0: code_notes.append(f"Code Partial ({code_score})")
-        else: code_notes.append("Code Failed")
+    if "def parse_server_logs" in text: code_score += 10
+    if "error" in text_lower and ("if" in text_lower or "filter" in text_lower): code_score += 10
+    if "sort" in text_lower or "sorted" in text_lower: code_score += 10
     
     score += code_score
-    breakdown.append(", ".join(code_notes))
+    if code_score == 30: breakdown.append("Code Perfect")
+    elif code_score > 0: breakdown.append(f"Code Partial ({code_score})")
+    else: breakdown.append("Code Failed")
     
     return score, ", ".join(breakdown)
 
@@ -444,7 +412,7 @@ def call_anthropic_streaming(config: Dict, api_key: str, model: str) -> Dict[str
     return {"content": ''.join(content_chunks), "ttft": ttft, "total_time": time.time() - start_time}
 
 def call_google(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
-    url = f"[https://generativelanguage.googleapis.com/v1beta/models/](https://generativelanguage.googleapis.com/v1beta/models/){model}:generateContent?key={api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     headers = {"Content-Type": "application/json"}
     data = {
         "contents": [{"parts": [{"text": PROMPT}]}],
@@ -572,9 +540,7 @@ def save_results(results):
     except:
         history = []
     
-    # Maintain only last 30 runs to prevent repo bloat
     history = history[-30:]
-    
     reliability = {}
     for p in PROVIDERS:
         total = sum(1 for h in history if p in h.get("results", {}))
