@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -46,22 +46,15 @@
                 linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
             background-size: 40px 40px; 
-            overflow-x: hidden; 
+            overflow-x: hidden; /* Prevent horizontal scroll on body */
         }
 
         .container { max-width: 1400px; margin: 0 auto; padding: 0 15px; }
         .hidden { display: none !important; }
         
-        /* === TOOLTIPS (ENHANCED) === */
-        [data-tooltip] { 
-            position: relative; 
-            cursor: help; 
-            text-decoration: underline dotted var(--neon-green);
-            text-underline-offset: 4px;
-        }
-        
-        /* Default Tooltip (Top) */
-        [data-tooltip]:not([data-tooltip-pos="bottom"])::after {
+        /* === TOOLTIPS === */
+        [data-tooltip] { position: relative; cursor: help; border-bottom: 1px dotted var(--neon-green); }
+        [data-tooltip]::after {
             content: attr(data-tooltip);
             position: absolute;
             visibility: hidden;
@@ -85,46 +78,14 @@
             pointer-events: none;
             border-radius: 4px;
         }
-        [data-tooltip]:not([data-tooltip-pos="bottom"]):hover::after { 
-            visibility: visible; opacity: 1; transform: translateX(-50%) translateY(-15px); 
-        }
-
-        /* Bottom Tooltip (For Table Headers & Ad) */
-        [data-tooltip-pos="bottom"]::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            visibility: hidden;
-            opacity: 0;
-            top: 100%; left: 50%; 
-            transform: translateX(-50%) translateY(10px);
-            background: #0a0e12; 
-            border: 1px solid var(--neon-green); 
-            color: #fff; 
-            padding: 10px;
-            font-size: 0.8rem; 
-            font-family: 'Share Tech Mono', monospace;
-            width: max-content; 
-            max-width: 250px; 
-            z-index: 999999; 
-            box-shadow: 0 10px 40px rgba(0,0,0,1); 
-            text-align: left; 
-            white-space: pre-wrap; 
-            line-height: 1.4;
-            transition: 0.15s ease-out;
-            pointer-events: none;
-            border-radius: 4px;
-        }
-        [data-tooltip-pos="bottom"]:hover::after { 
-            visibility: visible; opacity: 1; transform: translateX(-50%) translateY(15px); 
-        }
+        [data-tooltip]:hover::after { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(-15px); }
 
         /* === HEADER === */
         header { 
             background: rgba(2, 4, 5, 0.95); 
             border-bottom: 1px solid var(--border-color); 
             padding: 20px 0;
-            position: relative; /* Scrolls away on scroll */
-            z-index: 100; 
+            position: sticky; top: 0; z-index: 100; 
             backdrop-filter: blur(10px);
         }
         
@@ -186,7 +147,7 @@
             padding: 8px 25px;
             border-radius: 4px;
             width: fit-content; margin: 0 auto;
-            flex-wrap: wrap; 
+            flex-wrap: wrap; /* Allows stacking on mobile */
         }
         .hud-stat { display: flex; gap: 8px; align-items: center; white-space: nowrap; }
         .hud-label { color: var(--text-muted); font-size: 0.7rem; letter-spacing: 1px; font-family: 'Orbitron'; }
@@ -220,7 +181,7 @@
             background: transparent; border: 1px solid var(--border-color); color: var(--text-muted);
             padding: 8px 16px; cursor: pointer; font-family: 'Share Tech Mono'; font-size: 0.8rem;
             transition: all 0.2s;
-            flex-grow: 1; 
+            flex-grow: 1; /* Better touch targets on mobile */
         }
         .ctrl-btn:hover { color: var(--neon-green); border-color: var(--neon-green); }
         .ctrl-btn.active { background: var(--neon-dim); color: var(--neon-green); border-color: var(--neon-green); }
@@ -228,7 +189,7 @@
         /* === GRID SYSTEM === */
         .bz-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Adjusted for mobile */
             gap: 20px;
             margin-bottom: 40px;
         }
@@ -304,10 +265,10 @@
             border: 1px solid var(--border-color); background: var(--bg-panel);
             border-radius: 4px; margin-bottom: 40px;
             width: 100%;
-            overflow-x: auto; 
-            -webkit-overflow-scrolling: touch; 
+            overflow-x: auto; /* Enable scroll only if needed */
+            -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
         }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; } 
+        table { width: 100%; border-collapse: collapse; min-width: 800px; } /* Ensure min width triggers scroll */
         
         th { 
             text-align: left; padding: 15px; background: #05080a; 
@@ -334,9 +295,8 @@
         /* === METHODOLOGY === */
         .methodology-box {
             background: var(--bg-panel); border: 1px solid var(--border-color);
-            padding: 40px; 
-            margin-bottom: 40px; position: relative; 
-            overflow: visible; 
+            padding: 40px; /* Reduced from 60px */
+            margin-bottom: 40px; position: relative; overflow: hidden;
         }
         .method-title {
             font-family: 'Orbitron'; font-size: 1.5rem; color: #fff; 
@@ -358,10 +318,10 @@
         .step-name { font-family: 'Rajdhani'; font-size: 1.3rem; font-weight: 700; color: #fff; }
         
         .code-block {
-            background: #050505; border: 1px solid #333; padding: 20px; 
+            background: #050505; border: 1px solid #333; padding: 20px; /* Reduced padding */
             font-family: 'Courier New', monospace; font-size: 0.85rem; color: var(--text-muted);
-            border-left: 3px solid var(--neon-green); margin-left: 10px; 
-            white-space: pre-wrap; line-height: 1.5; 
+            border-left: 3px solid var(--neon-green); margin-left: 10px; /* Reduced margin */
+            white-space: pre-wrap; line-height: 1.5; /* Reduced line height */
         }
         .highlight { color: var(--neon-green); font-weight: bold; }
         
@@ -402,28 +362,42 @@
 
         footer { border-top: 1px solid var(--border-color); padding: 40px 0; text-align: center; color: #666; }
 
-        /* === MOBILE RESPONSIVENESS === */
+        /* === MOBILE RESPONSIVENESS (iPhone SE & others) === */
         @media (max-width: 768px) {
             body { font-size: 14px; }
+            
+            /* Compact Header */
             header { padding: 15px 0; }
-            .ascii-logo { font-size: 5px; line-height: 5px; } 
+            .ascii-logo { font-size: 5px; line-height: 5px; } /* Tiny font for logo */
             .logo-tagline { font-size: 0.8rem; padding: 0 10px; }
+            
+            /* Stacked HUD */
             .hud-bar { gap: 10px; padding: 10px; width: 95%; flex-direction: row; flex-wrap: wrap; }
-            .hud-stat { font-size: 0.8rem; flex-basis: 45%; justify-content: center; } 
+            .hud-stat { font-size: 0.8rem; flex-basis: 45%; justify-content: center; } /* 2 per row */
             .hud-value { font-size: 1rem; }
+            
+            /* Stacked Ad Banner */
             .ad-banner { flex-direction: column; text-align: center; padding: 15px; gap: 10px; }
             .ad-text { font-size: 0.9rem; }
             .act-btn { width: 100%; }
+            
+            /* Controls */
             .controls-bar { flex-direction: column; align-items: stretch; gap: 10px; }
             .btn-group { width: 100%; }
             .ctrl-btn { flex: 1; padding: 10px; }
+            
+            /* Table Scrolling */
             .bz-table-container { overflow-x: scroll; display: block; }
+            
+            /* Methodology Padding Fixes */
             .methodology-box { padding: 20px 15px; }
             .method-title { font-size: 1.3rem; margin-bottom: 20px; }
-            .step-container p { margin-left: 0 !important; margin-bottom: 15px; } 
+            .step-container p { margin-left: 0 !important; margin-bottom: 15px; } /* Remove heavy indent */
             .step-head { margin-bottom: 10px; }
             .code-block { margin-left: 0; padding: 15px; font-size: 0.75rem; overflow-x: auto; }
             .disclaimer-box { padding: 15px; }
+            
+            /* Chart */
             .chart-header { flex-direction: column; align-items: flex-start; gap: 10px; }
             .chart-title { margin-bottom: 0; }
             .chart-canvas-wrapper { height: 250px; }
@@ -458,7 +432,7 @@
             <div style="opacity:0.3" class="desktop-only">|</div>
             <div class="hud-stat"><span class="hud-label">STATUS</span><span class="hud-value" style="color:var(--neon-green)">LIVE</span></div>
             <div style="opacity:0.3" class="desktop-only">|</div>
-            <div class="hud-stat"><span class="hud-label">PROTOCOL</span><span class="hud-value" style="color:var(--neon-red)">V5.1</span></div>
+            <div class="hud-stat"><span class="hud-label">PROTOCOL</span><span class="hud-value" style="color:var(--neon-red)">V5.0</span></div>
         </div>
     </div>
 </header>
@@ -466,7 +440,7 @@
 <div class="container">
     
     <div class="ad-banner">
-        <div class="ad-text" data-tooltip="ELI5: Please. I am begging you. Advertise here for the price of a coffee. I need this." data-tooltip-pos="bottom">ADVERTISE HERE: Reach thousands of AI developers.</div>
+        <div class="ad-text">ADVERTISE HERE: Reach thousands of AI developers.</div>
         <a href="mailto:dnilgis@gmail.com" class="act-btn">CONTACT ></a>
     </div>
 
@@ -497,14 +471,14 @@
                     <th class="col-center">RK</th>
                     <th>PROVIDER</th>
                     <th>MODEL</th>
-                    <th class="col-center" data-tooltip="Overall Score (0-100). Combines Smarts, Speed, and Responsiveness." data-tooltip-pos="bottom">SCORE</th>
-                    <th class="col-center" data-tooltip="Time to finish the entire test (Seconds)." data-tooltip-pos="bottom">SPEED</th>
-                    <th class="col-center" data-tooltip="Writing Speed (Tokens Per Second). Higher is better." data-tooltip-pos="bottom">TPS</th>
-                    <th class="col-center" data-tooltip="Reaction Time (Time To First Token). Lower is better." data-tooltip-pos="bottom">TTFT</th>
+                    <th class="col-center" data-tooltip="Overall Score (0-100). Combines Smarts, Speed, and Responsiveness.">SCORE</th>
+                    <th class="col-center" data-tooltip="Time to finish the entire test (Seconds).">SPEED</th>
+                    <th class="col-center" data-tooltip="Writing Speed (Tokens Per Second). Higher is better.">TPS</th>
+                    <th class="col-center" data-tooltip="Reaction Time (Time To First Token). Lower is better.">TTFT</th>
                     <th class="col-center">COST</th>
-                    <th class="col-center" data-tooltip="Did it follow strict JSON rules? (Word count & letter bans)" data-tooltip-pos="bottom">JSON</th>
-                    <th class="col-center" data-tooltip="Did it calculate the correct date?" data-tooltip-pos="bottom">LOGIC</th>
-                    <th class="col-center" data-tooltip="Did it write working code with filters?" data-tooltip-pos="bottom">CODE</th>
+                    <th class="col-center" data-tooltip="Did it follow strict JSON rules? (Word count & letter bans)">JSON</th>
+                    <th class="col-center" data-tooltip="Did it calculate the correct date?">LOGIC</th>
+                    <th class="col-center" data-tooltip="Did it write working code with filters?">CODE</th>
                     <th>OUTPUT (PREVIEW)</th>
                     <th class="col-center">LINK</th>
                 </tr>
@@ -518,8 +492,8 @@
         <div class="chart-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h3 class="chart-title" style="color:#fff; font-family:'Orbitron'; font-size:1.4rem;">Historical Performance</h3>
             <div class="btn-group">
-                <button class="ctrl-btn" id="chart-speed" onclick="setChartMode('speed')" data-tooltip="Historical Speed (Seconds). Lower is better.">SPEED</button>
-                <button class="ctrl-btn active" id="chart-score" onclick="setChartMode('score')" data-tooltip="Historical Braiain Score (0-100). Higher is better.">SCORES</button>
+                <button class="ctrl-btn" id="chart-speed" onclick="setChartMode('speed')">SPEED</button>
+                <button class="ctrl-btn active" id="chart-score" onclick="setChartMode('score')">SCORES</button>
             </div>
         </div>
         <div class="chart-canvas-wrapper">
@@ -528,11 +502,11 @@
     </div>
 
     <div class="methodology-box">
-        <div class="method-title">THE GAUNTLET PROTOCOL v5.1 (HARD MODE)</div>
+        <div class="method-title">THE GAUNTLET PROTOCOL v5.0 (HARD MODE)</div>
         
         <p style="margin-bottom: 30px; font-size: 1rem; color: var(--text-main);">
             The Braiain Speed Index has evolved. Standard benchmarks have become too easy for SOTA models, resulting in 
-            score saturation. <strong>Protocol v5.1 ("Hard Mode")</strong> introduces strict constraints, RAG-simulation, 
+            score saturation. <strong>Protocol v5.0 ("Hard Mode")</strong> introduces strict constraints, RAG-simulation, 
             and data processing tasks designed to break "lazy" models.
         </p>
 
@@ -615,8 +589,7 @@ Logic Test (0-30 points):
   • 0 for Wrong Answer (Wednesday/Friday guesses)
 
 Code Test (0-30 points):
-  • +5 for Valid Python Syntax (AST Parse)
-  • +5 for correct function definition
+  • +10 for correct function definition
   • +10 for filter logic implementation
   • +10 for sorting logic implementation
 
@@ -728,7 +701,6 @@ To survive forever, it had to become a closed loop. It could not depend on the f
 <script>
     // === CONFIGURATION ===
     let appData = null;
-    let currentResults = []; // Store results globally
     let currentSort = 'score';
     let currentChartMode = 'score'; 
     let chartInstance = null;
@@ -756,21 +728,10 @@ To survive forever, it had to become a closed loop. It could not depend on the f
             document.getElementById('node-count').textContent = appData.results ? appData.results.length : 0;
             document.getElementById('last-run').textContent = appData.last_updated ? appData.last_updated.split(' ')[1] + ' UTC' : 'N/A';
             
-            // DYNAMIC TITLE UPDATE
-            if(appData.results && appData.results.length > 0) {
-                // Find top scorer
-                const topNode = [...appData.results].sort((a,b) => (b.braiain_score||0) - (a.braiain_score||0))[0];
-                if(topNode) {
-                    document.title = `Braiain: ${topNode.provider} Leads (${topNode.braiain_score}) - AI Benchmark`;
-                }
-            }
-
             render();
             renderChart();
         } catch (e) {
-            console.error("Error loading data:", e);
-            document.getElementById('node-count').textContent = 'ERROR';
-            document.getElementById('last-run').textContent = 'FAILED';
+            console.error(e);
         }
     }
 
@@ -778,13 +739,17 @@ To survive forever, it had to become a closed loop. It could not depend on the f
     function startCountdown() {
         function update() {
             const now = new Date();
+            // Get current time in UTC
             const nowUTC = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+            
+            // Determine next 6-hour interval (0, 6, 12, 18)
             let nextRun = new Date(nowUTC);
             nextRun.setMinutes(0);
             nextRun.setSeconds(0);
             nextRun.setMilliseconds(0);
             
             const hour = nowUTC.getHours();
+            // Find next multiple of 6
             const nextHour = Math.ceil((hour + 1) / 6) * 6;
             
             if (nextHour >= 24) {
@@ -795,6 +760,8 @@ To survive forever, it had to become a closed loop. It could not depend on the f
             }
             
             const diff = nextRun - nowUTC;
+            
+            // Format H:M:S
             const h = Math.floor(diff / 3600000);
             const m = Math.floor((diff % 3600000) / 60000);
             const s = Math.floor((diff % 60000) / 1000);
@@ -802,16 +769,14 @@ To survive forever, it had to become a closed loop. It could not depend on the f
             document.getElementById('next-run').textContent = 
                 `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         }
+        
         update();
         setInterval(update, 1000);
     }
 
     // === RENDERING ===
     function render() {
-        if(!appData || !appData.results) {
-            console.error("No data available to render");
-            return;
-        }
+        if(!appData || !appData.results) return;
         
         const sorted = [...appData.results].sort((a,b) => {
             if(a.status !== 'Online') return 1; if(b.status !== 'Online') return -1;
@@ -824,23 +789,10 @@ To survive forever, it had to become a closed loop. It could not depend on the f
             return 0;
         });
 
-        currentResults = sorted; // Update global store
-        
-        console.log("Render complete. currentResults:", currentResults.length, "items");
-        if (currentResults.length > 0) {
-            console.log("Sample result:", currentResults[0]);
-        }
-
         // 1. RENDER GRID (Hidden by default)
         const gridHtml = sorted.map((r, i) => {
             const comps = parseGrade(r.grade_breakdown);
-            
-            // INTELLIGENT CONTENT FALLBACK
-            let displayContent = r.full_response || r.response_preview || "";
-            if (!displayContent && r.error_info) {
-                displayContent = `ERROR: ${r.error_info.type} - ${r.error_info.message}`;
-            }
-            const cleanText = cleanTextSnippet(displayContent);
+            const cleanText = cleanTextSnippet(r.full_response);
             
             return `
             <div class="bz-card">
@@ -877,12 +829,12 @@ To survive forever, it had to become a closed loop. It could not depend on the f
                     <div class="bz-check-item"><span class="bz-check-lbl">CODE</span><span class="${comps.code?'icon-ok':'icon-bad'}">${comps.code ? '✓' : '✗'}</span></div>
                 </div>
                 
-                <div class="bz-preview" onclick="openModalByIndex(${i})">
-                    <div class="bz-preview-text">${escapeHtml(cleanText)}</div>
+                <div class="bz-preview" onclick="openModal('${r.provider}', '${escapeText(r.full_response)}')">
+                    <div class="bz-preview-text">${cleanText}</div>
                 </div>
                 
                 <div class="bz-actions">
-                    <button class="bz-btn btn-outline" onclick="openModalByIndex(${i})">VIEW OUTPUT</button>
+                    <button class="bz-btn btn-outline" onclick="openModal('${r.provider}', '${escapeText(r.full_response)}')">VIEW OUTPUT</button>
                     <a href="${AFFILIATES[r.provider] || '#'}" target="_blank" rel="noopener noreferrer" class="bz-btn btn-fill">VISIT</a>
                 </div>
             </div>`;
@@ -892,13 +844,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         // 2. RENDER LIST (Visible by default)
         const listHtml = sorted.map((r, i) => {
             const comps = parseGrade(r.grade_breakdown);
-            
-            // INTELLIGENT CONTENT FALLBACK
-            let displayContent = r.full_response || r.response_preview || "";
-            if (!displayContent && r.error_info) {
-                displayContent = `ERROR: ${r.error_info.type} - ${r.error_info.message}`;
-            }
-            const cleanText = cleanTextSnippet(displayContent);
+            const cleanText = cleanTextSnippet(r.full_response);
             
             return `
             <tr>
@@ -916,8 +862,8 @@ To survive forever, it had to become a closed loop. It could not depend on the f
                 <td class="col-center col-check"><span class="${comps.code?'icon-ok':'icon-bad'}">${comps.code ? '✓' : '✗'}</span></td>
                 
                 <td>
-                    <div class="table-preview" onclick="openModalByIndex(${i})" title="Click for full response">
-                        ${escapeHtml(cleanText)}
+                    <div class="table-preview" onclick="openModal('${r.provider}', '${escapeText(r.full_response)}')" title="Click for full response">
+                        ${cleanText}
                     </div>
                 </td>
                 
@@ -952,69 +898,15 @@ To survive forever, it had to become a closed loop. It could not depend on the f
     }
 
     function cleanTextSnippet(text) {
-        if(!text) return "No output available."; 
+        if(!text) return "";
         let clean = text;
         clean = clean.replace(/PART \d+ - [A-Z ]+:/gi, "");
         clean = clean.replace(/```[a-z]*\n?/gi, "");
-        const truncated = clean.trim().substring(0, 300);
-        return truncated.length > 0 ? truncated : "Output was empty or only contained headers.";
+        return clean.trim().substring(0, 300);
     }
 
-    function escapeHtml(str) {
-        if (!str) return "";
-        return str
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
-    function openModalByIndex(index) {
-        if (!currentResults || !currentResults[index]) {
-            console.error("No data available for index:", index);
-            alert("Unable to load data. Please refresh the page.");
-            return;
-        }
-        
-        const r = currentResults[index];
-        let content = r.full_response || r.response_preview || "";
-        
-        // Enhanced fallback for failed requests
-        if (!content && r.error_info) {
-            content = `═══════════════════════════════════════
-ERROR DETAILS
-═══════════════════════════════════════
-
-Provider: ${r.provider}
-Model: ${r.model}
-Status: ${r.status}
-
-Error Type: ${r.error_info.type || 'Unknown'}
-Error Message: ${r.error_info.message || 'No details available'}
-
-═══════════════════════════════════════`;
-        }
-        
-        // Fallback for completely empty responses
-        if (!content || content.trim().length === 0) {
-            content = `No output data available for ${r.provider}.
-
-This could mean:
-- The API request timed out
-- The response was empty
-- The model refused to respond
-- There was a network error
-
-Provider: ${r.provider}
-Model: ${r.model}
-Status: ${r.status}
-Score: ${r.braiain_score || 0}
-
-Check the benchmark logs for more details.`;
-        }
-        
-        openModal(`${r.provider} - ${r.model}`, content);
+    function escapeText(str) {
+        return (str || "").replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
     }
 
     function openModal(title, text) {
@@ -1059,7 +951,7 @@ Check the benchmark logs for more details.`;
         const datasets = Array.from(providers).map((p, i) => ({
             label: p,
             borderColor: colors[i % colors.length],
-            borderWidth: 3, 
+            borderWidth: 2,
             pointRadius: 3,
             tension: 0.4,
             data: history.map(h => {
