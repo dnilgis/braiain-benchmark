@@ -768,7 +768,9 @@ To survive forever, it had to become a closed loop. It could not depend on the f
             render();
             renderChart();
         } catch (e) {
-            console.error(e);
+            console.error("Error loading data:", e);
+            document.getElementById('node-count').textContent = 'ERROR';
+            document.getElementById('last-run').textContent = 'FAILED';
         }
     }
 
@@ -806,7 +808,10 @@ To survive forever, it had to become a closed loop. It could not depend on the f
 
     // === RENDERING ===
     function render() {
-        if(!appData || !appData.results) return;
+        if(!appData || !appData.results) {
+            console.error("No data available to render");
+            return;
+        }
         
         const sorted = [...appData.results].sort((a,b) => {
             if(a.status !== 'Online') return 1; if(b.status !== 'Online') return -1;
@@ -820,13 +825,18 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         });
 
         currentResults = sorted; // Update global store
+        
+        console.log("Render complete. currentResults:", currentResults.length, "items");
+        if (currentResults.length > 0) {
+            console.log("Sample result:", currentResults[0]);
+        }
 
         // 1. RENDER GRID (Hidden by default)
         const gridHtml = sorted.map((r, i) => {
             const comps = parseGrade(r.grade_breakdown);
             
             // INTELLIGENT CONTENT FALLBACK
-            let displayContent = r.full_response;
+            let displayContent = r.full_response || r.response_preview || "";
             if (!displayContent && r.error_info) {
                 displayContent = `ERROR: ${r.error_info.type} - ${r.error_info.message}`;
             }
@@ -884,7 +894,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
             const comps = parseGrade(r.grade_breakdown);
             
             // INTELLIGENT CONTENT FALLBACK
-            let displayContent = r.full_response;
+            let displayContent = r.full_response || r.response_preview || "";
             if (!displayContent && r.error_info) {
                 displayContent = `ERROR: ${r.error_info.type} - ${r.error_info.message}`;
             }
@@ -961,14 +971,50 @@ To survive forever, it had to become a closed loop. It could not depend on the f
     }
 
     function openModalByIndex(index) {
-        const r = currentResults[index];
-        if (r) {
-            let content = r.full_response;
-            if (!content && r.error_info) {
-                content = `ERROR DETAILS:\nType: ${r.error_info.type}\nMessage: ${r.error_info.message}`;
-            }
-            openModal(r.provider, content || "No output data found.");
+        if (!currentResults || !currentResults[index]) {
+            console.error("No data available for index:", index);
+            alert("Unable to load data. Please refresh the page.");
+            return;
         }
+        
+        const r = currentResults[index];
+        let content = r.full_response || r.response_preview || "";
+        
+        // Enhanced fallback for failed requests
+        if (!content && r.error_info) {
+            content = `═══════════════════════════════════════
+ERROR DETAILS
+═══════════════════════════════════════
+
+Provider: ${r.provider}
+Model: ${r.model}
+Status: ${r.status}
+
+Error Type: ${r.error_info.type || 'Unknown'}
+Error Message: ${r.error_info.message || 'No details available'}
+
+═══════════════════════════════════════`;
+        }
+        
+        // Fallback for completely empty responses
+        if (!content || content.trim().length === 0) {
+            content = `No output data available for ${r.provider}.
+
+This could mean:
+- The API request timed out
+- The response was empty
+- The model refused to respond
+- There was a network error
+
+Provider: ${r.provider}
+Model: ${r.model}
+Status: ${r.status}
+Score: ${r.braiain_score || 0}
+
+Check the benchmark logs for more details.`;
+        }
+        
+        openModal(`${r.provider} - ${r.model}`, content);
     }
 
     function openModal(title, text) {
