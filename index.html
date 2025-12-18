@@ -52,15 +52,15 @@
         .container { max-width: 1400px; margin: 0 auto; padding: 0 15px; }
         .hidden { display: none !important; }
         
-        /* === TOOLTIPS (FIXED) === */
+        /* === TOOLTIPS (ENHANCED) === */
         [data-tooltip] { 
             position: relative; 
             cursor: help; 
-            /* Added visual cue for mobile/desktop */
             text-decoration: underline dotted var(--neon-green);
             text-underline-offset: 4px;
         }
-        [data-tooltip]::after {
+        /* Default (Top) */
+        [data-tooltip]:not([data-tooltip-pos="bottom"])::after {
             content: attr(data-tooltip);
             position: absolute;
             visibility: hidden;
@@ -84,14 +84,47 @@
             pointer-events: none;
             border-radius: 4px;
         }
-        [data-tooltip]:hover::after { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(-15px); }
+        [data-tooltip]:not([data-tooltip-pos="bottom"]):hover::after { 
+            visibility: visible; opacity: 1; transform: translateX(-50%) translateY(-15px); 
+        }
+
+        /* Bottom Variant (For Table Headers) */
+        [data-tooltip-pos="bottom"]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            visibility: hidden;
+            opacity: 0;
+            top: 100%; left: 50%; /* Position below */
+            transform: translateX(-50%) translateY(10px);
+            background: #0a0e12; 
+            border: 1px solid var(--neon-green); 
+            color: #fff; 
+            padding: 10px;
+            font-size: 0.8rem; 
+            font-family: 'Share Tech Mono', monospace;
+            width: max-content; 
+            max-width: 250px; 
+            z-index: 999999; 
+            box-shadow: 0 10px 40px rgba(0,0,0,1); 
+            text-align: left; 
+            white-space: pre-wrap; 
+            line-height: 1.4;
+            transition: 0.15s ease-out;
+            pointer-events: none;
+            border-radius: 4px;
+        }
+        [data-tooltip-pos="bottom"]:hover::after { 
+            visibility: visible; opacity: 1; transform: translateX(-50%) translateY(15px); 
+        }
 
         /* === HEADER === */
         header { 
             background: rgba(2, 4, 5, 0.95); 
             border-bottom: 1px solid var(--border-color); 
             padding: 20px 0;
-            position: sticky; top: 0; z-index: 100; 
+            /* CHANGED: Header now scrolls away */
+            position: relative; 
+            z-index: 100; 
             backdrop-filter: blur(10px);
         }
         
@@ -298,12 +331,12 @@
         }
         .table-visit-btn:hover { background: var(--neon-green); color: #000; }
 
-        /* === METHODOLOGY (UPDATED) === */
+        /* === METHODOLOGY === */
         .methodology-box {
             background: var(--bg-panel); border: 1px solid var(--border-color);
             padding: 40px; 
             margin-bottom: 40px; position: relative; 
-            overflow: visible; /* FIXED: Was hidden, prevented tooltips */
+            overflow: visible; 
         }
         .method-title {
             font-family: 'Orbitron'; font-size: 1.5rem; color: #fff; 
@@ -369,35 +402,28 @@
 
         footer { border-top: 1px solid var(--border-color); padding: 40px 0; text-align: center; color: #666; }
 
-        /* === MOBILE RESPONSIVENESS (iPhone SE & others) === */
+        /* === MOBILE RESPONSIVENESS === */
         @media (max-width: 768px) {
             body { font-size: 14px; }
-            
             header { padding: 15px 0; }
             .ascii-logo { font-size: 5px; line-height: 5px; } 
             .logo-tagline { font-size: 0.8rem; padding: 0 10px; }
-            
             .hud-bar { gap: 10px; padding: 10px; width: 95%; flex-direction: row; flex-wrap: wrap; }
             .hud-stat { font-size: 0.8rem; flex-basis: 45%; justify-content: center; } 
             .hud-value { font-size: 1rem; }
-            
             .ad-banner { flex-direction: column; text-align: center; padding: 15px; gap: 10px; }
             .ad-text { font-size: 0.9rem; }
             .act-btn { width: 100%; }
-            
             .controls-bar { flex-direction: column; align-items: stretch; gap: 10px; }
             .btn-group { width: 100%; }
             .ctrl-btn { flex: 1; padding: 10px; }
-            
             .bz-table-container { overflow-x: scroll; display: block; }
-            
             .methodology-box { padding: 20px 15px; }
             .method-title { font-size: 1.3rem; margin-bottom: 20px; }
             .step-container p { margin-left: 0 !important; margin-bottom: 15px; } 
             .step-head { margin-bottom: 10px; }
             .code-block { margin-left: 0; padding: 15px; font-size: 0.75rem; overflow-x: auto; }
             .disclaimer-box { padding: 15px; }
-            
             .chart-header { flex-direction: column; align-items: flex-start; gap: 10px; }
             .chart-title { margin-bottom: 0; }
             .chart-canvas-wrapper { height: 250px; }
@@ -440,7 +466,7 @@
 <div class="container">
     
     <div class="ad-banner">
-        <div class="ad-text">ADVERTISE HERE: Reach thousands of AI developers.</div>
+        <div class="ad-text" data-tooltip="ELI5: Please. I am begging you. Advertise here for the price of a coffee. I need this." data-tooltip-pos="bottom">ADVERTISE HERE: Reach thousands of AI developers.</div>
         <a href="mailto:dnilgis@gmail.com" class="act-btn">CONTACT ></a>
     </div>
 
@@ -471,14 +497,14 @@
                     <th class="col-center">RK</th>
                     <th>PROVIDER</th>
                     <th>MODEL</th>
-                    <th class="col-center" data-tooltip="Overall Score (0-100). Combines Smarts, Speed, and Responsiveness.">SCORE</th>
-                    <th class="col-center" data-tooltip="Time to finish the entire test (Seconds).">SPEED</th>
-                    <th class="col-center" data-tooltip="Writing Speed (Tokens Per Second). Higher is better.">TPS</th>
-                    <th class="col-center" data-tooltip="Reaction Time (Time To First Token). Lower is better.">TTFT</th>
+                    <th class="col-center" data-tooltip="Overall Score (0-100). Combines Smarts, Speed, and Responsiveness." data-tooltip-pos="bottom">SCORE</th>
+                    <th class="col-center" data-tooltip="Time to finish the entire test (Seconds)." data-tooltip-pos="bottom">SPEED</th>
+                    <th class="col-center" data-tooltip="Writing Speed (Tokens Per Second). Higher is better." data-tooltip-pos="bottom">TPS</th>
+                    <th class="col-center" data-tooltip="Reaction Time (Time To First Token). Lower is better." data-tooltip-pos="bottom">TTFT</th>
                     <th class="col-center">COST</th>
-                    <th class="col-center" data-tooltip="Did it follow strict JSON rules? (Word count & letter bans)">JSON</th>
-                    <th class="col-center" data-tooltip="Did it calculate the correct date?">LOGIC</th>
-                    <th class="col-center" data-tooltip="Did it write working code with filters?">CODE</th>
+                    <th class="col-center" data-tooltip="Did it follow strict JSON rules? (Word count & letter bans)" data-tooltip-pos="bottom">JSON</th>
+                    <th class="col-center" data-tooltip="Did it calculate the correct date?" data-tooltip-pos="bottom">LOGIC</th>
+                    <th class="col-center" data-tooltip="Did it write working code with filters?" data-tooltip-pos="bottom">CODE</th>
                     <th>OUTPUT (PREVIEW)</th>
                     <th class="col-center">LINK</th>
                 </tr>
@@ -492,8 +518,8 @@
         <div class="chart-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h3 class="chart-title" style="color:#fff; font-family:'Orbitron'; font-size:1.4rem;">Historical Performance</h3>
             <div class="btn-group">
-                <button class="ctrl-btn" id="chart-speed" onclick="setChartMode('speed')">SPEED</button>
-                <button class="ctrl-btn active" id="chart-score" onclick="setChartMode('score')">SCORES</button>
+                <button class="ctrl-btn" id="chart-speed" onclick="setChartMode('speed')" data-tooltip="Historical Speed (Seconds). Lower is better.">SPEED</button>
+                <button class="ctrl-btn active" id="chart-score" onclick="setChartMode('score')" data-tooltip="Historical Braiain Score (0-100). Higher is better.">SCORES</button>
             </div>
         </div>
         <div class="chart-canvas-wrapper">
@@ -589,7 +615,8 @@ Logic Test (0-30 points):
   • 0 for Wrong Answer (Wednesday/Friday guesses)
 
 Code Test (0-30 points):
-  • +10 for correct function definition
+  • +5 for Valid Python Syntax (AST Parse)
+  • +5 for correct function definition
   • +10 for filter logic implementation
   • +10 for sorting logic implementation
 
