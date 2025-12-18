@@ -1,4 +1,4 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -28,6 +28,7 @@ DOCTYPE html>
             --neon-green: #00ff41;
             --neon-dim: rgba(0, 255, 65, 0.1);
             --neon-red: #ff0055;
+            --neon-gold: #ffaa00; /* New for Ads/Warnings */
             --border-color: #1a2329;
             --text-main: #e6e6e6;
             --text-muted: #aaa;
@@ -46,14 +47,20 @@ DOCTYPE html>
                 linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
             background-size: 40px 40px; 
-            overflow-x: hidden; /* Prevent horizontal scroll on body */
+            overflow-x: hidden; 
         }
 
         .container { max-width: 1400px; margin: 0 auto; padding: 0 15px; }
         .hidden { display: none !important; }
         
-        /* === TOOLTIPS === */
-        [data-tooltip] { position: relative; cursor: help; border-bottom: 1px dotted var(--neon-green); }
+        /* === IMPROVED TOOLTIPS === */
+        /* Changed from cursor:help to text-decoration for mobile visibility */
+        [data-tooltip] { 
+            position: relative; 
+            text-decoration: underline dotted var(--neon-green); 
+            text-underline-offset: 3px;
+            cursor: help;
+        }
         [data-tooltip]::after {
             content: attr(data-tooltip);
             position: absolute;
@@ -147,28 +154,29 @@ DOCTYPE html>
             padding: 8px 25px;
             border-radius: 4px;
             width: fit-content; margin: 0 auto;
-            flex-wrap: wrap; /* Allows stacking on mobile */
+            flex-wrap: wrap; 
         }
         .hud-stat { display: flex; gap: 8px; align-items: center; white-space: nowrap; }
         .hud-label { color: var(--text-muted); font-size: 0.7rem; letter-spacing: 1px; font-family: 'Orbitron'; }
         .hud-value { color: #fff; font-family: 'Rajdhani'; font-weight: 700; font-size: 1.1rem; }
 
-        /* === AD BANNER === */
+        /* === IMPROVED AD BANNER === */
+        /* Changed style to differentiate from content */
         .ad-banner {
             margin: 20px auto; padding: 15px 20px;
-            border: 1px dashed var(--border-color); 
-            background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,255,65,0.05) 50%, rgba(0,0,0,0) 100%);
+            border: 1px dotted var(--neon-gold); /* Distinct border */
+            background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255, 170, 0, 0.05) 50%, rgba(0,0,0,0) 100%);
             display: flex; justify-content: space-between; align-items: center; gap: 15px;
         }
-        .ad-text { font-size: 0.95rem; color: #fff; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; font-weight: bold; }
+        .ad-text { font-size: 0.95rem; color: var(--neon-gold); font-family: 'Orbitron', sans-serif; letter-spacing: 1px; font-weight: bold; }
         .act-btn { 
             display: inline-block; padding: 8px 16px; font-size: 0.8rem; font-weight: bold; 
-            border: 1px solid var(--neon-green); color: var(--neon-green); text-decoration: none; 
-            background: rgba(0,255,65,0.05); transition: 0.2s; font-family: 'Orbitron', sans-serif;
+            border: 1px solid var(--neon-gold); color: var(--neon-gold); text-decoration: none; 
+            background: rgba(255, 170, 0, 0.05); transition: 0.2s; font-family: 'Orbitron', sans-serif;
             text-align: center;
             white-space: nowrap;
         }
-        .act-btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 10px var(--neon-dim); }
+        .act-btn:hover { background: var(--neon-gold); color: #000; box-shadow: 0 0 10px rgba(255, 170, 0, 0.3); }
 
         /* === CONTROLS === */
         .controls-bar {
@@ -181,15 +189,24 @@ DOCTYPE html>
             background: transparent; border: 1px solid var(--border-color); color: var(--text-muted);
             padding: 8px 16px; cursor: pointer; font-family: 'Share Tech Mono'; font-size: 0.8rem;
             transition: all 0.2s;
-            flex-grow: 1; /* Better touch targets on mobile */
+            flex-grow: 1; 
         }
         .ctrl-btn:hover { color: var(--neon-green); border-color: var(--neon-green); }
         .ctrl-btn.active { background: var(--neon-dim); color: var(--neon-green); border-color: var(--neon-green); }
+        
+        .compare-float {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #000; border: 1px solid var(--neon-green);
+            padding: 15px; z-index: 900;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+            display: none; flex-direction: column; gap: 10px;
+        }
+        .compare-float.visible { display: flex; }
 
         /* === GRID SYSTEM === */
         .bz-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Adjusted for mobile */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
             gap: 20px;
             margin-bottom: 40px;
         }
@@ -265,10 +282,10 @@ DOCTYPE html>
             border: 1px solid var(--border-color); background: var(--bg-panel);
             border-radius: 4px; margin-bottom: 40px;
             width: 100%;
-            overflow-x: auto; /* Enable scroll only if needed */
-            -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch;
         }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; } /* Ensure min width triggers scroll */
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
         
         th { 
             text-align: left; padding: 15px; background: #05080a; 
@@ -291,12 +308,20 @@ DOCTYPE html>
             text-decoration: none; font-size: 0.7rem; font-weight: bold; font-family: 'Orbitron';
         }
         .table-visit-btn:hover { background: var(--neon-green); color: #000; }
+        
+        /* Custom Checkbox */
+        .model-select {
+            appearance: none; width: 16px; height: 16px; border: 1px solid #444; background: #000;
+            cursor: pointer; display: inline-block; vertical-align: middle;
+        }
+        .model-select:checked { background: var(--neon-green); border-color: var(--neon-green); }
 
         /* === METHODOLOGY === */
+        /* Fixed overflow issue */
         .methodology-box {
             background: var(--bg-panel); border: 1px solid var(--border-color);
-            padding: 40px; /* Reduced from 60px */
-            margin-bottom: 40px; position: relative; overflow: hidden;
+            padding: 40px; 
+            margin-bottom: 40px; position: relative; overflow: visible; 
         }
         .method-title {
             font-family: 'Orbitron'; font-size: 1.5rem; color: #fff; 
@@ -306,7 +331,7 @@ DOCTYPE html>
         .step-container { margin-bottom: 30px; }
         .step-head { 
             display: flex; align-items: center; gap: 12px; margin-bottom: 15px; 
-            cursor: help; width: fit-content;
+            width: fit-content;
         }
         .step-num { 
             background: var(--neon-dim); color: var(--neon-green); 
@@ -318,18 +343,14 @@ DOCTYPE html>
         .step-name { font-family: 'Rajdhani'; font-size: 1.3rem; font-weight: 700; color: #fff; }
         
         .code-block {
-            background: #050505; border: 1px solid #333; padding: 20px; /* Reduced padding */
+            background: #050505; border: 1px solid #333; padding: 20px; 
             font-family: 'Courier New', monospace; font-size: 0.85rem; color: var(--text-muted);
-            border-left: 3px solid var(--neon-green); margin-left: 10px; /* Reduced margin */
-            white-space: pre-wrap; line-height: 1.5; /* Reduced line height */
+            border-left: 3px solid var(--neon-green); margin-left: 10px; 
+            white-space: pre-wrap; line-height: 1.5; 
         }
         .highlight { color: var(--neon-green); font-weight: bold; }
         
-        .hard-mode-warn {
-            color: var(--neon-red);
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
+        .hard-mode-warn { color: var(--neon-red); font-weight: bold; letter-spacing: 0.5px; }
         
         .disclaimer-box { 
             background: rgba(255,0,0,0.05); border: 1px solid #331111; 
@@ -354,6 +375,11 @@ DOCTYPE html>
         }
         .modal-body { padding: 20px; font-family: monospace; white-space: pre-wrap; color: #ccc; font-size: 0.9rem; line-height: 1.5; }
 
+        /* Compare Modal Specifics */
+        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .compare-col { background: #000; padding: 15px; border: 1px solid #333; }
+        .compare-score { font-size: 2rem; font-weight: bold; color: var(--neon-green); font-family: 'Rajdhani'; }
+
         #story-modal .modal-body { font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.6; color: #ddd; }
         
         /* === CHART === */
@@ -362,45 +388,40 @@ DOCTYPE html>
 
         footer { border-top: 1px solid var(--border-color); padding: 40px 0; text-align: center; color: #666; }
 
-        /* === MOBILE RESPONSIVENESS (iPhone SE & others) === */
+        /* === MOBILE RESPONSIVENESS === */
         @media (max-width: 768px) {
             body { font-size: 14px; }
             
-            /* Compact Header */
             header { padding: 15px 0; }
-            .ascii-logo { font-size: 5px; line-height: 5px; } /* Tiny font for logo */
+            .ascii-logo { font-size: 5px; line-height: 5px; } 
             .logo-tagline { font-size: 0.8rem; padding: 0 10px; }
             
-            /* Stacked HUD */
             .hud-bar { gap: 10px; padding: 10px; width: 95%; flex-direction: row; flex-wrap: wrap; }
-            .hud-stat { font-size: 0.8rem; flex-basis: 45%; justify-content: center; } /* 2 per row */
+            .hud-stat { font-size: 0.8rem; flex-basis: 45%; justify-content: center; } 
             .hud-value { font-size: 1rem; }
             
-            /* Stacked Ad Banner */
             .ad-banner { flex-direction: column; text-align: center; padding: 15px; gap: 10px; }
             .ad-text { font-size: 0.9rem; }
             .act-btn { width: 100%; }
             
-            /* Controls */
             .controls-bar { flex-direction: column; align-items: stretch; gap: 10px; }
             .btn-group { width: 100%; }
             .ctrl-btn { flex: 1; padding: 10px; }
             
-            /* Table Scrolling */
             .bz-table-container { overflow-x: scroll; display: block; }
             
-            /* Methodology Padding Fixes */
             .methodology-box { padding: 20px 15px; }
             .method-title { font-size: 1.3rem; margin-bottom: 20px; }
-            .step-container p { margin-left: 0 !important; margin-bottom: 15px; } /* Remove heavy indent */
+            .step-container p { margin-left: 0 !important; margin-bottom: 15px; } 
             .step-head { margin-bottom: 10px; }
             .code-block { margin-left: 0; padding: 15px; font-size: 0.75rem; overflow-x: auto; }
             .disclaimer-box { padding: 15px; }
             
-            /* Chart */
             .chart-header { flex-direction: column; align-items: flex-start; gap: 10px; }
             .chart-title { margin-bottom: 0; }
             .chart-canvas-wrapper { height: 250px; }
+            
+            .compare-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -468,6 +489,7 @@ DOCTYPE html>
         <table>
             <thead>
                 <tr>
+                    <th class="col-center">CMP</th>
                     <th class="col-center">RK</th>
                     <th>PROVIDER</th>
                     <th>MODEL</th>
@@ -654,6 +676,16 @@ Remains unchanged from v4.0. We value fast, streaming responses just as much as 
     </div>
 </div>
 
+<div id="compare-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="font-family:'Orbitron'; color:#fff;">MODEL COMPARISON</h3>
+            <button onclick="closeCompareModal()" class="ctrl-btn">CLOSE [X]</button>
+        </div>
+        <div class="modal-body" id="compare-body"></div>
+    </div>
+</div>
+
 <div id="story-modal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
@@ -698,20 +730,49 @@ To survive forever, it had to become a closed loop. It could not depend on the f
     </div>
 </div>
 
+<div class="compare-float" id="compare-bar">
+    <div style="font-family:'Orbitron'; color:#fff; font-weight:bold;">COMPARE MODELS (<span id="compare-count">0</span>/2)</div>
+    <button class="ctrl-btn active" onclick="openCompare()" style="width:100%">VIEW DIFF</button>
+    <button class="ctrl-btn" onclick="clearCompare()" style="width:100%">CLEAR</button>
+</div>
+
 <script>
     // === CONFIGURATION ===
     let appData = null;
     let currentSort = 'score';
     let currentChartMode = 'score'; 
     let chartInstance = null;
-    const AFFILIATES = {"OpenAI":"https://platform.openai.com/","Google":"https://ai.google.dev/","Anthropic":"https://console.anthropic.com/","Groq":"https://console.groq.com/","Mistral AI":"https://console.mistral.ai/","Cohere":"https://dashboard.cohere.com/","Together AI":"https://api.together.xyz/","DeepSeek":"https://platform.deepseek.com/","Fireworks":"https://fireworks.ai/","Cerebras":"https://inference.cerebras.ai/"};
+    let selectedForCompare = [];
+    
+    // Add real affiliate links here
+    const AFFILIATES = {
+        "OpenAI":"https://platform.openai.com/",
+        "Google":"https://ai.google.dev/",
+        "Anthropic":"https://console.anthropic.com/",
+        "Groq":"https://console.groq.com/",
+        "Mistral AI":"https://console.mistral.ai/",
+        "Cohere":"https://dashboard.cohere.com/",
+        "Together AI":"https://api.together.xyz/",
+        "DeepSeek":"https://platform.deepseek.com/",
+        "Fireworks":"https://fireworks.ai/",
+        "Cerebras":"https://inference.cerebras.ai/"
+    };
 
     // === INITIALIZATION ===
     window.onload = function() {
+        // Default to GRID on mobile for better UX
+        if(window.innerWidth < 768) {
+            setMode('grid');
+        }
+        
         fetchData();
         startCountdown(); 
+        
         document.getElementById('modal').addEventListener('click', (e) => {
             if(e.target === document.getElementById('modal')) closeModal();
+        });
+        document.getElementById('compare-modal').addEventListener('click', (e) => {
+            if(e.target === document.getElementById('compare-modal')) closeCompareModal();
         });
         document.getElementById('story-modal').addEventListener('click', (e) => {
             if(e.target === document.getElementById('story-modal')) closeStoryModal();
@@ -725,6 +786,11 @@ To survive forever, it had to become a closed loop. It could not depend on the f
             appData = await res.json();
             
             // UPDATE HUD
+            if(appData.results && appData.results.length > 0) {
+                const topModel = appData.results.sort((a,b) => b.braiain_score - a.braiain_score)[0];
+                document.title = `Braiain: ${topModel.provider} Leads (${topModel.braiain_score}) - AI Benchmark`;
+            }
+            
             document.getElementById('node-count').textContent = appData.results ? appData.results.length : 0;
             document.getElementById('last-run').textContent = appData.last_updated ? appData.last_updated.split(' ')[1] + ' UTC' : 'N/A';
             
@@ -739,17 +805,13 @@ To survive forever, it had to become a closed loop. It could not depend on the f
     function startCountdown() {
         function update() {
             const now = new Date();
-            // Get current time in UTC
             const nowUTC = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
             
-            // Determine next 6-hour interval (0, 6, 12, 18)
+            // 6-hour interval logic
             let nextRun = new Date(nowUTC);
-            nextRun.setMinutes(0);
-            nextRun.setSeconds(0);
-            nextRun.setMilliseconds(0);
+            nextRun.setMinutes(0); nextRun.setSeconds(0); nextRun.setMilliseconds(0);
             
             const hour = nowUTC.getHours();
-            // Find next multiple of 6
             const nextHour = Math.ceil((hour + 1) / 6) * 6;
             
             if (nextHour >= 24) {
@@ -760,8 +822,6 @@ To survive forever, it had to become a closed loop. It could not depend on the f
             }
             
             const diff = nextRun - nowUTC;
-            
-            // Format H:M:S
             const h = Math.floor(diff / 3600000);
             const m = Math.floor((diff % 3600000) / 60000);
             const s = Math.floor((diff % 60000) / 1000);
@@ -789,7 +849,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
             return 0;
         });
 
-        // 1. RENDER GRID (Hidden by default)
+        // 1. RENDER GRID (Hidden by default, default on mobile)
         const gridHtml = sorted.map((r, i) => {
             const comps = parseGrade(r.grade_breakdown);
             const cleanText = cleanTextSnippet(r.full_response);
@@ -841,13 +901,15 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         }).join('');
         document.getElementById('grid-container').innerHTML = gridHtml;
 
-        // 2. RENDER LIST (Visible by default)
+        // 2. RENDER LIST (Visible by default on Desktop)
         const listHtml = sorted.map((r, i) => {
             const comps = parseGrade(r.grade_breakdown);
             const cleanText = cleanTextSnippet(r.full_response);
+            const isChecked = selectedForCompare.includes(r.provider) ? 'checked' : '';
             
             return `
             <tr>
+                <td class="col-center"><input type="checkbox" class="model-select" ${isChecked} onchange="toggleCompare('${r.provider}')"></td>
                 <td class="col-center"><strong>${i+1}</strong></td>
                 <td><strong>${r.provider}</strong></td>
                 <td style="color:var(--text-muted); font-size:0.85rem;">${r.model}</td>
@@ -909,6 +971,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         return (str || "").replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
     }
 
+    // === MODAL MANAGERS ===
     function openModal(title, text) {
         document.getElementById('modal-title').textContent = title;
         document.getElementById('modal-text').textContent = text;
@@ -928,6 +991,70 @@ To survive forever, it had to become a closed loop. It could not depend on the f
     
     function closeStoryModal() {
         document.getElementById('story-modal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // === COMPARISON LOGIC ===
+    function toggleCompare(provider) {
+        const idx = selectedForCompare.indexOf(provider);
+        if (idx > -1) {
+            selectedForCompare.splice(idx, 1);
+        } else {
+            if (selectedForCompare.length >= 2) selectedForCompare.shift(); // Keep only last 2
+            selectedForCompare.push(provider);
+        }
+        updateCompareUI();
+        render(); // Re-render to update checkboxes
+    }
+
+    function updateCompareUI() {
+        const count = selectedForCompare.length;
+        document.getElementById('compare-count').textContent = count;
+        document.getElementById('compare-bar').classList.toggle('visible', count > 0);
+    }
+
+    function clearCompare() {
+        selectedForCompare = [];
+        updateCompareUI();
+        render();
+    }
+
+    function openCompare() {
+        if (selectedForCompare.length < 2) return alert("Select 2 models to compare");
+        
+        const m1 = appData.results.find(r => r.provider === selectedForCompare[0]);
+        const m2 = appData.results.find(r => r.provider === selectedForCompare[1]);
+        
+        if (!m1 || !m2) return;
+
+        const html = `
+            <div class="compare-grid">
+                <div class="compare-col">
+                    <h3 style="color:#fff; border-bottom:1px solid #333; padding-bottom:10px;">${m1.provider}</h3>
+                    <div class="compare-score">${m1.braiain_score}</div>
+                    <div style="margin:10px 0; font-size:0.8rem; color:#aaa;">
+                        Speed: ${m1.time}s | TPS: ${m1.tokens_per_second} | Quality: ${m1.quality_score}
+                    </div>
+                    <div style="font-family:monospace; white-space:pre-wrap; font-size:0.8rem; color:#ddd;">${m1.full_response}</div>
+                </div>
+                <div class="compare-col">
+                    <h3 style="color:#fff; border-bottom:1px solid #333; padding-bottom:10px;">${m2.provider}</h3>
+                    <div class="compare-score">${m2.braiain_score}</div>
+                    <div style="margin:10px 0; font-size:0.8rem; color:#aaa;">
+                        Speed: ${m2.time}s | TPS: ${m2.tokens_per_second} | Quality: ${m2.quality_score}
+                    </div>
+                    <div style="font-family:monospace; white-space:pre-wrap; font-size:0.8rem; color:#ddd;">${m2.full_response}</div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('compare-body').innerHTML = html;
+        document.getElementById('compare-modal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCompareModal() {
+        document.getElementById('compare-modal').style.display = 'none';
         document.body.style.overflow = 'auto';
     }
 
@@ -951,7 +1078,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         const datasets = Array.from(providers).map((p, i) => ({
             label: p,
             borderColor: colors[i % colors.length],
-            borderWidth: 2,
+            borderWidth: 3, // Thicker lines for visibility
             pointRadius: 3,
             tension: 0.4,
             data: history.map(h => {
