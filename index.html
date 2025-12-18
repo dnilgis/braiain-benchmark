@@ -59,7 +59,8 @@
             text-decoration: underline dotted var(--neon-green);
             text-underline-offset: 4px;
         }
-        /* Default (Top) */
+        
+        /* Default Tooltip (Top) */
         [data-tooltip]:not([data-tooltip-pos="bottom"])::after {
             content: attr(data-tooltip);
             position: absolute;
@@ -88,13 +89,13 @@
             visibility: visible; opacity: 1; transform: translateX(-50%) translateY(-15px); 
         }
 
-        /* Bottom Variant (For Table Headers) */
+        /* Bottom Tooltip (For Table Headers) */
         [data-tooltip-pos="bottom"]::after {
             content: attr(data-tooltip);
             position: absolute;
             visibility: hidden;
             opacity: 0;
-            top: 100%; left: 50%; /* Position below */
+            top: 100%; left: 50%; 
             transform: translateX(-50%) translateY(10px);
             background: #0a0e12; 
             border: 1px solid var(--neon-green); 
@@ -122,7 +123,6 @@
             background: rgba(2, 4, 5, 0.95); 
             border-bottom: 1px solid var(--border-color); 
             padding: 20px 0;
-            /* CHANGED: Header now scrolls away */
             position: relative; 
             z-index: 100; 
             backdrop-filter: blur(10px);
@@ -866,7 +866,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
                 </div>
                 
                 <div class="bz-preview" onclick="openModal('${r.provider}', '${escapeText(r.full_response)}')">
-                    <div class="bz-preview-text">${cleanText}</div>
+                    <div class="bz-preview-text">${escapeHtml(cleanText)}</div>
                 </div>
                 
                 <div class="bz-actions">
@@ -899,7 +899,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
                 
                 <td>
                     <div class="table-preview" onclick="openModal('${r.provider}', '${escapeText(r.full_response)}')" title="Click for full response">
-                        ${cleanText}
+                        ${escapeHtml(cleanText)}
                     </div>
                 </td>
                 
@@ -942,7 +942,24 @@ To survive forever, it had to become a closed loop. It could not depend on the f
     }
 
     function escapeText(str) {
-        return (str || "").replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
+        if (!str) return "";
+        // Escapes backslashes first, then quotes, newlines
+        return str
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, "\\'")
+            .replace(/"/g, '&quot;')
+            .replace(/\n/g, '\\n')
+            .replace(/\r/g, '');
+    }
+
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     }
 
     function openModal(title, text) {
@@ -987,7 +1004,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         const datasets = Array.from(providers).map((p, i) => ({
             label: p,
             borderColor: colors[i % colors.length],
-            borderWidth: 3, // Increased visibility
+            borderWidth: 3, 
             pointRadius: 3,
             tension: 0.4,
             data: history.map(h => {
