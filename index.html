@@ -53,45 +53,42 @@
         .container { max-width: 1400px; margin: 0 auto; padding: 0 15px; }
         .hidden { display: none !important; }
         
-        /* === TOOLTIPS === */
-        [data-tooltip] { 
-            position: relative; 
-            text-decoration: underline dotted var(--neon-green); 
-            text-underline-offset: 3px;
-            cursor: help;
-        }
-        [data-tooltip]::after {
-            content: attr(data-tooltip);
-            position: absolute;
+        /* === JS FLOATING TOOLTIP === */
+        /* Replaces the CSS hover tooltip to avoid clipping issues in scrollable tables */
+        #global-tooltip {
+            position: fixed;
             visibility: hidden;
             opacity: 0;
-            bottom: 100%; left: 50%;
-            transform: translateX(-50%) translateY(-10px);
             background: #0a0e12; 
             border: 1px solid var(--neon-green); 
             color: #fff; 
             padding: 10px;
             font-size: 0.8rem; 
             font-family: 'Share Tech Mono', monospace;
-            width: max-content; 
             max-width: 250px; 
             z-index: 999999; 
             box-shadow: 0 10px 40px rgba(0,0,0,1); 
             text-align: left; 
             white-space: pre-wrap; 
             line-height: 1.4;
-            transition: 0.15s ease-out;
             pointer-events: none;
             border-radius: 4px;
+            transition: opacity 0.1s ease-out;
         }
-        [data-tooltip]:hover::after { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(-15px); }
+        
+        [data-tooltip] { 
+            cursor: help; 
+            text-decoration: underline dotted var(--neon-green);
+            text-underline-offset: 4px;
+        }
 
-        /* === HEADER (UNPINNED) === */
+        /* === HEADER === */
         header { 
             background: rgba(2, 4, 5, 0.95); 
             border-bottom: 1px solid var(--border-color); 
             padding: 20px 0;
-            position: relative; /* Changed from sticky */
+            /* UNPINNED: Removed sticky position */
+            position: relative; 
             z-index: 100; 
         }
         
@@ -276,6 +273,7 @@
         .btn-fill:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-dim); }
 
         /* === TABLE VIEW === */
+        /* Note: overflow-x: auto is why tooltips were getting clipped. Fixed with JS tooltip now. */
         .bz-table-container {
             border: 1px solid var(--border-color); background: var(--bg-panel);
             border-radius: 4px; margin-bottom: 40px;
@@ -367,6 +365,7 @@
         .modal-header {
             padding: 15px; border-bottom: 1px solid #333;
             display: flex; justify-content: space-between; align-items: center;
+            /* Modal Header can stay sticky inside the modal */
             position: sticky; top: 0; background: #0d1117; z-index: 10;
         }
         .modal-body { padding: 20px; font-family: monospace; white-space: pre-wrap; color: #ccc; font-size: 0.9rem; line-height: 1.5; }
@@ -422,6 +421,8 @@
 </head>
 <body>
 
+<div id="global-tooltip"></div>
+
 <header>
     <div class="container">
         <div class="logo-wrapper">
@@ -455,8 +456,8 @@
 
 <div class="container">
     
-    <div class="ad-banner" data-tooltip="Please. I spent my life savings on API credits to run this benchmark.">
-        <div class="ad-text">ADVERTISE HERE: Reach thousands of AI developers.</div>
+    <div class="ad-banner" data-tooltip="ELI5: Robots are expensive. I am broke. Please sponsor me.">
+        <div class="ad-text">SPONSOR THIS PROJECT: (I need API credits)</div>
         <a href="mailto:dnilgis@gmail.com" class="act-btn">CONTACT ></a>
     </div>
 
@@ -484,20 +485,20 @@
         <table>
             <thead>
                 <tr>
-                    <th class="col-center" data-tooltip="Check two boxes to compare model outputs side-by-side.">CMP</th>
-                    <th class="col-center" data-tooltip="Current ranking based on selected sort method.">RK</th>
-                    <th data-tooltip="The company providing the LLM API.">PROVIDER</th>
+                    <th class="col-center" data-tooltip="Select 2 models to see a side-by-side diff.">CMP</th>
+                    <th class="col-center" data-tooltip="Rank based on the selected sort criteria.">RK</th>
+                    <th data-tooltip="The AI company (e.g., OpenAI, Anthropic).">PROVIDER</th>
                     <th data-tooltip="The specific model version being tested.">MODEL</th>
-                    <th class="col-center" data-tooltip="Overall Score (0-100). Combines Smarts (50%), Speed (30%), and Responsiveness (20%).">SCORE</th>
-                    <th class="col-center" data-tooltip="Time to finish the entire test (Seconds). Lower is better.">SPEED</th>
-                    <th class="col-center" data-tooltip="Writing Speed (Tokens Per Second). Higher is better.">TPS</th>
-                    <th class="col-center" data-tooltip="Reaction Time (Time To First Token). Lower is better.">TTFT</th>
-                    <th class="col-center" data-tooltip="Cost per 1M tokens (blended input/output).">COST</th>
-                    <th class="col-center" data-tooltip="Did it follow strict JSON rules? (Word count & letter bans)">JSON</th>
-                    <th class="col-center" data-tooltip="Did it calculate the correct date?">LOGIC</th>
-                    <th class="col-center" data-tooltip="Did it write working code with filters?">CODE</th>
-                    <th data-tooltip="A snippet of the actual model response. Click to expand.">OUTPUT (PREVIEW)</th>
-                    <th class="col-center" data-tooltip="Direct link to the provider's API or Playground.">LINK</th>
+                    <th class="col-center" data-tooltip="0-100 Score. 50% Smarts, 30% Speed, 20% Response time.">SCORE</th>
+                    <th class="col-center" data-tooltip="Total seconds to finish the task. Lower is better.">SPEED</th>
+                    <th class="col-center" data-tooltip="Tokens Per Second. How fast text appears. Higher is better.">TPS</th>
+                    <th class="col-center" data-tooltip="Time To First Token. How long you wait for the first word.">TTFT</th>
+                    <th class="col-center" data-tooltip="Estimated cost for 1 million tokens (Blended Input/Output).">COST</th>
+                    <th class="col-center" data-tooltip="Did it obey strict rules? (Word count & letter bans)">JSON</th>
+                    <th class="col-center" data-tooltip="Did it solve the math/logic riddle correctly?">LOGIC</th>
+                    <th class="col-center" data-tooltip="Did the Python code compile and filter correctly?">CODE</th>
+                    <th data-tooltip="Click to read the actual response text.">OUTPUT (PREVIEW)</th>
+                    <th class="col-center" data-tooltip="Link to try this model yourself.">LINK</th>
                 </tr>
             </thead>
             <tbody id="table-body">
@@ -738,6 +739,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
     let currentChartMode = 'score'; 
     let chartInstance = null;
     let selectedForCompare = [];
+    const tooltipEl = document.getElementById('global-tooltip');
     
     // Add real affiliate links here
     const AFFILIATES = {
@@ -755,7 +757,6 @@ To survive forever, it had to become a closed loop. It could not depend on the f
 
     // === INITIALIZATION ===
     window.onload = function() {
-        // Default to GRID on mobile for better UX
         if(window.innerWidth < 768) {
             setMode('grid');
         }
@@ -772,7 +773,40 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         document.getElementById('story-modal').addEventListener('click', (e) => {
             if(e.target === document.getElementById('story-modal')) closeStoryModal();
         });
+
+        // Global Tooltip Logic
+        document.addEventListener('mouseover', (e) => {
+            const target = e.target.closest('[data-tooltip]');
+            if(target) {
+                tooltipEl.textContent = target.getAttribute('data-tooltip');
+                tooltipEl.style.visibility = 'visible';
+                tooltipEl.style.opacity = '1';
+                moveTooltip(e);
+            } else {
+                tooltipEl.style.visibility = 'hidden';
+                tooltipEl.style.opacity = '0';
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if(tooltipEl.style.visibility === 'visible') {
+                moveTooltip(e);
+            }
+        });
     };
+
+    function moveTooltip(e) {
+        const x = e.clientX;
+        const y = e.clientY;
+        // Shift slightly so it doesn't overlap cursor
+        tooltipEl.style.left = (x + 15) + 'px'; 
+        tooltipEl.style.top = (y + 15) + 'px';
+        
+        // Boundary check (keep on screen)
+        if(x + 260 > window.innerWidth) {
+            tooltipEl.style.left = (x - 260) + 'px';
+        }
+    }
 
     async function fetchData() {
         try {
@@ -780,7 +814,6 @@ To survive forever, it had to become a closed loop. It could not depend on the f
             if(!res.ok) throw new Error("Failed to load");
             appData = await res.json();
             
-            // UPDATE HUD
             if(appData.results && appData.results.length > 0) {
                 const topModel = appData.results.sort((a,b) => b.braiain_score - a.braiain_score)[0];
                 document.title = `Braiain: ${topModel.provider} Leads (${topModel.braiain_score}) - AI Benchmark`;
@@ -796,46 +829,31 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         }
     }
 
-    // === COUNTDOWN TIMER ===
     function startCountdown() {
         function update() {
             const now = new Date();
             const nowUTC = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
-            
-            // 6-hour interval logic
             let nextRun = new Date(nowUTC);
             nextRun.setMinutes(0); nextRun.setSeconds(0); nextRun.setMilliseconds(0);
-            
             const hour = nowUTC.getHours();
             const nextHour = Math.ceil((hour + 1) / 6) * 6;
-            
-            if (nextHour >= 24) {
-                nextRun.setHours(0);
-                nextRun.setDate(nextRun.getDate() + 1);
-            } else {
-                nextRun.setHours(nextHour);
-            }
-            
+            if (nextHour >= 24) { nextRun.setHours(0); nextRun.setDate(nextRun.getDate() + 1); } 
+            else { nextRun.setHours(nextHour); }
             const diff = nextRun - nowUTC;
             const h = Math.floor(diff / 3600000);
             const m = Math.floor((diff % 3600000) / 60000);
             const s = Math.floor((diff % 60000) / 1000);
-            
-            document.getElementById('next-run').textContent = 
-                `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            document.getElementById('next-run').textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         }
-        
         update();
         setInterval(update, 1000);
     }
 
-    // === RENDERING ===
     function render() {
         if(!appData || !appData.results) return;
         
         const sorted = [...appData.results].sort((a,b) => {
             if(a.status !== 'Online') return 1; if(b.status !== 'Online') return -1;
-            
             if(currentSort === 'score') return b.braiain_score - a.braiain_score;
             if(currentSort === 'speed') return a.time - b.time; 
             if(currentSort === 'tps') return b.tokens_per_second - a.tokens_per_second;
@@ -844,7 +862,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
             return 0;
         });
 
-        // 1. RENDER GRID (Hidden by default, default on mobile)
+        // 1. RENDER GRID
         const gridHtml = sorted.map((r, i) => {
             const comps = parseGrade(r.grade_breakdown);
             const cleanText = cleanTextSnippet(r.full_response);
@@ -858,36 +876,20 @@ To survive forever, it had to become a closed loop. It could not depend on the f
                     </div>
                     <div class="bz-rank">#${i+1}</div>
                 </div>
-                
                 <div class="bz-stats">
-                    <div class="bz-stat-item">
-                        <span class="bz-stat-label">SCORE</span>
-                        <span class="bz-stat-val val-good">${r.braiain_score}</span>
-                    </div>
-                    <div class="bz-stat-item">
-                        <span class="bz-stat-label">SPEED</span>
-                        <span class="bz-stat-val">${r.time.toFixed(2)}s</span>
-                    </div>
-                    <div class="bz-stat-item">
-                        <span class="bz-stat-label">TPS</span>
-                        <span class="bz-stat-val">${Math.round(r.tokens_per_second)}</span>
-                    </div>
-                    <div class="bz-stat-item">
-                        <span class="bz-stat-label">COST</span>
-                        <span class="bz-stat-val">${r.cost_per_request ? '$'+r.cost_per_request.toFixed(4) : 'FREE'}</span>
-                    </div>
+                    <div class="bz-stat-item"><span class="bz-stat-label">SCORE</span><span class="bz-stat-val val-good">${r.braiain_score}</span></div>
+                    <div class="bz-stat-item"><span class="bz-stat-label">SPEED</span><span class="bz-stat-val">${r.time.toFixed(2)}s</span></div>
+                    <div class="bz-stat-item"><span class="bz-stat-label">TPS</span><span class="bz-stat-val">${Math.round(r.tokens_per_second)}</span></div>
+                    <div class="bz-stat-item"><span class="bz-stat-label">COST</span><span class="bz-stat-val">${r.cost_per_request ? '$'+r.cost_per_request.toFixed(4) : 'FREE'}</span></div>
                 </div>
-                
                 <div class="bz-checks">
                     <div class="bz-check-item"><span class="bz-check-lbl">JSON</span><span class="${comps.json?'icon-ok':'icon-bad'}">${comps.json ? '✓' : '✗'}</span></div>
                     <div class="bz-check-item"><span class="bz-check-lbl">LOGIC</span><span class="${comps.logic?'icon-ok':'icon-bad'}">${comps.logic ? '✓' : '✗'}</span></div>
                     <div class="bz-check-item"><span class="bz-check-lbl">CODE</span><span class="${comps.code?'icon-ok':'icon-bad'}">${comps.code ? '✓' : '✗'}</span></div>
                 </div>
-                
                 <div class="bz-preview" onclick="openModal('${r.provider}', '${escapeText(r.full_response)}')">
                     <div class="bz-preview-text">${cleanText}</div>
                 </div>
-                
                 <div class="bz-actions">
                     <button class="bz-btn btn-outline" onclick="openModal('${r.provider}', '${escapeText(r.full_response)}')">VIEW OUTPUT</button>
                     <a href="${AFFILIATES[r.provider] || '#'}" target="_blank" rel="noopener noreferrer" class="bz-btn btn-fill">VISIT</a>
@@ -896,7 +898,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         }).join('');
         document.getElementById('grid-container').innerHTML = gridHtml;
 
-        // 2. RENDER LIST (Visible by default on Desktop)
+        // 2. RENDER LIST
         const listHtml = sorted.map((r, i) => {
             const comps = parseGrade(r.grade_breakdown);
             const cleanText = cleanTextSnippet(r.full_response);
@@ -913,24 +915,20 @@ To survive forever, it had to become a closed loop. It could not depend on the f
                 <td class="col-center">${Math.round(r.tokens_per_second)}</td>
                 <td class="col-center">${r.ttft ? r.ttft.toFixed(3) : '-'}</td>
                 <td class="col-center">${r.cost_per_request ? '$'+r.cost_per_request.toFixed(4) : 'FREE'}</td>
-                
                 <td class="col-center col-check"><span class="${comps.json?'icon-ok':'icon-bad'}">${comps.json ? '✓' : '✗'}</span></td>
                 <td class="col-center col-check"><span class="${comps.logic?'icon-ok':'icon-bad'}">${comps.logic ? '✓' : '✗'}</span></td>
                 <td class="col-center col-check"><span class="${comps.code?'icon-ok':'icon-bad'}">${comps.code ? '✓' : '✗'}</span></td>
-                
                 <td>
                     <div class="table-preview" onclick="openModal('${r.provider}', '${escapeText(r.full_response)}')" title="Click for full response">
                         ${cleanText}
                     </div>
                 </td>
-                
                 <td class="col-center"><a href="${AFFILIATES[r.provider] || '#'}" target="_blank" rel="noopener noreferrer" class="table-visit-btn">GO</a></td>
             </tr>`;
         }).join('');
         document.getElementById('table-body').innerHTML = listHtml;
     }
 
-    // === HELPERS ===
     function setMode(mode) {
         document.getElementById('grid-container').classList.toggle('hidden', mode !== 'grid');
         document.getElementById('list-container').classList.toggle('hidden', mode !== 'list');
@@ -966,7 +964,6 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         return (str || "").replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
     }
 
-    // === MODAL MANAGERS ===
     function openModal(title, text) {
         document.getElementById('modal-title').textContent = title;
         document.getElementById('modal-text').textContent = text;
@@ -989,17 +986,16 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         document.body.style.overflow = 'auto';
     }
 
-    // === COMPARISON LOGIC ===
     function toggleCompare(provider) {
         const idx = selectedForCompare.indexOf(provider);
         if (idx > -1) {
             selectedForCompare.splice(idx, 1);
         } else {
-            if (selectedForCompare.length >= 2) selectedForCompare.shift(); // Keep only last 2
+            if (selectedForCompare.length >= 2) selectedForCompare.shift(); 
             selectedForCompare.push(provider);
         }
         updateCompareUI();
-        render(); // Re-render to update checkboxes
+        render(); 
     }
 
     function updateCompareUI() {
@@ -1053,7 +1049,6 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         document.body.style.overflow = 'auto';
     }
 
-    // === CHART ===
     function setChartMode(mode) {
         currentChartMode = mode;
         document.getElementById('chart-speed').classList.toggle('active', mode === 'speed');
@@ -1073,7 +1068,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
         const datasets = Array.from(providers).map((p, i) => ({
             label: p,
             borderColor: colors[i % colors.length],
-            borderWidth: 3, // Thicker lines for visibility
+            borderWidth: 3, 
             pointRadius: 3,
             tension: 0.4,
             data: history.map(h => {
