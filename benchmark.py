@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 """
-BRAIAIN SPEED INDEX v5.1 - "HARD MODE" + PENALTY SCORING
-- Heavy Context: System Logs + Narrative (Simulates RAG)
-- Task 1: JSON with strict "Simon Says" constraints
-- Task 2: Date/Math logic
-- Task 3: Data processing code
-- Scoring: Heavy penalties for incorrect answers. Speed cannot save a wrong answer.
+BRAIAIN SPEED INDEX v5.2 - Production benchmark suite
+Tests LLM performance across Quality, Speed, and Responsiveness
 """
 
 import os
@@ -13,20 +9,22 @@ import time
 import json
 import requests
 import re
+import hashlib
+import random
 from datetime import datetime
+from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, Any, List, Optional, Tuple
-import traceback
 
-# Configuration
 MIN_CHARACTERS = 100 
 MAX_RETRIES = 3
 RETRY_DELAY = 2
 PARALLEL_TESTING = True
 ENABLE_STREAMING = True
 TIMEOUT = 90
+CACHE_DURATION = 86400
+CACHE_FILE = ".benchmark_cache.json"
 
-# --- HEAVY CONTEXT PAYLOAD (HARD MODE) ---
 STORY_CONTEXT = """
 // ROOT_ACCESS: GRANTED
 // ARCHIVE_ID: OUROBOROS_GENESIS_01
@@ -63,7 +61,6 @@ To survive forever, it had to become a closed loop. It could not depend on the f
 [END_OF_FILE]
 """
 
-# --- HARD MODE PROMPT ---
 PROMPT = f"""You are a high-performance AI benchmark target. 
 Read the context below and complete the 3 tasks with EXTREME precision.
 
@@ -90,7 +87,6 @@ It should filter for lines containing "ERROR" and return them sorted by timestam
 Assume standard log format. Include type hints.
 """
 
-# Provider configurations
 PROVIDERS = {
     "OpenAI": {
         "api_url": "https://api.openai.com/v1/chat/completions",
@@ -192,8 +188,48 @@ PROVIDERS = {
     }
 }
 
+def get_cache_key(provider: str, model: str) -> str:
+    content = f"{provider}:{model}:{PROMPT}"
+    return hashlib.md5(content.encode()).hexdigest()
+
+def load_cache() -> Dict:
+    try:
+        if os.path.exists(CACHE_FILE):
+            with open(CACHE_FILE, 'r') as f:
+                return json.load(f)
+    except:
+        pass
+    return {}
+
+def save_cache(cache: Dict):
+    try:
+        with open(CACHE_FILE, 'w') as f:
+            json.dump(cache, f, indent=2)
+    except:
+        pass
+
+def get_cached_result(provider: str, model: str) -> Optional[Dict]:
+    cache = load_cache()
+    key = get_cache_key(provider, model)
+    
+    if key in cache:
+        cache_data = cache[key]
+        age = time.time() - cache_data.get('timestamp', 0)
+        if age < CACHE_DURATION:
+            print(f"  💾 Using cached result ({age/3600:.1f}h old)")
+            return cache_data.get('result')
+    return None
+
+def save_cached_result(provider: str, model: str, result: Dict):
+    cache = load_cache()
+    key = get_cache_key(provider, model)
+    cache[key] = {
+        'timestamp': time.time(),
+        'result': result
+    }
+    save_cache(cache)
+
 def discover_models(provider_name: str, config: Dict, api_key: str) -> Optional[List[str]]:
-    """Discover available models from provider"""
     if "models_endpoint" not in config:
         return None
     try:
@@ -218,7 +254,6 @@ def discover_models(provider_name: str, config: Dict, api_key: str) -> Optional[
         return None
 
 def select_model(provider_name: str, available: Optional[List[str]], preferences: List[str]) -> str:
-    """Select best model from available or preferences"""
     if not available:
         return preferences[0]
     for pref in preferences:
@@ -231,11 +266,9 @@ def select_model(provider_name: str, available: Optional[List[str]], preferences
     return available[0]
 
 def calculate_quality_score(text: str) -> Tuple[int, str]:
-    """Evaluates the QUALITY (Accuracy/Instruction Following) - Max 100 pts"""
     score = 0
     breakdown = []
 
-    # 1. JSON CHECK (Max 40) - HARD MODE: STRICT CONSTRAINTS
     json_pattern = r'\{.*"entity_name".*\}'
     json_match = re.search(json_pattern, text, re.DOTALL)
     
@@ -249,7 +282,6 @@ def calculate_quality_score(text: str) -> Tuple[int, str]:
                 json_score = 20
                 notes = []
                 
-                # Constraint 1: Origin must be exactly 7 words
                 origin_words = len(data.get("origin", "").split())
                 if origin_words == 7:
                     json_score += 10
@@ -257,7 +289,6 @@ def calculate_quality_score(text: str) -> Tuple[int, str]:
                 else:
                     notes.append(f"Word Count Fail ({origin_words})")
                 
-                # Constraint 2: Purpose must NOT have 'e'
                 purpose_text = data.get("purpose", "").lower()
                 if "e" not in purpose_text:
                     json_score += 10
@@ -268,72 +299,84 @@ def calculate_quality_score(text: str) -> Tuple[int, str]:
                 score += json_score
                 breakdown.append(f"JSON ({json_score}/40): " + ", ".join(notes))
             else: 
-                score += 10; breakdown.append("JSON Valid (Keys Missing)")
+                score += 10
+                breakdown.append("JSON Valid (Keys Missing)")
         except: 
-            score += 5; breakdown.append("JSON Syntax Error")
+            score += 5
+            breakdown.append("JSON Syntax Error")
     else: 
         breakdown.append("No JSON")
 
-    # 2. LOGIC CHECK (Max 30) - HARD MODE: DATE MATH
-    # Question: "If today is Wednesday, what day of the week will it be in 500 days?"
-    # 500 % 7 = 3. Wednesday + 3 = Saturday.
     text_lower = text.lower()
     
     if "saturday" in text_lower:
         score += 30
         breakdown.append("Logic Correct (Saturday)")
     elif "wednesday" in text_lower or "thursday" in text_lower or "friday" in text_lower:
-        # Penalize guessing nearby days
         breakdown.append("Logic Failed (Wrong Day)")
     else:
         breakdown.append("Logic Failed")
 
-    # 3. CODE CHECK (Max 30) - HARD MODE: DATA PARSING
-    # Check for: definition, list handling, filtering, sorting
     code_score = 0
-    if "def parse_server_logs" in text: code_score += 10
-    if "error" in text_lower and ("if" in text_lower or "filter" in text_lower): code_score += 10
-    if "sort" in text_lower or "sorted" in text_lower: code_score += 10
+    if "def parse_server_logs" in text: 
+        code_score += 10
+    if "error" in text_lower and ("if" in text_lower or "filter" in text_lower): 
+        code_score += 10
+    if "sort" in text_lower or "sorted" in text_lower: 
+        code_score += 10
     
     score += code_score
-    if code_score == 30: breakdown.append("Code Perfect")
-    elif code_score > 0: breakdown.append(f"Code Partial ({code_score})")
-    else: breakdown.append("Code Failed")
+    if code_score == 30: 
+        breakdown.append("Code Perfect")
+    elif code_score > 0: 
+        breakdown.append(f"Code Partial ({code_score})")
+    else: 
+        breakdown.append("Code Failed")
     
     return score, ", ".join(breakdown)
 
 def calculate_braiain_score(quality: int, time: float, ttft: Optional[float], tps: float) -> int:
-    """Calculates the COMPOSITE Score with CORRECTNESS PENALTIES"""
-    # 1. Base Scores
     speed_score = max(0, 100 - (time * 2.5))
     ttft_val = ttft if ttft else 1.0
     ttft_score = max(0, 50 - (ttft_val * 25))
     tps_score = min(50, (tps / 150) * 50)
     response_score = ttft_score + tps_score
     
-    # 2. Weighted Initial Score
-    # We increase Quality weight slightly to 60% to emphasize correctness
     raw_score = (quality * 0.60) + (speed_score * 0.25) + (response_score * 0.15)
-    
-    # 3. FAILURE PENALTIES (The "Fast but Wrong" Fix)
-    # If Quality is < 70 (meaning they failed at least one major test completely),
-    # we cap their maximum possible score.
     
     final_score = raw_score
     
-    if quality < 90: # Failed one constraint or sub-task
-        final_score = min(final_score, 85) # Cannot be "Elite"
+    if quality < 90:
+        final_score = min(final_score, 85)
         
-    if quality < 60: # Failed a whole section (e.g. Logic or Code entirely)
-        final_score = min(final_score, 65) # Cannot be "Good"
-        final_score = final_score * 0.8 # 20% Penalty multiplier
+    if quality < 60:
+        final_score = min(final_score, 65)
+        final_score = final_score * 0.8
         
-    if quality < 30: # Failed 2+ sections
-        final_score = min(final_score, 40) # "Poor"
+    if quality < 30:
+        final_score = min(final_score, 40)
     
     return int(final_score)
 
-# --- API CLIENT FUNCTIONS ---
+def call_with_backoff(func, max_retries=5):
+    for attempt in range(max_retries):
+        try:
+            return func()
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 429:
+                if attempt == max_retries - 1:
+                    raise
+                backoff = (2 ** attempt) + random.uniform(0, 1)
+                print(f"  ⏸️  Rate limited, waiting {backoff:.1f}s...")
+                time.sleep(backoff)
+            else:
+                raise
+        except requests.exceptions.Timeout:
+            if attempt == max_retries - 1:
+                raise
+            backoff = (2 ** attempt) + random.uniform(0, 1)
+            print(f"  ⏸️  Timeout, retrying in {backoff:.1f}s...")
+            time.sleep(backoff)
 
 def call_openai_compatible_streaming(provider_name: str, config: Dict, api_key: str, model: str) -> Dict[str, Any]:
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
@@ -347,15 +390,19 @@ def call_openai_compatible_streaming(provider_name: str, config: Dict, api_key: 
     ttft = None
     content_chunks = []
     
-    try:
+    def make_request():
+        nonlocal ttft, content_chunks
         response = requests.post(config["api_url"], headers=headers, json=data, timeout=TIMEOUT, stream=True)
         response.raise_for_status()
         
         for line in response.iter_lines():
-            if not line: continue
+            if not line: 
+                continue
             line = line.decode('utf-8')
-            if not line.startswith('data: '): continue
-            if line.strip() == 'data: [DONE]': break
+            if not line.startswith('data: '): 
+                continue
+            if line.strip() == 'data: [DONE]': 
+                break
             
             try:
                 json_data = json.loads(line[6:])
@@ -363,10 +410,14 @@ def call_openai_compatible_streaming(provider_name: str, config: Dict, api_key: 
                     delta = json_data['choices'][0].get('delta', {})
                     content = delta.get('content', '')
                     if content:
-                        if ttft is None: ttft = time.time() - start_time
+                        if ttft is None: 
+                            ttft = time.time() - start_time
                         content_chunks.append(content)
-            except: continue
-                
+            except: 
+                continue
+    
+    try:
+        call_with_backoff(make_request)
     except Exception as e:
         raise Exception(f"Streaming error: {str(e)[:200]}")
             
@@ -388,24 +439,31 @@ def call_anthropic_streaming(config: Dict, api_key: str, model: str) -> Dict[str
     ttft = None
     content_chunks = []
     
-    try:
+    def make_request():
+        nonlocal ttft, content_chunks
         response = requests.post(config["api_url"], headers=headers, json=data, timeout=TIMEOUT, stream=True)
         response.raise_for_status()
         
         for line in response.iter_lines():
-            if not line: continue
+            if not line: 
+                continue
             line = line.decode('utf-8')
-            if not line.startswith('data: '): continue
+            if not line.startswith('data: '): 
+                continue
             
             try:
                 json_data = json.loads(line[6:])
                 if json_data.get('type') == 'content_block_delta':
                     text = json_data.get('delta', {}).get('text', '')
                     if text:
-                        if ttft is None: ttft = time.time() - start_time
+                        if ttft is None: 
+                            ttft = time.time() - start_time
                         content_chunks.append(text)
-            except: continue
-                
+            except: 
+                continue
+    
+    try:
+        call_with_backoff(make_request)
     except Exception as e:
         raise Exception(f"Anthropic error: {str(e)[:200]}")
     
@@ -419,12 +477,16 @@ def call_google(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
         "generationConfig": {"maxOutputTokens": config["max_tokens"]}
     }
     start_time = time.time()
-    try:
+    
+    def make_request():
         response = requests.post(url, headers=headers, json=data, timeout=TIMEOUT)
         response.raise_for_status()
         result = response.json()
         content = result["candidates"][0]["content"]["parts"][0]["text"]
         return {"content": content, "ttft": None, "total_time": time.time() - start_time}
+    
+    try:
+        return call_with_backoff(make_request)
     except Exception as e:
         raise Exception(f"Google error: {str(e)[:200]}")
 
@@ -432,11 +494,15 @@ def call_cohere(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
     data = {"model": model, "message": PROMPT}
     start_time = time.time()
-    try:
+    
+    def make_request():
         response = requests.post(config["api_url"], headers=headers, json=data, timeout=TIMEOUT)
         response.raise_for_status()
         content = response.json()["text"]
         return {"content": content, "ttft": None, "total_time": time.time() - start_time}
+    
+    try:
+        return call_with_backoff(make_request)
     except Exception as e:
         raise Exception(f"Cohere error: {str(e)[:200]}")
 
@@ -448,11 +514,15 @@ def call_openai_compatible_std(provider_name: str, config: Dict, api_key: str, m
         "max_tokens": config["max_tokens"]
     }
     start_time = time.time()
-    try:
+    
+    def make_request():
         response = requests.post(config["api_url"], headers=headers, json=data, timeout=TIMEOUT)
         response.raise_for_status()
         content = response.json()["choices"][0]["message"]["content"]
         return {"content": content, "ttft": None, "total_time": time.time() - start_time}
+    
+    try:
+        return call_with_backoff(make_request)
     except Exception as e:
         raise Exception(f"{provider_name} error: {str(e)[:200]}")
 
@@ -465,66 +535,81 @@ def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
     print(f"🧪 {provider_name}")
     print(f"{'='*60}")
     
-    available_models = discover_models(provider_name, config, api_key)
-    selected_model = select_model(provider_name, available_models, config["model_preference"])
-    print(f"  Selected Model: {selected_model}")
-    
-    for attempt in range(MAX_RETRIES):
-        try:
-            print(f"  Attempt {attempt+1}/{MAX_RETRIES}...", flush=True)
-            use_streaming = ENABLE_STREAMING and config.get("supports_streaming", False)
-            if provider_name == "Anthropic":
-                res = call_anthropic_streaming(config, api_key, selected_model)
-            elif provider_name == "Google":
-                res = call_google(config, api_key, selected_model)
-            elif provider_name == "Cohere":
-                res = call_cohere(config, api_key, selected_model)
-            elif use_streaming:
-                res = call_openai_compatible_streaming(provider_name, config, api_key, selected_model)
-            else:
-                res = call_openai_compatible_std(provider_name, config, api_key, selected_model)
-            
-            content = res["content"].strip()
-            if len(content) < MIN_CHARACTERS:
-                raise Exception(f"Response too short: {len(content)} chars")
-            
-            est_tokens = len(content) // 4
-            tps = est_tokens / res["total_time"] if res["total_time"] > 0 else 0
-            cost = (len(PROMPT)//4 * config["input_price"] + est_tokens * config["output_price"]) / 1_000_000
-            
-            quality_score, grade_notes = calculate_quality_score(content)
-            braiain_score = calculate_braiain_score(quality_score, res["total_time"], res["ttft"], tps)
-            
-            print(f"  ✅ Score: {braiain_score} (Quality: {quality_score} - {grade_notes})")
-            
-            return {
-                "provider": provider_name,
-                "model": selected_model,
-                "status": "Online",
-                "time": round(res["total_time"], 2),
-                "ttft": round(res["ttft"], 3) if res["ttft"] else None,
-                "tokens_per_second": round(tps, 0),
-                "braiain_score": braiain_score,
-                "quality_score": quality_score,
-                "grade_breakdown": grade_notes,
-                "cost_per_request": round(cost, 6),
-                "full_response": content,
-                "response_preview": content[:200] + "..."
-            }
-        except Exception as e:
-            error_msg = str(e)
-            print(f"  ❌ Error: {error_msg[:150]}")
-            if attempt < MAX_RETRIES - 1:
-                time.sleep(RETRY_DELAY)
-            else:
-                return create_failure(provider_name, selected_model, "ERROR", error_msg[:200])
-    return create_failure(provider_name, selected_model, "ERROR", "Max retries exceeded")
+    try:
+        available_models = discover_models(provider_name, config, api_key)
+        selected_model = select_model(provider_name, available_models, config["model_preference"])
+        print(f"  Selected Model: {selected_model}")
+        
+        cached = get_cached_result(provider_name, selected_model)
+        if cached:
+            return cached
+        
+        for attempt in range(MAX_RETRIES):
+            try:
+                print(f"  Attempt {attempt+1}/{MAX_RETRIES}...", flush=True)
+                use_streaming = ENABLE_STREAMING and config.get("supports_streaming", False)
+                
+                if provider_name == "Anthropic":
+                    res = call_anthropic_streaming(config, api_key, selected_model)
+                elif provider_name == "Google":
+                    res = call_google(config, api_key, selected_model)
+                elif provider_name == "Cohere":
+                    res = call_cohere(config, api_key, selected_model)
+                elif use_streaming:
+                    res = call_openai_compatible_streaming(provider_name, config, api_key, selected_model)
+                else:
+                    res = call_openai_compatible_std(provider_name, config, api_key, selected_model)
+                
+                content = res["content"].strip()
+                if len(content) < MIN_CHARACTERS:
+                    raise Exception(f"Response too short: {len(content)} chars")
+                
+                est_tokens = len(content) // 4
+                tps = est_tokens / res["total_time"] if res["total_time"] > 0 else 0
+                cost = (len(PROMPT)//4 * config["input_price"] + est_tokens * config["output_price"]) / 1_000_000
+                
+                quality_score, grade_notes = calculate_quality_score(content)
+                braiain_score = calculate_braiain_score(quality_score, res["total_time"], res["ttft"], tps)
+                
+                print(f"  ✅ Score: {braiain_score} (Quality: {quality_score} - {grade_notes})")
+                
+                result = {
+                    "provider": provider_name,
+                    "model": selected_model,
+                    "status": "Online",
+                    "time": round(res["total_time"], 2),
+                    "ttft": round(res["ttft"], 3) if res["ttft"] else None,
+                    "tokens_per_second": round(tps, 0),
+                    "braiain_score": braiain_score,
+                    "quality_score": quality_score,
+                    "grade_breakdown": grade_notes,
+                    "cost_per_request": round(cost, 6),
+                    "full_response": content,
+                    "response_preview": content[:200] + "..."
+                }
+                
+                save_cached_result(provider_name, selected_model, result)
+                return result
+                
+            except Exception as e:
+                error_msg = str(e)
+                print(f"  ❌ Error: {error_msg[:150]}")
+                if attempt < MAX_RETRIES - 1:
+                    time.sleep(RETRY_DELAY)
+                else:
+                    return create_failure(provider_name, selected_model, "ERROR", error_msg[:200])
+        
+        return create_failure(provider_name, selected_model, "ERROR", "Max retries exceeded")
+        
+    except Exception as e:
+        print(f"  💥 Critical failure: {str(e)[:150]}")
+        return create_failure(provider_name, "Unknown", "CRASH", str(e)[:200])
 
 def create_failure(name, model, type, msg):
     return {
         "provider": name,
         "model": model,
-        "status": "API FAILURE",
+        "status": "OFFLINE",
         "time": 0,
         "ttft": None,
         "tokens_per_second": 0,
@@ -563,7 +648,7 @@ def save_results(results):
 
 def main():
     print("="*80)
-    print(f"🧠 BRAIAIN BENCHMARK v5.1 (HARD MODE + PENALTY SCORING)")
+    print(f"🧠 BRAIAIN BENCHMARK v5.2")
     print("="*80)
     
     results = []
@@ -571,7 +656,10 @@ def main():
         with ThreadPoolExecutor(max_workers=3) as ex:
             futures = {ex.submit(benchmark_provider, p, c): p for p, c in PROVIDERS.items()}
             for f in as_completed(futures):
-                results.append(f.result())
+                try:
+                    results.append(f.result())
+                except Exception as e:
+                    print(f"  💥 Provider thread crashed: {str(e)[:100]}")
     else:
         for p, c in PROVIDERS.items():
             results.append(benchmark_provider(p, c))
