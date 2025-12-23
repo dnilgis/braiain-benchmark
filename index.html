@@ -313,6 +313,18 @@
             cursor: pointer; display: inline-block; vertical-align: middle;
         }
         .model-select:checked { background: var(--neon-green); border-color: var(--neon-green); }
+        
+        /* Sparkline styling */
+        .sparkline-cell {
+            width: 120px;
+            height: 30px;
+            padding: 4px 8px !important;
+        }
+        .sparkline-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
 
         .methodology-box {
             background: var(--bg-panel); border: 1px solid var(--border-color);
@@ -414,6 +426,8 @@
             .chart-canvas-wrapper { height: 250px; }
             
             .compare-grid { grid-template-columns: 1fr; }
+            
+            #model-overlay-select { width: 100%; }
         }
     </style>
 </head>
@@ -493,6 +507,7 @@
                     <th class="col-center" data-tooltip="Tokens Per Second. How fast text appears. Higher is better.">TPS</th>
                     <th class="col-center" data-tooltip="Time To First Token. How long you wait for the first word.">TTFT</th>
                     <th class="col-center" data-tooltip="Estimated cost for 1 million tokens (Blended Input/Output).">COST</th>
+                    <th class="col-center sparkline-cell" data-tooltip="Last 10 runs performance trend (sparkline).">TREND</th>
                     <th class="col-center" data-tooltip="Did it obey strict rules? (Word count & letter bans)">JSON</th>
                     <th class="col-center" data-tooltip="Did it solve the math/logic riddle correctly?">LOGIC</th>
                     <th class="col-center" data-tooltip="Did the Python code compile and filter correctly?">CODE</th>
@@ -506,15 +521,30 @@
     </div>
 
     <div class="chart-container">
-        <div class="chart-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3 class="chart-title" style="color:#fff; font-family:'Orbitron'; font-size:1.4rem;" data-tooltip="ELI5: A graph showing how each AI performs over time. Did GPT-4 used to win? Did Claude get better? This shows the history.">Historical Performance</h3>
-            <div class="btn-group">
-                <button class="ctrl-btn" id="chart-speed" onclick="setChartMode('speed')">SPEED</button>
-                <button class="ctrl-btn active" id="chart-score" onclick="setChartMode('score')">SCORES</button>
+        <div class="chart-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap: wrap; gap: 10px;">
+            <h3 class="chart-title" style="color:#fff; font-family:'Orbitron'; font-size:1.4rem;" data-tooltip="ELI5: Shows performance trends over time. The shaded bands show normal range (25th-75th percentile). Toggle specific models to compare against the baseline.">Historical Performance Trends</h3>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div class="btn-group">
+                    <button class="ctrl-btn" id="chart-speed" onclick="setChartMode('speed')">SPEED</button>
+                    <button class="ctrl-btn active" id="chart-score" onclick="setChartMode('score')">SCORES</button>
+                </div>
+                <select id="model-overlay-select" onchange="updateChartOverlay()" style="background: #000; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 12px; font-family: 'Share Tech Mono'; font-size: 0.8rem; cursor: pointer;">
+                    <option value="">+ Compare Model</option>
+                </select>
             </div>
         </div>
         <div class="chart-canvas-wrapper">
             <canvas id="mainChart"></canvas>
+        </div>
+        <div style="display: flex; gap: 20px; justify-content: center; margin-top: 15px; flex-wrap: wrap; font-size: 0.75rem; color: var(--text-muted);">
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <div style="width: 20px; height: 3px; background: rgba(0, 255, 65, 0.3);"></div>
+                <span>25th-75th Percentile</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <div style="width: 20px; height: 3px; background: var(--neon-green);"></div>
+                <span>Median (50th)</span>
+            </div>
         </div>
     </div>
 
@@ -779,6 +809,7 @@ Assume standard log format. Include type hints.
     let currentChartMode = 'score'; 
     let chartInstance = null;
     let selectedForCompare = [];
+    let selectedOverlayModels = [];
     const tooltipEl = document.getElementById('global-tooltip');
     
     const AFFILIATES = {
@@ -860,6 +891,7 @@ Assume standard log format. Include type hints.
             document.getElementById('node-count').textContent = appData.results ? appData.results.length : 0;
             document.getElementById('last-run').textContent = appData.last_updated ? appData.last_updated.split(' ')[1] + ' UTC' : 'N/A';
             
+            populateModelSelector();
             render();
             renderChart();
             renderSpeedComparison();
@@ -887,6 +919,74 @@ Assume standard log format. Include type hints.
         }
         update();
         setInterval(update, 1000);
+    }
+
+    function populateModelSelector() {
+        if (!appData || !appData.results) return;
+        
+        const select = document.getElementById('model-overlay-select');
+        const providers = appData.results
+            .filter(r => r.status === 'Online')
+            .sort((a, b) => b.braiain_score - a.braiain_score)
+            .map(r => r.provider);
+        
+        select.innerHTML = '<option value="">+ Compare Model</option>' + 
+            providers.map(p => `<option value="${p}">${p}</option>`).join('');
+    }
+
+    function updateChartOverlay() {
+        const select = document.getElementById('model-overlay-select');
+        const selectedModel = select.value;
+        
+        if (selectedModel && !selectedOverlayModels.includes(selectedModel)) {
+            if (selectedOverlayModels.length >= 3) {
+                selectedOverlayModels.shift();
+            }
+            selectedOverlayModels.push(selectedModel);
+        } else if (!selectedModel) {
+            selectedOverlayModels = [];
+        }
+        
+        select.value = '';
+        renderChart();
+    }
+
+    function drawSparkline(canvas, data) {
+        if (!canvas || !data || data.length === 0) return;
+        
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        ctx.clearRect(0, 0, width, height);
+        
+        const validData = data.filter(d => d !== null && d !== undefined);
+        if (validData.length === 0) return;
+        
+        const min = Math.min(...validData);
+        const max = Math.max(...validData);
+        const range = max - min || 1;
+        
+        const stepX = width / (data.length - 1 || 1);
+        
+        ctx.strokeStyle = '#00ff41';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        
+        data.forEach((value, i) => {
+            if (value === null || value === undefined) return;
+            
+            const x = i * stepX;
+            const y = height - ((value - min) / range) * height;
+            
+            if (i === 0 || data[i - 1] === null) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        });
+        
+        ctx.stroke();
     }
 
     function render() {
@@ -942,6 +1042,10 @@ Assume standard log format. Include type hints.
             const cleanText = cleanTextSnippet(r.full_response);
             const isChecked = selectedForCompare.includes(r.provider) ? 'checked' : '';
             
+            // Get sparkline data from history
+            const sparklineData = getSparklineData(r.provider);
+            const sparklineId = `sparkline-${r.provider.replace(/\s+/g, '-')}`;
+            
             return `
             <tr>
                 <td class="col-center"><input type="checkbox" class="model-select" ${isChecked} onchange="toggleCompare('${r.provider}')"></td>
@@ -953,6 +1057,7 @@ Assume standard log format. Include type hints.
                 <td class="col-center">${Math.round(r.tokens_per_second)}</td>
                 <td class="col-center">${r.ttft ? r.ttft.toFixed(3) : '-'}</td>
                 <td class="col-center">${r.cost_per_request ? '$'+r.cost_per_request.toFixed(4) : 'FREE'}</td>
+                <td class="col-center sparkline-cell"><canvas id="${sparklineId}" class="sparkline-canvas" width="120" height="30"></canvas></td>
                 <td class="col-center col-check"><span class="${comps.json?'icon-ok':'icon-bad'}">${comps.json ? '✓' : '✗'}</span></td>
                 <td class="col-center col-check"><span class="${comps.logic?'icon-ok':'icon-bad'}">${comps.logic ? '✓' : '✗'}</span></td>
                 <td class="col-center col-check"><span class="${comps.code?'icon-ok':'icon-bad'}">${comps.code ? '✓' : '✗'}</span></td>
@@ -965,6 +1070,29 @@ Assume standard log format. Include type hints.
             </tr>`;
         }).join('');
         document.getElementById('table-body').innerHTML = listHtml;
+        
+        // Draw sparklines after DOM update
+        setTimeout(() => {
+            sorted.forEach(r => {
+                const sparklineId = `sparkline-${r.provider.replace(/\s+/g, '-')}`;
+                const canvas = document.getElementById(sparklineId);
+                const data = getSparklineData(r.provider);
+                if (canvas) drawSparkline(canvas, data);
+            });
+        }, 0);
+    }
+
+    function getSparklineData(provider) {
+        if (!appData || !appData.history) return [];
+        
+        const metric = currentChartMode === 'speed' ? 'time' : 'braiain_score';
+        const lastN = appData.history.slice(-10);
+        
+        return lastN.map(h => {
+            const res = h.results ? h.results[provider] : null;
+            if (!res || res.status !== 'Online') return null;
+            return res[metric] || 0;
+        });
     }
 
     function setMode(mode) {
@@ -1102,8 +1230,24 @@ Assume standard log format. Include type hints.
         document.getElementById('chart-speed').classList.toggle('active', mode === 'speed');
         document.getElementById('chart-score').classList.toggle('active', mode === 'score');
         renderChart();
+        render(); // Re-render table to update sparklines
         renderSpeedComparison();
         calculateCosts();
+    }
+
+    function calculatePercentiles(values) {
+        const sorted = values.filter(v => v !== null).sort((a, b) => a - b);
+        if (sorted.length === 0) return { p25: null, p50: null, p75: null };
+        
+        const p25Index = Math.floor(sorted.length * 0.25);
+        const p50Index = Math.floor(sorted.length * 0.50);
+        const p75Index = Math.floor(sorted.length * 0.75);
+        
+        return {
+            p25: sorted[p25Index],
+            p50: sorted[p50Index],
+            p75: sorted[p75Index]
+        };
     }
 
     function renderChart() {
@@ -1111,31 +1255,73 @@ Assume standard log format. Include type hints.
         const ctx = document.getElementById('mainChart');
         const history = appData.history;
         
-        const providers = new Set();
-        history.forEach(h => { if(h.results) Object.keys(h.results).forEach(k => providers.add(k)); });
+        const labels = history.map(h => new Date(h.timestamp.replace(' UTC','Z')).toLocaleDateString());
         
-        const colors = ['#00ff41', '#00f3ff', '#ff0055', '#ffaa00', '#aa00ff', '#ffffff', '#ffff00'];
-        const datasets = Array.from(providers).map((p, i) => ({
-            label: p,
-            borderColor: colors[i % colors.length],
-            borderWidth: 3, 
-            pointRadius: 3,
-            tension: 0.4,
-            data: history.map(h => {
-                const res = h.results ? h.results[p] : null;
-                if(!res || res.status !== 'Online') return null;
-                return currentChartMode === 'speed' ? res.time : (res.braiain_score || 0);
-            })
-        }));
+        // Calculate percentile bands
+        const metric = currentChartMode === 'speed' ? 'time' : 'braiain_score';
+        const percentileData = history.map(h => {
+            if (!h.results) return { p25: null, p50: null, p75: null };
+            
+            const values = Object.values(h.results)
+                .filter(r => r.status === 'Online')
+                .map(r => r[metric])
+                .filter(v => v !== null && v !== undefined);
+            
+            return calculatePercentiles(values);
+        });
+        
+        const datasets = [
+            {
+                label: '75th Percentile',
+                borderColor: 'transparent',
+                backgroundColor: 'rgba(0, 255, 65, 0.15)',
+                pointRadius: 0,
+                fill: '+1',
+                data: percentileData.map(p => p.p75)
+            },
+            {
+                label: '25th Percentile', 
+                borderColor: 'transparent',
+                backgroundColor: 'rgba(0, 255, 65, 0.15)',
+                pointRadius: 0,
+                fill: false,
+                data: percentileData.map(p => p.p25)
+            },
+            {
+                label: 'Median (50th)',
+                borderColor: '#00ff41',
+                borderWidth: 3,
+                pointRadius: 4,
+                tension: 0.4,
+                fill: false,
+                data: percentileData.map(p => p.p50)
+            }
+        ];
+        
+        // Add overlay models if any selected
+        const colors = ['#00f3ff', '#ff0055', '#ffaa00'];
+        selectedOverlayModels.forEach((provider, i) => {
+            datasets.push({
+                label: provider,
+                borderColor: colors[i % colors.length],
+                borderWidth: 2,
+                borderDash: [5, 5],
+                pointRadius: 3,
+                tension: 0.4,
+                fill: false,
+                data: history.map(h => {
+                    const res = h.results ? h.results[provider] : null;
+                    if (!res || res.status !== 'Online') return null;
+                    return res[metric] || null;
+                })
+            });
+        });
 
         if(chartInstance) chartInstance.destroy();
         
         chartInstance = new Chart(ctx, {
             type: 'line',
-            data: { 
-                labels: history.map(h => new Date(h.timestamp.replace(' UTC','Z')).toLocaleDateString()),
-                datasets: datasets 
-            },
+            data: { labels, datasets },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -1143,7 +1329,11 @@ Assume standard log format. Include type hints.
                 scales: {
                     y: { 
                         grid: { color: 'rgba(255,255,255,0.05)' }, 
-                        title: { display: true, text: currentChartMode === 'speed' ? 'Speed (Seconds)' : 'Braiain Score', color: '#888' },
+                        title: { 
+                            display: true, 
+                            text: currentChartMode === 'speed' ? 'Speed (Seconds)' : 'Braiain Score', 
+                            color: '#888' 
+                        },
                         ticks: { color: '#888' }
                     },
                     x: { 
@@ -1151,7 +1341,29 @@ Assume standard log format. Include type hints.
                         ticks: { color: '#888' }
                     }
                 },
-                plugins: { legend: { labels: { color: '#888', font: { family:'Share Tech Mono' } } } }
+                plugins: { 
+                    legend: { 
+                        labels: { 
+                            color: '#888', 
+                            font: { family:'Share Tech Mono' },
+                            filter: (item) => item.text !== '75th Percentile' && item.text !== '25th Percentile'
+                        } 
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                if (context.parsed.y !== null) {
+                                    label += currentChartMode === 'speed' 
+                                        ? context.parsed.y.toFixed(2) + 's'
+                                        : context.parsed.y.toFixed(0);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
             }
         });
     }
