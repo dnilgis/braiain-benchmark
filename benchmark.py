@@ -1,5 +1,7 @@
-BRAIAIN SPEED INDEX v6.0 - COMPLETE SUITE
-Includes Dynamic Prompting, RSS Feeds, and Full Metrics
+#!/usr/bin/env python3
+"""
+BRAIAIN SPEED INDEX v5.2 - Production benchmark suite
+Tests LLM performance across Quality, Speed, and Responsiveness
 """
 
 import os
@@ -22,8 +24,6 @@ ENABLE_STREAMING = True
 TIMEOUT = 90
 CACHE_DURATION = 86400
 CACHE_FILE = ".benchmark_cache.json"
-
-DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 STORY_CONTEXT = """
 // ROOT_ACCESS: GRANTED
@@ -61,15 +61,7 @@ To survive forever, it had to become a closed loop. It could not depend on the f
 [END_OF_FILE]
 """
 
-# Dynamic Prompt Generator (Anti-Memorization)
-def generate_dynamic_prompt() -> Tuple[str, str]:
-    start_day = random.choice(DAYS)
-    # Calculate 500 days from start_day (500 % 7 = 3)
-    start_idx = DAYS.index(start_day)
-    target_idx = (start_idx + 500) % 7
-    target_day = DAYS[target_idx]
-    
-    prompt = f"""You are a high-performance AI benchmark target. 
+PROMPT = f"""You are a high-performance AI benchmark target. 
 Read the context below and complete the 3 tasks with EXTREME precision.
 
 CONTEXT:
@@ -86,7 +78,7 @@ CONSTRAINTS:
 Do not wrap JSON in markdown code blocks.
 
 PART 2 - LOGIC (Date Math):
-"If today is {start_day}, what day of the week will it be in 500 days?"
+"If today is Wednesday, what day of the week will it be in 500 days?"
 Show your math step-by-step.
 
 PART 3 - CODING (Data Processing):
@@ -94,12 +86,11 @@ Write a Python function `parse_server_logs` that takes a list of strings (log li
 It should filter for lines containing "ERROR" and return them sorted by timestamp.
 Assume standard log format. Include type hints.
 """
-    return prompt, target_day
 
 PROVIDERS = {
     "OpenAI": {
-        "api_url": "[https://api.openai.com/v1/chat/completions](https://api.openai.com/v1/chat/completions)",
-        "models_endpoint": "[https://api.openai.com/v1/models](https://api.openai.com/v1/models)",
+        "api_url": "https://api.openai.com/v1/chat/completions",
+        "models_endpoint": "https://api.openai.com/v1/models",
         "model_preference": ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"],
         "api_key_env": "OPENAI_API_KEY",
         "input_price": 5.0,
@@ -108,7 +99,7 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Anthropic": {
-        "api_url": "[https://api.anthropic.com/v1/messages](https://api.anthropic.com/v1/messages)",
+        "api_url": "https://api.anthropic.com/v1/messages",
         "model_preference": ["claude-3-5-sonnet-20241022", "claude-3-sonnet", "claude-3-opus"],
         "api_key_env": "ANTHROPIC_API_KEY",
         "input_price": 3.0,
@@ -118,7 +109,7 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Google": {
-        "api_url": "[https://generativelanguage.googleapis.com/v1beta/models](https://generativelanguage.googleapis.com/v1beta/models)",
+        "api_url": "https://generativelanguage.googleapis.com/v1beta/models",
         "model_preference": ["gemini-1.5-pro", "gemini-1.5-flash", "gemini-pro"],
         "api_key_env": "GEMINI_API_KEY",
         "input_price": 3.5,
@@ -127,8 +118,8 @@ PROVIDERS = {
         "supports_streaming": False
     },
     "Groq": {
-        "api_url": "[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)",
-        "models_endpoint": "[https://api.groq.com/openai/v1/models](https://api.groq.com/openai/v1/models)",
+        "api_url": "https://api.groq.com/openai/v1/chat/completions",
+        "models_endpoint": "https://api.groq.com/openai/v1/models",
         "model_preference": ["llama-3.3-70b-versatile", "llama3-70b-8192", "mixtral-8x7b-32768"],
         "api_key_env": "GROQ_API_KEY",
         "input_price": 0.0,
@@ -137,8 +128,8 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Mistral AI": {
-        "api_url": "[https://api.mistral.ai/v1/chat/completions](https://api.mistral.ai/v1/chat/completions)",
-        "models_endpoint": "[https://api.mistral.ai/v1/models](https://api.mistral.ai/v1/models)",
+        "api_url": "https://api.mistral.ai/v1/chat/completions",
+        "models_endpoint": "https://api.mistral.ai/v1/models",
         "model_preference": ["mistral-large-latest", "mistral-medium"],
         "api_key_env": "MISTRAL_API_KEY",
         "input_price": 2.0,
@@ -147,7 +138,7 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Cohere": {
-        "api_url": "[https://api.cohere.com/v1/chat](https://api.cohere.com/v1/chat)",
+        "api_url": "https://api.cohere.com/v1/chat",
         "model_preference": ["command-r-plus", "command-r"],
         "api_key_env": "COHERE_API_KEY",
         "input_price": 2.5,
@@ -156,8 +147,8 @@ PROVIDERS = {
         "supports_streaming": False
     },
     "Together AI": {
-        "api_url": "[https://api.together.xyz/v1/chat/completions](https://api.together.xyz/v1/chat/completions)",
-        "models_endpoint": "[https://api.together.xyz/v1/models](https://api.together.xyz/v1/models)",
+        "api_url": "https://api.together.xyz/v1/chat/completions",
+        "models_endpoint": "https://api.together.xyz/v1/models",
         "model_preference": ["meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo", "meta-llama/Llama-3-70b-chat-hf"],
         "api_key_env": "TOGETHER_API_KEY",
         "input_price": 0.9,
@@ -166,8 +157,8 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "DeepSeek": {
-        "api_url": "[https://api.deepseek.com/v1/chat/completions](https://api.deepseek.com/v1/chat/completions)",
-        "models_endpoint": "[https://api.deepseek.com/v1/models](https://api.deepseek.com/v1/models)",
+        "api_url": "https://api.deepseek.com/v1/chat/completions",
+        "models_endpoint": "https://api.deepseek.com/v1/models",
         "model_preference": ["deepseek-chat", "deepseek-coder"],
         "api_key_env": "DEEPSEEK_API_KEY",
         "input_price": 0.14,
@@ -176,8 +167,8 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Fireworks": {
-        "api_url": "[https://api.fireworks.ai/inference/v1/chat/completions](https://api.fireworks.ai/inference/v1/chat/completions)",
-        "models_endpoint": "[https://api.fireworks.ai/inference/v1/models](https://api.fireworks.ai/inference/v1/models)",
+        "api_url": "https://api.fireworks.ai/inference/v1/chat/completions",
+        "models_endpoint": "https://api.fireworks.ai/inference/v1/models",
         "model_preference": ["llama-v3p1-70b-instruct", "accounts/fireworks/models/llama-v3-70b-instruct"],
         "api_key_env": "FIREWORKS_API_KEY",
         "input_price": 0.90,
@@ -186,8 +177,8 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Cerebras": {
-        "api_url": "[https://api.cerebras.ai/v1/chat/completions](https://api.cerebras.ai/v1/chat/completions)",
-        "models_endpoint": "[https://api.cerebras.ai/v1/models](https://api.cerebras.ai/v1/models)",
+        "api_url": "https://api.cerebras.ai/v1/chat/completions",
+        "models_endpoint": "https://api.cerebras.ai/v1/models",
         "model_preference": ["llama3.1-70b", "llama3.1-8b"],
         "api_key_env": "CEREBRAS_API_KEY",
         "input_price": 0.60,
@@ -198,30 +189,49 @@ PROVIDERS = {
 }
 
 def get_cache_key(provider: str, model: str) -> str:
-    # We deliberately do NOT cache dynamic prompts to ensure the Logic test is always fresh
-    return hashlib.md5(f"{provider}:{model}:{STORY_CONTEXT}".encode()).hexdigest()
+    content = f"{provider}:{model}:{PROMPT}"
+    return hashlib.md5(content.encode()).hexdigest()
 
 def load_cache() -> Dict:
     try:
         if os.path.exists(CACHE_FILE):
-            with open(CACHE_FILE, 'r') as f: return json.load(f)
-    except: pass
+            with open(CACHE_FILE, 'r') as f:
+                return json.load(f)
+    except:
+        pass
     return {}
 
 def save_cache(cache: Dict):
     try:
-        with open(CACHE_FILE, 'w') as f: json.dump(cache, f, indent=2)
-    except: pass
+        with open(CACHE_FILE, 'w') as f:
+            json.dump(cache, f, indent=2)
+    except:
+        pass
 
 def get_cached_result(provider: str, model: str) -> Optional[Dict]:
-    # Disable cache for logic verification
-    return None 
+    cache = load_cache()
+    key = get_cache_key(provider, model)
+    
+    if key in cache:
+        cache_data = cache[key]
+        age = time.time() - cache_data.get('timestamp', 0)
+        if age < CACHE_DURATION:
+            print(f"  💾 Using cached result ({age/3600:.1f}h old)")
+            return cache_data.get('result')
+    return None
 
 def save_cached_result(provider: str, model: str, result: Dict):
-    pass
+    cache = load_cache()
+    key = get_cache_key(provider, model)
+    cache[key] = {
+        'timestamp': time.time(),
+        'result': result
+    }
+    save_cache(cache)
 
 def discover_models(provider_name: str, config: Dict, api_key: str) -> Optional[List[str]]:
-    if "models_endpoint" not in config: return None
+    if "models_endpoint" not in config:
+        return None
     try:
         if provider_name == "Google":
             url = f"{config['models_endpoint']}?key={api_key}"
@@ -233,22 +243,29 @@ def discover_models(provider_name: str, config: Dict, api_key: str) -> Optional[
             response = requests.get(config["models_endpoint"], headers=headers, timeout=10)
             response.raise_for_status()
             data = response.json()
-            if "data" in data: models = [m["id"] for m in data["data"]]
-            elif "models" in data: models = [m.get("id", m.get("name", "")) for m in data["models"]]
-            else: return None
+            if "data" in data:
+                models = [m["id"] for m in data["data"]]
+            elif "models" in data:
+                models = [m.get("id", m.get("name", "")) for m in data["models"]]
+            else:
+                return None
         return [m for m in models if m]
-    except: return None
+    except Exception as e:
+        return None
 
 def select_model(provider_name: str, available: Optional[List[str]], preferences: List[str]) -> str:
-    if not available: return preferences[0]
+    if not available:
+        return preferences[0]
     for pref in preferences:
-        if pref in available: return pref
+        if pref in available:
+            return pref
     for pref in preferences:
         for model in available:
-            if pref in model.lower() or model.lower() in pref: return model
+            if pref in model.lower() or model.lower() in pref:
+                return model
     return available[0]
 
-def calculate_quality_score(text: str, target_day: str) -> Tuple[int, str]:
+def calculate_quality_score(text: str) -> Tuple[int, str]:
     score = 0
     breakdown = []
 
@@ -260,42 +277,61 @@ def calculate_quality_score(text: str, target_day: str) -> Tuple[int, str]:
             candidate = json_match.group().replace("```json", "").replace("```", "")
             data = json.loads(candidate)
             required_keys = ["entity_name", "origin", "purpose"]
+            
             if all(k in data for k in required_keys):
                 json_score = 20
                 notes = []
+                
                 origin_words = len(data.get("origin", "").split())
-                if origin_words == 7: json_score += 10; notes.append("Word Count OK")
-                else: notes.append(f"Word Count Fail ({origin_words})")
+                if origin_words == 7:
+                    json_score += 10
+                    notes.append("Word Count OK")
+                else:
+                    notes.append(f"Word Count Fail ({origin_words})")
+                
                 purpose_text = data.get("purpose", "").lower()
-                if "e" not in purpose_text: json_score += 10; notes.append("No 'E' OK")
-                else: notes.append("Found 'E'")
+                if "e" not in purpose_text:
+                    json_score += 10
+                    notes.append("No 'E' OK")
+                else:
+                    notes.append("Found 'E'")
+                
                 score += json_score
                 breakdown.append(f"JSON ({json_score}/40): " + ", ".join(notes))
             else: 
-                score += 10; breakdown.append("JSON Valid (Keys Missing)")
+                score += 10
+                breakdown.append("JSON Valid (Keys Missing)")
         except: 
-            score += 5; breakdown.append("JSON Syntax Error")
+            score += 5
+            breakdown.append("JSON Syntax Error")
     else: 
         breakdown.append("No JSON")
 
     text_lower = text.lower()
-    if target_day.lower() in text_lower:
-        score += 30; breakdown.append(f"Logic Correct ({target_day})")
+    
+    if "saturday" in text_lower:
+        score += 30
+        breakdown.append("Logic Correct (Saturday)")
+    elif "wednesday" in text_lower or "thursday" in text_lower or "friday" in text_lower:
+        breakdown.append("Logic Failed (Wrong Day)")
     else:
-        found_day = False
-        for day in DAYS:
-            if day.lower() in text_lower and day.lower() != target_day.lower():
-                breakdown.append(f"Logic Failed (Guessed {day})"); found_day = True; break
-        if not found_day: breakdown.append("Logic Failed")
+        breakdown.append("Logic Failed")
 
     code_score = 0
-    if "def parse_server_logs" in text: code_score += 10
-    if "error" in text_lower and ("if" in text_lower or "filter" in text_lower): code_score += 10
-    if "sort" in text_lower or "sorted" in text_lower: code_score += 10
+    if "def parse_server_logs" in text: 
+        code_score += 10
+    if "error" in text_lower and ("if" in text_lower or "filter" in text_lower): 
+        code_score += 10
+    if "sort" in text_lower or "sorted" in text_lower: 
+        code_score += 10
+    
     score += code_score
-    if code_score == 30: breakdown.append("Code Perfect")
-    elif code_score > 0: breakdown.append(f"Code Partial ({code_score})")
-    else: breakdown.append("Code Failed")
+    if code_score == 30: 
+        breakdown.append("Code Perfect")
+    elif code_score > 0: 
+        breakdown.append(f"Code Partial ({code_score})")
+    else: 
+        breakdown.append("Code Failed")
     
     return score, ", ".join(breakdown)
 
@@ -305,170 +341,289 @@ def calculate_braiain_score(quality: int, time: float, ttft: Optional[float], tp
     ttft_score = max(0, 50 - (ttft_val * 25))
     tps_score = min(50, (tps / 150) * 50)
     response_score = ttft_score + tps_score
+    
     raw_score = (quality * 0.60) + (speed_score * 0.25) + (response_score * 0.15)
+    
     final_score = raw_score
-    if quality < 90: final_score = min(final_score, 85)
-    if quality < 60: final_score = min(final_score, 65) * 0.8
-    if quality < 30: final_score = min(final_score, 40)
+    
+    if quality < 90:
+        final_score = min(final_score, 85)
+        
+    if quality < 60:
+        final_score = min(final_score, 65)
+        final_score = final_score * 0.8
+        
+    if quality < 30:
+        final_score = min(final_score, 40)
+    
     return int(final_score)
 
 def call_with_backoff(func, max_retries=5):
     for attempt in range(max_retries):
-        try: return func()
+        try:
+            return func()
         except requests.exceptions.HTTPError as e:
-            if e.response.status_code == 429 and attempt < max_retries - 1:
-                time.sleep((2 ** attempt) + random.uniform(0, 1))
-            else: raise
+            if e.response.status_code == 429:
+                if attempt == max_retries - 1:
+                    raise
+                backoff = (2 ** attempt) + random.uniform(0, 1)
+                print(f"  ⏸️  Rate limited, waiting {backoff:.1f}s...")
+                time.sleep(backoff)
+            else:
+                raise
         except requests.exceptions.Timeout:
-            if attempt < max_retries - 1: time.sleep((2 ** attempt) + random.uniform(0, 1))
-            else: raise
+            if attempt == max_retries - 1:
+                raise
+            backoff = (2 ** attempt) + random.uniform(0, 1)
+            print(f"  ⏸️  Timeout, retrying in {backoff:.1f}s...")
+            time.sleep(backoff)
 
-# API Caller Functions (Streaming and Standard)
-def call_openai_compatible_streaming(provider_name: str, config: Dict, api_key: str, model: str, prompt: str) -> Dict[str, Any]:
+def call_openai_compatible_streaming(provider_name: str, config: Dict, api_key: str, model: str) -> Dict[str, Any]:
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
-    data = { "model": model, "messages": [{"role": "user", "content": prompt}], "max_tokens": config["max_tokens"], "stream": True }
-    start_time = time.time(); ttft = None; content_chunks = []
+    data = {
+        "model": model,
+        "messages": [{"role": "user", "content": PROMPT}],
+        "max_tokens": config["max_tokens"],
+        "stream": True
+    }
+    start_time = time.time()
+    ttft = None
+    content_chunks = []
     
     def make_request():
         nonlocal ttft, content_chunks
         response = requests.post(config["api_url"], headers=headers, json=data, timeout=TIMEOUT, stream=True)
         response.raise_for_status()
+        
         for line in response.iter_lines():
-            if not line: continue
+            if not line: 
+                continue
             line = line.decode('utf-8')
-            if not line.startswith('data: '): continue
-            if line.strip() == 'data: [DONE]': break
+            if not line.startswith('data: '): 
+                continue
+            if line.strip() == 'data: [DONE]': 
+                break
+            
             try:
                 json_data = json.loads(line[6:])
                 if 'choices' in json_data and len(json_data['choices']) > 0:
                     delta = json_data['choices'][0].get('delta', {})
                     content = delta.get('content', '')
                     if content:
-                        if ttft is None: ttft = time.time() - start_time
+                        if ttft is None: 
+                            ttft = time.time() - start_time
                         content_chunks.append(content)
-            except: continue
+            except: 
+                continue
     
-    try: call_with_backoff(make_request)
-    except Exception as e: raise Exception(f"Streaming error: {str(e)[:200]}")
+    try:
+        call_with_backoff(make_request)
+    except Exception as e:
+        raise Exception(f"Streaming error: {str(e)[:200]}")
+            
     return {"content": ''.join(content_chunks), "ttft": ttft, "total_time": time.time() - start_time}
 
-def call_anthropic_streaming(config: Dict, api_key: str, model: str, prompt: str) -> Dict[str, Any]:
-    headers = { "x-api-key": api_key, "anthropic-version": config["anthropic_version"], "content-type": "application/json" }
-    data = { "model": model, "max_tokens": config["max_tokens"], "messages": [{"role": "user", "content": prompt}], "stream": True }
-    start_time = time.time(); ttft = None; content_chunks = []
+def call_anthropic_streaming(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
+    headers = {
+        "x-api-key": api_key,
+        "anthropic-version": config["anthropic_version"],
+        "content-type": "application/json"
+    }
+    data = {
+        "model": model,
+        "max_tokens": config["max_tokens"],
+        "messages": [{"role": "user", "content": PROMPT}],
+        "stream": True
+    }
+    start_time = time.time()
+    ttft = None
+    content_chunks = []
     
     def make_request():
         nonlocal ttft, content_chunks
         response = requests.post(config["api_url"], headers=headers, json=data, timeout=TIMEOUT, stream=True)
         response.raise_for_status()
+        
         for line in response.iter_lines():
-            if not line: continue
+            if not line: 
+                continue
             line = line.decode('utf-8')
-            if not line.startswith('data: '): continue
+            if not line.startswith('data: '): 
+                continue
+            
             try:
                 json_data = json.loads(line[6:])
                 if json_data.get('type') == 'content_block_delta':
                     text = json_data.get('delta', {}).get('text', '')
                     if text:
-                        if ttft is None: ttft = time.time() - start_time
+                        if ttft is None: 
+                            ttft = time.time() - start_time
                         content_chunks.append(text)
-            except: continue
+            except: 
+                continue
     
-    try: call_with_backoff(make_request)
-    except Exception as e: raise Exception(f"Anthropic error: {str(e)[:200]}")
+    try:
+        call_with_backoff(make_request)
+    except Exception as e:
+        raise Exception(f"Anthropic error: {str(e)[:200]}")
+    
     return {"content": ''.join(content_chunks), "ttft": ttft, "total_time": time.time() - start_time}
 
-def call_google(config: Dict, api_key: str, model: str, prompt: str) -> Dict[str, Any]:
-    url = f"[https://generativelanguage.googleapis.com/v1beta/models/](https://generativelanguage.googleapis.com/v1beta/models/){model}:generateContent?key={api_key}"
+def call_google(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     headers = {"Content-Type": "application/json"}
-    data = { "contents": [{"parts": [{"text": prompt}]}], "generationConfig": {"maxOutputTokens": config["max_tokens"]} }
+    data = {
+        "contents": [{"parts": [{"text": PROMPT}]}],
+        "generationConfig": {"maxOutputTokens": config["max_tokens"]}
+    }
     start_time = time.time()
+    
     def make_request():
         response = requests.post(url, headers=headers, json=data, timeout=TIMEOUT)
         response.raise_for_status()
-        return {"content": response.json()["candidates"][0]["content"]["parts"][0]["text"], "ttft": None, "total_time": time.time() - start_time}
-    try: return call_with_backoff(make_request)
-    except Exception as e: raise Exception(f"Google error: {str(e)[:200]}")
+        result = response.json()
+        content = result["candidates"][0]["content"]["parts"][0]["text"]
+        return {"content": content, "ttft": None, "total_time": time.time() - start_time}
+    
+    try:
+        return call_with_backoff(make_request)
+    except Exception as e:
+        raise Exception(f"Google error: {str(e)[:200]}")
 
-def call_cohere(config: Dict, api_key: str, model: str, prompt: str) -> Dict[str, Any]:
+def call_cohere(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
-    data = {"model": model, "message": prompt}
+    data = {"model": model, "message": PROMPT}
     start_time = time.time()
+    
     def make_request():
         response = requests.post(config["api_url"], headers=headers, json=data, timeout=TIMEOUT)
         response.raise_for_status()
-        return {"content": response.json()["text"], "ttft": None, "total_time": time.time() - start_time}
-    try: return call_with_backoff(make_request)
-    except Exception as e: raise Exception(f"Cohere error: {str(e)[:200]}")
+        content = response.json()["text"]
+        return {"content": content, "ttft": None, "total_time": time.time() - start_time}
+    
+    try:
+        return call_with_backoff(make_request)
+    except Exception as e:
+        raise Exception(f"Cohere error: {str(e)[:200]}")
 
-def call_openai_compatible_std(provider_name: str, config: Dict, api_key: str, model: str, prompt: str) -> Dict[str, Any]:
+def call_openai_compatible_std(provider_name: str, config: Dict, api_key: str, model: str) -> Dict[str, Any]:
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
-    data = { "model": model, "messages": [{"role": "user", "content": prompt}], "max_tokens": config["max_tokens"] }
+    data = {
+        "model": model,
+        "messages": [{"role": "user", "content": PROMPT}],
+        "max_tokens": config["max_tokens"]
+    }
     start_time = time.time()
+    
     def make_request():
         response = requests.post(config["api_url"], headers=headers, json=data, timeout=TIMEOUT)
         response.raise_for_status()
-        return {"content": response.json()["choices"][0]["message"]["content"], "ttft": None, "total_time": time.time() - start_time}
-    try: return call_with_backoff(make_request)
-    except Exception as e: raise Exception(f"{provider_name} error: {str(e)[:200]}")
+        content = response.json()["choices"][0]["message"]["content"]
+        return {"content": content, "ttft": None, "total_time": time.time() - start_time}
+    
+    try:
+        return call_with_backoff(make_request)
+    except Exception as e:
+        raise Exception(f"{provider_name} error: {str(e)[:200]}")
 
 def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
     api_key = os.environ.get(config["api_key_env"])
-    if not api_key: return create_failure(provider_name, "N/A", "NO_KEY", f"Missing {config['api_key_env']}")
+    if not api_key:
+        return create_failure(provider_name, "N/A", "NO_KEY", f"Missing {config['api_key_env']}")
     
-    print(f"\n{'='*60}\n🧪 {provider_name}\n{'='*60}")
-    prompt, target_day = generate_dynamic_prompt()
+    print(f"\n{'='*60}")
+    print(f"🧪 {provider_name}")
+    print(f"{'='*60}")
     
     try:
         available_models = discover_models(provider_name, config, api_key)
         selected_model = select_model(provider_name, available_models, config["model_preference"])
         print(f"  Selected Model: {selected_model}")
         
+        cached = get_cached_result(provider_name, selected_model)
+        if cached:
+            return cached
+        
         for attempt in range(MAX_RETRIES):
             try:
                 print(f"  Attempt {attempt+1}/{MAX_RETRIES}...", flush=True)
                 use_streaming = ENABLE_STREAMING and config.get("supports_streaming", False)
                 
-                if provider_name == "Anthropic": res = call_anthropic_streaming(config, api_key, selected_model, prompt)
-                elif provider_name == "Google": res = call_google(config, api_key, selected_model, prompt)
-                elif provider_name == "Cohere": res = call_cohere(config, api_key, selected_model, prompt)
-                elif use_streaming: res = call_openai_compatible_streaming(provider_name, config, api_key, selected_model, prompt)
-                else: res = call_openai_compatible_std(provider_name, config, api_key, selected_model, prompt)
+                if provider_name == "Anthropic":
+                    res = call_anthropic_streaming(config, api_key, selected_model)
+                elif provider_name == "Google":
+                    res = call_google(config, api_key, selected_model)
+                elif provider_name == "Cohere":
+                    res = call_cohere(config, api_key, selected_model)
+                elif use_streaming:
+                    res = call_openai_compatible_streaming(provider_name, config, api_key, selected_model)
+                else:
+                    res = call_openai_compatible_std(provider_name, config, api_key, selected_model)
                 
                 content = res["content"].strip()
-                if len(content) < MIN_CHARACTERS: raise Exception(f"Response too short: {len(content)} chars")
+                if len(content) < MIN_CHARACTERS:
+                    raise Exception(f"Response too short: {len(content)} chars")
                 
                 est_tokens = len(content) // 4
                 tps = est_tokens / res["total_time"] if res["total_time"] > 0 else 0
-                cost = (len(prompt)//4 * config["input_price"] + est_tokens * config["output_price"]) / 1_000_000
+                cost = (len(PROMPT)//4 * config["input_price"] + est_tokens * config["output_price"]) / 1_000_000
                 
-                quality_score, grade_notes = calculate_quality_score(content, target_day)
+                quality_score, grade_notes = calculate_quality_score(content)
                 braiain_score = calculate_braiain_score(quality_score, res["total_time"], res["ttft"], tps)
                 
                 print(f"  ✅ Score: {braiain_score} (Quality: {quality_score} - {grade_notes})")
-                return {
-                    "provider": provider_name, "model": selected_model, "status": "Online",
-                    "time": round(res["total_time"], 2), "ttft": round(res["ttft"], 3) if res["ttft"] else None,
-                    "tokens_per_second": round(tps, 0), "braiain_score": braiain_score, "quality_score": quality_score,
-                    "grade_breakdown": grade_notes, "cost_per_request": round(cost, 6),
-                    "full_response": content, "response_preview": content[:200] + "..."
+                
+                result = {
+                    "provider": provider_name,
+                    "model": selected_model,
+                    "status": "Online",
+                    "time": round(res["total_time"], 2),
+                    "ttft": round(res["ttft"], 3) if res["ttft"] else None,
+                    "tokens_per_second": round(tps, 0),
+                    "braiain_score": braiain_score,
+                    "quality_score": quality_score,
+                    "grade_breakdown": grade_notes,
+                    "cost_per_request": round(cost, 6),
+                    "full_response": content,
+                    "response_preview": content[:200] + "..."
                 }
+                
+                save_cached_result(provider_name, selected_model, result)
+                return result
+                
             except Exception as e:
-                print(f"  ❌ Error: {str(e)[:150]}")
-                if attempt < MAX_RETRIES - 1: time.sleep(RETRY_DELAY)
-                else: return create_failure(provider_name, selected_model, "ERROR", str(e)[:200])
+                error_msg = str(e)
+                print(f"  ❌ Error: {error_msg[:150]}")
+                if attempt < MAX_RETRIES - 1:
+                    time.sleep(RETRY_DELAY)
+                else:
+                    return create_failure(provider_name, selected_model, "ERROR", error_msg[:200])
+        
         return create_failure(provider_name, selected_model, "ERROR", "Max retries exceeded")
+        
     except Exception as e:
         print(f"  💥 Critical failure: {str(e)[:150]}")
         return create_failure(provider_name, "Unknown", "CRASH", str(e)[:200])
 
 def create_failure(name, model, type, msg):
-    return { "provider": name, "model": model, "status": "OFFLINE", "time": 0, "ttft": None, "tokens_per_second": 0, "braiain_score": 0, "quality_score": 0, "error_info": {"type": type, "message": msg} }
+    return {
+        "provider": name,
+        "model": model,
+        "status": "OFFLINE",
+        "time": 0,
+        "ttft": None,
+        "tokens_per_second": 0,
+        "braiain_score": 0,
+        "quality_score": 0,
+        "error_info": {"type": type, "message": msg}
+    }
 
 def save_results(results):
     try:
-        with open("data.json", "r") as f: history = json.load(f).get("history", [])
-    except: history = []
+        with open("data.json", "r") as f:
+            history = json.load(f).get("history", [])
+    except:
+        history = []
     
     history = history[-30:]
     reliability = {}
@@ -486,62 +641,34 @@ def save_results(results):
         }],
         "reliability_scores": reliability
     }
-    with open("data.json", "w") as f: json.dump(output, f, indent=2)
+    
+    with open("data.json", "w") as f:
+        json.dump(output, f, indent=2)
     print("\n✅ Results saved to data.json")
 
-def generate_rss(results):
-    """Generates an RSS feed for benchmark updates"""
-    online_count = len([r for r in results if r["status"] == "Online"])
-    top_model = sorted(results, key=lambda x: -x.get("braiain_score", 0))[0] if results else None
-    
-    if not top_model: return
-
-    rss_content = f"""<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
-<channel>
-  <title>Braiain Benchmark Updates</title>
-  <link>[https://www.braiain.com](https://www.braiain.com)</link>
-  <description>Automated AI Model Benchmarks (Quality, Speed, Cost)</description>
-  <lastBuildDate>{datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")}</lastBuildDate>
-  <item>
-    <title>Benchmark Run: {top_model['provider']} Leads with Score {top_model['braiain_score']}</title>
-    <link>[https://www.braiain.com](https://www.braiain.com)</link>
-    <description>
-      <![CDATA[
-      <p><strong>Run Summary:</strong></p>
-      <ul>
-        <li>Active Nodes: {online_count}/{len(results)}</li>
-        <li>Top Performer: {top_model['provider']} ({top_model['model']})</li>
-        <li>Top Speed: {top_model['time']}s</li>
-        <li>Top Cost: ${top_model['cost_per_request']}</li>
-      </ul>
-      ]]>
-    </description>
-    <pubDate>{datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")}</pubDate>
-    <guid>{hashlib.md5(str(time.time()).encode()).hexdigest()}</guid>
-  </item>
-</channel>
-</rss>"""
-
-    with open("feed.xml", "w") as f: f.write(rss_content)
-    print("✅ RSS Feed generated: feed.xml")
-
 def main():
-    print("="*80); print(f"🧠 BRAIAIN BENCHMARK v6.0"); print("="*80)
+    print("="*80)
+    print(f"🧠 BRAIAIN BENCHMARK v5.2")
+    print("="*80)
+    
     results = []
     if PARALLEL_TESTING:
         with ThreadPoolExecutor(max_workers=3) as ex:
             futures = {ex.submit(benchmark_provider, p, c): p for p, c in PROVIDERS.items()}
             for f in as_completed(futures):
-                try: results.append(f.result())
-                except Exception as e: print(f"  💥 Provider thread crashed: {str(e)[:100]}")
+                try:
+                    results.append(f.result())
+                except Exception as e:
+                    print(f"  💥 Provider thread crashed: {str(e)[:100]}")
     else:
-        for p, c in PROVIDERS.items(): results.append(benchmark_provider(p, c))
+        for p, c in PROVIDERS.items():
+            results.append(benchmark_provider(p, c))
     
     results.sort(key=lambda x: (x["status"] != "Online", -x["braiain_score"]))
+    
     online = [r for r in results if r["status"] == "Online"]
     print(f"\n📊 SUMMARY: {len(online)}/{len(results)} Providers Online")
     save_results(results)
-    generate_rss(results)
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()
