@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-BRAIAIN SPEED INDEX v5.2 - Production benchmark suite
+BRAIAIN SPEED INDEX v5.3 - Production benchmark suite
 Tests LLM performance across Quality, Speed, and Responsiveness
 """
 
@@ -91,7 +91,7 @@ PROVIDERS = {
     "OpenAI": {
         "api_url": "https://api.openai.com/v1/chat/completions",
         "models_endpoint": "https://api.openai.com/v1/models",
-        "model_preference": ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"],
+        "model_preference": ["gpt-4o", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"],
         "api_key_env": "OPENAI_API_KEY",
         "input_price": 5.0,
         "output_price": 15.0,
@@ -100,7 +100,7 @@ PROVIDERS = {
     },
     "Anthropic": {
         "api_url": "https://api.anthropic.com/v1/messages",
-        "model_preference": ["claude-3-5-sonnet-20241022", "claude-3-sonnet", "claude-3-opus"],
+        "model_preference": ["claude-sonnet-4-20250514", "claude-3-5-sonnet-20241022", "claude-3-sonnet-20240229"],
         "api_key_env": "ANTHROPIC_API_KEY",
         "input_price": 3.0,
         "output_price": 15.0,
@@ -120,7 +120,7 @@ PROVIDERS = {
     "Groq": {
         "api_url": "https://api.groq.com/openai/v1/chat/completions",
         "models_endpoint": "https://api.groq.com/openai/v1/models",
-        "model_preference": ["llama-3.3-70b-versatile", "llama3-70b-8192", "mixtral-8x7b-32768"],
+        "model_preference": ["llama-3.3-70b-versatile", "llama-3.1-70b-versatile", "mixtral-8x7b-32768"],
         "api_key_env": "GROQ_API_KEY",
         "input_price": 0.0,
         "output_price": 0.0,
@@ -130,7 +130,7 @@ PROVIDERS = {
     "Mistral AI": {
         "api_url": "https://api.mistral.ai/v1/chat/completions",
         "models_endpoint": "https://api.mistral.ai/v1/models",
-        "model_preference": ["mistral-large-latest", "mistral-medium"],
+        "model_preference": ["mistral-large-latest", "mistral-medium-latest", "mistral-small-latest"],
         "api_key_env": "MISTRAL_API_KEY",
         "input_price": 2.0,
         "output_price": 6.0,
@@ -138,8 +138,8 @@ PROVIDERS = {
         "supports_streaming": True
     },
     "Cohere": {
-        "api_url": "https://api.cohere.com/v1/chat",
-        "model_preference": ["command-r-plus", "command-r"],
+        "api_url": "https://api.cohere.com/v2/chat",
+        "model_preference": ["command-r-plus-08-2024", "command-r-plus", "command-r"],
         "api_key_env": "COHERE_API_KEY",
         "input_price": 2.5,
         "output_price": 10.0,
@@ -169,7 +169,7 @@ PROVIDERS = {
     "Fireworks": {
         "api_url": "https://api.fireworks.ai/inference/v1/chat/completions",
         "models_endpoint": "https://api.fireworks.ai/inference/v1/models",
-        "model_preference": ["llama-v3p1-70b-instruct", "accounts/fireworks/models/llama-v3-70b-instruct"],
+        "model_preference": ["accounts/fireworks/models/llama-v3p1-70b-instruct", "accounts/fireworks/models/llama-v3-70b-instruct"],
         "api_key_env": "FIREWORKS_API_KEY",
         "input_price": 0.90,
         "output_price": 0.90,
@@ -187,6 +187,18 @@ PROVIDERS = {
         "supports_streaming": True
     }
 }
+
+# Error patterns that indicate model deprecation/not found
+MODEL_ERROR_PATTERNS = [
+    "model_not_found", "model not found", "does not exist", 
+    "deprecated", "decommissioned", "no longer available",
+    "invalid model", "unknown model", "not supported"
+]
+
+def is_model_error(error_msg: str) -> bool:
+    """Check if error indicates model is deprecated/unavailable"""
+    error_lower = error_msg.lower()
+    return any(pattern in error_lower for pattern in MODEL_ERROR_PATTERNS)
 
 def get_cache_key(provider: str, model: str) -> str:
     content = f"{provider}:{model}:{PROMPT}"
@@ -251,19 +263,39 @@ def discover_models(provider_name: str, config: Dict, api_key: str) -> Optional[
                 return None
         return [m for m in models if m]
     except Exception as e:
+        print(f"  ⚠️  Model discovery failed: {str(e)[:50]}")
         return None
 
-def select_model(provider_name: str, available: Optional[List[str]], preferences: List[str]) -> str:
+def select_model(provider_name: str, available: Optional[List[str]], preferences: List[str], exclude: List[str] = None) -> Optional[str]:
+    """Select best available model, excluding any that have failed"""
+    exclude = exclude or []
+    
+    # Filter out excluded models from preferences
+    valid_prefs = [p for p in preferences if p not in exclude]
+    
+    if not valid_prefs:
+        return None
+    
     if not available:
-        return preferences[0]
-    for pref in preferences:
+        return valid_prefs[0]
+    
+    for pref in valid_prefs:
         if pref in available:
             return pref
-    for pref in preferences:
+    
+    # Fuzzy match
+    for pref in valid_prefs:
         for model in available:
             if pref in model.lower() or model.lower() in pref:
-                return model
-    return available[0]
+                if model not in exclude:
+                    return model
+    
+    # Return first available not in exclude list
+    for model in available:
+        if model not in exclude:
+            return model
+    
+    return None
 
 def calculate_quality_score(text: str) -> Tuple[int, str]:
     score = 0
@@ -491,14 +523,28 @@ def call_google(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
         raise Exception(f"Google error: {str(e)[:200]}")
 
 def call_cohere(config: Dict, api_key: str, model: str) -> Dict[str, Any]:
-    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
-    data = {"model": model, "message": PROMPT}
+    """Cohere v2 API - uses messages array format"""
+    headers = {
+        "Authorization": f"Bearer {api_key}", 
+        "Content-Type": "application/json"
+    }
+    data = {
+        "model": model, 
+        "messages": [{"role": "user", "content": PROMPT}]
+    }
     start_time = time.time()
     
     def make_request():
         response = requests.post(config["api_url"], headers=headers, json=data, timeout=TIMEOUT)
         response.raise_for_status()
-        content = response.json()["text"]
+        result = response.json()
+        # v2 API returns content in message.content array
+        content_block = result.get("message", {}).get("content", [])
+        if content_block and len(content_block) > 0:
+            content = content_block[0].get("text", "")
+        else:
+            # Fallback for different response formats
+            content = result.get("text", "") or str(result)
         return {"content": content, "ttft": None, "total_time": time.time() - start_time}
     
     try:
@@ -526,6 +572,21 @@ def call_openai_compatible_std(provider_name: str, config: Dict, api_key: str, m
     except Exception as e:
         raise Exception(f"{provider_name} error: {str(e)[:200]}")
 
+def try_call_provider(provider_name: str, config: Dict, api_key: str, model: str) -> Dict[str, Any]:
+    """Attempt to call a provider with a specific model"""
+    use_streaming = ENABLE_STREAMING and config.get("supports_streaming", False)
+    
+    if provider_name == "Anthropic":
+        return call_anthropic_streaming(config, api_key, model)
+    elif provider_name == "Google":
+        return call_google(config, api_key, model)
+    elif provider_name == "Cohere":
+        return call_cohere(config, api_key, model)
+    elif use_streaming:
+        return call_openai_compatible_streaming(provider_name, config, api_key, model)
+    else:
+        return call_openai_compatible_std(provider_name, config, api_key, model)
+
 def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
     api_key = os.environ.get(config["api_key_env"])
     if not api_key:
@@ -537,67 +598,79 @@ def benchmark_provider(provider_name: str, config: Dict) -> Dict[str, Any]:
     
     try:
         available_models = discover_models(provider_name, config, api_key)
-        selected_model = select_model(provider_name, available_models, config["model_preference"])
-        print(f"  Selected Model: {selected_model}")
+        failed_models = []  # Track models that have failed
         
-        cached = get_cached_result(provider_name, selected_model)
-        if cached:
-            return cached
-        
-        for attempt in range(MAX_RETRIES):
-            try:
-                print(f"  Attempt {attempt+1}/{MAX_RETRIES}...", flush=True)
-                use_streaming = ENABLE_STREAMING and config.get("supports_streaming", False)
-                
-                if provider_name == "Anthropic":
-                    res = call_anthropic_streaming(config, api_key, selected_model)
-                elif provider_name == "Google":
-                    res = call_google(config, api_key, selected_model)
-                elif provider_name == "Cohere":
-                    res = call_cohere(config, api_key, selected_model)
-                elif use_streaming:
-                    res = call_openai_compatible_streaming(provider_name, config, api_key, selected_model)
-                else:
-                    res = call_openai_compatible_std(provider_name, config, api_key, selected_model)
-                
-                content = res["content"].strip()
-                if len(content) < MIN_CHARACTERS:
-                    raise Exception(f"Response too short: {len(content)} chars")
-                
-                est_tokens = len(content) // 4
-                tps = est_tokens / res["total_time"] if res["total_time"] > 0 else 0
-                cost = (len(PROMPT)//4 * config["input_price"] + est_tokens * config["output_price"]) / 1_000_000
-                
-                quality_score, grade_notes = calculate_quality_score(content)
-                braiain_score = calculate_braiain_score(quality_score, res["total_time"], res["ttft"], tps)
-                
-                print(f"  ✅ Score: {braiain_score} (Quality: {quality_score} - {grade_notes})")
-                
-                result = {
-                    "provider": provider_name,
-                    "model": selected_model,
-                    "status": "Online",
-                    "time": round(res["total_time"], 2),
-                    "ttft": round(res["ttft"], 3) if res["ttft"] else None,
-                    "tokens_per_second": round(tps, 0),
-                    "braiain_score": braiain_score,
-                    "quality_score": quality_score,
-                    "grade_breakdown": grade_notes,
-                    "cost_per_request": round(cost, 6),
-                    "full_response": content,
-                    "response_preview": content[:200] + "..."
-                }
-                
-                save_cached_result(provider_name, selected_model, result)
-                return result
-                
-            except Exception as e:
-                error_msg = str(e)
-                print(f"  ❌ Error: {error_msg[:150]}")
-                if attempt < MAX_RETRIES - 1:
-                    time.sleep(RETRY_DELAY)
-                else:
-                    return create_failure(provider_name, selected_model, "ERROR", error_msg[:200])
+        # Try models until one works
+        while True:
+            selected_model = select_model(provider_name, available_models, config["model_preference"], exclude=failed_models)
+            
+            if not selected_model:
+                return create_failure(provider_name, "N/A", "NO_MODEL", "All models failed or unavailable")
+            
+            print(f"  Selected Model: {selected_model}")
+            
+            cached = get_cached_result(provider_name, selected_model)
+            if cached:
+                return cached
+            
+            model_failed = False
+            
+            for attempt in range(MAX_RETRIES):
+                try:
+                    print(f"  Attempt {attempt+1}/{MAX_RETRIES}...", flush=True)
+                    
+                    res = try_call_provider(provider_name, config, api_key, selected_model)
+                    
+                    content = res["content"].strip()
+                    if len(content) < MIN_CHARACTERS:
+                        raise Exception(f"Response too short: {len(content)} chars")
+                    
+                    est_tokens = len(content) // 4
+                    tps = est_tokens / res["total_time"] if res["total_time"] > 0 else 0
+                    cost = (len(PROMPT)//4 * config["input_price"] + est_tokens * config["output_price"]) / 1_000_000
+                    
+                    quality_score, grade_notes = calculate_quality_score(content)
+                    braiain_score = calculate_braiain_score(quality_score, res["total_time"], res["ttft"], tps)
+                    
+                    print(f"  ✅ Score: {braiain_score} (Quality: {quality_score} - {grade_notes})")
+                    
+                    result = {
+                        "provider": provider_name,
+                        "model": selected_model,
+                        "status": "Online",
+                        "time": round(res["total_time"], 2),
+                        "ttft": round(res["ttft"], 3) if res["ttft"] else None,
+                        "tokens_per_second": round(tps, 0),
+                        "braiain_score": braiain_score,
+                        "quality_score": quality_score,
+                        "grade_breakdown": grade_notes,
+                        "cost_per_request": round(cost, 6),
+                        "full_response": content,
+                        "response_preview": content[:200] + "..."
+                    }
+                    
+                    save_cached_result(provider_name, selected_model, result)
+                    return result
+                    
+                except Exception as e:
+                    error_msg = str(e)
+                    print(f"  ❌ Error: {error_msg[:150]}")
+                    
+                    # Check if this is a model-specific error
+                    if is_model_error(error_msg):
+                        print(f"  🔄 Model '{selected_model}' unavailable, trying next...")
+                        failed_models.append(selected_model)
+                        model_failed = True
+                        break  # Exit retry loop, try next model
+                    
+                    if attempt < MAX_RETRIES - 1:
+                        time.sleep(RETRY_DELAY)
+                    else:
+                        return create_failure(provider_name, selected_model, "ERROR", error_msg[:200])
+            
+            # If model failed due to deprecation, continue to try next model
+            if not model_failed:
+                break
         
         return create_failure(provider_name, selected_model, "ERROR", "Max retries exceeded")
         
@@ -648,7 +721,7 @@ def save_results(results):
 
 def main():
     print("="*80)
-    print(f"🧠 BRAIAIN BENCHMARK v5.2")
+    print(f"🧠 BRAIAIN BENCHMARK v5.3")
     print("="*80)
     
     results = []
