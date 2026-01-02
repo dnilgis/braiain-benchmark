@@ -1,2 +1,10 @@
-requests==2.32.3
-urllib3<3
+# Core API clients - pinned for stability
+google-generativeai>=0.8.0
+openai>=1.0.0
+anthropic>=0.39.0
+groq>=0.11.0
+cohere>=5.11.0
+
+# Utilities
+requests>=2.31.0
+huggingface_hub>=0.20.0
