@@ -76,22 +76,22 @@ img{display:block;max-width:100%}
 }
 #hud-logo{
   font-family:var(--font-display);font-weight:900;
-  font-size:1.1rem;letter-spacing:3px;color:var(--cyan);
+  font-size:1.3rem;letter-spacing:4px;color:var(--cyan);
   text-shadow:var(--glow-cyan);
   flex-shrink:0;
 }
 #hud-ticker{
-  font-size:.7rem;color:var(--muted);
+  font-size:.85rem;color:var(--muted);
   letter-spacing:1px;text-transform:uppercase;
 }
 #hud-round{
   margin-left:auto;
-  font-family:var(--font-display);font-size:.7rem;
+  font-family:var(--font-display);font-size:.85rem;
   color:var(--cyan);letter-spacing:2px;
 }
 #hud-pips{display:flex;gap:4px;margin-left:8px}
 .pip{
-  width:8px;height:8px;border-radius:50%;
+  width:10px;height:10px;border-radius:50%;
   background:var(--border);transition:background .3s,box-shadow .3s;
 }
 .pip.correct{background:var(--green);box-shadow:var(--glow-green)}
@@ -137,7 +137,7 @@ img{display:block;max-width:100%}
 .boot-btn:active{transform:scale(.97)}
 
 /* ── GAME SCREEN ── */
-#screen-game{gap:16px;max-width:640px;width:100%;margin:0 auto}
+#screen-game{gap:20px;max-width:960px;width:100%;margin:0 auto}
 
 /* Image container */
 #image-frame{
@@ -166,7 +166,7 @@ img{display:block;max-width:100%}
 
 /* Magnifier */
 #magnifier{
-  position:absolute;width:120px;height:120px;
+  position:absolute;width:140px;height:140px;
   border-radius:50%;border:2px solid var(--cyan);
   box-shadow:var(--glow-cyan);
   pointer-events:none;display:none;
@@ -176,17 +176,17 @@ img{display:block;max-width:100%}
 
 /* Question prompt */
 #prompt{
-  text-align:center;font-size:.8rem;
-  color:var(--muted);letter-spacing:1px;
+  text-align:center;font-size:1rem;
+  color:var(--muted);letter-spacing:2px;
   text-transform:uppercase;
 }
 
 /* HUMAN / AI Buttons */
-#choices{display:flex;gap:12px;width:100%;max-width:400px}
+#choices{display:flex;gap:16px;width:100%;max-width:560px}
 .choice-btn{
-  flex:1;padding:16px 8px;
-  font-family:var(--font-display);font-size:.9rem;font-weight:700;
-  letter-spacing:3px;text-transform:uppercase;
+  flex:1;padding:20px 8px;
+  font-family:var(--font-display);font-size:1.1rem;font-weight:700;
+  letter-spacing:4px;text-transform:uppercase;
   border:2px solid var(--border);
   background:rgba(12,12,24,.6);
   transition:all .2s;position:relative;overflow:hidden;
@@ -211,23 +211,23 @@ img{display:block;max-width:100%}
 
 /* ── REVEAL PANEL ── */
 #reveal-panel{
-  width:100%;max-width:640px;
+  width:100%;max-width:960px;
   animation:fadeUp .35s ease-out;
-  display:none;flex-direction:column;gap:14px;
+  display:none;flex-direction:column;gap:16px;
 }
 #reveal-panel.active{display:flex}
 #reveal-verdict{
-  text-align:center;padding:14px;
-  font-family:var(--font-display);font-size:1rem;
+  text-align:center;padding:16px;
+  font-family:var(--font-display);font-size:1.1rem;
   font-weight:700;letter-spacing:3px;
   border:1px solid var(--border);
 }
 #reveal-verdict.correct{color:var(--green);border-color:var(--green);background:rgba(0,255,157,.05)}
 #reveal-verdict.wrong{color:var(--red);border-color:var(--red);background:rgba(255,0,60,.05)}
-#reveal-source{font-size:.75rem;color:var(--muted);text-align:center}
+#reveal-source{font-size:.85rem;color:var(--muted);text-align:center}
 #reveal-tip{
-  font-size:.78rem;line-height:1.5;
-  padding:12px 14px;
+  font-size:.9rem;line-height:1.6;
+  padding:14px 16px;
   border-left:2px solid var(--cyan);
   background:rgba(0,229,255,.04);
   color:var(--text);
@@ -768,51 +768,59 @@ function initMagnifier(img) {
   const frame = document.getElementById('image-frame');
   const mag = document.getElementById('magnifier');
   const zoom = 2.5;
+  const magR = 70; // half of 140px magnifier
+  const TOUCH_OFFSET = 120; // pixels above finger on touch
+  let isTouch = false;
 
-  function show(x, y) {
+  function show(x, y, offsetY) {
     const rect = frame.getBoundingClientRect();
     const px = (x - rect.left) / rect.width;
     const py = (y - rect.top) / rect.height;
     if (px < 0 || px > 1 || py < 0 || py > 1) { mag.style.display = 'none'; return; }
 
+    // Position loupe — centered on mouse, offset above finger on touch
+    let loupeX = x - rect.left - magR;
+    let loupeY = (y - rect.top - magR) - offsetY;
+
+    // Clamp loupe inside frame
+    loupeX = Math.max(0, Math.min(loupeX, rect.width - magR * 2));
+    loupeY = Math.max(0, Math.min(loupeY, rect.height - magR * 2));
+
     mag.style.display = 'block';
-    mag.style.left = (x - rect.left - 60) + 'px';
-    mag.style.top = (y - rect.top - 60) + 'px';
+    mag.style.left = loupeX + 'px';
+    mag.style.top = loupeY + 'px';
     mag.style.backgroundImage = 'url(' + img.src + ')';
     mag.style.backgroundSize = (rect.width * zoom) + 'px ' + (rect.height * zoom) + 'px';
+    // Background always tracks actual touch/mouse point (not loupe position)
     mag.style.backgroundPosition =
-      (-px * rect.width * zoom + 60) + 'px ' +
-      (-py * rect.height * zoom + 60) + 'px';
+      (-px * rect.width * zoom + magR) + 'px ' +
+      (-py * rect.height * zoom + magR) + 'px';
   }
 
   function hide() { mag.style.display = 'none'; }
 
-  // Mouse
-  frame.onmousemove = e => show(e.clientX, e.clientY);
+  // Mouse — no offset
+  frame.onmousemove = e => { isTouch = false; show(e.clientX, e.clientY, 0); };
   frame.onmouseleave = hide;
 
-  // Touch
+  // Touch — offset above finger
+  frame.ontouchstart = e => {
+    e.preventDefault();
+    isTouch = true;
+    if (e.touches.length === 1) {
+      const t = e.touches[0];
+      show(t.clientX, t.clientY, TOUCH_OFFSET);
+    }
+  };
   frame.ontouchmove = e => {
     e.preventDefault();
-    const t = e.touches[0];
-    show(t.clientX, t.clientY);
+    if (e.touches.length === 1) {
+      const t = e.touches[0];
+      show(t.clientX, t.clientY, TOUCH_OFFSET);
+    }
   };
   frame.ontouchend = hide;
   frame.ontouchcancel = hide;
-
-  // Tap to toggle on mobile
-  let magVisible = false;
-  frame.ontouchstart = e => {
-    if (e.touches.length === 1) {
-      magVisible = !magVisible;
-      if (magVisible) {
-        const t = e.touches[0];
-        show(t.clientX, t.clientY);
-      } else {
-        hide();
-      }
-    }
-  };
 }
 
 /* ══════════════════════════════════════
