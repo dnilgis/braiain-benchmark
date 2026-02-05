@@ -172,6 +172,19 @@ img{display:block;max-width:100%}
   text-shadow:var(--glow-cyan);
 }
 #boot-sub{font-size:.75rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+#boot-stats{
+  display:none;gap:24px;margin:16px 0 8px;
+}
+#boot-stats.visible{display:flex}
+.bstat{display:flex;flex-direction:column;align-items:center;gap:2px}
+.bstat-num{
+  font-family:var(--font-display);font-size:1.3rem;
+  font-weight:900;color:var(--cyan);letter-spacing:1px;
+}
+.bstat-label{
+  font-family:var(--font-mono);font-size:.4rem;
+  color:var(--muted);letter-spacing:1.5px;
+}
 #boot-status{font-size:.7rem;color:var(--green);min-height:1.2em}
 .boot-btn{
   margin-top:12px;padding:14px 40px;
@@ -356,8 +369,20 @@ img{display:block;max-width:100%}
   transition:all .2s;
 }
 .share-btn:hover{border-color:var(--cyan);color:var(--cyan)}
-#countdown-wrap{font-size:.7rem;color:var(--muted);letter-spacing:1px}
-#countdown{color:var(--cyan)}
+#countdown-wrap{
+  text-align:center;padding:20px 0 8px;
+  border-top:1px solid var(--border);margin-top:8px;
+}
+#countdown-label{
+  font-family:var(--font-mono);font-size:.5rem;
+  color:var(--muted);letter-spacing:3px;display:block;margin-bottom:6px;
+}
+#countdown{
+  font-family:var(--font-display);font-size:2rem;font-weight:900;
+  color:var(--cyan);letter-spacing:4px;
+  text-shadow:0 0 20px rgba(0,229,255,.3),0 0 40px rgba(0,229,255,.1);
+  display:block;
+}
 
 /* Toast */
 #toast{
@@ -422,13 +447,13 @@ img{display:block;max-width:100%}
   margin-top:8px;opacity:.35;
 }
 /* ══════════════════════════════════════
-   YESTERDAY'S REVIEW
+   TODAY'S REVIEW
    ══════════════════════════════════════ */
-#yesterday-section{
+#review-section{
   display:none;max-width:640px;margin:0 auto;
   padding:32px 16px 0;
 }
-#yesterday-section.visible{display:block}
+#review-section.visible{display:block}
 .yd-header{
   text-align:center;margin-bottom:20px;
   border-top:1px solid var(--border);padding-top:28px;
@@ -487,17 +512,6 @@ img{display:block;max-width:100%}
   font-family:var(--font-mono);font-size:.45rem;
   color:var(--muted);min-width:45px;text-align:right;letter-spacing:.5px;
 }
-.yd-summary{
-  text-align:center;margin-top:16px;padding:12px;
-  border:1px solid var(--border);background:var(--surface);
-}
-.yd-summary-stat{
-  font-family:var(--font-display);font-size:1rem;
-  color:var(--cyan);font-weight:700;letter-spacing:1px;
-}
-.yd-summary-label{
-  font-size:.55rem;color:var(--muted);letter-spacing:1px;margin-top:2px;
-}
 </style>
 </head>
 <body>
@@ -517,6 +531,11 @@ img{display:block;max-width:100%}
 <main id="screen-boot" class="screen active">
   <div id="boot-logo">BRAIAIN</div>
   <div id="boot-sub">CAN YOU SPOT THE AI?</div>
+  <div id="boot-stats">
+    <div class="bstat"><span class="bstat-num" id="bs-played">0</span><span class="bstat-label">DAYS PLAYED</span></div>
+    <div class="bstat"><span class="bstat-num" id="bs-avg">—</span><span class="bstat-label">AVG SCORE</span></div>
+    <div class="bstat"><span class="bstat-num" id="bs-best">0</span><span class="bstat-label">BEST STREAK</span></div>
+  </div>
   <div id="boot-status"></div>
   <button class="boot-btn" id="btn-start" style="display:none" onclick="startGame()">BEGIN SCAN</button>
 </main>
@@ -566,21 +585,20 @@ img{display:block;max-width:100%}
     <button class="share-btn" onclick="shareClipboard()">📋 COPY</button>
     <button class="share-btn" onclick="shareX()">𝕏 SHARE</button>
   </div>
-  <div id="countdown-wrap">NEXT CHALLENGE IN <span id="countdown">--:--:--</span></div>
+  <div id="countdown-wrap">
+    <span id="countdown-label">NEXT CHALLENGE DROPS IN</span>
+    <span id="countdown">--:--:--</span>
+  </div>
 </main>
 
-<!-- YESTERDAY'S REVIEW -->
-<section id="yesterday-section">
+<!-- TODAY'S REVIEW (shown after game) -->
+<section id="review-section">
   <div class="yd-header">
-    <div class="yd-label">// DECLASSIFIED</div>
-    <div class="yd-title" id="yd-title">YESTERDAY'S CHALLENGE</div>
-    <div class="yd-subtitle" id="yd-subtitle"></div>
+    <div class="yd-label">// MISSION DEBRIEF</div>
+    <div class="yd-title" id="review-title">TODAY'S ANSWERS</div>
+    <div class="yd-subtitle" id="review-subtitle"></div>
   </div>
-  <div class="yd-grid" id="yd-grid"></div>
-  <div class="yd-summary" id="yd-summary" style="display:none">
-    <div class="yd-summary-stat" id="yd-summary-stat"></div>
-    <div class="yd-summary-label">COMMUNITY AVERAGE ACCURACY</div>
-  </div>
+  <div class="yd-grid" id="review-grid"></div>
 </section>
 
 <!-- Toast -->
@@ -633,7 +651,6 @@ function trackEvent(name, params) {
    CONFIG
    ══════════════════════════════════════ */
 const API_BASE = 'https://api.braiain.com';
-const CHALLENGE_BASE = 'challenges/';
 const TOTAL_ROUNDS = 10;
 
 /* ══════════════════════════════════════
@@ -762,6 +779,9 @@ async function boot() {
   // Scramble logo
   await scrambleText(logo, 'BRAIAIN', 800);
   await scrambleText(sub, 'CAN YOU SPOT THE AI?', 500);
+
+  // Show running stats on home screen
+  loadBootStats();
 
   // Check for already-played today
   loadStreak();
@@ -1006,7 +1026,7 @@ function showResults() {
   });
 
   startCountdown();
-  loadYesterdayReview();
+  loadTodayReview();
 }
 
 /* ══════════════════════════════════════
@@ -1199,97 +1219,76 @@ function startCountdown() {
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
     const el = document.getElementById('countdown');
-    if (el) el.textContent = h + 'h ' + String(m).padStart(2, '0') + 'm ' + String(s).padStart(2, '0') + 's';
+    if (el) el.textContent = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
   }
   tick();
   setInterval(tick, 1000);
 }
 
 /* ══════════════════════════════════════
-   YESTERDAY'S REVIEW
+   TODAY'S REVIEW (post-game debrief)
    ══════════════════════════════════════ */
-async function loadYesterdayReview() {
-  const section = document.getElementById('yesterday-section');
-  const ydKey = getYesterdayKey();
+function loadTodayReview() {
+  const section = document.getElementById('review-section');
+  if (!dailyData || !dailyData.rounds) return;
 
-  try {
-    const resp = await fetchWithTimeout(
-      CHALLENGE_BASE + ydKey + '.json?v=' + BUILD_HASH, {}, 5000
-    );
-    if (!resp.ok) throw new Error('not found');
-    const data = await resp.json();
+  // Header
+  const catEmoji = dailyData.category_emoji || '👁️';
+  document.getElementById('review-title').textContent =
+    catEmoji + ' ' + (dailyData.category || 'IMAGE DETECTION').toUpperCase();
+  document.getElementById('review-subtitle').textContent =
+    'Day ' + (dailyData.day_number || '1') + ' — All 10 Answers Revealed';
 
-    // Header
-    const catEmoji = data.category_emoji || '🔍';
-    document.getElementById('yd-title').textContent =
-      catEmoji + ' ' + (data.category || 'YESTERDAY\'S CHALLENGE').toUpperCase();
-    document.getElementById('yd-subtitle').textContent =
-      'Day ' + (data.day_number || '?') + ' — ' + formatDateLabel(ydKey);
+  // Build cards
+  const grid = document.getElementById('review-grid');
+  grid.innerHTML = '';
 
-    // Build cards
-    const grid = document.getElementById('yd-grid');
-    grid.innerHTML = '';
+  const rounds = dailyData.rounds.slice(0, TOTAL_ROUNDS);
+  for (let i = 0; i < rounds.length; i++) {
+    const r = rounds[i];
+    const card = document.createElement('div');
+    card.className = 'yd-card';
 
-    let totalAccuracy = 0;
-    let statsCount = 0;
+    const isHuman = r.source === 'human';
+    const labelClass = isHuman ? 'human' : 'ai';
+    const labelText = isHuman ? '✓ HUMAN' : '✗ AI-GENERATED';
 
-    for (let i = 0; i < data.rounds.length; i++) {
-      const r = data.rounds[i];
-      const card = document.createElement('div');
-      card.className = 'yd-card';
+    // Show user's answer as a pip
+    const userCorrect = results[i];
+    const pipClass = userCorrect ? 'correct' : 'wrong';
+    const pipText = userCorrect ? '✓' : '✗';
 
-      const isHuman = r.source === 'human';
-      const labelClass = isHuman ? 'human' : 'ai';
-      const labelText = isHuman ? '✓ HUMAN' : '✗ AI-GENERATED';
+    card.innerHTML =
+      '<img class="yd-card-img" src="' + r.content + '" alt="Round ' + (i + 1) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+      '<div class="yd-card-body">' +
+        '<div class="yd-card-row">' +
+          '<span class="yd-card-label ' + labelClass + '">' + labelText + '</span>' +
+          '<span class="yd-card-round"><span class="r-pip ' + pipClass + '" style="width:20px;height:20px;font-size:.55rem;display:inline-flex">' + pipText + '</span> R' + (i + 1) + '</span>' +
+        '</div>' +
+        '<div class="yd-card-attrib">' + (r.attribution || '') + '</div>' +
+        '<div class="yd-bar-wrap">' +
+          '<div class="yd-bar"><div class="yd-bar-fill" id="rv-bar-' + i + '"></div></div>' +
+          '<span class="yd-bar-label" id="rv-stat-' + i + '">—</span>' +
+        '</div>' +
+      '</div>';
 
-      card.innerHTML =
-        '<img class="yd-card-img" src="' + r.content + '" alt="Round ' + (i + 1) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
-        '<div class="yd-card-body">' +
-          '<div class="yd-card-row">' +
-            '<span class="yd-card-label ' + labelClass + '">' + labelText + '</span>' +
-            '<span class="yd-card-round">R' + (i + 1) + '</span>' +
-          '</div>' +
-          '<div class="yd-card-attrib">' + (r.attribution || '') + '</div>' +
-          '<div class="yd-bar-wrap">' +
-            '<div class="yd-bar"><div class="yd-bar-fill" id="yd-bar-' + i + '"></div></div>' +
-            '<span class="yd-bar-label" id="yd-stat-' + i + '">—</span>' +
-          '</div>' +
-        '</div>';
+    grid.appendChild(card);
 
-      grid.appendChild(card);
-
-      // Try fetching community stats for each round
-      fetchYdStat(r.id, i).then(pct => {
-        if (pct !== null) {
-          totalAccuracy += pct;
-          statsCount++;
-          // Update summary if we have all stats
-          if (statsCount >= data.rounds.length) {
-            showYdSummary(Math.round(totalAccuracy / statsCount));
-          }
-        }
-      });
-    }
-
-    // Show section with a slight delay for nice reveal
-    setTimeout(() => {
-      section.classList.add('visible');
-    }, 300);
-
-  } catch (e) {
-    // No yesterday data available — silently hide
-    section.classList.remove('visible');
+    // Fetch community stats per round
+    fetchReviewStat(r.id, i);
   }
+
+  setTimeout(() => { section.classList.add('visible'); }, 300);
 }
 
-async function fetchYdStat(roundId, index) {
+async function fetchReviewStat(roundId, index) {
   try {
     const resp = await fetchWithTimeout(API_BASE + '/stats?id=' + roundId, {}, 4000);
     if (!resp.ok) throw new Error('no stats');
     const data = await resp.json();
     const pct = Math.round(data.pct || 0);
-    const bar = document.getElementById('yd-bar-' + index);
-    const label = document.getElementById('yd-stat-' + index);
+    const bar = document.getElementById('rv-bar-' + index);
+    const label = document.getElementById('rv-stat-' + index);
     if (bar) {
       setTimeout(() => { bar.style.width = pct + '%'; }, 100 + index * 80);
       if (pct >= 70) bar.style.background = 'var(--green)';
@@ -1297,29 +1296,43 @@ async function fetchYdStat(roundId, index) {
       else bar.style.background = 'var(--red)';
     }
     if (label) label.textContent = pct + '% correct';
-    return pct;
   } catch (e) {
-    // No API available — show placeholder
-    const label = document.getElementById('yd-stat-' + index);
+    const label = document.getElementById('rv-stat-' + index);
     if (label) label.textContent = 'NO DATA';
-    return null;
   }
 }
 
-function showYdSummary(avgPct) {
-  const summary = document.getElementById('yd-summary');
-  const stat = document.getElementById('yd-summary-stat');
-  if (summary && stat) {
-    stat.textContent = avgPct + '%';
-    summary.style.display = '';
-  }
-}
+/* ══════════════════════════════════════
+   BOOT SCREEN STATS
+   ══════════════════════════════════════ */
+function loadBootStats() {
+  // Count days played and calculate avg score from localStorage
+  let daysPlayed = 0;
+  let totalScore = 0;
 
-function formatDateLabel(dateStr) {
-  const d = new Date(dateStr + 'T12:00:00Z');
-  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-  return days[d.getUTCDay()] + ' ' + months[d.getUTCMonth()] + ' ' + d.getUTCDate();
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('braiain_results_')) {
+      try {
+        const r = JSON.parse(localStorage.getItem(key));
+        if (Array.isArray(r) && r.length > 0) {
+          daysPlayed++;
+          totalScore += r.filter(Boolean).length;
+        }
+      } catch (e) {}
+    }
+  }
+
+  const bestStrk = parseInt(localStorage.getItem('braiain_best_streak') || '0');
+
+  // Only show if player has history
+  if (daysPlayed > 0) {
+    const avg = Math.round((totalScore / daysPlayed) * 10) / 10;
+    document.getElementById('bs-played').textContent = daysPlayed;
+    document.getElementById('bs-avg').textContent = avg + '/10';
+    document.getElementById('bs-best').textContent = bestStrk;
+    document.getElementById('boot-stats').classList.add('visible');
+  }
 }
 
 /* ══════════════════════════════════════
