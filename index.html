@@ -328,58 +328,55 @@ img{display:block;max-width:100%}
    TIP TERMINAL (FOOTER)
    ══════════════════════════════════════ */
 .tip-terminal{
-  text-align:center;padding:32px 16px 28px;
+  text-align:center;padding:18px 12px 16px;
   border-top:1px solid var(--border);margin-top:auto;
+  display:none;
 }
+.tip-terminal.visible{display:block}
 .tip-terminal .tip-label{
-  font-family:var(--font-display);font-size:.55rem;
-  letter-spacing:3px;color:var(--muted);margin-bottom:14px;
-  text-transform:uppercase;
+  font-family:var(--font-display);font-size:.45rem;
+  letter-spacing:2.5px;color:var(--muted);margin-bottom:8px;
 }
-.tip-keys{display:flex;gap:8px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+.tip-keys{display:flex;gap:6px;justify-content:center;margin-bottom:8px}
 .tip-key{
-  padding:7px 16px;font-family:var(--font-mono);font-size:.72rem;
-  letter-spacing:1.5px;font-weight:700;
+  padding:4px 12px;font-family:var(--font-mono);font-size:.6rem;
+  letter-spacing:1px;font-weight:700;
   border:1px solid var(--border);background:var(--surface);
   color:var(--muted);opacity:.5;
   transition:all .25s;cursor:pointer;
-  text-transform:uppercase;
 }
 .tip-key:hover{opacity:.8;border-color:var(--cyan)}
 .tip-key.active{
   opacity:1;color:var(--cyan);border-color:var(--cyan);
   box-shadow:var(--glow-cyan);
-  text-shadow:0 0 8px rgba(0,229,255,.5);
 }
 .tip-addr-wrap{
-  margin:0 auto;max-width:520px;padding:8px 14px;
+  margin:0 auto;max-width:480px;padding:5px 10px;
   background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);
-  cursor:pointer;transition:all .25s;position:relative;
-  overflow:hidden;
+  cursor:pointer;transition:all .25s;position:relative;overflow:hidden;
 }
 .tip-addr-wrap:hover{border-color:var(--cyan);background:rgba(0,229,255,.08)}
 .tip-addr-wrap:active{transform:scale(.98)}
 .tip-addr{
-  font-family:var(--font-mono);font-size:.6rem;
-  color:var(--cyan);letter-spacing:.5px;
-  word-break:break-all;line-height:1.5;
-  opacity:.8;transition:opacity .2s;
+  font-family:var(--font-mono);font-size:.52rem;
+  color:var(--cyan);letter-spacing:.3px;
+  word-break:break-all;line-height:1.4;opacity:.7;
 }
 .tip-addr-wrap:hover .tip-addr{opacity:1}
 .tip-addr-hint{
-  font-family:var(--font-mono);font-size:.5rem;
-  color:var(--muted);letter-spacing:1px;margin-top:6px;
+  font-family:var(--font-mono);font-size:.42rem;
+  color:var(--muted);letter-spacing:1px;margin-top:4px;
 }
 .tip-copy-flash{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:rgba(0,229,255,.12);color:var(--cyan);
-  font-family:var(--font-display);font-size:.7rem;letter-spacing:3px;
+  font-family:var(--font-display);font-size:.6rem;letter-spacing:3px;
   opacity:0;transition:opacity .15s;pointer-events:none;
 }
 .tip-copy-flash.flash{opacity:1}
 .tip-footer-note{
-  font-size:.5rem;color:var(--muted);letter-spacing:1px;
-  margin-top:14px;opacity:.4;
+  font-size:.42rem;color:var(--muted);letter-spacing:1px;
+  margin-top:8px;opacity:.35;
 }
 </style>
 </head>
@@ -786,6 +783,7 @@ function endGame() {
 function showResults() {
   showScreen('screen-results');
   document.getElementById('hud').style.display = 'none';
+  document.querySelector('.tip-terminal').classList.add('visible');
 
   const score = results.filter(Boolean).length;
   const titles = [
