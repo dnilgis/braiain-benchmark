@@ -3,12 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+<!-- Cache busting: version stamped on all assets -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
 <title>BRAIAIN — Can You Spot the AI?</title>
-<meta name="description" content="Daily AI detection game. 10 rounds. Are you looking at a real photo or an AI fake? Test your instincts.">
+
+<!-- SEO -->
+<meta name="description" content="Daily AI detection game. 10 rounds. Are you looking at a real photo or an AI fake? Test your instincts and track your streak.">
+<meta name="keywords" content="AI detection, real or fake, AI game, daily challenge, spot the AI, artificial intelligence, image detection">
+<meta name="author" content="BRAIAIN">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://braiain.com/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BRAIAIN">
 <meta property="og:title" content="BRAIAIN — Can You Spot the AI?">
-<meta property="og:description" content="Daily AI detection challenge. Can you tell what's real?">
+<meta property="og:description" content="Daily AI detection challenge. 10 rounds. Real photo or AI fake? Test your instincts.">
 <meta property="og:url" content="https://braiain.com">
+<meta property="og:image" content="https://braiain.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BRAIAIN — Can You Spot the AI? Daily detection challenge.">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BRAIAIN — Can You Spot the AI?">
+<meta name="twitter:description" content="Daily AI detection challenge. Can you tell what's real?">
+<meta name="twitter:image" content="https://braiain.com/og-image.png">
+
+<!-- Favicons -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#00e5ff">
+<meta name="msapplication-TileColor" content="#0a0e17">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "BRAIAIN",
+  "url": "https://braiain.com",
+  "description": "Daily AI detection game. Can you tell real photos from AI-generated images?",
+  "applicationCategory": "Game",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3B3ZCE62NW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-3B3ZCE62NW');
+</script>
+
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════
@@ -469,6 +530,36 @@ img{display:block;max-width:100%}
 
 <script>
 /* ══════════════════════════════════════
+   VERSION & CACHE BUSTING
+   ══════════════════════════════════════ */
+const APP_VERSION = '2.1.0';
+const BUILD_HASH = Date.now().toString(36).slice(-6);
+
+// Force reload if version mismatch (cache bust across deploys)
+(function cacheBust() {
+  const stored = localStorage.getItem('braiain_version');
+  if (stored && stored !== APP_VERSION) {
+    localStorage.setItem('braiain_version', APP_VERSION);
+    // Clear old caches
+    if ('caches' in window) {
+      caches.keys().then(names => names.forEach(n => caches.delete(n)));
+    }
+    window.location.reload(true);
+    return;
+  }
+  localStorage.setItem('braiain_version', APP_VERSION);
+})();
+
+/* ══════════════════════════════════════
+   GA4 EVENT HELPERS
+   ══════════════════════════════════════ */
+function trackEvent(name, params) {
+  if (typeof gtag === 'function') {
+    gtag('event', name, params || {});
+  }
+}
+
+/* ══════════════════════════════════════
    CONFIG
    ══════════════════════════════════════ */
 const API_BASE = 'https://api.braiain.com';
@@ -609,7 +700,7 @@ async function boot() {
   // Load daily data
   status.textContent = '> LOADING DAILY CHALLENGE...';
   try {
-    const resp = await fetchWithTimeout('daily.json', {}, 5000);
+    const resp = await fetchWithTimeout('daily.json?v=' + APP_VERSION + '&t=' + BUILD_HASH, {}, 5000);
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     dailyData = await resp.json();
     status.textContent = '> DAY ' + dailyData.day_number + ' — ' + (dailyData.category || 'DETECTION').toUpperCase() + ' LOADED';
@@ -641,6 +732,7 @@ async function boot() {
    GAME FLOW
    ══════════════════════════════════════ */
 function startGame() {
+  trackEvent('game_start', { day: dailyData.day_number });
   gameActive = true;
   currentRound = 0;
   results = [];
@@ -696,6 +788,9 @@ function loadRound() {
 
 function choose(answer) {
   if (!gameActive) return;
+
+  // Haptic feedback
+  if (navigator.vibrate) navigator.vibrate(10);
 
   const round = dailyData.rounds[currentRound];
   const isCorrect = answer === round.source;
@@ -773,6 +868,7 @@ function endGame() {
   localStorage.setItem('braiain_results_' + todayKey, JSON.stringify(results));
 
   const score = results.filter(Boolean).length;
+  trackEvent('game_complete', { score: score, total: TOTAL_ROUNDS, day: dailyData.day_number });
   updateStreak(score);
   showResults();
 }
@@ -974,6 +1070,7 @@ function getShareText() {
 }
 
 function shareClipboard() {
+  trackEvent('share', { method: 'clipboard' });
   const text = getShareText();
   if (navigator.share) {
     navigator.share({ text }).catch(() => copyFallback(text));
@@ -989,6 +1086,7 @@ function copyFallback(text) {
 }
 
 function shareX() {
+  trackEvent('share', { method: 'twitter' });
   const text = encodeURIComponent(getShareText());
   window.open('https://twitter.com/intent/tweet?text=' + text, '_blank');
 }
@@ -1073,6 +1171,36 @@ function copyTipAddr() {
 }
 
 document.addEventListener('DOMContentLoaded', initTipTerminal);
+
+/* ══════════════════════════════════════
+   BOOT
+   ══════════════════════════════════════ */
+/* ══════════════════════════════════════
+   KEYBOARD SHORTCUTS (Desktop)
+   ══════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  // Game screen: Left/H = Human, Right/A = AI
+  if (gameActive && document.getElementById('screen-game').classList.contains('active')) {
+    const revealActive = document.getElementById('reveal-panel').classList.contains('active');
+    if (!revealActive) {
+      if (e.key === 'ArrowLeft' || e.key === 'h' || e.key === 'H') { e.preventDefault(); choose('human'); }
+      if (e.key === 'ArrowRight' || e.key === 'a' || e.key === 'A') { e.preventDefault(); choose('ai'); }
+    } else {
+      // Reveal visible: Enter/Space/Right = Next
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); nextRound(); }
+    }
+  }
+  // Review modal: Escape to close
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('review-modal');
+    if (modal && modal.classList.contains('active')) { e.preventDefault(); modal.classList.remove('active'); }
+  }
+  // Boot screen: Enter to start
+  if (e.key === 'Enter' && document.getElementById('screen-boot').classList.contains('active')) {
+    const btn = document.getElementById('btn-start');
+    if (btn && btn.style.display !== 'none') { e.preventDefault(); startGame(); }
+  }
+});
 
 /* ══════════════════════════════════════
    BOOT
