@@ -429,43 +429,22 @@ img{display:block;max-width:100%}
   font-family:var(--font-display);font-size:.45rem;
   letter-spacing:2.5px;color:var(--muted);margin-bottom:8px;
 }
-.tip-keys{display:flex;gap:6px;justify-content:center;margin-bottom:8px}
+.tip-keys{display:flex;gap:8px;justify-content:center;margin-bottom:6px}
 .tip-key{
-  padding:4px 12px;font-family:var(--font-mono);font-size:.6rem;
+  padding:6px 16px;font-family:var(--font-mono);font-size:.6rem;
   letter-spacing:1px;font-weight:700;
   border:1px solid var(--border);background:var(--surface);
-  color:var(--muted);opacity:.5;
+  color:var(--muted);opacity:.6;
   transition:all .25s;cursor:pointer;
 }
-.tip-key:hover{opacity:.8;border-color:var(--cyan)}
-.tip-key.active{
-  opacity:1;color:var(--cyan);border-color:var(--cyan);
-  box-shadow:var(--glow-cyan);
-}
-.tip-addr-wrap{
-  margin:0 auto;max-width:480px;padding:5px 10px;
-  background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);
-  cursor:pointer;transition:all .25s;position:relative;overflow:hidden;
-}
-.tip-addr-wrap:hover{border-color:var(--cyan);background:rgba(0,229,255,.08)}
-.tip-addr-wrap:active{transform:scale(.98)}
-.tip-addr{
-  font-family:var(--font-mono);font-size:.52rem;
-  color:var(--cyan);letter-spacing:.3px;
-  word-break:break-all;line-height:1.4;opacity:.7;
-}
-.tip-addr-wrap:hover .tip-addr{opacity:1}
-.tip-addr-hint{
+.tip-key:hover{opacity:1;border-color:var(--cyan);color:var(--cyan);box-shadow:var(--glow-cyan)}
+.tip-key:active{transform:scale(.95)}
+.tip-key.copied{opacity:1;color:var(--green);border-color:var(--green)}
+.tip-hint{
   font-family:var(--font-mono);font-size:.42rem;
-  color:var(--muted);letter-spacing:1px;margin-top:4px;
+  color:var(--muted);letter-spacing:1.5px;text-align:center;
+  opacity:.4;margin-bottom:6px;
 }
-.tip-copy-flash{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  background:rgba(0,229,255,.12);color:var(--cyan);
-  font-family:var(--font-display);font-size:.6rem;letter-spacing:3px;
-  opacity:0;transition:opacity .15s;pointer-events:none;
-}
-.tip-copy-flash.flash{opacity:1}
 .tip-footer-note{
   font-size:.42rem;color:var(--muted);letter-spacing:1px;
   margin-top:8px;opacity:.35;
@@ -586,7 +565,7 @@ const FALLBACK = {
   rounds: [
     {
       id:'d1r01',type:'image',source:'human',
-      content:'https://images.unsplash.com/photo-1535905557558-afc4877a26fc?auto=format&fit=crop&w=800&q=80',
+      content:'https://picsum.photos/id/167/800/600',
       attribution:'Real photograph — urban cityscape at night',
       pro_tip:'LIGHT BLEED: Real neon and city lights create natural lens flare, chromatic aberration, and uneven glow. AI tends to render light sources as clean, uniform halos without the messy physics of real optics.',
       credit_name:'Susan Yin',
@@ -594,7 +573,7 @@ const FALLBACK = {
     },
     {
       id:'d1r02',type:'image',source:'human',
-      content:'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80',
+      content:'https://picsum.photos/id/429/800/600',
       attribution:'Real photograph — humanoid robot in studio',
       pro_tip:'MECHANICAL JOINTS: Real robots have visible seams, screws, and manufacturing marks. AI-generated robots often have impossibly smooth transitions between parts and joints that couldn\'t physically articulate.',
       credit_name:'Alex Knight',
@@ -610,7 +589,7 @@ const FALLBACK = {
     },
     {
       id:'d1r04',type:'image',source:'human',
-      content:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80',
+      content:'https://picsum.photos/id/29/800/600',
       attribution:'Real photograph — food styling and fresh vegetables',
       pro_tip:'ORGANIC CHAOS: Real food has natural imperfections — a leaf slightly wilted, sauce dripped asymmetrically, crumbs scattered randomly. AI food looks suspiciously art-directed with impossible uniformity.',
       credit_name:'Anna Pelzer',
@@ -618,7 +597,7 @@ const FALLBACK = {
     },
     {
       id:'d1r05',type:'image',source:'ai',
-      content:'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
+      content:'https://picsum.photos/id/240/800/600',
       attribution:'AI-generated — cyberpunk digital environment',
       pro_tip:'PHYSICS VIOLATIONS: Check shadows and reflections. AI frequently places light sources inconsistently — shadows may point in conflicting directions, and reflections don\'t match the objects casting them.',
       credit_name:'Markus Spiske',
@@ -626,7 +605,7 @@ const FALLBACK = {
     },
     {
       id:'d1r06',type:'image',source:'human',
-      content:'https://images.unsplash.com/photo-1592478411213-61535f94e0ca?auto=format&fit=crop&w=800&q=80',
+      content:'https://picsum.photos/id/36/800/600',
       attribution:'Real photograph — rain-soaked neon street scene',
       pro_tip:'WATER BEHAVIOR: Real rain on real surfaces creates complex, irregular reflections with natural distortion. AI renders water as either too perfect (mirror-like) or too uniform (repeated ripple patterns).',
       credit_name:'Jezael Melgoza',
@@ -642,7 +621,7 @@ const FALLBACK = {
     },
     {
       id:'d1r08',type:'image',source:'human',
-      content:'https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=800&q=80',
+      content:'https://picsum.photos/id/122/800/600',
       attribution:'Real photograph — laptop with screen glow in dark environment',
       pro_tip:'SCREEN LIGHT: Real screens cast uneven light that falls off naturally with distance and bounces differently off varied surfaces. AI often renders screen glow as a uniform wash of color.',
       credit_name:'Ales Nesetril',
@@ -658,7 +637,7 @@ const FALLBACK = {
     },
     {
       id:'d1r10',type:'image',source:'human',
-      content:'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80',
+      content:'https://picsum.photos/id/164/800/600',
       attribution:'Real photograph — retro tech and circuit boards',
       pro_tip:'MANUFACTURING DETAIL: Real electronics have consistent trace widths, solder joints with natural irregularity, and dust/wear marks. AI circuit boards often have traces that lead nowhere and components that don\'t exist.',
       credit_name:'Lorenzo Herrera',
@@ -767,7 +746,19 @@ async function boot() {
 /* ══════════════════════════════════════
    GAME FLOW
    ══════════════════════════════════════ */
+function haptic(pattern) {
+  if (!navigator.vibrate) return;
+  switch (pattern) {
+    case 'tap':     navigator.vibrate(8);  break;
+    case 'correct': navigator.vibrate([10, 30, 10]); break;
+    case 'wrong':   navigator.vibrate([40, 20, 40]); break;
+    case 'finish':  navigator.vibrate([10, 20, 10, 20, 30]); break;
+    default:        navigator.vibrate(10);
+  }
+}
+
 function startGame() {
+  haptic('tap');
   gameActive = true;
   currentRound = 0;
   results = [];
@@ -831,12 +822,13 @@ function loadRound() {
 function choose(answer) {
   if (!gameActive) return;
 
-  // Haptic feedback
-  if (navigator.vibrate) navigator.vibrate(10);
+  haptic('tap');
 
   const round = dailyData.rounds[currentRound];
   const isCorrect = answer === round.source;
   results.push(isCorrect);
+
+  setTimeout(() => haptic(isCorrect ? 'correct' : 'wrong'), 150);
 
   // Disable buttons
   document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
@@ -907,6 +899,7 @@ function showReveal(round, isCorrect) {
 }
 
 function nextRound() {
+  haptic('tap');
   currentRound++;
   if (currentRound >= TOTAL_ROUNDS || currentRound >= dailyData.rounds.length) {
     endGame();
@@ -917,6 +910,7 @@ function nextRound() {
 
 function endGame() {
   gameActive = false;
+  haptic('finish');
   const todayKey = getTodayKey();
   localStorage.setItem('braiain_played_' + todayKey, '1');
   localStorage.setItem('braiain_results_' + todayKey, JSON.stringify(results));
@@ -1274,54 +1268,36 @@ boot();
 <div class="tip-terminal">
   <div class="tip-label">// TIP THE DEVELOPER</div>
   <div class="tip-keys">
-    <button class="tip-key active" data-chain="eth">[ ETH ]</button>
-    <button class="tip-key" data-chain="sol">[ SOL ]</button>
-    <button class="tip-key" data-chain="kas">[ KAS ]</button>
+    <button class="tip-key" data-chain="eth" onclick="copyTip('eth')">⟠ ETH</button>
+    <button class="tip-key" data-chain="sol" onclick="copyTip('sol')">◎ SOL</button>
+    <button class="tip-key" data-chain="kas" onclick="copyTip('kas')">⬡ KAS</button>
   </div>
-  <div class="tip-addr-wrap" id="tip-addr-wrap" onclick="copyTipAddr()">
-    <div class="tip-addr" id="tip-addr"></div>
-    <div class="tip-addr-hint">CLICK TO COPY</div>
-    <div class="tip-copy-flash" id="tip-flash">COPIED ✓</div>
-  </div>
+  <div class="tip-hint">TAP TO COPY WALLET ADDRESS</div>
   <div class="tip-footer-note">BRAIAIN &copy; 2026 — SYSTEM SECURE. NO PERSONAL DATA ARCHIVED.</div>
 </div>
 
 <script>
-/* ══════════════════════════════════════
-   TIP TERMINAL
-   ══════════════════════════════════════ */
 const TIP_ADDRS = {
   eth: '0x3e3eaf955a6ea978e7694574b14cd8bf082e79cf',
   sol: 'GStGz2ztQ2UqMGPXA8j2i9PSFhpaYsjxwbLTttUKD74d',
   kas: 'kaspa:qps9fumvkw0n29hkjrk7lumpuu64k2u9ug543lg9ga'
 };
-let activeTipChain = 'eth';
 
-function initTipTerminal() {
-  document.getElementById('tip-addr').textContent = TIP_ADDRS.eth;
-  document.querySelectorAll('.tip-key').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const chain = btn.dataset.chain;
-      if (chain === activeTipChain) return;
-      activeTipChain = chain;
-      document.querySelectorAll('.tip-key').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('tip-addr').textContent = TIP_ADDRS[chain];
-    });
-  });
-}
-
-function copyTipAddr() {
-  const addr = TIP_ADDRS[activeTipChain];
+function copyTip(chain) {
+  haptic('tap');
+  const addr = TIP_ADDRS[chain];
+  const btn = document.querySelector('.tip-key[data-chain="' + chain + '"]');
   navigator.clipboard.writeText(addr).then(() => {
-    const flash = document.getElementById('tip-flash');
-    flash.classList.add('flash');
-    setTimeout(() => flash.classList.remove('flash'), 1200);
-    showToast('ADDRESS COPIED');
+    btn.classList.add('copied');
+    btn.textContent = '✓ COPIED';
+    showToast(chain.toUpperCase() + ' ADDRESS COPIED');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      const labels = { eth: '⟠ ETH', sol: '◎ SOL', kas: '⬡ KAS' };
+      btn.textContent = labels[chain];
+    }, 2000);
   }).catch(() => showToast('COPY FAILED'));
 }
-
-document.addEventListener('DOMContentLoaded', initTipTerminal);
 </script>
 </body>
 </html>

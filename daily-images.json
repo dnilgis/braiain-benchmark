@@ -7,7 +7,7 @@
     {
       "id": "d2r1",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1481349518771-20055b2a7b24?w=800&q=80",
+      "content": "https://picsum.photos/id/188/800/600",
       "source": "human",
       "attribution": "Real photograph — library interior by Susan Yin (@syinq) on Unsplash",
       "pro_tip": "DEPTH OF FIELD: Real cameras create natural bokeh with gradual focus falloff. AI images often have abrupt transitions between sharp and blurry areas, or apply blur inconsistently across the frame."
@@ -15,7 +15,7 @@
     {
       "id": "d2r2",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80",
+      "content": "https://picsum.photos/id/429/800/600",
       "source": "human",
       "attribution": "Real photograph — humanoid robot by Alex Knight (@agk42) on Unsplash",
       "pro_tip": "REAL ROBOTS look manufactured — visible seams, consistent materials, machined surfaces. AI-generated robots often have impossible geometry, melting joints, or materials that shift texture mid-surface."
@@ -32,7 +32,7 @@
     {
       "id": "d2r4",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80",
+      "content": "https://picsum.photos/id/29/800/600",
       "source": "human",
       "attribution": "Real photograph — fresh vegetables and food styling by Anna Pelzer on Unsplash",
       "pro_tip": "ORGANIC CHAOS: Real food has imperfect placement, natural shadows, and varying textures. AI food images often look too perfect, with suspiciously uniform colors and unnaturally smooth surfaces."
@@ -40,7 +40,7 @@
     {
       "id": "d2r5",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80",
+      "content": "https://picsum.photos/id/240/800/600",
       "source": "human",
       "attribution": "Real photograph — Matrix-style code rain by Markus Spiske on Unsplash",
       "pro_tip": "SCREEN ARTIFACTS: Real photos of screens show moiré patterns, pixel grids, and uneven brightness from the backlight. AI-generated screen images are too clean — perfectly uniform glow with no physical display artifacts."
@@ -48,7 +48,7 @@
     {
       "id": "d2r6",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80",
+      "content": "https://picsum.photos/id/0/800/600",
       "source": "human",
       "attribution": "Real photograph — colorful abstract gradient by Pawel Czerwinski on Unsplash",
       "pro_tip": "TEXTURE DEPTH: Real abstract photos maintain consistent texture at all zoom levels. AI-generated abstracts often break down into smudges or show banding artifacts in smooth gradients.",
@@ -66,7 +66,7 @@
     {
       "id": "d2r8",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&q=80",
+      "content": "https://picsum.photos/id/122/800/600",
       "source": "human",
       "attribution": "Real photograph — laptop with purple glow by Clint Patterson (@cbpsc1) on Unsplash",
       "pro_tip": "REFLECTION TEST: Real reflections on glossy surfaces have natural distortion and light scatter. AI often makes reflections too perfect or places them at physically impossible angles."
@@ -83,7 +83,7 @@
     {
       "id": "d2r10",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80",
+      "content": "https://picsum.photos/id/164/800/600",
       "source": "human",
       "attribution": "Real photograph — retro gaming setup with neon lighting by Lorenzo Herrera (@lorenzoherrera) on Unsplash",
       "pro_tip": "LIGHTING PHYSICS: Real neon casts colored light that spills onto nearby surfaces with natural falloff. AI neon often glows in isolation — bright tubes that don't illuminate their surroundings realistically."

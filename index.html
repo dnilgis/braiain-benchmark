@@ -274,6 +274,9 @@ img{display:block;max-width:100%}
 #reveal-verdict.correct{color:var(--green);border-color:var(--green);background:rgba(0,255,157,.05)}
 #reveal-verdict.wrong{color:var(--red);border-color:var(--red);background:rgba(255,0,60,.05)}
 #reveal-source{font-size:.75rem;color:var(--muted);text-align:center}
+#reveal-source-link{font-size:.6rem;text-align:center;margin-top:2px}
+#reveal-source-link a{color:var(--cyan);opacity:.5;text-decoration:none;letter-spacing:.5px;font-family:var(--font-mono)}
+#reveal-source-link a:hover{opacity:.8;text-decoration:underline}
 #reveal-tip{
   font-size:.78rem;line-height:1.5;
   padding:12px 14px;
@@ -398,46 +401,102 @@ img{display:block;max-width:100%}
   font-family:var(--font-display);font-size:.45rem;
   letter-spacing:2.5px;color:var(--muted);margin-bottom:8px;
 }
-.tip-keys{display:flex;gap:6px;justify-content:center;margin-bottom:8px}
+.tip-keys{display:flex;gap:8px;justify-content:center;margin-bottom:6px}
 .tip-key{
-  padding:4px 12px;font-family:var(--font-mono);font-size:.6rem;
+  padding:6px 16px;font-family:var(--font-mono);font-size:.6rem;
   letter-spacing:1px;font-weight:700;
   border:1px solid var(--border);background:var(--surface);
-  color:var(--muted);opacity:.5;
+  color:var(--muted);opacity:.6;
   transition:all .25s;cursor:pointer;
 }
-.tip-key:hover{opacity:.8;border-color:var(--cyan)}
-.tip-key.active{
-  opacity:1;color:var(--cyan);border-color:var(--cyan);
-  box-shadow:var(--glow-cyan);
-}
-.tip-addr-wrap{
-  margin:0 auto;max-width:480px;padding:5px 10px;
-  background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);
-  cursor:pointer;transition:all .25s;position:relative;overflow:hidden;
-}
-.tip-addr-wrap:hover{border-color:var(--cyan);background:rgba(0,229,255,.08)}
-.tip-addr-wrap:active{transform:scale(.98)}
-.tip-addr{
-  font-family:var(--font-mono);font-size:.52rem;
-  color:var(--cyan);letter-spacing:.3px;
-  word-break:break-all;line-height:1.4;opacity:.7;
-}
-.tip-addr-wrap:hover .tip-addr{opacity:1}
-.tip-addr-hint{
+.tip-key:hover{opacity:1;border-color:var(--cyan);color:var(--cyan);box-shadow:var(--glow-cyan)}
+.tip-key:active{transform:scale(.95)}
+.tip-key.copied{opacity:1;color:var(--green);border-color:var(--green)}
+.tip-hint{
   font-family:var(--font-mono);font-size:.42rem;
-  color:var(--muted);letter-spacing:1px;margin-top:4px;
+  color:var(--muted);letter-spacing:1.5px;text-align:center;
+  opacity:.4;margin-bottom:6px;
 }
-.tip-copy-flash{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  background:rgba(0,229,255,.12);color:var(--cyan);
-  font-family:var(--font-display);font-size:.6rem;letter-spacing:3px;
-  opacity:0;transition:opacity .15s;pointer-events:none;
-}
-.tip-copy-flash.flash{opacity:1}
 .tip-footer-note{
   font-size:.42rem;color:var(--muted);letter-spacing:1px;
   margin-top:8px;opacity:.35;
+}
+/* ══════════════════════════════════════
+   YESTERDAY'S REVIEW
+   ══════════════════════════════════════ */
+#yesterday-section{
+  display:none;max-width:640px;margin:0 auto;
+  padding:32px 16px 0;
+}
+#yesterday-section.visible{display:block}
+.yd-header{
+  text-align:center;margin-bottom:20px;
+  border-top:1px solid var(--border);padding-top:28px;
+}
+.yd-label{
+  font-family:var(--font-display);font-size:.5rem;
+  letter-spacing:3px;color:var(--muted);margin-bottom:4px;
+}
+.yd-title{
+  font-family:var(--font-display);font-size:.9rem;
+  letter-spacing:2px;color:var(--cyan);font-weight:700;
+}
+.yd-subtitle{
+  font-size:.65rem;color:var(--muted);margin-top:4px;letter-spacing:.5px;
+}
+.yd-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+}
+@media(max-width:480px){.yd-grid{grid-template-columns:1fr}}
+.yd-card{
+  background:var(--surface);border:1px solid var(--border);
+  overflow:hidden;transition:border-color .25s;
+}
+.yd-card:hover{border-color:rgba(0,229,255,.3)}
+.yd-card-img{
+  width:100%;aspect-ratio:4/3;object-fit:cover;
+  display:block;filter:brightness(.85);
+}
+.yd-card-body{padding:8px 10px}
+.yd-card-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:6px;
+}
+.yd-card-label{
+  font-family:var(--font-mono);font-size:.6rem;
+  letter-spacing:1px;font-weight:700;
+}
+.yd-card-label.human{color:var(--green)}
+.yd-card-label.ai{color:var(--red)}
+.yd-card-round{
+  font-family:var(--font-mono);font-size:.45rem;
+  color:var(--muted);letter-spacing:1px;
+}
+.yd-card-attrib{
+  font-size:.55rem;color:var(--muted);
+  margin-top:3px;line-height:1.3;
+}
+.yd-bar-wrap{
+  margin-top:6px;display:flex;align-items:center;gap:6px;
+}
+.yd-bar{
+  flex:1;height:4px;background:var(--border);overflow:hidden;
+}
+.yd-bar-fill{height:100%;background:var(--green);transition:width .8s ease-out}
+.yd-bar-label{
+  font-family:var(--font-mono);font-size:.45rem;
+  color:var(--muted);min-width:45px;text-align:right;letter-spacing:.5px;
+}
+.yd-summary{
+  text-align:center;margin-top:16px;padding:12px;
+  border:1px solid var(--border);background:var(--surface);
+}
+.yd-summary-stat{
+  font-family:var(--font-display);font-size:1rem;
+  color:var(--cyan);font-weight:700;letter-spacing:1px;
+}
+.yd-summary-label{
+  font-size:.55rem;color:var(--muted);letter-spacing:1px;margin-top:2px;
 }
 </style>
 </head>
@@ -477,6 +536,7 @@ img{display:block;max-width:100%}
   <div id="reveal-panel">
     <div id="reveal-verdict"></div>
     <div id="reveal-source"></div>
+    <div id="reveal-source-link"></div>
     <div id="reveal-tip"></div>
     <div id="global-bar-wrap">
       <span>GLOBAL ACCURACY</span>
@@ -509,6 +569,20 @@ img{display:block;max-width:100%}
   <div id="countdown-wrap">NEXT CHALLENGE IN <span id="countdown">--:--:--</span></div>
 </main>
 
+<!-- YESTERDAY'S REVIEW -->
+<section id="yesterday-section">
+  <div class="yd-header">
+    <div class="yd-label">// DECLASSIFIED</div>
+    <div class="yd-title" id="yd-title">YESTERDAY'S CHALLENGE</div>
+    <div class="yd-subtitle" id="yd-subtitle"></div>
+  </div>
+  <div class="yd-grid" id="yd-grid"></div>
+  <div class="yd-summary" id="yd-summary" style="display:none">
+    <div class="yd-summary-stat" id="yd-summary-stat"></div>
+    <div class="yd-summary-label">COMMUNITY AVERAGE ACCURACY</div>
+  </div>
+</section>
+
 <!-- Toast -->
 <div id="toast"></div>
 
@@ -516,15 +590,11 @@ img{display:block;max-width:100%}
 <div class="tip-terminal">
   <div class="tip-label">// TIP THE DEVELOPER</div>
   <div class="tip-keys">
-    <button class="tip-key active" data-chain="eth">[ ETH ]</button>
-    <button class="tip-key" data-chain="sol">[ SOL ]</button>
-    <button class="tip-key" data-chain="kas">[ KAS ]</button>
+    <button class="tip-key" data-chain="eth" onclick="copyTip('eth')">⟠ ETH</button>
+    <button class="tip-key" data-chain="sol" onclick="copyTip('sol')">◎ SOL</button>
+    <button class="tip-key" data-chain="kas" onclick="copyTip('kas')">⬡ KAS</button>
   </div>
-  <div class="tip-addr-wrap" id="tip-addr-wrap" onclick="copyTipAddr()">
-    <div class="tip-addr" id="tip-addr"></div>
-    <div class="tip-addr-hint">CLICK TO COPY</div>
-    <div class="tip-copy-flash" id="tip-flash">COPIED ✓</div>
-  </div>
+  <div class="tip-hint">TAP TO COPY WALLET ADDRESS</div>
   <div class="tip-footer-note">BRAIAIN &copy; 2026 — SYSTEM SECURE. NO PERSONAL DATA ARCHIVED.</div>
 </div>
 
@@ -563,6 +633,7 @@ function trackEvent(name, params) {
    CONFIG
    ══════════════════════════════════════ */
 const API_BASE = 'https://api.braiain.com';
+const CHALLENGE_BASE = 'challenges/';
 const TOTAL_ROUNDS = 10;
 
 /* ══════════════════════════════════════
@@ -587,7 +658,7 @@ const FALLBACK = {
   rounds: [
     {
       id:'f1',type:'image',source:'human',
-      content:'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80',
+      content:'https://picsum.photos/id/10/800/600',
       attribution:'Real photograph — Yosemite Valley landscape',
       pro_tip:'ATMOSPHERIC DEPTH: Real landscapes show natural haze and color shifts in the distance. AI often renders backgrounds too sharply or with artificial blur.'
     },
@@ -599,7 +670,7 @@ const FALLBACK = {
     },
     {
       id:'f3',type:'image',source:'human',
-      content:'https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?w=800&q=80',
+      content:'https://picsum.photos/id/15/800/600',
       attribution:'Real photograph — dog portrait',
       pro_tip:'FUR DETAIL: Real animal fur has irregular patterns and individual hairs catching light differently. AI fur often looks too uniform or creates impossible light reflections.'
     },
@@ -611,7 +682,7 @@ const FALLBACK = {
     },
     {
       id:'f5',type:'image',source:'human',
-      content:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80',
+      content:'https://picsum.photos/id/29/800/600',
       attribution:'Real photograph — food styling',
       pro_tip:'ORGANIC CHAOS: Real food photos have natural imperfections — a crumb out of place, uneven sauce drips. AI food looks suspiciously perfect.'
     },
@@ -623,7 +694,7 @@ const FALLBACK = {
     },
     {
       id:'f7',type:'image',source:'human',
-      content:'https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=800&q=80',
+      content:'https://picsum.photos/id/47/800/600',
       attribution:'Real photograph — nature close-up',
       pro_tip:'TEXTURE CONSISTENCY: Real textures hold up at every zoom level. AI textures often dissolve into repetitive patterns or meaningless smudges when examined closely.'
     },
@@ -635,7 +706,7 @@ const FALLBACK = {
     },
     {
       id:'f9',type:'image',source:'human',
-      content:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      content:'https://picsum.photos/id/100/800/600',
       attribution:'Real photograph — mountain vista',
       pro_tip:'NOISE PATTERN: Real photos have consistent sensor noise across the entire image. AI images have unnaturally clean areas mixed with over-detailed zones.'
     },
@@ -711,6 +782,9 @@ async function boot() {
 
   await sleep(400);
 
+  // Start preloading all images in background
+  preloadAllImages();
+
   if (played) {
     // Already played — show results
     try {
@@ -732,6 +806,7 @@ async function boot() {
    GAME FLOW
    ══════════════════════════════════════ */
 function startGame() {
+  haptic('tap');
   trackEvent('game_start', { day: dailyData.day_number });
   gameActive = true;
   currentRound = 0;
@@ -781,6 +856,9 @@ function loadRound() {
   };
   img.src = round.content;
 
+  // Preload next round's image for zero lag
+  preloadNextImage(currentRound + 1);
+
   // Update prompt
   scrambleText(document.getElementById('prompt'), 'CLASSIFY: HUMAN OR AI-GENERATED?', 300);
   updateHUD();
@@ -789,12 +867,14 @@ function loadRound() {
 function choose(answer) {
   if (!gameActive) return;
 
-  // Haptic feedback
-  if (navigator.vibrate) navigator.vibrate(10);
+  haptic('tap');
 
   const round = dailyData.rounds[currentRound];
   const isCorrect = answer === round.source;
   results.push(isCorrect);
+
+  // Haptic result feedback (slight delay so tap registers first)
+  setTimeout(() => haptic(isCorrect ? 'correct' : 'wrong'), 150);
 
   // Disable buttons
   document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
@@ -833,6 +913,15 @@ function showReveal(round, isCorrect) {
   verdict.textContent = isCorrect ? '✓ CORRECT — ' + round.source.toUpperCase() : '✗ WRONG — IT WAS ' + round.source.toUpperCase();
 
   source.textContent = round.attribution || '';
+
+  // Show source image URL
+  const sourceLink = document.getElementById('reveal-source-link');
+  if (round.content && round.source === 'human') {
+    sourceLink.innerHTML = '<a href="' + round.content + '" target="_blank" rel="noopener">[ VIEW SOURCE IMAGE ↗ ]</a>';
+  } else {
+    sourceLink.innerHTML = '';
+  }
+
   tip.innerHTML = '<strong>PRO TIP:</strong> ' + (round.pro_tip || '');
 
   // Fetch global accuracy
@@ -853,6 +942,7 @@ function showReveal(round, isCorrect) {
 }
 
 function nextRound() {
+  haptic('tap');
   currentRound++;
   if (currentRound >= TOTAL_ROUNDS || currentRound >= dailyData.rounds.length) {
     endGame();
@@ -863,6 +953,7 @@ function nextRound() {
 
 function endGame() {
   gameActive = false;
+  haptic('finish');
   const todayKey = getTodayKey();
   localStorage.setItem('braiain_played_' + todayKey, '1');
   localStorage.setItem('braiain_results_' + todayKey, JSON.stringify(results));
@@ -915,6 +1006,7 @@ function showResults() {
   });
 
   startCountdown();
+  loadYesterdayReview();
 }
 
 /* ══════════════════════════════════════
@@ -1070,6 +1162,7 @@ function getShareText() {
 }
 
 function shareClipboard() {
+  haptic('tap');
   trackEvent('share', { method: 'clipboard' });
   const text = getShareText();
   if (navigator.share) {
@@ -1086,6 +1179,7 @@ function copyFallback(text) {
 }
 
 function shareX() {
+  haptic('tap');
   trackEvent('share', { method: 'twitter' });
   const text = encodeURIComponent(getShareText());
   window.open('https://twitter.com/intent/tweet?text=' + text, '_blank');
@@ -1109,6 +1203,175 @@ function startCountdown() {
   }
   tick();
   setInterval(tick, 1000);
+}
+
+/* ══════════════════════════════════════
+   YESTERDAY'S REVIEW
+   ══════════════════════════════════════ */
+async function loadYesterdayReview() {
+  const section = document.getElementById('yesterday-section');
+  const ydKey = getYesterdayKey();
+
+  try {
+    const resp = await fetchWithTimeout(
+      CHALLENGE_BASE + ydKey + '.json?v=' + BUILD_HASH, {}, 5000
+    );
+    if (!resp.ok) throw new Error('not found');
+    const data = await resp.json();
+
+    // Header
+    const catEmoji = data.category_emoji || '🔍';
+    document.getElementById('yd-title').textContent =
+      catEmoji + ' ' + (data.category || 'YESTERDAY\'S CHALLENGE').toUpperCase();
+    document.getElementById('yd-subtitle').textContent =
+      'Day ' + (data.day_number || '?') + ' — ' + formatDateLabel(ydKey);
+
+    // Build cards
+    const grid = document.getElementById('yd-grid');
+    grid.innerHTML = '';
+
+    let totalAccuracy = 0;
+    let statsCount = 0;
+
+    for (let i = 0; i < data.rounds.length; i++) {
+      const r = data.rounds[i];
+      const card = document.createElement('div');
+      card.className = 'yd-card';
+
+      const isHuman = r.source === 'human';
+      const labelClass = isHuman ? 'human' : 'ai';
+      const labelText = isHuman ? '✓ HUMAN' : '✗ AI-GENERATED';
+
+      card.innerHTML =
+        '<img class="yd-card-img" src="' + r.content + '" alt="Round ' + (i + 1) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+        '<div class="yd-card-body">' +
+          '<div class="yd-card-row">' +
+            '<span class="yd-card-label ' + labelClass + '">' + labelText + '</span>' +
+            '<span class="yd-card-round">R' + (i + 1) + '</span>' +
+          '</div>' +
+          '<div class="yd-card-attrib">' + (r.attribution || '') + '</div>' +
+          '<div class="yd-bar-wrap">' +
+            '<div class="yd-bar"><div class="yd-bar-fill" id="yd-bar-' + i + '"></div></div>' +
+            '<span class="yd-bar-label" id="yd-stat-' + i + '">—</span>' +
+          '</div>' +
+        '</div>';
+
+      grid.appendChild(card);
+
+      // Try fetching community stats for each round
+      fetchYdStat(r.id, i).then(pct => {
+        if (pct !== null) {
+          totalAccuracy += pct;
+          statsCount++;
+          // Update summary if we have all stats
+          if (statsCount >= data.rounds.length) {
+            showYdSummary(Math.round(totalAccuracy / statsCount));
+          }
+        }
+      });
+    }
+
+    // Show section with a slight delay for nice reveal
+    setTimeout(() => {
+      section.classList.add('visible');
+    }, 300);
+
+  } catch (e) {
+    // No yesterday data available — silently hide
+    section.classList.remove('visible');
+  }
+}
+
+async function fetchYdStat(roundId, index) {
+  try {
+    const resp = await fetchWithTimeout(API_BASE + '/stats?id=' + roundId, {}, 4000);
+    if (!resp.ok) throw new Error('no stats');
+    const data = await resp.json();
+    const pct = Math.round(data.pct || 0);
+    const bar = document.getElementById('yd-bar-' + index);
+    const label = document.getElementById('yd-stat-' + index);
+    if (bar) {
+      setTimeout(() => { bar.style.width = pct + '%'; }, 100 + index * 80);
+      if (pct >= 70) bar.style.background = 'var(--green)';
+      else if (pct >= 40) bar.style.background = 'var(--cyan)';
+      else bar.style.background = 'var(--red)';
+    }
+    if (label) label.textContent = pct + '% correct';
+    return pct;
+  } catch (e) {
+    // No API available — show placeholder
+    const label = document.getElementById('yd-stat-' + index);
+    if (label) label.textContent = 'NO DATA';
+    return null;
+  }
+}
+
+function showYdSummary(avgPct) {
+  const summary = document.getElementById('yd-summary');
+  const stat = document.getElementById('yd-summary-stat');
+  if (summary && stat) {
+    stat.textContent = avgPct + '%';
+    summary.style.display = '';
+  }
+}
+
+function formatDateLabel(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00Z');
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  return days[d.getUTCDay()] + ' ' + months[d.getUTCMonth()] + ' ' + d.getUTCDate();
+}
+
+/* ══════════════════════════════════════
+   IMAGE PRELOADING
+   ══════════════════════════════════════ */
+const preloadCache = new Map();
+
+function preloadNextImage(nextIndex) {
+  if (!dailyData || !dailyData.rounds) return;
+  if (nextIndex >= dailyData.rounds.length || nextIndex >= TOTAL_ROUNDS) return;
+  const url = dailyData.rounds[nextIndex].content;
+  if (preloadCache.has(url)) return;
+  const img = new Image();
+  img.src = url;
+  preloadCache.set(url, img);
+}
+
+function preloadAllImages() {
+  if (!dailyData || !dailyData.rounds) return;
+  // Preload first 3 immediately, rest after short delay
+  const rounds = dailyData.rounds.slice(0, TOTAL_ROUNDS);
+  rounds.slice(0, 3).forEach(r => {
+    if (!preloadCache.has(r.content)) {
+      const img = new Image();
+      img.src = r.content;
+      preloadCache.set(r.content, img);
+    }
+  });
+  // Preload remaining after 2s
+  setTimeout(() => {
+    rounds.slice(3).forEach(r => {
+      if (!preloadCache.has(r.content)) {
+        const img = new Image();
+        img.src = r.content;
+        preloadCache.set(r.content, img);
+      }
+    });
+  }, 2000);
+}
+
+/* ══════════════════════════════════════
+   HAPTIC FEEDBACK
+   ══════════════════════════════════════ */
+function haptic(pattern) {
+  if (!navigator.vibrate) return;
+  switch (pattern) {
+    case 'tap':     navigator.vibrate(8);  break;
+    case 'correct': navigator.vibrate([10, 30, 10]); break;
+    case 'wrong':   navigator.vibrate([40, 20, 40]); break;
+    case 'finish':  navigator.vibrate([10, 20, 10, 20, 30]); break;
+    default:        navigator.vibrate(10);
+  }
 }
 
 /* ══════════════════════════════════════
@@ -1144,33 +1407,23 @@ const TIP_ADDRS = {
   sol: 'GStGz2ztQ2UqMGPXA8j2i9PSFhpaYsjxwbLTttUKD74d',
   kas: 'kaspa:qps9fumvkw0n29hkjrk7lumpuu64k2u9ug543lg9ga'
 };
-let activeTipChain = 'eth';
 
-function initTipTerminal() {
-  document.getElementById('tip-addr').textContent = TIP_ADDRS.eth;
-  document.querySelectorAll('.tip-key').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const chain = btn.dataset.chain;
-      if (chain === activeTipChain) return;
-      activeTipChain = chain;
-      document.querySelectorAll('.tip-key').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('tip-addr').textContent = TIP_ADDRS[chain];
-    });
-  });
-}
-
-function copyTipAddr() {
-  const addr = TIP_ADDRS[activeTipChain];
+function copyTip(chain) {
+  haptic('tap');
+  const addr = TIP_ADDRS[chain];
+  const btn = document.querySelector('.tip-key[data-chain="' + chain + '"]');
   navigator.clipboard.writeText(addr).then(() => {
-    const flash = document.getElementById('tip-flash');
-    flash.classList.add('flash');
-    setTimeout(() => flash.classList.remove('flash'), 1200);
-    showToast('ADDRESS COPIED');
+    btn.classList.add('copied');
+    btn.textContent = '✓ COPIED';
+    showToast(chain.toUpperCase() + ' ADDRESS COPIED');
+    trackEvent('tip_copy', { chain: chain });
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      const labels = { eth: '⟠ ETH', sol: '◎ SOL', kas: '⬡ KAS' };
+      btn.textContent = labels[chain];
+    }, 2000);
   }).catch(() => showToast('COPY FAILED'));
 }
-
-document.addEventListener('DOMContentLoaded', initTipTerminal);
 
 /* ══════════════════════════════════════
    BOOT

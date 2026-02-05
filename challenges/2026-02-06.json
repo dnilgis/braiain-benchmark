@@ -7,7 +7,7 @@
     {
       "id": "d2r01",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/60/800/600",
       "source": "human",
       "attribution": "Real photograph — downhill skier in powder snow",
       "pro_tip": "SNOW SPRAY: Real snow kicked up by skiers is chaotic — thousands of unique ice crystals catching light at random angles. AI snow spray tends to look like white fog or a uniform blur.",
@@ -17,7 +17,7 @@
     {
       "id": "d2r02",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1605540436563-5bca919ae766?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/180/800/600",
       "source": "ai",
       "attribution": "AI-generated — stylized winter sports scene",
       "pro_tip": "GEAR DETAILS: Real ski equipment has brand logos, buckle mechanisms, and wear marks. AI often creates generic equipment with suspiciously smooth surfaces and unreadable text on labels.",
@@ -27,7 +27,7 @@
     {
       "id": "d2r03",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1565992441121-4367c2967103?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/160/800/600",
       "source": "human",
       "attribution": "Real photograph — snowboarder mid-air trick",
       "pro_tip": "BODY PHYSICS: In real action shots, the athlete's body shows natural tension — strained muscles, asymmetric posture from force. AI athletes often look posed, like mannequins frozen mid-flight.",
@@ -37,7 +37,7 @@
     {
       "id": "d2r04",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1477601263568-180e2c6d046e?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/237/800/600",
       "source": "human",
       "attribution": "Real photograph — alpine mountain panorama with snow",
       "pro_tip": "SNOW TEXTURE: Real snow has complex layering — wind crust, powder pockets, ice patches, animal tracks. AI snow is often a uniform white blanket that looks like frosting.",
@@ -57,7 +57,7 @@
     {
       "id": "d2r06",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/40/800/600",
       "source": "human",
       "attribution": "Real photograph — ice skating rink close-up",
       "pro_tip": "ICE SURFACE: Real ice has visible scratches, chips, and uneven patches from skate blades. AI ice tends to look like glass — too smooth, too reflective, too perfect.",
@@ -67,7 +67,7 @@
     {
       "id": "d2r07",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/240/800/600",
       "source": "ai",
       "attribution": "AI-generated — dramatic winter sports composition",
       "pro_tip": "CROWD FACES: If there are spectators in the background, zoom in. AI generates faces that blur into smudges or have misaligned features. Real crowd shots show distinct, varied individuals.",
@@ -77,7 +77,7 @@
     {
       "id": "d2r08",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1491002052546-bf38f186af56?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/292/800/600",
       "source": "human",
       "attribution": "Real photograph — cross-country skiing trail through forest",
       "pro_tip": "TREE BRANCHES: Real winter trees have intricate, irregular branch patterns with varying snow accumulation. AI trees tend toward symmetrical branching with unnaturally even snow distribution.",
@@ -97,7 +97,7 @@
     {
       "id": "d2r10",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1544717302-de2939b7ef71?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/312/800/600",
       "source": "human",
       "attribution": "Real photograph — ski resort gondola against mountain backdrop",
       "pro_tip": "CABLE AND WIRE: Real cables have consistent thickness, natural sag from gravity, and visible strands. AI frequently renders cables that change thickness, float impossibly, or merge into the background.",

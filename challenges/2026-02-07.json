@@ -7,7 +7,7 @@
     {
       "id": "d3r01",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1504016798967-59a258e9386d?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/338/800/600",
       "source": "human",
       "attribution": "Real photograph — football fans in stadium crowd",
       "pro_tip": "CROWD ENERGY: Real crowd photos have chaotic variety — different expressions, mid-motion blur, varied clothing. AI crowds often look like cloned figures with eerily similar poses.",
@@ -27,7 +27,7 @@
     {
       "id": "d3r03",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/0/800/600",
       "source": "human",
       "attribution": "Real photograph — BBQ grill with smoke at outdoor party",
       "pro_tip": "SMOKE BEHAVIOR: Real smoke is wispy, semi-transparent, and follows air currents unpredictably. AI smoke looks like soft cotton or a uniform gray cloud without natural turbulence.",
@@ -37,7 +37,7 @@
     {
       "id": "d3r04",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/240/800/600",
       "source": "ai",
       "attribution": "AI-generated — hyperreal outdoor gathering scene",
       "pro_tip": "HAND CHECK: Zoom into any hands in the image. AI infamously struggles with finger count, knuckle placement, and natural hand poses. Real hands have visible veins, wrinkles, and varied skin tones.",
@@ -47,7 +47,7 @@
     {
       "id": "d3r05",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/274/800/600",
       "source": "human",
       "attribution": "Real photograph — hot dogs and game day food spread",
       "pro_tip": "FOOD IMPERFECTION: Real game day food is messy — ketchup smears, uneven toppings, grease stains on paper plates. AI food styling is weirdly immaculate, like a catalogue shoot.",
@@ -67,7 +67,7 @@
     {
       "id": "d3r07",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1471295253337-3ceaaedca402?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/399/800/600",
       "source": "human",
       "attribution": "Real photograph — parking lot tailgate setup with canopy",
       "pro_tip": "BACKGROUND CLUTTER: Real tailgate scenes have messy, organic backgrounds — random cars, scattered coolers, tangled extension cords. AI over-tidies backgrounds or fills them with nonsensical objects.",
@@ -87,7 +87,7 @@
     {
       "id": "d3r09",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/64/800/600",
       "source": "human",
       "attribution": "Real photograph — close-up of grilled food with char marks",
       "pro_tip": "GRILL MARKS: Real char has irregular, organic patterns that follow the food's surface contours. AI grill marks tend to be perfectly parallel or geometrically uniform.",
@@ -97,7 +97,7 @@
     {
       "id": "d3r10",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1535905557558-afc4877a26fc?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/167/800/600",
       "source": "human",
       "attribution": "Real photograph — evening outdoor scene with string lights",
       "pro_tip": "STRING LIGHTS: Real bulbs have natural variation — some brighter, some dimmer, with realistic lens flare. AI string lights are often perfectly uniform with identical halos around each bulb.",

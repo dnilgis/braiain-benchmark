@@ -7,7 +7,7 @@
     {
       "id": "d5r01",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/200/800/600",
       "source": "human",
       "attribution": "Real photograph — fresh Neapolitan pizza with charred crust",
       "pro_tip": "CHAR PATTERNS: Real pizza char is random and organic — no two bubbles are alike, and the browning follows the dough's natural irregularities. AI char tends to look stamped or repetitively patterned.",
@@ -27,7 +27,7 @@
     {
       "id": "d5r03",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/225/800/600",
       "source": "human",
       "attribution": "Real photograph — pepperoni pizza overhead shot",
       "pro_tip": "PEPPERONI PLACEMENT: Real pepperoni slices have natural variation — some curled at edges, some flat, varying sizes, grease pooling differently on each. AI pepperoni tends to be uniform circles.",
@@ -37,7 +37,7 @@
     {
       "id": "d5r04",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/240/800/600",
       "source": "ai",
       "attribution": "AI-generated — stylized food scene",
       "pro_tip": "SURFACE TEXTURE: Real pizza surfaces show the grain of flour dusting, tiny air bubbles in the dough, and uneven sauce coverage. AI creates a suspiciously smooth, uniform surface.",
@@ -47,7 +47,7 @@
     {
       "id": "d5r05",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/256/800/600",
       "source": "human",
       "attribution": "Real photograph — cheese pull from pizza slice",
       "pro_tip": "CHEESE STRETCH: Real cheese pulls have natural tapering — thicker near the slice, threading into thin strands that break at different points. AI cheese pulls look like uniform rubber bands.",
@@ -67,7 +67,7 @@
     {
       "id": "d5r07",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/301/800/600",
       "source": "human",
       "attribution": "Real photograph — pizzaiolo tossing dough in kitchen",
       "pro_tip": "FLOUR DUST: Real kitchen environments have flour particles catching light, creating a natural haze. AI either omits this entirely or adds it as a uniform fog layer.",
@@ -87,7 +87,7 @@
     {
       "id": "d5r09",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/366/800/600",
       "source": "human",
       "attribution": "Real photograph — wood-fired pizza oven with flames",
       "pro_tip": "FIRE BEHAVIOR: Real flames have chaotic, asymmetric movement with varying color (blue base, orange tips, yellow highlights). AI fire is often too symmetrical with uniform coloring.",
@@ -97,7 +97,7 @@
     {
       "id": "d5r10",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/29/800/600",
       "source": "human",
       "attribution": "Real photograph — fresh ingredients and food prep",
       "pro_tip": "INGREDIENT VARIETY: Real fresh ingredients have natural blemishes, size variation, and organic shapes. AI produces vegetables and herbs that look like they came from a 3D model library — too uniform, too perfect.",

@@ -7,7 +7,7 @@
     {
       "id": "d4r01",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/250/800/600",
       "source": "human",
       "attribution": "Real photograph — football player in action on field",
       "pro_tip": "MOTION BLUR: Real action shots have directional motion blur on fast-moving limbs. AI freezes every part of the image with unnatural sharpness, or applies blur uniformly instead of directionally.",
@@ -27,7 +27,7 @@
     {
       "id": "d4r03",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/352/800/600",
       "source": "human",
       "attribution": "Real photograph — football referee making a call",
       "pro_tip": "UNIFORM DETAILS: Real referee uniforms have specific stripe patterns, consistent stitching, and proper badge placement. AI often gets stripe spacing wrong or creates impossible fabric folds.",
@@ -37,7 +37,7 @@
     {
       "id": "d4r04",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/240/800/600",
       "source": "ai",
       "attribution": "AI-generated — surreal halftime spectacle",
       "pro_tip": "PYROTECHNICS: Real fireworks and stage effects have natural smoke dispersion, varied spark trajectories, and inconsistent brightness. AI pyrotechnics look too symmetrical and clean.",
@@ -47,7 +47,7 @@
     {
       "id": "d4r05",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/119/800/600",
       "source": "human",
       "attribution": "Real photograph — football on grass field close-up",
       "pro_tip": "GRASS REALITY: Real grass has varied blade lengths, brown patches, divots, and natural color variation. AI grass is often a uniform green carpet that looks spray-painted.",
@@ -67,7 +67,7 @@
     {
       "id": "d4r07",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1461896836934-bd45ba8c4e32?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/24/800/600",
       "source": "human",
       "attribution": "Real photograph — packed stadium from upper deck view",
       "pro_tip": "DEPTH OF FIELD: Real telephoto shots from upper decks have natural depth-of-field falloff. The far side of the stadium gets progressively softer. AI often keeps everything in sharp focus.",
@@ -87,7 +87,7 @@
     {
       "id": "d4r09",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/175/800/600",
       "source": "human",
       "attribution": "Real photograph — football helmet close-up with visor",
       "pro_tip": "VISOR REFLECTIONS: Real helmet visors show distorted reflections of the surrounding environment — stadium lights, other players, sky. AI visors often show impossibly clean or inconsistent reflections.",
@@ -97,7 +97,7 @@
     {
       "id": "d4r10",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/164/800/600",
       "source": "human",
       "attribution": "Real photograph — retro scoreboard and stadium tech",
       "pro_tip": "DIGITAL DISPLAYS: Real LED scoreboards have visible pixel grids, slight color banding, and viewing-angle variation. AI scoreboards often look like flat images pasted onto the scene.",
