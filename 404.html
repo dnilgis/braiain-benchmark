@@ -8,25 +8,18 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 
-<title>BRAIAIN — Can You Spot the AI?</title>
+<title>BRAIAIN — System Breach</title>
 
-<meta name="description" content="Daily AI detection game. 10 rounds. Are you looking at a real photo or an AI fake? Test your instincts.">
-<meta name="robots" content="index, follow">
+<meta name="description" content="You've breached the firewall. Dodge the trackers to escape.">
+<meta name="robots" content="noindex">
 <link rel="canonical" href="https://braiain.com/">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="BRAIAIN">
-<meta property="og:title" content="BRAIAIN — Can You Spot the AI?">
-<meta property="og:description" content="Daily AI detection challenge. Can you tell what's real?">
+<meta property="og:title" content="BRAIAIN — System Breach">
+<meta property="og:description" content="404. You've breached the firewall.">
 <meta property="og:url" content="https://braiain.com">
 <meta property="og:image" content="https://braiain.com/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="BRAIAIN — Can You Spot the AI?">
-<meta name="twitter:description" content="Daily AI detection challenge. Can you tell what's real?">
-<meta name="twitter:image" content="https://braiain.com/og-image.png">
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -34,7 +27,6 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#00e5ff">
-<meta name="msapplication-TileColor" content="#0a0e17">
 
 <!-- GA4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3B3ZCE62NW"></script>
@@ -44,9 +36,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-/* ══════════════════════════════════════
-   RESET & BASE
-   ══════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#06060c;--surface:#0c0c18;--border:#1a1a2e;
@@ -54,1294 +43,640 @@
   --text:#e0e0e0;--muted:#5a5a7a;
   --font-display:'Orbitron',sans-serif;
   --font-mono:'Share Tech Mono',monospace;
-  --glow-cyan:0 0 20px rgba(0,229,255,.3);
-  --glow-green:0 0 20px rgba(0,255,157,.3);
-  --glow-red:0 0 20px rgba(255,0,60,.3);
 }
 html{font-size:16px;-webkit-tap-highlight-color:transparent}
 body{
   background:var(--bg);color:var(--text);
   font-family:var(--font-mono);
-  min-height:100dvh;overflow-x:hidden;
+  min-height:100dvh;overflow:hidden;
   display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  position:relative;
 }
-button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-img{display:block;max-width:100%}
 
-/* ══════════════════════════════════════
-   CRT SCANLINE OVERLAY
-   ══════════════════════════════════════ */
-#crt-overlay{
-  position:fixed;inset:0;pointer-events:none;z-index:9999;
+/* Scanlines */
+body::after{
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
   background:repeating-linear-gradient(
-    0deg,
-    rgba(0,0,0,.03) 0px,
-    rgba(0,0,0,.03) 1px,
-    transparent 1px,
-    transparent 3px
+    0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px
   );
-  mix-blend-mode:multiply;
 }
 
-/* ══════════════════════════════════════
-   HUD — TOP BAR
-   ══════════════════════════════════════ */
-#hud{
-  position:sticky;top:0;z-index:100;
-  background:rgba(6,6,12,.92);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-  padding:10px 16px;
-  display:flex;flex-wrap:wrap;align-items:center;
-  gap:6px 16px;
-}
-#hud-logo{
-  font-family:var(--font-display);font-weight:900;
-  font-size:1.3rem;letter-spacing:4px;color:var(--cyan);
-  text-shadow:var(--glow-cyan);
-  flex-shrink:0;
-}
-#hud-ticker{
-  font-size:.85rem;color:var(--muted);
-  letter-spacing:1px;text-transform:uppercase;
-}
-#hud-round{
-  margin-left:auto;
-  font-family:var(--font-display);font-size:.85rem;
-  color:var(--cyan);letter-spacing:2px;
-}
-#hud-pips{display:flex;gap:4px;margin-left:8px}
-.pip{
-  width:10px;height:10px;border-radius:50%;
-  background:var(--border);transition:background .3s,box-shadow .3s;
-}
-.pip.correct{background:var(--green);box-shadow:var(--glow-green)}
-.pip.wrong{background:var(--red);box-shadow:var(--glow-red)}
-@media(max-width:480px){
-  #hud-ticker{order:3;width:100%;margin-top:2px}
-}
-
-/* ══════════════════════════════════════
-   SCREENS
-   ══════════════════════════════════════ */
+/* ── SCREENS ── */
 .screen{
-  display:none;flex-direction:column;align-items:center;
-  flex:1;padding:20px 16px 40px;
-  animation:fadeUp .4s ease-out;
+  display:none;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:16px;text-align:center;
+  padding:20px;width:100%;max-width:480px;
 }
 .screen.active{display:flex}
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
-}
 
-/* ── BOOT SCREEN ── */
-#screen-boot{justify-content:center;gap:20px;text-align:center}
-#boot-logo{
-  font-family:var(--font-display);font-weight:900;
-  font-size:clamp(2rem,8vw,3.5rem);
-  letter-spacing:6px;color:var(--cyan);
-  text-shadow:var(--glow-cyan);
+/* ── BREACH INTRO ── */
+#breach-code{
+  font-family:var(--font-mono);font-size:.8rem;
+  color:var(--red);letter-spacing:2px;opacity:.6;
 }
-#boot-sub{font-size:.75rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
-#boot-status{font-size:.7rem;color:var(--green);min-height:1.2em}
-.boot-btn{
-  margin-top:12px;padding:14px 40px;
-  font-family:var(--font-display);font-size:.85rem;font-weight:700;
+#breach-title{
+  font-family:var(--font-display);font-size:clamp(1.4rem,5vw,2rem);
+  font-weight:900;letter-spacing:4px;color:var(--red);
+  text-shadow:0 0 30px rgba(255,0,60,.4),0 0 60px rgba(255,0,60,.15);
+  animation:glitch 3s infinite;
+}
+#breach-sub{
+  font-size:.85rem;color:var(--muted);max-width:340px;line-height:1.6;
+}
+#breach-sub strong{color:var(--text);font-weight:400}
+#breach-controls{
+  font-size:.7rem;color:var(--muted);opacity:.5;margin-top:-4px;
+}
+.breach-btn{
+  margin-top:4px;padding:14px 36px;
+  font-family:var(--font-display);font-size:.9rem;font-weight:700;
   letter-spacing:3px;text-transform:uppercase;
-  color:var(--bg);background:var(--cyan);
-  border:none;position:relative;
+  color:var(--bg);background:var(--red);
+  border:none;cursor:pointer;
   clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);
   transition:background .2s,transform .1s;
 }
-.boot-btn:hover{background:var(--green)}
-.boot-btn:active{transform:scale(.97)}
-
-/* ── GAME SCREEN ── */
-#screen-game{gap:20px;max-width:960px;width:100%;margin:0 auto}
-
-/* Image container */
-#image-frame{
-  position:relative;width:100%;
-  aspect-ratio:4/3;overflow:hidden;
+.breach-btn:hover{background:var(--cyan);transform:scale(1.02)}
+.breach-btn:active{transform:scale(.97)}
+.breach-btn.go-home{
+  background:transparent;color:var(--muted);
   border:1px solid var(--border);
-  background:var(--surface);
+  clip-path:none;padding:10px 24px;font-size:.75rem;
+  letter-spacing:2px;
 }
-#image-frame img{
-  width:100%;height:100%;object-fit:cover;
-  transition:opacity .3s;
+.breach-btn.go-home:hover{color:var(--text);border-color:var(--text)}
+#breach-best{
+  font-size:.7rem;color:var(--muted);letter-spacing:1px;
 }
-#image-frame.loading img{opacity:0}
-#scan-line{
-  position:absolute;left:0;width:100%;height:2px;
-  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
-  box-shadow:0 0 12px var(--cyan);
-  top:0;opacity:0;pointer-events:none;
-  animation:none;
-}
-@keyframes scanDown{
-  0%{top:0;opacity:1}
-  100%{top:100%;opacity:.4}
-}
-#image-frame.scanning #scan-line{animation:scanDown 1.2s ease-in-out forwards}
 
-/* Magnifier */
-#magnifier{
-  position:absolute;width:140px;height:140px;
-  border-radius:50%;border:2px solid var(--cyan);
-  box-shadow:var(--glow-cyan);
-  pointer-events:none;display:none;
-  background-repeat:no-repeat;
+@keyframes glitch{
+  0%,92%,100%{transform:translate(0)}
+  93%{transform:translate(-3px,1px)}
+  95%{transform:translate(2px,-1px)}
+  97%{transform:translate(-1px,2px)}
+}
+
+/* ── GAME ── */
+#game-wrap{
+  position:fixed;inset:0;display:none;
+  flex-direction:column;
+}
+#game-wrap.active{display:flex}
+
+#game-hud{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;
+  background:rgba(6,6,12,.92);
+  border-bottom:1px solid var(--border);
   z-index:10;
 }
-
-/* Question prompt */
-#prompt{
-  text-align:center;font-size:1rem;
-  color:var(--muted);letter-spacing:2px;
-  text-transform:uppercase;
-}
-
-/* HUMAN / AI Buttons */
-#choices{display:flex;gap:16px;width:100%;max-width:560px}
-.choice-btn{
-  flex:1;padding:20px 8px;
-  font-family:var(--font-display);font-size:1.1rem;font-weight:700;
-  letter-spacing:4px;text-transform:uppercase;
-  border:2px solid var(--border);
-  background:rgba(12,12,24,.6);
-  transition:all .2s;position:relative;overflow:hidden;
-}
-.choice-btn::before{
-  content:'';position:absolute;inset:0;
-  opacity:0;transition:opacity .2s;
-}
-.choice-btn.human{color:var(--green)}
-.choice-btn.human::before{background:rgba(0,255,157,.08)}
-.choice-btn.human:hover,.choice-btn.human:active{
-  border-color:var(--green);box-shadow:var(--glow-green);
-}
-.choice-btn.human:hover::before{opacity:1}
-.choice-btn.ai{color:var(--red)}
-.choice-btn.ai::before{background:rgba(255,0,60,.08)}
-.choice-btn.ai:hover,.choice-btn.ai:active{
-  border-color:var(--red);box-shadow:var(--glow-red);
-}
-.choice-btn.ai:hover::before{opacity:1}
-.choice-btn:disabled{opacity:.3;pointer-events:none}
-
-/* ── REVEAL PANEL ── */
-#reveal-panel{
-  width:100%;max-width:960px;
-  animation:fadeUp .35s ease-out;
-  display:none;flex-direction:column;gap:16px;
-}
-#reveal-panel.active{display:flex}
-#reveal-verdict{
-  text-align:center;padding:16px;
-  font-family:var(--font-display);font-size:1.1rem;
-  font-weight:700;letter-spacing:3px;
-  border:1px solid var(--border);
-}
-#reveal-verdict.correct{color:var(--green);border-color:var(--green);background:rgba(0,255,157,.05)}
-#reveal-verdict.wrong{color:var(--red);border-color:var(--red);background:rgba(255,0,60,.05)}
-#reveal-source{font-size:.85rem;color:var(--muted);text-align:center}
-#reveal-tip{
-  font-size:.9rem;line-height:1.6;
-  padding:14px 16px;
-  border-left:2px solid var(--cyan);
-  background:rgba(0,229,255,.04);
-  color:var(--text);
-}
-#reveal-tip strong{color:var(--cyan);font-weight:400}
-#global-bar-wrap{
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  padding:12px;background:rgba(0,229,255,.04);
-  border:1px solid rgba(0,229,255,.1);
-}
-#global-bar-header{
-  font-family:var(--font-mono);font-size:.45rem;
-  letter-spacing:2px;color:var(--muted);
-}
-#global-pct{
-  font-family:var(--font-display);font-size:1.6rem;font-weight:900;
-  color:var(--cyan);letter-spacing:2px;
-  text-shadow:0 0 15px rgba(0,229,255,.25);
-  line-height:1;
-}
-#global-bar{
-  width:100%;height:5px;background:var(--border);overflow:hidden;
-}
-#global-bar-fill{
-  height:100%;background:var(--cyan);width:0%;
-  transition:width .8s ease-out;
-}
-#global-label{
+.hud-item{display:flex;flex-direction:column;align-items:center;gap:1px}
+.hud-label{
   font-family:var(--font-mono);font-size:.5rem;
-  color:var(--muted);letter-spacing:.5px;
+  color:var(--muted);letter-spacing:2px;
 }
-.next-btn{
-  align-self:center;padding:12px 32px;
-  font-family:var(--font-display);font-size:.75rem;font-weight:700;
-  letter-spacing:3px;text-transform:uppercase;
-  color:var(--bg);background:var(--cyan);
-  clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);
-  transition:background .2s;
+.hud-val{font-family:var(--font-display);font-weight:700;font-size:1.1rem}
+#hud-time .hud-val{color:var(--cyan)}
+#hud-score .hud-val{color:var(--green)}
+#hud-lives{display:flex;gap:5px;margin-top:2px}
+.life-pip{
+  width:12px;height:12px;
+  background:var(--red);
+  clip-path:polygon(50% 0%,100% 35%,82% 100%,18% 100%,0% 35%);
+  transition:opacity .3s;
 }
-.next-btn:hover{background:var(--green)}
+.life-pip.lost{opacity:.15}
 
-/* ── RESULTS SCREEN ── */
-#screen-results{justify-content:center;gap:20px;text-align:center;max-width:520px;margin:0 auto}
+canvas#game-canvas{
+  flex:1;display:block;width:100%;
+  touch-action:none;cursor:crosshair;
+}
 
-/* Score Ring */
-#score-ring-wrap{position:relative;width:160px;height:160px}
-#score-ring-wrap svg{transform:rotate(-90deg)}
-.ring-bg{fill:none;stroke:var(--border);stroke-width:8}
-.ring-fg{
-  fill:none;stroke:var(--cyan);stroke-width:8;
-  stroke-linecap:round;
-  stroke-dasharray:440;stroke-dashoffset:440;
-  transition:stroke-dashoffset 1.2s ease-out,stroke .3s;
+/* ── GAME OVER ── */
+#screen-over{gap:14px}
+#over-title{
+  font-family:var(--font-display);font-size:clamp(1.2rem,4vw,1.6rem);
+  font-weight:900;letter-spacing:3px;
 }
-#score-center{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+#over-title.caught{color:var(--red)}
+#over-title.escaped{color:var(--green);text-shadow:0 0 20px rgba(0,255,157,.3)}
+#over-sub{font-size:.85rem;color:var(--muted);line-height:1.5}
+#over-stats{display:flex;gap:24px;margin:8px 0}
+.over-stat{display:flex;flex-direction:column;align-items:center;gap:2px}
+.over-stat-num{
+  font-family:var(--font-display);font-size:1.4rem;
+  font-weight:900;color:var(--cyan);
 }
-#score-num{
-  font-family:var(--font-display);font-weight:900;
-  font-size:2.2rem;color:var(--cyan);
+.over-stat-label{
+  font-family:var(--font-mono);font-size:.55rem;
+  color:var(--muted);letter-spacing:1.5px;
 }
-#score-label{font-size:.65rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
-#results-title{
-  font-family:var(--font-display);font-size:1.1rem;
-  font-weight:700;letter-spacing:2px;color:var(--text);
-}
-#results-streak{font-size:.75rem;color:var(--muted)}
+#over-buttons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 
-/* Results pip grid */
-#results-grid{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
-.r-pip{
-  width:28px;height:28px;display:flex;
-  align-items:center;justify-content:center;
-  font-size:.7rem;font-weight:700;
-  border:1px solid var(--border);
+/* ── FOOTER ── */
+.footer-row{
+  position:fixed;bottom:12px;left:0;right:0;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  flex-wrap:wrap;z-index:10;
 }
-.r-pip.correct{color:var(--green);border-color:var(--green);background:rgba(0,255,157,.08)}
-.r-pip.wrong{color:var(--red);border-color:var(--red);background:rgba(255,0,60,.08)}
+.footer-row span,.footer-row a{
+  font-family:var(--font-mono);font-size:.6rem;
+  color:var(--muted);letter-spacing:.5px;opacity:.35;
+}
+.footer-row .sep{opacity:.2}
+.footer-row a{text-decoration:none;transition:opacity .3s,color .3s}
+.footer-row a:hover{opacity:.7;color:var(--text)}
 
-/* Share buttons */
-#share-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.share-btn{
-  padding:10px 20px;font-size:.72rem;font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;
-  border:1px solid var(--border);background:var(--surface);
-  transition:all .2s;
-}
-.share-btn:hover{border-color:var(--cyan);color:var(--cyan)}
-#countdown-wrap{font-size:.7rem;color:var(--muted);letter-spacing:1px}
-#countdown{color:var(--cyan)}
-
-/* Credit link (reveal panel + review modal) */
-.credit-link{
-  font-size:.7rem;color:var(--muted);text-align:center;
-  letter-spacing:.5px;
-}
-.credit-link a{
-  color:var(--cyan);text-decoration:none;opacity:.7;
-  transition:opacity .2s;
-}
-.credit-link a:hover{opacity:1;text-decoration:underline}
-
-/* Clickable results pips */
-.r-pip{cursor:pointer;transition:transform .15s,box-shadow .15s}
-.r-pip:hover{transform:scale(1.2)}
-.r-pip.correct:hover{box-shadow:var(--glow-green)}
-.r-pip.wrong:hover{box-shadow:var(--glow-red)}
-
-/* Review Modal */
-#review-modal{
-  display:none;position:fixed;inset:0;z-index:300;
-  background:rgba(6,6,12,.88);backdrop-filter:blur(8px);
-  align-items:center;justify-content:center;
-  padding:16px;
-}
-#review-modal.active{display:flex}
-#review-card{
-  background:var(--surface);border:1px solid var(--border);
-  max-width:520px;width:100%;padding:20px;
-  position:relative;
-  animation:fadeUp .25s ease-out;
-}
-#review-close{
-  position:absolute;top:10px;right:14px;
-  font-size:1.4rem;color:var(--muted);background:none;border:none;
-  cursor:pointer;line-height:1;transition:color .2s;
-}
-#review-close:hover{color:var(--cyan)}
-#review-round-label{
-  font-family:var(--font-display);font-size:.7rem;
-  color:var(--muted);letter-spacing:2px;margin-bottom:12px;
-}
-#review-card img{
-  width:100%;aspect-ratio:4/3;object-fit:cover;
-  border:1px solid var(--border);margin-bottom:12px;
-}
-#review-verdict{
-  font-family:var(--font-display);font-size:.9rem;
-  font-weight:700;letter-spacing:2px;
-  padding:10px;text-align:center;margin-bottom:10px;
-  border:1px solid var(--border);
-}
-#review-verdict.correct{color:var(--green);border-color:var(--green);background:rgba(0,255,157,.05)}
-#review-verdict.wrong{color:var(--red);border-color:var(--red);background:rgba(255,0,60,.05)}
-#review-attribution{font-size:.78rem;color:var(--muted);text-align:center;margin-bottom:8px}
-#review-tip{
-  font-size:.82rem;line-height:1.5;padding:10px 12px;
-  border-left:2px solid var(--cyan);background:rgba(0,229,255,.04);
-  margin-bottom:10px;
-}
-#review-tip strong{color:var(--cyan);font-weight:400}
-
-/* Toast */
-#toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
-  padding:10px 24px;background:var(--surface);
-  border:1px solid var(--cyan);color:var(--cyan);
-  font-size:.75rem;letter-spacing:1px;
-  opacity:0;transition:all .3s;z-index:200;pointer-events:none;
-}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* ══════════════════════════════════════
-   VERTICAL COLLAPSE TRANSITION
-   ══════════════════════════════════════ */
-@keyframes collapseOut{
-  0%{opacity:1;transform:scaleY(1)}
-  100%{opacity:0;transform:scaleY(0)}
-}
-@keyframes expandIn{
-  0%{opacity:0;transform:scaleY(0)}
-  100%{opacity:1;transform:scaleY(1)}
-}
-.collapse-out{animation:collapseOut .25s ease-in forwards;transform-origin:top}
-.expand-in{animation:expandIn .3s ease-out forwards;transform-origin:top}
-
-/* ══════════════════════════════════════
-   TEXT SCRAMBLE
-   ══════════════════════════════════════ */
-.scrambling{color:var(--cyan) !important}
-
-/* ══════════════════════════════════════
-   TIP TERMINAL (FOOTER)
-   ══════════════════════════════════════ */
-.tip-terminal{
-  text-align:center;padding:24px 16px 20px;
-  border-top:1px solid rgba(0,229,255,.15);margin-top:auto;
-}
-.tip-terminal .tip-label{
-  font-family:var(--font-display);font-size:.55rem;
-  letter-spacing:3px;color:var(--cyan);margin-bottom:10px;opacity:.7;
-}
-.tip-keys{display:flex;gap:10px;justify-content:center;margin-bottom:8px}
-.tip-key{
-  padding:8px 20px;font-family:var(--font-mono);font-size:.65rem;
-  letter-spacing:1px;font-weight:700;
-  border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.05);
-  color:var(--cyan);opacity:.8;
-  transition:all .25s;cursor:pointer;
-}
-.tip-key:hover{opacity:1;border-color:var(--cyan);box-shadow:var(--glow-cyan)}
-.tip-key:active{transform:scale(.95)}
-.tip-key.copied{opacity:1;color:var(--green);border-color:var(--green)}
-.tip-hint{
-  font-family:var(--font-mono);font-size:.48rem;
-  color:var(--muted);letter-spacing:1.5px;text-align:center;
-  opacity:.6;margin-bottom:8px;
-}
-.tip-footer-note{
-  font-size:.45rem;color:var(--muted);letter-spacing:1px;
-  margin-top:10px;opacity:.5;
-}
-.tip-footer-credit{
-  font-size:.42rem;color:#888;letter-spacing:.5px;
-  margin-top:8px;opacity:.4;transition:opacity .4s;
-}
-.tip-footer-credit:hover{opacity:.8}
-.tip-footer-credit a{color:#aaa;text-decoration:none;border-bottom:1px dotted transparent}
-.tip-footer-credit a:hover{color:var(--cyan);border-bottom-color:var(--cyan)}
+/* ── BG PARTICLES ── */
+#particles{position:fixed;inset:0;z-index:-1;pointer-events:none}
 </style>
 </head>
 <body>
 
-<!-- CRT Overlay -->
-<div id="crt-overlay"></div>
+<canvas id="particles"></canvas>
 
-<!-- HUD -->
-<header id="hud" style="display:none">
-  <div id="hud-logo">BRAIAIN</div>
-  <div id="hud-ticker">LOADING...</div>
-  <div id="hud-round">--/--</div>
-  <div id="hud-pips"></div>
-</header>
-
-<!-- BOOT SCREEN -->
-<main id="screen-boot" class="screen active">
-  <div id="boot-logo">BRAIAIN</div>
-  <div id="boot-sub">CAN YOU SPOT THE AI?</div>
-  <div id="boot-status"></div>
-  <button class="boot-btn" id="btn-start" style="display:none" onclick="startGame()">BEGIN SCAN</button>
-</main>
-
-<!-- GAME SCREEN -->
-<main id="screen-game" class="screen">
-  <div id="image-frame">
-    <img id="game-img" src="" alt="Analyze this image" draggable="false">
-    <div id="scan-line"></div>
-    <div id="magnifier"></div>
+<!-- ═══ BREACH INTRO ═══ -->
+<div class="screen active" id="screen-breach">
+  <div id="breach-code">ERROR 404 // SECTOR NOT FOUND</div>
+  <div id="breach-title">SYSTEM BREACH</div>
+  <div id="breach-sub">
+    You've punched through the firewall into an <strong>unauthorized sector</strong>.
+    Trackers are converging on your position. Dodge them to escape back to the mainframe.
   </div>
-  <div id="prompt">CLASSIFY: HUMAN OR AI-GENERATED?</div>
-  <div id="choices">
-    <button class="choice-btn human" onclick="choose('human')">HUMAN</button>
-    <button class="choice-btn ai" onclick="choose('ai')">AI</button>
-  </div>
-  <div id="reveal-panel">
-    <div id="reveal-verdict"></div>
-    <div id="reveal-source"></div>
-    <div id="reveal-tip"></div>
-    <div id="reveal-credit"></div>
-    <div id="global-bar-wrap">
-      <span id="global-bar-header">COMMUNITY DETECTION RATE</span>
-      <span id="global-pct">—</span>
-      <div id="global-bar"><div id="global-bar-fill"></div></div>
-      <span id="global-label">CONNECTING TO NETWORK...</span>
+  <div id="breach-controls">← → KEYS &nbsp;/&nbsp; TOUCH TO MOVE &nbsp;/&nbsp; COLLECT ■ DATA</div>
+  <button class="breach-btn" onclick="startGame()">EVADE TRACKERS</button>
+  <button class="breach-btn go-home" onclick="window.location.href='/'">RETURN TO MAINFRAME</button>
+  <div id="breach-best"></div>
+</div>
+
+<!-- ═══ GAME ═══ -->
+<div id="game-wrap">
+  <div id="game-hud">
+    <div class="hud-item" id="hud-time">
+      <span class="hud-label">ESCAPE IN</span>
+      <span class="hud-val" id="time-val">30</span>
     </div>
-    <button class="next-btn" onclick="nextRound()">NEXT SCAN →</button>
-  </div>
-</main>
-
-<!-- RESULTS SCREEN -->
-<main id="screen-results" class="screen">
-  <div id="score-ring-wrap">
-    <svg viewBox="0 0 160 160" width="160" height="160">
-      <circle class="ring-bg" cx="80" cy="80" r="70"/>
-      <circle class="ring-fg" id="ring-fg" cx="80" cy="80" r="70"/>
-    </svg>
-    <div id="score-center">
-      <div id="score-num">0</div>
-      <div id="score-label">OF 10</div>
+    <div class="hud-item">
+      <span class="hud-label">SHIELDS</span>
+      <div id="hud-lives"></div>
+    </div>
+    <div class="hud-item" id="hud-score">
+      <span class="hud-label">DATA</span>
+      <span class="hud-val" id="score-val">0</span>
     </div>
   </div>
-  <div id="results-title"></div>
-  <div id="results-streak"></div>
-  <div id="results-grid"></div>
-  <div id="share-row">
-    <button class="share-btn" onclick="shareClipboard()">📋 COPY</button>
-    <button class="share-btn" onclick="shareX()">𝕏 SHARE</button>
-  </div>
-  <div id="countdown-wrap">NEXT CHALLENGE IN <span id="countdown">--:--:--</span></div>
-</main>
+  <canvas id="game-canvas"></canvas>
+</div>
 
-<!-- Toast -->
-<div id="toast"></div>
-
-<!-- Review Modal (results screen pip tap) -->
-<div id="review-modal" onclick="closeReview(event)">
-  <div id="review-card">
-    <button id="review-close" onclick="closeReview()">&times;</button>
-    <div id="review-round-label"></div>
-    <img id="review-img" src="" alt="Round image">
-    <div id="review-verdict"></div>
-    <div id="review-attribution"></div>
-    <div id="review-tip"></div>
-    <div id="review-credit"></div>
+<!-- ═══ GAME OVER ═══ -->
+<div class="screen" id="screen-over">
+  <div id="over-title">SIGNAL LOST</div>
+  <div id="over-sub"></div>
+  <div id="over-stats">
+    <div class="over-stat">
+      <span class="over-stat-num" id="stat-time">0s</span>
+      <span class="over-stat-label">SURVIVED</span>
+    </div>
+    <div class="over-stat">
+      <span class="over-stat-num" id="stat-score">0</span>
+      <span class="over-stat-label">DATA</span>
+    </div>
+    <div class="over-stat">
+      <span class="over-stat-num" id="stat-best">0</span>
+      <span class="over-stat-label">BEST</span>
+    </div>
   </div>
+  <div id="over-buttons">
+    <button class="breach-btn" onclick="startGame()">RETRY</button>
+    <button class="breach-btn go-home" onclick="window.location.href='/'">RETURN TO MAINFRAME</button>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<div class="footer-row">
+  <span>&copy; 2026 BRAIAIN</span>
+  <span class="sep">&middot;</span>
+  <a href="mailto:dnilgis@gmail.com">a dnilgis project</a>
+  <span class="sep">&middot;</span>
+  <span>no data collected</span>
 </div>
 
 <script>
 /* ══════════════════════════════════════
-   CONFIG
+   CONSTANTS
    ══════════════════════════════════════ */
-const API_BASE = 'https://api.braiain.com';
-const TOTAL_ROUNDS = 10;
+const ESCAPE_TIME   = 30;
+const START_LIVES   = 3;
+const PLAYER_SPEED  = 6;
+const PLAYER_W      = 24;
+const PLAYER_H      = 14;
+const DATA_CHANCE   = 0.12;
+const DATA_VALUE    = 50;
+const BASE_SPAWN_MS = 650;
+const BASE_SPEED    = 1.8;
 
 /* ══════════════════════════════════════
    STATE
    ══════════════════════════════════════ */
-let dailyData = null;
-let currentRound = 0;
-let results = [];
-let streak = 0;
-let bestStreak = 0;
-let gameActive = false;
+let canvas, ctx, dW, dH;
+let player, trackers, pickups, fx;
+let lives, score, timeLeft, running, escaped;
+let spawnCD, spawnInterval, speedBonus;
+let keys = {};
+let touchTarget = null;
+let raf = null;
+let prevT = 0;
 
 /* ══════════════════════════════════════
-   FALLBACK DATA — Hardcoded reliable Unsplash IDs
-   If daily.json fails to load, use these.
+   AMBIENT PARTICLES
    ══════════════════════════════════════ */
-const FALLBACK = {
-  day_number: 0,
-  date: 'offline',
-  category: 'Image Detection',
-  category_emoji: '👁️',
-  rounds: [
-    {
-      id:'d1r01',type:'image',source:'human',
-      content:'https://picsum.photos/id/167/800/600',
-      attribution:'Real photograph — urban cityscape at night',
-      pro_tip:'LIGHT BLEED: Real neon and city lights create natural lens flare, chromatic aberration, and uneven glow. AI tends to render light sources as clean, uniform halos without the messy physics of real optics.',
-      credit_name:'Susan Yin',
-      source_url:'https://unsplash.com/photos/2JIvboGLeho'
-    },
-    {
-      id:'d1r02',type:'image',source:'human',
-      content:'https://picsum.photos/id/429/800/600',
-      attribution:'Real photograph — humanoid robot in studio',
-      pro_tip:'MECHANICAL JOINTS: Real robots have visible seams, screws, and manufacturing marks. AI-generated robots often have impossibly smooth transitions between parts and joints that couldn\'t physically articulate.',
-      credit_name:'Alex Knight',
-      source_url:'https://unsplash.com/photos/2EJCSULRwC8'
-    },
-    {
-      id:'d1r03',type:'image',source:'ai',
-      content:'https://picsum.photos/id/338/800/600',
-      attribution:'AI-generated — digital artwork created with Midjourney',
-      pro_tip:'UNCANNY PERFECTION: This image has a \'too polished\' quality. Real photos always have sensor noise, subtle motion blur, and optical imperfections. AI images are suspiciously pristine across the entire frame.',
-      credit_name:'Midjourney via Unsplash',
-      source_url:'https://unsplash.com/photos/U1gvhqVQ2kQ'
-    },
-    {
-      id:'d1r04',type:'image',source:'human',
-      content:'https://picsum.photos/id/29/800/600',
-      attribution:'Real photograph — food styling and fresh vegetables',
-      pro_tip:'ORGANIC CHAOS: Real food has natural imperfections — a leaf slightly wilted, sauce dripped asymmetrically, crumbs scattered randomly. AI food looks suspiciously art-directed with impossible uniformity.',
-      credit_name:'Anna Pelzer',
-      source_url:'https://unsplash.com/photos/IGfIGP5ONV0'
-    },
-    {
-      id:'d1r05',type:'image',source:'ai',
-      content:'https://picsum.photos/id/240/800/600',
-      attribution:'AI-generated — cyberpunk digital environment',
-      pro_tip:'PHYSICS VIOLATIONS: Check shadows and reflections. AI frequently places light sources inconsistently — shadows may point in conflicting directions, and reflections don\'t match the objects casting them.',
-      credit_name:'Markus Spiske',
-      source_url:'https://unsplash.com/photos/ahi73ZN5P0Y'
-    },
-    {
-      id:'d1r06',type:'image',source:'human',
-      content:'https://picsum.photos/id/36/800/600',
-      attribution:'Real photograph — rain-soaked neon street scene',
-      pro_tip:'WATER BEHAVIOR: Real rain on real surfaces creates complex, irregular reflections with natural distortion. AI renders water as either too perfect (mirror-like) or too uniform (repeated ripple patterns).',
-      credit_name:'Jezael Melgoza',
-      source_url:'https://unsplash.com/photos/layMbSJ3YOE'
-    },
-    {
-      id:'d1r07',type:'image',source:'ai',
-      content:'https://picsum.photos/id/64/800/600',
-      attribution:'AI-generated — photorealistic portrait',
-      pro_tip:'BOUNDARY ARTIFACTS: Zoom into where hair meets background or skin meets fabric. AI creates subtle smearing, impossible blending, or haloing effects at these transition zones.',
-      credit_name:'AI Generator via Unsplash',
-      source_url:'https://unsplash.com/photos/portrait-ai-generated'
-    },
-    {
-      id:'d1r08',type:'image',source:'human',
-      content:'https://picsum.photos/id/122/800/600',
-      attribution:'Real photograph — laptop with screen glow in dark environment',
-      pro_tip:'SCREEN LIGHT: Real screens cast uneven light that falls off naturally with distance and bounces differently off varied surfaces. AI often renders screen glow as a uniform wash of color.',
-      credit_name:'Ales Nesetril',
-      source_url:'https://unsplash.com/photos/Im7lZjxeLhg'
-    },
-    {
-      id:'d1r09',type:'image',source:'ai',
-      content:'https://picsum.photos/id/274/800/600',
-      attribution:'AI-generated — fantasy environment',
-      pro_tip:'REPETITION PATTERNS: Count similar elements — leaves, bricks, clouds. AI creates subtle copy-paste repetition that nature never produces. Real scenes have true randomness in every repeated element.',
-      credit_name:'AI Generator via Unsplash',
-      source_url:'https://unsplash.com/photos/fantasy-ai-landscape'
-    },
-    {
-      id:'d1r10',type:'image',source:'human',
-      content:'https://picsum.photos/id/164/800/600',
-      attribution:'Real photograph — retro tech and circuit boards',
-      pro_tip:'MANUFACTURING DETAIL: Real electronics have consistent trace widths, solder joints with natural irregularity, and dust/wear marks. AI circuit boards often have traces that lead nowhere and components that don\'t exist.',
-      credit_name:'Lorenzo Herrera',
-      source_url:'https://unsplash.com/photos/p0j-mE6mGo4'
+(function(){
+  const c = document.getElementById('particles');
+  const cx = c.getContext('2d');
+  let dots = [];
+  function resize(){
+    c.width = innerWidth; c.height = innerHeight;
+    dots = Array.from({length:35}, () => ({
+      x: Math.random()*c.width, y: Math.random()*c.height,
+      vy: .1+Math.random()*.35, r: .4+Math.random()*1, a: .03+Math.random()*.1
+    }));
+  }
+  function draw(){
+    cx.clearRect(0,0,c.width,c.height);
+    for(const d of dots){
+      d.y += d.vy;
+      if(d.y > c.height+5){ d.y = -5; d.x = Math.random()*c.width; }
+      cx.beginPath(); cx.arc(d.x,d.y,d.r,0,Math.PI*2);
+      cx.fillStyle = 'rgba(0,229,255,'+d.a+')'; cx.fill();
     }
-  ]
-};
+    requestAnimationFrame(draw);
+  }
+  addEventListener('resize', resize); resize(); draw();
+})();
 
 /* ══════════════════════════════════════
-   TEXT SCRAMBLE EFFECT
+   SCREEN MANAGEMENT
    ══════════════════════════════════════ */
-const GLYPHS = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`ΔΣΩλμπ';
-function scrambleText(el, finalText, duration = 600) {
-  return new Promise(resolve => {
-    el.classList.add('scrambling');
-    const len = finalText.length;
-    const steps = 12;
-    let step = 0;
-    const iv = setInterval(() => {
-      step++;
-      const progress = step / steps;
-      let display = '';
-      for (let i = 0; i < len; i++) {
-        if (i / len < progress) {
-          display += finalText[i];
-        } else {
-          display += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-        }
-      }
-      el.textContent = display;
-      if (step >= steps) {
-        clearInterval(iv);
-        el.textContent = finalText;
-        el.classList.remove('scrambling');
-        resolve();
-      }
-    }, duration / steps);
-  });
-}
-
-/* ══════════════════════════════════════
-   BOOT SEQUENCE
-   ══════════════════════════════════════ */
-async function boot() {
-  const status = document.getElementById('boot-status');
-  const logo = document.getElementById('boot-logo');
-  const sub = document.getElementById('boot-sub');
-
-  // Scramble logo
-  await scrambleText(logo, 'BRAIAIN', 800);
-  await scrambleText(sub, 'CAN YOU SPOT THE AI?', 500);
-
-  // Check for already-played today
-  loadStreak();
-  const todayKey = getTodayKey();
-  const played = localStorage.getItem('braiain_played_' + todayKey);
-
-  // Load daily data: try challenges/YYYY-MM-DD.json → daily.json → FALLBACK
-  status.textContent = '> LOADING DAILY CHALLENGE...';
-  const todayFile = 'challenges/' + todayKey + '.json';
-  let loaded = false;
-
-  // Try date-specific challenge first
-  try {
-    status.textContent = '> SCANNING ' + todayFile.toUpperCase() + '...';
-    const resp = await fetchWithTimeout(todayFile, {}, 5000);
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    dailyData = await resp.json();
-    status.textContent = '> DAY ' + dailyData.day_number + ' — ' + (dailyData.category || 'DETECTION').toUpperCase() + ' LOADED';
-    loaded = true;
-  } catch (e) {
-    // Date file not found — try generic daily.json
-    try {
-      status.textContent = '> DATE FILE MISSING — TRYING DAILY.JSON...';
-      const resp2 = await fetchWithTimeout('daily.json', {}, 5000);
-      if (!resp2.ok) throw new Error('HTTP ' + resp2.status);
-      dailyData = await resp2.json();
-      status.textContent = '> DAY ' + dailyData.day_number + ' — ' + (dailyData.category || 'DETECTION').toUpperCase() + ' LOADED';
-      loaded = true;
-    } catch (e2) {
-      // Both failed — use hardcoded fallback
-      dailyData = FALLBACK;
-      status.textContent = '> OFFLINE MODE — USING CACHED DATA';
-    }
-  }
-
-  await sleep(400);
-
-  if (played) {
-    // Already played — show results
-    try {
-      const saved = JSON.parse(localStorage.getItem('braiain_results_' + todayKey));
-      if (saved && saved.length) {
-        results = saved;
-        currentRound = TOTAL_ROUNDS;
-        showResults();
-        return;
-      }
-    } catch (e) {}
-  }
-
-  document.getElementById('btn-start').style.display = '';
-  status.textContent = '> READY — ' + dailyData.rounds.length + ' TARGETS QUEUED';
-}
-
-/* ══════════════════════════════════════
-   GAME FLOW
-   ══════════════════════════════════════ */
-function haptic(pattern) {
-  if (!navigator.vibrate) return;
-  switch (pattern) {
-    case 'tap':     navigator.vibrate(8);  break;
-    case 'correct': navigator.vibrate([10, 30, 10]); break;
-    case 'wrong':   navigator.vibrate([40, 20, 40]); break;
-    case 'finish':  navigator.vibrate([10, 20, 10, 20, 30]); break;
-    default:        navigator.vibrate(10);
-  }
-}
-
-function startGame() {
-  haptic('tap');
-  gameActive = true;
-  currentRound = 0;
-  results = [];
-  showScreen('screen-game');
-  document.getElementById('hud').style.display = '';
-  updateHUD();
-  loadRound();
-}
-
-function loadRound() {
-  if (currentRound >= TOTAL_ROUNDS || currentRound >= dailyData.rounds.length) {
-    endGame();
-    return;
-  }
-
-  const round = dailyData.rounds[currentRound];
-  const frame = document.getElementById('image-frame');
-  const img = document.getElementById('game-img');
-  const revealPanel = document.getElementById('reveal-panel');
-  const choices = document.getElementById('choices');
-
-  // Reset UI
-  revealPanel.classList.remove('active');
-  revealPanel.style.display = 'none';
-  choices.style.display = '';
-  document.querySelectorAll('.choice-btn').forEach(b => b.disabled = false);
-  frame.classList.remove('scanning');
-  frame.classList.add('loading');
-
-  // Reset community stat for new round
-  const gFill = document.getElementById('global-bar-fill');
-  const gPct = document.getElementById('global-pct');
-  const gLabel = document.getElementById('global-label');
-  if (gFill) gFill.style.width = '0%';
-  if (gPct) { gPct.textContent = '—'; gPct.style.color = 'var(--cyan)'; }
-  if (gLabel) gLabel.textContent = 'CONNECTING TO NETWORK...';
-
-  // Load image
-  img.onload = () => {
-    frame.classList.remove('loading');
-    frame.classList.add('scanning');
-    // Enable magnifier after scan
-    setTimeout(() => {
-      frame.classList.remove('scanning');
-      initMagnifier(img);
-    }, 1200);
-  };
-  img.onerror = () => {
-    frame.classList.remove('loading');
-    // Fallback: try without query params
-    if (img.src.includes('?')) {
-      img.src = img.src.split('?')[0];
-    }
-  };
-  img.src = round.content;
-
-  // Preload next round's image
-  const nextIdx = currentRound + 1;
-  if (nextIdx < TOTAL_ROUNDS && nextIdx < dailyData.rounds.length) {
-    const preload = new Image();
-    preload.src = dailyData.rounds[nextIdx].content;
-  }
-
-  // Update prompt
-  scrambleText(document.getElementById('prompt'), 'CLASSIFY: HUMAN OR AI-GENERATED?', 300);
-  updateHUD();
-}
-
-function choose(answer) {
-  if (!gameActive) return;
-
-  haptic('tap');
-
-  const round = dailyData.rounds[currentRound];
-  const isCorrect = answer === round.source;
-  results.push(isCorrect);
-
-  setTimeout(() => haptic(isCorrect ? 'correct' : 'wrong'), 150);
-
-  // Disable buttons
-  document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
-
-  // Highlight chosen button
-  const btns = document.querySelectorAll('.choice-btn');
-  btns.forEach(b => {
-    if ((answer === 'human' && b.classList.contains('human')) ||
-        (answer === 'ai' && b.classList.contains('ai'))) {
-      b.style.borderColor = isCorrect ? 'var(--green)' : 'var(--red)';
-      b.style.boxShadow = isCorrect ? 'var(--glow-green)' : 'var(--glow-red)';
-    }
-  });
-
-  // Update pip
-  const pips = document.querySelectorAll('.pip');
-  if (pips[currentRound]) {
-    pips[currentRound].classList.add(isCorrect ? 'correct' : 'wrong');
-  }
-
-  // Show reveal
-  showReveal(round, isCorrect);
-
-  // Report to API (fire and forget)
-  reportVote(round.id, isCorrect);
-}
-
-function showReveal(round, isCorrect) {
-  const panel = document.getElementById('reveal-panel');
-  const verdict = document.getElementById('reveal-verdict');
-  const source = document.getElementById('reveal-source');
-  const tip = document.getElementById('reveal-tip');
-  const choices = document.getElementById('choices');
-
-  verdict.className = 'reveal-verdict ' + (isCorrect ? 'correct' : 'wrong');
-  verdict.textContent = isCorrect ? '✓ CORRECT — ' + round.source.toUpperCase() : '✗ WRONG — IT WAS ' + round.source.toUpperCase();
-
-  source.textContent = round.attribution || '';
-  tip.innerHTML = '<strong>PRO TIP:</strong> ' + (round.pro_tip || '');
-
-  // Credit link
-  const credit = document.getElementById('reveal-credit');
-  if (round.credit_name && round.source_url) {
-    credit.className = 'credit-link';
-    credit.innerHTML = '🔗 Source: <a href="' + round.source_url + '" target="_blank" rel="noopener">' + round.credit_name + '</a>';
-  } else if (round.credit_name) {
-    credit.className = 'credit-link';
-    credit.textContent = '🔗 Source: ' + round.credit_name;
-  } else {
-    credit.textContent = '';
-  }
-
-  // Fetch global accuracy
-  fetchGlobalAccuracy(round.id);
-
-  // Collapse choices, expand reveal
-  choices.style.display = 'none';
-  panel.style.display = '';
-  panel.classList.add('active');
-
-  // Update next button text on last round
-  const nextBtn = panel.querySelector('.next-btn');
-  if (currentRound >= TOTAL_ROUNDS - 1 || currentRound >= dailyData.rounds.length - 1) {
-    nextBtn.textContent = 'VIEW RESULTS →';
-  } else {
-    nextBtn.textContent = 'NEXT SCAN →';
-  }
-}
-
-function nextRound() {
-  haptic('tap');
-  currentRound++;
-  if (currentRound >= TOTAL_ROUNDS || currentRound >= dailyData.rounds.length) {
-    endGame();
-  } else {
-    loadRound();
-  }
-}
-
-function endGame() {
-  gameActive = false;
-  haptic('finish');
-  const todayKey = getTodayKey();
-  localStorage.setItem('braiain_played_' + todayKey, '1');
-  localStorage.setItem('braiain_results_' + todayKey, JSON.stringify(results));
-
-  const score = results.filter(Boolean).length;
-  updateStreak(score);
-  showResults();
-}
-
-/* ══════════════════════════════════════
-   RESULTS
-   ══════════════════════════════════════ */
-function showResults() {
-  showScreen('screen-results');
-  document.getElementById('hud').style.display = 'none';
-
-  const score = results.filter(Boolean).length;
-  const titles = [
-    'COMPLETELY COMPROMISED','SYSTEM FAILURE','WEAK SIGNAL','PARTIAL DETECTION',
-    'HALF MEASURES','MEDIOCRE SCAN','DECENT INSTINCTS','SHARP DETECTOR',
-    'ELITE SCANNER','NEAR PERFECT','VOIGHT-KAMPFF MASTER'
-  ];
-
-  // Score ring animation
-  const ring = document.getElementById('ring-fg');
-  const circumference = 2 * Math.PI * 70; // r=70
-  const offset = circumference - (score / TOTAL_ROUNDS) * circumference;
-  setTimeout(() => {
-    ring.style.strokeDashoffset = offset;
-    if (score >= 7) ring.style.stroke = 'var(--green)';
-    else if (score >= 4) ring.style.stroke = 'var(--cyan)';
-    else ring.style.stroke = 'var(--red)';
-  }, 100);
-
-  document.getElementById('score-num').textContent = score;
-  scrambleText(document.getElementById('results-title'), titles[score], 500);
-  document.getElementById('results-streak').textContent =
-    streak > 0 ? '🔥 ' + streak + '-day streak | Best: ' + bestStreak : 'Best streak: ' + bestStreak;
-
-  // Pip grid — clickable for review
-  const grid = document.getElementById('results-grid');
-  grid.innerHTML = '';
-  results.forEach((c, i) => {
-    const pip = document.createElement('div');
-    pip.className = 'r-pip ' + (c ? 'correct' : 'wrong');
-    pip.textContent = c ? '✓' : '✗';
-    pip.onclick = () => openReview(i);
-    grid.appendChild(pip);
-  });
-
-  startCountdown();
-}
-
-/* ══════════════════════════════════════
-   REVIEW MODAL (tap pip on results screen)
-   ══════════════════════════════════════ */
-function openReview(index) {
-  const round = dailyData.rounds[index];
-  if (!round) return;
-
-  const isCorrect = results[index];
-  const modal = document.getElementById('review-modal');
-
-  document.getElementById('review-round-label').textContent = 'ROUND ' + (index + 1) + ' OF ' + TOTAL_ROUNDS;
-  document.getElementById('review-img').src = round.content;
-
-  const verdict = document.getElementById('review-verdict');
-  verdict.className = isCorrect ? 'correct' : 'wrong';
-  verdict.textContent = isCorrect
-    ? '✓ CORRECT — ' + round.source.toUpperCase()
-    : '✗ WRONG — IT WAS ' + round.source.toUpperCase();
-
-  document.getElementById('review-attribution').textContent = round.attribution || '';
-  document.getElementById('review-tip').innerHTML = '<strong>PRO TIP:</strong> ' + (round.pro_tip || '');
-
-  // Credit link
-  const credit = document.getElementById('review-credit');
-  if (round.credit_name && round.source_url) {
-    credit.className = 'credit-link';
-    credit.innerHTML = '🔗 Source: <a href="' + round.source_url + '" target="_blank" rel="noopener">' + round.credit_name + '</a>';
-  } else if (round.credit_name) {
-    credit.className = 'credit-link';
-    credit.textContent = '🔗 Source: ' + round.credit_name;
-  } else {
-    credit.textContent = '';
-  }
-
-  modal.classList.add('active');
-}
-
-function closeReview(e) {
-  if (e && e.target !== document.getElementById('review-modal') && e.target !== document.getElementById('review-close')) return;
-  document.getElementById('review-modal').classList.remove('active');
-}
-
-/* ══════════════════════════════════════
-   MAGNIFIER (Touch + Mouse)
-   ══════════════════════════════════════ */
-function initMagnifier(img) {
-  const frame = document.getElementById('image-frame');
-  const mag = document.getElementById('magnifier');
-  const zoom = 2.5;
-  const magR = 70; // half of 140px magnifier
-  const TOUCH_OFFSET = 120; // pixels above finger on touch
-  let isTouch = false;
-
-  function show(x, y, offsetY) {
-    const rect = frame.getBoundingClientRect();
-    const px = (x - rect.left) / rect.width;
-    const py = (y - rect.top) / rect.height;
-    if (px < 0 || px > 1 || py < 0 || py > 1) { mag.style.display = 'none'; return; }
-
-    // Position loupe — centered on mouse, offset above finger on touch
-    let loupeX = x - rect.left - magR;
-    let loupeY = (y - rect.top - magR) - offsetY;
-
-    // Clamp loupe inside frame
-    loupeX = Math.max(0, Math.min(loupeX, rect.width - magR * 2));
-    loupeY = Math.max(0, Math.min(loupeY, rect.height - magR * 2));
-
-    mag.style.display = 'block';
-    mag.style.left = loupeX + 'px';
-    mag.style.top = loupeY + 'px';
-    mag.style.backgroundImage = 'url(' + img.src + ')';
-    mag.style.backgroundSize = (rect.width * zoom) + 'px ' + (rect.height * zoom) + 'px';
-    // Background always tracks actual touch/mouse point (not loupe position)
-    mag.style.backgroundPosition =
-      (-px * rect.width * zoom + magR) + 'px ' +
-      (-py * rect.height * zoom + magR) + 'px';
-  }
-
-  function hide() { mag.style.display = 'none'; }
-
-  // Mouse — no offset
-  frame.onmousemove = e => { isTouch = false; show(e.clientX, e.clientY, 0); };
-  frame.onmouseleave = hide;
-
-  // Touch — offset above finger
-  frame.ontouchstart = e => {
-    e.preventDefault();
-    isTouch = true;
-    if (e.touches.length === 1) {
-      const t = e.touches[0];
-      show(t.clientX, t.clientY, TOUCH_OFFSET);
-    }
-  };
-  frame.ontouchmove = e => {
-    e.preventDefault();
-    if (e.touches.length === 1) {
-      const t = e.touches[0];
-      show(t.clientX, t.clientY, TOUCH_OFFSET);
-    }
-  };
-  frame.ontouchend = hide;
-  frame.ontouchcancel = hide;
-}
-
-/* ══════════════════════════════════════
-   HUD UPDATES
-   ══════════════════════════════════════ */
-function updateHUD() {
-  const cat = dailyData ? (dailyData.category_emoji || '') + ' ' + (dailyData.category || '').toUpperCase() : '';
-  const dayNum = dailyData ? dailyData.day_number : '--';
-  document.getElementById('hud-ticker').textContent = 'DAY ' + dayNum + ' — ' + cat;
-  document.getElementById('hud-round').textContent = (currentRound + 1) + '/' + TOTAL_ROUNDS;
-
-  // Build pips
-  const pipWrap = document.getElementById('hud-pips');
-  pipWrap.innerHTML = '';
-  for (let i = 0; i < TOTAL_ROUNDS; i++) {
-    const p = document.createElement('div');
-    p.className = 'pip';
-    if (i < results.length) p.classList.add(results[i] ? 'correct' : 'wrong');
-    pipWrap.appendChild(p);
-  }
-}
-
-/* ══════════════════════════════════════
-   STREAK
-   ══════════════════════════════════════ */
-function loadStreak() {
-  streak = parseInt(localStorage.getItem('braiain_streak') || '0');
-  bestStreak = parseInt(localStorage.getItem('braiain_best_streak') || '0');
-  const last = localStorage.getItem('braiain_last_date');
-  const today = getTodayKey();
-  const yesterday = getYesterdayKey();
-  if (last !== today && last !== yesterday) streak = 0;
-}
-
-function updateStreak(score) {
-  const today = getTodayKey();
-  const last = localStorage.getItem('braiain_last_date');
-  const yesterday = getYesterdayKey();
-
-  if (score >= 5) {
-    if (last === yesterday || !last) streak++;
-    else if (last !== today) streak = 1;
-  } else {
-    streak = 0;
-  }
-  if (streak > bestStreak) bestStreak = streak;
-
-  localStorage.setItem('braiain_streak', streak);
-  localStorage.setItem('braiain_best_streak', bestStreak);
-  localStorage.setItem('braiain_last_date', today);
-}
-
-/* ══════════════════════════════════════
-   API
-   ══════════════════════════════════════ */
-async function reportVote(questionId, wasCorrect) {
-  try {
-    await fetchWithTimeout(API_BASE + '/vote', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: questionId, correct: wasCorrect })
-    }, 4000);
-  } catch (e) { /* silent */ }
-}
-
-async function fetchGlobalAccuracy(questionId) {
-  const fill = document.getElementById('global-bar-fill');
-  const label = document.getElementById('global-label');
-  const pctEl = document.getElementById('global-pct');
-  try {
-    const resp = await fetchWithTimeout(API_BASE + '/stats?id=' + questionId, {}, 4000);
-    if (!resp.ok) throw new Error();
-    const data = await resp.json();
-    if (data.total > 0) {
-      const pct = Math.round(data.pct);
-      fill.style.width = pct + '%';
-      pctEl.textContent = pct + '%';
-      label.textContent = data.total + ' PLAYERS SCANNED';
-      if (pct >= 70) {
-        pctEl.style.color = 'var(--green)';
-        fill.style.background = 'var(--green)';
-      } else if (pct >= 40) {
-        pctEl.style.color = 'var(--cyan)';
-        fill.style.background = 'var(--cyan)';
-      } else {
-        pctEl.style.color = 'var(--red)';
-        fill.style.background = 'var(--red)';
-      }
-      return;
-    }
-  } catch (e) { /* fall through */ }
-  fill.style.width = '0%';
-  pctEl.textContent = '—';
-  label.textContent = 'CONNECTING TO NETWORK...';
-}
-
-/* ══════════════════════════════════════
-   SHARE
-   ══════════════════════════════════════ */
-function getShareText() {
-  const score = results.filter(Boolean).length;
-  const day = dailyData ? dailyData.day_number : '?';
-  const grid = results.map(c => c ? '🟩' : '🟥').join('');
-  const lines = [
-    'BRAIAIN Day ' + day + ' — ' + score + '/' + TOTAL_ROUNDS,
-    grid,
-    streak > 0 ? '🔥 ' + streak + ' day streak' : '',
-    '',
-    'Can you spot the AI? → braiain.com'
-  ];
-  return lines.filter(l => l !== '').join('\n');
-}
-
-function shareClipboard() {
-  const text = getShareText();
-  if (navigator.share) {
-    navigator.share({ text }).catch(() => copyFallback(text));
-  } else {
-    copyFallback(text);
-  }
-}
-
-function copyFallback(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('COPIED TO CLIPBOARD');
-  }).catch(() => showToast('COPY FAILED'));
-}
-
-function shareX() {
-  const text = encodeURIComponent(getShareText());
-  window.open('https://twitter.com/intent/tweet?text=' + text, '_blank');
-}
-
-/* ══════════════════════════════════════
-   COUNTDOWN TO NEXT DAY
-   ══════════════════════════════════════ */
-function startCountdown() {
-  function tick() {
-    const now = new Date();
-    const tom = new Date(now);
-    tom.setUTCDate(tom.getUTCDate() + 1);
-    tom.setUTCHours(0, 0, 0, 0);
-    const diff = tom - now;
-    const h = Math.floor(diff / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-    const el = document.getElementById('countdown');
-    if (el) el.textContent = h + 'h ' + String(m).padStart(2, '0') + 'm ' + String(s).padStart(2, '0') + 's';
-  }
-  tick();
-  setInterval(tick, 1000);
-}
-
-/* ══════════════════════════════════════
-   UTILITIES
-   ══════════════════════════════════════ */
-function showScreen(id) {
+function showScreen(id){
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  document.getElementById('game-wrap').classList.remove('active');
+  if(id === 'game') document.getElementById('game-wrap').classList.add('active');
+  else document.getElementById(id).classList.add('active');
 }
 
-function getTodayKey() { return new Date().toISOString().split('T')[0]; }
-function getYesterdayKey() { return new Date(Date.now() - 86400000).toISOString().split('T')[0]; }
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+// Show best on intro
+const savedBest = parseInt(localStorage.getItem('braiain_404_best') || '0');
+if(savedBest > 0) document.getElementById('breach-best').textContent = 'BEST RUN: '+savedBest+' DATA';
 
-function fetchWithTimeout(url, opts, ms) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), ms);
-  return fetch(url, { ...opts, signal: ctrl.signal }).finally(() => clearTimeout(t));
-}
+/* ══════════════════════════════════════
+   START GAME
+   ══════════════════════════════════════ */
+function startGame(){
+  canvas = document.getElementById('game-canvas');
+  ctx = canvas.getContext('2d');
+  showScreen('game');
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+  function resize(){
+    const wrap = document.getElementById('game-wrap');
+    const hud = document.getElementById('game-hud');
+    const cw = wrap.clientWidth;
+    const ch = wrap.clientHeight - hud.offsetHeight;
+    const pr = Math.min(devicePixelRatio, 2);
+    canvas.width = cw * pr; canvas.height = ch * pr;
+    canvas.style.width = cw+'px'; canvas.style.height = ch+'px';
+    ctx.setTransform(pr,0,0,pr,0,0);
+    dW = cw; dH = ch;
+  }
+  setTimeout(resize, 20);
+  window.onresize = resize;
+
+  // Init
+  player = { x:0, y:0, w:PLAYER_W, h:PLAYER_H, flash:0, inv:0 };
+  trackers = []; pickups = []; fx = [];
+  lives = START_LIVES; score = 0;
+  timeLeft = ESCAPE_TIME; running = true; escaped = false;
+  spawnInterval = BASE_SPAWN_MS; spawnCD = 0; speedBonus = 0;
+  prevT = 0;
+
+  renderLives();
+  document.getElementById('time-val').textContent = timeLeft;
+  document.getElementById('score-val').textContent = 0;
+
+  // Wait for resize then center player
+  setTimeout(() => {
+    player.x = dW / 2; player.y = dH - 44;
+  }, 40);
+
+  // Difficulty ramp
+  const ramp = setInterval(() => {
+    if(!running){ clearInterval(ramp); return; }
+    spawnInterval = Math.max(180, spawnInterval * .9);
+    speedBonus += .4;
+  }, 5000);
+
+  // Countdown
+  const clock = setInterval(() => {
+    if(!running){ clearInterval(clock); return; }
+    timeLeft = Math.max(0, timeLeft - 1);
+    document.getElementById('time-val').textContent = timeLeft;
+    // Urgency color
+    if(timeLeft <= 5) document.querySelector('#hud-time .hud-val').style.color = 'var(--red)';
+    else if(timeLeft <= 10) document.querySelector('#hud-time .hud-val').style.color = 'var(--amber)';
+    if(timeLeft <= 0){ escaped = true; endGame(); }
+  }, 1000);
+
+  if(raf) cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(loop);
 }
 
 /* ══════════════════════════════════════
-   KEYBOARD SHORTCUTS (Desktop)
+   GAME LOOP
    ══════════════════════════════════════ */
-document.addEventListener('keydown', e => {
-  // Game screen: Left = Human, Right = AI
-  if (gameActive && document.getElementById('screen-game').classList.contains('active')) {
-    const revealActive = document.getElementById('reveal-panel').classList.contains('active');
-    if (!revealActive) {
-      if (e.key === 'ArrowLeft' || e.key === 'h' || e.key === 'H') { e.preventDefault(); choose('human'); }
-      if (e.key === 'ArrowRight' || e.key === 'a' || e.key === 'A') { e.preventDefault(); choose('ai'); }
+function loop(t){
+  if(!running) return;
+  if(!prevT) prevT = t;
+  const dt = Math.min(t - prevT, 50);
+  prevT = t;
+
+  update(dt);
+  render();
+  raf = requestAnimationFrame(loop);
+}
+
+/* ══════════════════════════════════════
+   UPDATE
+   ══════════════════════════════════════ */
+function update(dt){
+  if(!dW) return;
+
+  // ── Player movement ──
+  let dir = 0;
+  if(keys['ArrowLeft']||keys['a']||keys['A']) dir = -1;
+  if(keys['ArrowRight']||keys['d']||keys['D']) dir = 1;
+
+  // Touch: player moves toward finger
+  if(touchTarget !== null){
+    const diff = touchTarget - player.x;
+    if(Math.abs(diff) > 3){
+      player.x += Math.sign(diff) * Math.min(PLAYER_SPEED * 1.2, Math.abs(diff));
+    }
+  } else {
+    player.x += dir * PLAYER_SPEED;
+  }
+  player.x = Math.max(player.w/2, Math.min(dW - player.w/2, player.x));
+  player.y = dH - 44;
+
+  if(player.flash > 0) player.flash -= dt;
+  if(player.inv > 0) player.inv -= dt;
+
+  // ── Spawn ──
+  spawnCD += dt;
+  if(spawnCD >= spawnInterval){
+    spawnCD = 0;
+    if(Math.random() < DATA_CHANCE){
+      pickups.push({
+        x: 16 + Math.random()*(dW-32), y: -14,
+        w:11, h:11, vy: (BASE_SPEED + speedBonus) * .65
+      });
     } else {
-      // Reveal visible: Enter/Space/Right = Next
-      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); nextRound(); }
+      const tw = 14 + Math.random()*28;
+      const th = 8 + Math.random()*12;
+      trackers.push({
+        x: tw/2 + Math.random()*(dW-tw), y: -th,
+        w:tw, h:th,
+        vy: BASE_SPEED + speedBonus + Math.random()*1.5,
+        vx: (Math.random()-.5)*1.2
+      });
     }
   }
-  // Review modal: Escape to close
-  if (e.key === 'Escape') {
-    const modal = document.getElementById('review-modal');
-    if (modal.classList.contains('active')) { e.preventDefault(); modal.classList.remove('active'); }
+
+  // ── Move trackers ──
+  for(let i=trackers.length-1; i>=0; i--){
+    const t = trackers[i];
+    t.y += t.vy; t.x += t.vx;
+    // Bounce off walls
+    if(t.x < t.w/2 || t.x > dW-t.w/2) t.vx *= -1;
+    if(t.y > dH+30){ trackers.splice(i,1); continue; }
+
+    if(player.inv <= 0 && hit(player, t)){
+      trackers.splice(i,1);
+      playerHit();
+    }
   }
-  // Boot screen: Enter to start
-  if (e.key === 'Enter' && document.getElementById('screen-boot').classList.contains('active')) {
-    const btn = document.getElementById('btn-start');
-    if (btn && btn.style.display !== 'none') { e.preventDefault(); startGame(); }
+
+  // ── Move pickups ──
+  for(let i=pickups.length-1; i>=0; i--){
+    const p = pickups[i];
+    p.y += p.vy;
+    if(p.y > dH+20){ pickups.splice(i,1); continue; }
+
+    if(hit(player, p)){
+      pickups.splice(i,1);
+      score += DATA_VALUE;
+      document.getElementById('score-val').textContent = score;
+      burst(p.x, p.y, 'green', 6);
+    }
   }
-});
+
+  // ── Particles ──
+  for(let i=fx.length-1; i>=0; i--){
+    const p = fx[i];
+    p.x += p.vx; p.y += p.vy; p.vy += .06;
+    p.life -= dt;
+    if(p.life <= 0) fx.splice(i,1);
+  }
+}
+
+function hit(a,b){
+  return Math.abs(a.x-b.x) < (a.w+b.w)/2 * .85 &&
+         Math.abs(a.y-b.y) < (a.h+b.h)/2 * .85;
+}
+
+function playerHit(){
+  lives--; player.flash = 250; player.inv = 1400;
+  burst(player.x, player.y, 'red', 12);
+  renderLives();
+  if(lives <= 0){ escaped = false; endGame(); }
+}
+
+function burst(x,y,color,n){
+  for(let i=0;i<n;i++){
+    fx.push({
+      x, y,
+      vx: (Math.random()-.5)*5, vy: (Math.random()-.5)*5 - 1,
+      life: 250 + Math.random()*350, maxLife: 600, color
+    });
+  }
+}
 
 /* ══════════════════════════════════════
-   BOOT
+   RENDER
    ══════════════════════════════════════ */
-boot();
-</script>
+function render(){
+  if(!dW) return;
+  ctx.clearRect(0,0,dW,dH);
 
-<!-- Tip Terminal -->
-<div class="tip-terminal">
-  <div class="tip-label">// TIP THE DEVELOPER</div>
-  <div class="tip-keys">
-    <button class="tip-key" data-chain="eth" onclick="copyTip('eth')">⟠ ETH</button>
-    <button class="tip-key" data-chain="sol" onclick="copyTip('sol')">◎ SOL</button>
-    <button class="tip-key" data-chain="kas" onclick="copyTip('kas')">⬡ KAS</button>
-  </div>
-  <div class="tip-hint">TAP TO COPY WALLET ADDRESS</div>
-  <div class="tip-footer-note">BRAIAIN &copy; 2026 — SYSTEM SECURE. NO PERSONAL DATA ARCHIVED.</div>
-  <div class="tip-footer-credit">A <a href="mailto:dnilgis@gmail.com">dnilgis</a> Project</div>
-</div>
+  // ── Grid ──
+  ctx.strokeStyle = 'rgba(0,229,255,.035)';
+  ctx.lineWidth = .5;
+  for(let x=0; x<dW; x+=36){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,dH);ctx.stroke();}
+  for(let y=0; y<dH; y+=36){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(dW,y);ctx.stroke();}
 
-<script>
-const TIP_ADDRS = {
-  eth: '0x3e3eaf955a6ea978e7694574b14cd8bf082e79cf',
-  sol: 'GStGz2ztQ2UqMGPXA8j2i9PSFhpaYsjxwbLTttUKD74d',
-  kas: 'kaspa:qps9fumvkw0n29hkjrk7lumpuu64k2u9ug543lg9ga'
-};
+  // ── Warning zone (bottom) ──
+  const grad = ctx.createLinearGradient(0,dH-80,0,dH);
+  grad.addColorStop(0,'rgba(0,229,255,0)');
+  grad.addColorStop(1,'rgba(0,229,255,.03)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,dH-80,dW,80);
 
-function copyTip(chain) {
-  haptic('tap');
-  const addr = TIP_ADDRS[chain];
-  const btn = document.querySelector('.tip-key[data-chain="' + chain + '"]');
-  navigator.clipboard.writeText(addr).then(() => {
-    btn.classList.add('copied');
-    btn.textContent = '✓ COPIED';
-    showToast(chain.toUpperCase() + ' ADDRESS COPIED');
-    setTimeout(() => {
-      btn.classList.remove('copied');
-      const labels = { eth: '⟠ ETH', sol: '◎ SOL', kas: '⬡ KAS' };
-      btn.textContent = labels[chain];
-    }, 2000);
-  }).catch(() => showToast('COPY FAILED'));
+  // ── Trackers ──
+  for(const t of trackers){
+    ctx.shadowColor = 'rgba(255,0,60,.45)';
+    ctx.shadowBlur = 10;
+    ctx.fillStyle = 'rgba(255,0,60,.65)';
+    ctx.fillRect(t.x-t.w/2, t.y-t.h/2, t.w, t.h);
+    // Inner detail
+    ctx.fillStyle = 'rgba(255,0,60,.25)';
+    ctx.fillRect(t.x-t.w/2+2, t.y-1, t.w-4, 2);
+    ctx.shadowBlur = 0;
+  }
+
+  // ── Pickups ──
+  for(const p of pickups){
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(Date.now()/500);
+    ctx.shadowColor = 'rgba(0,255,157,.5)';
+    ctx.shadowBlur = 8;
+    ctx.fillStyle = 'rgba(0,255,157,.75)';
+    ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  }
+
+  // ── Particles ──
+  for(const p of fx){
+    const a = Math.max(0, p.life / p.maxLife);
+    ctx.fillStyle = p.color === 'red'
+      ? 'rgba(255,0,60,'+a+')'
+      : 'rgba(0,255,157,'+a+')';
+    ctx.fillRect(p.x-2,p.y-2,4,4);
+  }
+
+  // ── Player ──
+  const blink = player.inv > 0 && Math.floor(Date.now()/80)%2;
+  if(!blink){
+    const isHit = player.flash > 0;
+    ctx.fillStyle = isHit ? 'rgba(255,0,60,.9)' : 'rgba(0,229,255,.9)';
+    ctx.shadowColor = isHit ? 'rgba(255,0,60,.5)' : 'rgba(0,229,255,.5)';
+    ctx.shadowBlur = 14;
+
+    const px = player.x, py = player.y;
+    ctx.beginPath();
+    ctx.moveTo(px, py - player.h);           // tip
+    ctx.lineTo(px + player.w/2, py + player.h*.4);  // right wing
+    ctx.lineTo(px + player.w*.2, py + player.h*.25);
+    ctx.lineTo(px - player.w*.2, py + player.h*.25);
+    ctx.lineTo(px - player.w/2, py + player.h*.4);  // left wing
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Engine glow
+    const glow = .25 + Math.random()*.2;
+    ctx.fillStyle = 'rgba(0,229,255,'+glow+')';
+    const flame = 3 + Math.random()*5;
+    ctx.fillRect(px-2.5, py+player.h*.25, 5, flame);
+  }
 }
+
+/* ══════════════════════════════════════
+   HUD
+   ══════════════════════════════════════ */
+function renderLives(){
+  const el = document.getElementById('hud-lives');
+  el.innerHTML = '';
+  for(let i=0; i<START_LIVES; i++){
+    const d = document.createElement('div');
+    d.className = 'life-pip' + (i >= lives ? ' lost' : '');
+    el.appendChild(d);
+  }
+}
+
+/* ══════════════════════════════════════
+   END GAME
+   ══════════════════════════════════════ */
+function endGame(){
+  running = false;
+  if(raf) cancelAnimationFrame(raf);
+  window.onresize = null;
+
+  const best = parseInt(localStorage.getItem('braiain_404_best')||'0');
+  if(score > best) localStorage.setItem('braiain_404_best', score+'');
+  const dispBest = Math.max(score, best);
+
+  const title = document.getElementById('over-title');
+  const sub = document.getElementById('over-sub');
+
+  if(escaped){
+    title.textContent = 'FIREWALL BYPASSED';
+    title.className = 'escaped';
+    sub.innerHTML = 'You evaded every tracker and made it out.<br>The mainframe is waiting.';
+  } else {
+    title.textContent = 'SIGNAL LOST';
+    title.className = 'caught';
+    const msgs = [
+      'Trackers locked your position.',
+      'Your signal was intercepted.',
+      'The firewall caught you.',
+      'Trackers overwhelmed your shields.'
+    ];
+    sub.innerHTML = msgs[Math.floor(Math.random()*msgs.length)]+'<br>Try again or head back to safety.';
+  }
+
+  document.getElementById('stat-time').textContent = (ESCAPE_TIME - timeLeft)+'s';
+  document.getElementById('stat-score').textContent = score;
+  document.getElementById('stat-best').textContent = dispBest;
+
+  // Reset timer color
+  const tv = document.querySelector('#hud-time .hud-val');
+  if(tv) tv.style.color = 'var(--cyan)';
+
+  showScreen('screen-over');
+}
+
+/* ══════════════════════════════════════
+   INPUT
+   ══════════════════════════════════════ */
+addEventListener('keydown', e => {
+  keys[e.key] = true;
+  if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key)) e.preventDefault();
+});
+addEventListener('keyup', e => { keys[e.key] = false; });
+
+// Touch input
+addEventListener('touchstart', e => {
+  if(!running) return;
+  touchTarget = e.touches[0].clientX;
+  e.preventDefault();
+}, {passive:false});
+
+addEventListener('touchmove', e => {
+  if(!running) return;
+  touchTarget = e.touches[0].clientX;
+  e.preventDefault();
+}, {passive:false});
+
+addEventListener('touchend', () => { touchTarget = null; });
+
+// Mouse — player follows cursor X during game
+addEventListener('mousemove', e => {
+  if(running) touchTarget = e.clientX;
+});
+addEventListener('mouseleave', () => { touchTarget = null; });
+
 </script>
 </body>
 </html>
