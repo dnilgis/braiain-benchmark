@@ -396,6 +396,64 @@ img{display:block;max-width:100%}
    TEXT SCRAMBLE
    ══════════════════════════════════════ */
 .scrambling{color:var(--cyan) !important}
+
+/* ══════════════════════════════════════
+   TIP TERMINAL (FOOTER)
+   ══════════════════════════════════════ */
+.tip-terminal{
+  text-align:center;padding:32px 16px 28px;
+  border-top:1px solid var(--border);margin-top:auto;
+}
+.tip-terminal .tip-label{
+  font-family:var(--font-display);font-size:.55rem;
+  letter-spacing:3px;color:var(--muted);margin-bottom:14px;
+  text-transform:uppercase;
+}
+.tip-keys{display:flex;gap:8px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+.tip-key{
+  padding:7px 16px;font-family:var(--font-mono);font-size:.72rem;
+  letter-spacing:1.5px;font-weight:700;
+  border:1px solid var(--border);background:var(--surface);
+  color:var(--muted);opacity:.5;
+  transition:all .25s;cursor:pointer;
+  text-transform:uppercase;
+}
+.tip-key:hover{opacity:.8;border-color:var(--cyan)}
+.tip-key.active{
+  opacity:1;color:var(--cyan);border-color:var(--cyan);
+  box-shadow:var(--glow-cyan);
+  text-shadow:0 0 8px rgba(0,229,255,.5);
+}
+.tip-addr-wrap{
+  margin:0 auto;max-width:520px;padding:8px 14px;
+  background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);
+  cursor:pointer;transition:all .25s;position:relative;
+  overflow:hidden;
+}
+.tip-addr-wrap:hover{border-color:var(--cyan);background:rgba(0,229,255,.08)}
+.tip-addr-wrap:active{transform:scale(.98)}
+.tip-addr{
+  font-family:var(--font-mono);font-size:.6rem;
+  color:var(--cyan);letter-spacing:.5px;
+  word-break:break-all;line-height:1.5;
+  opacity:.8;transition:opacity .2s;
+}
+.tip-addr-wrap:hover .tip-addr{opacity:1}
+.tip-addr-hint{
+  font-family:var(--font-mono);font-size:.5rem;
+  color:var(--muted);letter-spacing:1px;margin-top:6px;
+}
+.tip-copy-flash{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,229,255,.12);color:var(--cyan);
+  font-family:var(--font-display);font-size:.7rem;letter-spacing:3px;
+  opacity:0;transition:opacity .15s;pointer-events:none;
+}
+.tip-copy-flash.flash{opacity:1}
+.tip-footer-note{
+  font-size:.5rem;color:var(--muted);letter-spacing:1px;
+  margin-top:14px;opacity:.4;
+}
 </style>
 </head>
 <body>
@@ -544,11 +602,11 @@ const FALLBACK = {
     },
     {
       id:'d1r05',type:'image',source:'ai',
-      content:'https://images.unsplash.com/photo-1686191128892-3b37add4c844?auto=format&fit=crop&w=800&q=80',
-      attribution:'AI-generated — surrealist composition',
+      content:'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
+      attribution:'AI-generated — cyberpunk digital environment',
       pro_tip:'PHYSICS VIOLATIONS: Check shadows and reflections. AI frequently places light sources inconsistently — shadows may point in conflicting directions, and reflections don\'t match the objects casting them.',
-      credit_name:'AI Generator via Unsplash',
-      source_url:'https://unsplash.com/photos/jLwVAUtLOAQ'
+      credit_name:'Markus Spiske',
+      source_url:'https://unsplash.com/photos/ahi73ZN5P0Y'
     },
     {
       id:'d1r06',type:'image',source:'human',
@@ -1195,8 +1253,59 @@ document.addEventListener('keydown', e => {
    ══════════════════════════════════════ */
 boot();
 </script>
-<footer style="text-align:center;padding:20px 16px 24px;font-family:var(--font-mono);font-size:.65rem;color:var(--cyan);opacity:.35;letter-spacing:1px">
-  // SYSTEM SECURE. NO PERSONAL DATA ARCHIVED. BRAIAIN &copy; 2026
-</footer>
+
+<!-- Tip Terminal -->
+<div class="tip-terminal">
+  <div class="tip-label">// TIP THE DEVELOPER</div>
+  <div class="tip-keys">
+    <button class="tip-key active" data-chain="eth">[ ETH ]</button>
+    <button class="tip-key" data-chain="sol">[ SOL ]</button>
+    <button class="tip-key" data-chain="kas">[ KAS ]</button>
+  </div>
+  <div class="tip-addr-wrap" id="tip-addr-wrap" onclick="copyTipAddr()">
+    <div class="tip-addr" id="tip-addr"></div>
+    <div class="tip-addr-hint">CLICK TO COPY</div>
+    <div class="tip-copy-flash" id="tip-flash">COPIED ✓</div>
+  </div>
+  <div class="tip-footer-note">BRAIAIN &copy; 2026 — SYSTEM SECURE. NO PERSONAL DATA ARCHIVED.</div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   TIP TERMINAL
+   ══════════════════════════════════════ */
+const TIP_ADDRS = {
+  eth: '0x3e3eaf955a6ea978e7694574b14cd8bf082e79cf',
+  sol: 'GStGz2ztQ2UqMGPXA8j2i9PSFhpaYsjxwbLTttUKD74d',
+  kas: 'kaspa:qps9fumvkw0n29hkjrk7lumpuu64k2u9ug543lg9ga'
+};
+let activeTipChain = 'eth';
+
+function initTipTerminal() {
+  document.getElementById('tip-addr').textContent = TIP_ADDRS.eth;
+  document.querySelectorAll('.tip-key').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const chain = btn.dataset.chain;
+      if (chain === activeTipChain) return;
+      activeTipChain = chain;
+      document.querySelectorAll('.tip-key').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tip-addr').textContent = TIP_ADDRS[chain];
+    });
+  });
+}
+
+function copyTipAddr() {
+  const addr = TIP_ADDRS[activeTipChain];
+  navigator.clipboard.writeText(addr).then(() => {
+    const flash = document.getElementById('tip-flash');
+    flash.classList.add('flash');
+    setTimeout(() => flash.classList.remove('flash'), 1200);
+    showToast('ADDRESS COPIED');
+  }).catch(() => showToast('COPY FAILED'));
+}
+
+document.addEventListener('DOMContentLoaded', initTipTerminal);
+</script>
 </body>
 </html>
