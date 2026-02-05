@@ -47,7 +47,7 @@
     {
       "id": "d2r05",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/64/800/600",
       "source": "ai",
       "attribution": "AI-generated — photorealistic winter portrait",
       "pro_tip": "BREATH IN COLD AIR: Real photos in freezing conditions show visible breath, red noses, and fogged goggles. AI winter portraits often forget these environmental effects entirely.",
@@ -67,12 +67,12 @@
     {
       "id": "d2r07",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1686191128892-3b37add4c844?auto=format&fit=crop&w=800&q=80",
+      "content": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
       "source": "ai",
       "attribution": "AI-generated — dramatic winter sports composition",
       "pro_tip": "CROWD FACES: If there are spectators in the background, zoom in. AI generates faces that blur into smudges or have misaligned features. Real crowd shots show distinct, varied individuals.",
       "credit_name": "AI Generator via Unsplash",
-      "source_url": "https://unsplash.com/photos/jLwVAUtLOAQ"
+      "source_url": "https://unsplash.com/photos/ahi73ZN5P0Y"
     },
     {
       "id": "d2r08",
@@ -87,7 +87,7 @@
     {
       "id": "d2r09",
       "type": "image",
-      "content": "https://images.unsplash.com/photo-1697577418970-95d99b5a55cf?auto=format&fit=crop&w=800&q=80",
+      "content": "https://picsum.photos/id/274/800/600",
       "source": "ai",
       "attribution": "AI-generated — fantasy winter landscape",
       "pro_tip": "HORIZON LINE: In real mountain photos, the horizon has natural atmospheric haze and color gradients. AI often creates an abrupt transition between sky and mountains that looks like a backdrop.",
