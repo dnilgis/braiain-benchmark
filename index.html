@@ -423,7 +423,18 @@ img{display:block;max-width:100%}
   font-family:var(--font-display);font-size:1.2rem;
   font-weight:700;letter-spacing:2px;color:var(--text);
 }
-#results-streak{font-size:.85rem;color:var(--muted)}
+#results-stats{
+  display:flex;gap:24px;justify-content:center;flex-wrap:wrap;
+}
+.rstat{display:flex;flex-direction:column;align-items:center;gap:2px}
+.rstat-num{
+  font-family:var(--font-head);font-size:1.1rem;font-weight:900;
+  color:var(--cyan);
+}
+.rstat-label{
+  font-family:var(--font-mono);font-size:.55rem;
+  letter-spacing:1.5px;color:var(--muted);
+}
 
 /* Results pip grid */
 #results-grid{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
@@ -723,7 +734,12 @@ img{display:block;max-width:100%}
     </div>
   </div>
   <div id="results-title"></div>
-  <div id="results-streak"></div>
+  <div id="results-stats">
+    <div class="rstat"><span class="rstat-num" id="rs-played">0</span><span class="rstat-label">DAYS PLAYED</span></div>
+    <div class="rstat"><span class="rstat-num" id="rs-avg">—</span><span class="rstat-label">AVG SCORE</span></div>
+    <div class="rstat"><span class="rstat-num" id="rs-streak">0</span><span class="rstat-label">STREAK</span></div>
+    <div class="rstat"><span class="rstat-num" id="rs-best">0</span><span class="rstat-label">BEST STREAK</span></div>
+  </div>
   <div id="results-grid"></div>
   <div id="share-row">
     <button class="share-btn" onclick="shareClipboard()">📋 COPY</button>
@@ -1247,8 +1263,24 @@ function showResults() {
 
   document.getElementById('score-num').textContent = score;
   scrambleText(document.getElementById('results-title'), titles[score], 500);
-  document.getElementById('results-streak').textContent =
-    streak > 0 ? '🔥 ' + streak + '-day streak | Best: ' + bestStreak : 'Best streak: ' + bestStreak;
+
+  // Populate results stats row (mirrors boot stats)
+  let daysPlayed = 0, totalScore = 0;
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('braiain_results_')) {
+      try {
+        const r = JSON.parse(localStorage.getItem(key));
+        if (Array.isArray(r) && r.length > 0) { daysPlayed++; totalScore += r.filter(Boolean).length; }
+      } catch (e) {}
+    }
+  }
+  document.getElementById('rs-played').textContent = daysPlayed;
+  document.getElementById('rs-avg').textContent = daysPlayed > 0 ? (totalScore / daysPlayed).toFixed(1) + '/10' : '—';
+  const rsStreak = document.getElementById('rs-streak');
+  rsStreak.textContent = streak > 0 ? '🔥 ' + streak : '0';
+  if (streak > 0) rsStreak.style.color = 'var(--green)';
+  document.getElementById('rs-best').textContent = bestStreak;
 
   // Pip grid
   const grid = document.getElementById('results-grid');
