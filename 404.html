@@ -169,10 +169,10 @@ body::after{
   flex-wrap:wrap;z-index:1;
 }
 .footer-row span,.footer-row a{
-  font-family:var(--font-mono);font-size:.6rem;
-  color:var(--muted);letter-spacing:.5px;opacity:.35;
+  font-family:var(--font-mono);font-size:.75rem;
+  color:var(--text);letter-spacing:.5px;opacity:.5;
 }
-.footer-row .sep{opacity:.2}
+.footer-row .sep{opacity:.25}
 .footer-row a{text-decoration:none;transition:opacity .3s,color .3s}
 .footer-row a:hover{opacity:.7;color:var(--text)}
 
@@ -246,7 +246,7 @@ body::after{
 <div class="footer-row" id="page-footer">
   <span>&copy; 2026 BRAIAIN</span>
   <span class="sep">&middot;</span>
-  <a href="mailto:dnilgis@gmail.com">a dnilgis project</a>
+  <span>A <a id="footer-email-404">dnilgis</a> Project</span>
   <span class="sep">&middot;</span>
   <span>no data collected</span>
 </div>
@@ -739,6 +739,11 @@ document.addEventListener('mouseleave', function(){ touchTarget = null; });
 document.getElementById('btn-start').addEventListener('click', startGame);
 document.getElementById('btn-retry').addEventListener('click', startGame);
 document.getElementById('btn-home').addEventListener('click', function(){ window.location.href = '/'; });
+document.getElementById('btn-home2').addEventListener('click', function(){ window.location.href = '/'; });
+
+// Build email link (prevents Cloudflare encoding)
+var el404 = document.getElementById('footer-email-404');
+if (el404) el404.href = 'mail' + 'to:' + 'dnilgis' + '@' + 'gmail.com';
 
 })();
 </script>
