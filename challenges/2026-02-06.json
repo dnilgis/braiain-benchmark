@@ -2,88 +2,97 @@
   "day_number": 3,
   "date": "2026-02-06",
   "category": "Winter Olympics Opening Ceremony",
-  "category_subtitle": "Milan Cortina 2026 — Let the Games Begin!",
-  "category_emoji": "🏅",
+  "category_emoji": "🧠",
   "rounds": [
     {
       "id": "d3r1",
       "type": "image",
-      "content": "https://picsum.photos/id/274/800/600",
-      "source": "human",
-      "attribution": "Real photograph via Unsplash",
-      "pro_tip": "SNOW TEXTURE: Real snow has complex crystalline structure with subtle blue shadows. AI snow often looks like smooth white paint or cotton."
+      "content": "images/d3_ai1.png",
+      "source": "ai",
+      "attribution": "AI-generated — created with Google Gemini",
+      "pro_tip": "Look at the firework trails — real fireworks have irregular, organic burst patterns. AI fireworks tend to be too symmetrical and evenly spaced.",
+      "_note": "Prompt: A photorealistic photograph of fireworks exploding over a large outdoor stadium during a winter Olympics opening ceremony at night, with the Olympic rings illuminated on the field, crowds visible in the stands, smoke trails in the sky"
     },
     {
       "id": "d3r2",
       "type": "image",
-      "content": "https://image.pollinations.ai/prompt/photorealistic%20Olympic%20rings%20sculpture%20in%20snowy%20Italian%20Alps%20Dolomites%20mountain%20background%20golden%20sunset%20light%20winter%20atmosphere?width=800&height=600&seed=2001&model=flux&nologo=true",
-      "source": "ai",
-      "attribution": "AI-generated — Olympic rings monument in snowy mountain setting (Flux)",
-      "pro_tip": "GEOMETRIC PRECISION: The Olympic rings have exact proportions. AI often distorts them — uneven ring sizes, wrong overlap order, or incorrect colors."
+      "content": "https://images.unsplash.com/photo-1737770683322-0b6cf1f56fad?ixid=M3w4NjkxNDJ8MHwxfHNlYXJjaHwyfHxXaW50ZXIlMjBPbHltcGljcyUyME9wZW5pbmclMjBDZXJlbW9ueXxlbnwwfDB8fHwxNzcwMzQ3NzUxfDA&ixlib=rb-4.1.0&w=800&h=600&fit=crop&q=80",
+      "source": "human",
+      "attribution": "Photo by Huang Lin on Unsplash",
+      "pro_tip": "Natural imperfections like lens flare, slight blur, or uneven lighting are hallmarks of a real photograph.",
+      "source_url": "https://unsplash.com/photos/a-large-display-of-lights-in-the-dark--jhCsSQ_qxk"
     },
     {
       "id": "d3r3",
       "type": "image",
-      "content": "https://picsum.photos/id/325/800/600",
+      "content": "https://images.unsplash.com/photo-1581203437788-eec9fe0ebfe6?ixid=M3w4NjkxNDJ8MHwxfHNlYXJjaHw0fHxXaW50ZXIlMjBPbHltcGljcyUyME9wZW5pbmclMjBDZXJlbW9ueXxlbnwwfDB8fHwxNzcwMzQ3NzUxfDA&ixlib=rb-4.1.0&w=800&h=600&fit=crop&q=80",
       "source": "human",
-      "attribution": "Real photograph via Unsplash",
-      "pro_tip": "ICE SURFACE: Real ice has natural scratches, embedded bubbles, and varied translucency. AI ice often looks like frosted glass with unrealistic clarity."
+      "attribution": "Photo by Arno Senoner on Unsplash",
+      "pro_tip": "Natural imperfections like lens flare, slight blur, or uneven lighting are hallmarks of a real photograph.",
+      "source_url": "https://unsplash.com/photos/people-on-snow-covered-ground-during-daytime-Z0XJYTazv8Y"
     },
     {
       "id": "d3r4",
       "type": "image",
-      "content": "https://image.pollinations.ai/prompt/photorealistic%20figure%20skater%20mid%20spin%20on%20ice%20rink%20sparkly%20blue%20costume%20ice%20spray%20frozen%20droplets%20arena%20lights%20dramatic?width=800&height=600&seed=2002&model=flux&nologo=true",
-      "source": "ai",
-      "attribution": "AI-generated — figure skater mid-spin on Olympic ice (Midjourney)",
-      "pro_tip": "BODY PROPORTIONS: Real athletes have natural body proportions even in dynamic poses. AI often elongates limbs, twists joints impossibly, or creates anatomical errors."
+      "content": "https://images.unsplash.com/photo-1692175478166-377d3f03a31a?ixid=M3w4NjkxNDJ8MHwxfHNlYXJjaHwzfHxXaW50ZXIlMjBPbHltcGljcyUyME9wZW5pbmclMjBDZXJlbW9ueXxlbnwwfDB8fHwxNzcwMzQ3NzUxfDA&ixlib=rb-4.1.0&w=800&h=600&fit=crop&q=80",
+      "source": "human",
+      "attribution": "Photo by Samuel Quek on Unsplash",
+      "pro_tip": "Natural imperfections like lens flare, slight blur, or uneven lighting are hallmarks of a real photograph.",
+      "source_url": "https://unsplash.com/photos/a-large-group-of-people-standing-in-front-of-a-crowd-gqO5iuUkQ5I"
     },
     {
       "id": "d3r5",
       "type": "image",
-      "content": "https://picsum.photos/id/380/800/600",
-      "source": "human",
-      "attribution": "Real photograph via Unsplash",
-      "pro_tip": "MOUNTAIN DETAIL: Real mountain photos show geological strata, erosion patterns, and varied vegetation. AI mountains are often too smooth or repetitively textured."
+      "content": "images/d3_ai5.png",
+      "source": "ai",
+      "attribution": "AI-generated — created with Google Gemini",
+      "pro_tip": "Check the Olympic banners and any text — AI almost always garbles logos, ring arrangements, and text on signage.",
+      "_note": "Prompt: A photorealistic photograph of a ski jump venue in the Italian Alps at dusk with Olympic banners hanging along the track, snow-covered mountains in the background, dramatic pink and purple sunset sky"
     },
     {
       "id": "d3r6",
       "type": "image",
-      "content": "https://image.pollinations.ai/prompt/photorealistic%20ski%20jumper%20in%20mid%20air%20blue%20sky%20snowy%20mountain%20backdrop%20Olympic%20winter%20venue%20action%20shot%20telephoto%20lens?width=800&height=600&seed=2003&model=flux&nologo=true",
+      "content": "images/d3_ai4.png",
       "source": "ai",
-      "attribution": "AI-generated — ski jumper in mid-air against blue sky (DALL-E 3)",
-      "pro_tip": "EQUIPMENT DETAILS: Real ski equipment has brand logos, specific bindings, and wear marks. AI gear tends to have blurry or invented brand names and physically impossible mechanisms."
+      "attribution": "AI-generated — created with Google Gemini",
+      "pro_tip": "Look at the ice surface reflections — real ice reflects performers and lights imperfectly. AI tends to make reflections too clean or forgets them entirely.",
+      "_note": "Prompt: A photorealistic photograph of performers on an ice rink during an Olympic opening ceremony, colorful costumes, dramatic overhead spotlights creating light beams through haze, wide angle shot from above"
     },
     {
       "id": "d3r7",
       "type": "image",
-      "content": "https://picsum.photos/id/400/800/600",
+      "content": "https://images.unsplash.com/photo-1759340460823-eba8360a9b33?ixid=M3w4NjkxNDJ8MHwxfHNlYXJjaHw2fHxXaW50ZXIlMjBPbHltcGljcyUyME9wZW5pbmclMjBDZXJlbW9ueXxlbnwwfDB8fHwxNzcwMzQ3NzUxfDA&ixlib=rb-4.1.0&w=800&h=600&fit=crop&q=80",
       "source": "human",
-      "attribution": "Real photograph via Unsplash",
-      "pro_tip": "LIGHTING CONSISTENCY: In real photos, all surfaces respond to the same light source. AI sometimes lights different parts of the scene from conflicting angles."
+      "attribution": "Photo by Loris Boulinguez on Unsplash",
+      "pro_tip": "Natural imperfections like lens flare, slight blur, or uneven lighting are hallmarks of a real photograph.",
+      "source_url": "https://unsplash.com/photos/olympic-stadium-entrance-with-flags-and-flags-UrM_ve-pVbY"
     },
     {
       "id": "d3r8",
       "type": "image",
-      "content": "https://image.pollinations.ai/prompt/photorealistic%20Olympic%20torch%20bearer%20running%20through%20charming%20Italian%20village%20cobblestone%20street%20crowds%20cheering%20warm%20evening%20light%20flame%20bright?width=800&height=600&seed=2004&model=flux&nologo=true",
+      "content": "images/d3_ai3.png",
       "source": "ai",
-      "attribution": "AI-generated — Olympic torch bearer running through Italian village (Flux)",
-      "pro_tip": "FIRE INTERACTION: Real torch flames interact with the runner's movement — trailing, flickering. AI flames often sit static on the torch like a sticker."
+      "attribution": "AI-generated — created with Google Gemini",
+      "pro_tip": "Examine where the flame meets the cauldron — AI often gets fire interaction with metal surfaces wrong, creating floating or disconnected flames.",
+      "_note": "Prompt: A photorealistic photograph of the Olympic cauldron being lit with a bright flame at night, a lone athlete holding the torch on a platform above the stadium, dramatic orange glow reflecting off the structure"
     },
     {
       "id": "d3r9",
       "type": "image",
-      "content": "https://picsum.photos/id/416/800/600",
+      "content": "https://images.unsplash.com/photo-1692783334072-d63e74cba69d?ixid=M3w4NjkxNDJ8MHwxfHNlYXJjaHwxNnx8V2ludGVyJTIwT2x5bXBpY3MlMjBPcGVuaW5nJTIwQ2VyZW1vbnl8ZW58MHwwfHx8MTc3MDM0Nzc1MXww&ixlib=rb-4.1.0&w=800&h=600&fit=crop&q=80",
       "source": "human",
-      "attribution": "Real photograph via Unsplash",
-      "pro_tip": "ATMOSPHERIC PERSPECTIVE: In real landscape photos, distant objects appear hazier and bluer due to atmosphere. AI sometimes renders distant mountains as sharp as foreground objects."
+      "attribution": "Photo by Martin Wemyss on Unsplash",
+      "pro_tip": "Natural imperfections like lens flare, slight blur, or uneven lighting are hallmarks of a real photograph.",
+      "source_url": "https://unsplash.com/photos/a-group-of-people-standing-on-top-of-a-stage-gVhSmqt2iKg"
     },
     {
       "id": "d3r10",
       "type": "image",
-      "content": "https://image.pollinations.ai/prompt/photorealistic%20Olympic%20medal%20ceremony%20three%20athletes%20on%20podium%20national%20flags%20behind%20gold%20silver%20bronze%20medals%20indoor%20arena%20spotlight?width=800&height=600&seed=2005&model=flux&nologo=true",
+      "content": "images/d3_ai2.png",
       "source": "ai",
-      "attribution": "AI-generated — Olympic medal ceremony podium with flags (Midjourney)",
-      "pro_tip": "FLAGS & SYMBOLS: Real flags have correct proportions, colors, and designs. AI frequently generates flags with wrong stripe counts, invented symbols, or impossible folds."
+      "attribution": "AI-generated — created with Google Gemini",
+      "pro_tip": "Check the flags and text on jackets — AI struggles with country names, flag details, and readable lettering on uniforms.",
+      "_note": "Prompt: A photorealistic photograph of Olympic athletes marching in the parade of nations during a winter opening ceremony, wearing colorful national team jackets, waving flags, smiling, indoor arena with dramatic lighting"
     }
   ]
 }
