@@ -452,8 +452,13 @@ img{display:block;max-width:100%}
   letter-spacing:1.5px;color:var(--muted);
 }
 
-/* Results pip grid */
-#results-grid{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+/* Results pip grid — 5 over 5 */
+#results-grid{
+  display:grid;
+  grid-template-columns:repeat(5, 32px);
+  gap:6px;
+  justify-content:center;
+}
 .r-pip{
   width:32px;height:32px;display:flex;
   align-items:center;justify-content:center;
@@ -1161,7 +1166,7 @@ async function boot() {
   const bootQ = getDailyQuote();
   const bootTx = document.getElementById('boot-transmission');
   if (bootTx) {
-    bootTx.innerHTML = '<span style="color:var(--cyan)">"' + bootQ.text + '"</span><br><span style="font-size:.72rem;color:var(--muted);margin-top:4px;display:inline-block">— ' + bootQ.src + '</span>';
+    bootTx.innerHTML = '<span style="color:var(--cyan)">"' + bootQ.text + '"</span><br><span style="font-size:.78rem;color:var(--text);opacity:.55;margin-top:6px;display:inline-block;letter-spacing:.5px">— ' + bootQ.src + '</span>';
     setTimeout(() => { bootTx.style.opacity = '1'; }, 600);
   }
 }
@@ -1417,7 +1422,7 @@ function showResults() {
   const resQ = getRandomQuote(getDailyQuote().text);
   const resTx = document.getElementById('results-transmission');
   if (resTx) {
-    resTx.innerHTML = '<span style="color:var(--cyan)">"' + resQ.text + '"</span><br><span style="font-size:.72rem;color:var(--muted);margin-top:4px;display:inline-block">— ' + resQ.src + '</span>';
+    resTx.innerHTML = '<span style="color:var(--cyan)">"' + resQ.text + '"</span><br><span style="font-size:.78rem;color:var(--text);opacity:.55;margin-top:6px;display:inline-block;letter-spacing:.5px">— ' + resQ.src + '</span>';
   }
 }
 
