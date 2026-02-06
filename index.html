@@ -385,6 +385,12 @@ img{display:block;max-width:100%}
 .next-btn:hover{background:var(--green)}
 
 /* ── RESULTS SCREEN ── */
+#results-logo{
+  font-family:var(--font-head);font-size:1.4rem;font-weight:900;
+  letter-spacing:6px;color:var(--cyan);cursor:pointer;
+  opacity:.7;transition:opacity .2s;margin-bottom:4px;
+}
+#results-logo:hover{opacity:1}
 #screen-results{justify-content:center;gap:20px;text-align:center;max-width:520px;margin:0 auto}
 
 /* Score Ring */
@@ -649,7 +655,7 @@ img{display:block;max-width:100%}
 
 <!-- HUD -->
 <header id="hud" style="display:none">
-  <div id="hud-logo">BRAIAIN</div>
+  <div id="hud-logo" onclick="window.location.reload()" style="cursor:pointer" title="Return to home">BRAIAIN</div>
   <div id="hud-ticker">LOADING...</div>
   <div id="hud-round">--/--</div>
   <div id="hud-pips"></div>
@@ -698,6 +704,7 @@ img{display:block;max-width:100%}
 
 <!-- RESULTS SCREEN -->
 <main id="screen-results" class="screen">
+  <div id="results-logo" onclick="window.location.reload()">BRAIAIN</div>
   <div id="score-ring-wrap">
     <svg viewBox="0 0 160 160" width="160" height="160">
       <circle class="ring-bg" cx="80" cy="80" r="70"/>
@@ -748,7 +755,7 @@ img{display:block;max-width:100%}
     <span class="sep">&middot;</span>
     <span>SYSTEM <a href="/404.html" class="breach-trigger">SECURE</a></span>
     <span class="sep">&middot;</span>
-    <span>a dnilgis project</span>
+    <a href="mailto:dnilgis@gmail.com">a dnilgis project</a>
   </div>
 </div>
 
@@ -788,6 +795,7 @@ function trackEvent(name, params) {
    ══════════════════════════════════════ */
 const API_BASE = 'https://api.braiain.com';
 const TOTAL_ROUNDS = 10;
+let apiAvailable = false; // checked at boot
 
 /* ══════════════════════════════════════
    STATE
@@ -912,17 +920,59 @@ async function boot() {
   const logo = document.getElementById('boot-logo');
   const sub = document.getElementById('boot-sub');
 
-  // Scramble logo
+  // Check EARLY if already played today
+  loadStreak();
+  const todayKey = getTodayKey();
+  const played = localStorage.getItem('braiain_played_' + todayKey);
+
+  if (played) {
+    // FAST PATH: skip animations, load data, go straight to results
+    logo.textContent = 'BRAIAIN';
+    sub.textContent = 'CAN YOU SPOT THE AI?';
+    status.textContent = '> LOADING...';
+    loadBootStats();
+
+    try {
+      const indexResp = await fetchWithTimeout('daily.json?v=' + APP_VERSION + '&t=' + BUILD_HASH, {}, 5000);
+      if (!indexResp.ok) throw new Error('HTTP ' + indexResp.status);
+      const index = await indexResp.json();
+      const todayEntry = index[todayKey];
+      if (!todayEntry || !todayEntry.challenge_file) throw new Error('No entry for ' + todayKey);
+      const chalResp = await fetchWithTimeout(todayEntry.challenge_file + '?v=' + APP_VERSION + '&t=' + BUILD_HASH, {}, 5000);
+      if (!chalResp.ok) throw new Error('Challenge HTTP ' + chalResp.status);
+      dailyData = await chalResp.json();
+    } catch (e) {
+      dailyData = FALLBACK;
+    }
+
+    // Check API (non-blocking)
+    try {
+      const healthResp = await fetchWithTimeout(API_BASE + '/health', {}, 2000);
+      if (healthResp.ok) apiAvailable = true;
+    } catch (e) { apiAvailable = false; }
+
+    // Restore saved results and go straight to results screen
+    try {
+      const saved = JSON.parse(localStorage.getItem('braiain_results_' + todayKey));
+      if (saved && saved.length) {
+        results = saved;
+        currentRound = TOTAL_ROUNDS;
+        showResults();
+        return;
+      }
+    } catch (e) {}
+    // If saved results are missing, let them replay
+    document.getElementById('btn-start').style.display = '';
+    status.textContent = '> READY — PLAY AGAIN';
+    return;
+  }
+
+  // NORMAL PATH: first-time player today — full boot animation
   await scrambleText(logo, 'BRAIAIN', 800);
   await scrambleText(sub, 'CAN YOU SPOT THE AI?', 500);
 
   // Show running stats on home screen
   loadBootStats();
-
-  // Check for already-played today
-  loadStreak();
-  const todayKey = getTodayKey();
-  const played = localStorage.getItem('braiain_played_' + todayKey);
 
   // Load daily data (two-step: index → challenge file)
   status.textContent = '> LOADING DAILY CHALLENGE...';
@@ -957,25 +1007,19 @@ async function boot() {
     category: dailyData.category || 'unknown',
     returning: daysPlayed > 0,
     days_played: daysPlayed,
-    already_played_today: !!played,
+    already_played_today: false,
     offline: dailyData === FALLBACK
   });
 
   // Start preloading all images in background
   preloadAllImages();
 
-  if (played) {
-    // Already played — show results
-    try {
-      const saved = JSON.parse(localStorage.getItem('braiain_results_' + todayKey));
-      if (saved && saved.length) {
-        results = saved;
-        currentRound = TOTAL_ROUNDS;
-        showResults();
-        return;
-      }
-    } catch (e) {}
-  }
+  // Check API availability (non-blocking)
+  try {
+    const healthResp = await fetchWithTimeout(API_BASE + '/health', {}, 2000);
+    if (healthResp.ok) apiAvailable = true;
+  } catch (e) { apiAvailable = false; }
+  console.log('API:', apiAvailable ? 'online' : 'offline (community stats disabled)');
 
   document.getElementById('btn-start').style.display = '';
   status.textContent = '> READY — ' + dailyData.rounds.length + ' TARGETS QUEUED';
@@ -1321,6 +1365,7 @@ function updateStreak(score) {
    API
    ══════════════════════════════════════ */
 async function reportVote(questionId, wasCorrect) {
+  if (!apiAvailable) return;
   try {
     await fetchWithTimeout(API_BASE + '/vote', {
       method: 'POST',
@@ -1331,6 +1376,7 @@ async function reportVote(questionId, wasCorrect) {
 }
 
 async function fetchGlobalAccuracy(questionId) {
+  if (!apiAvailable) return;
   const fill = document.getElementById('global-bar-fill');
   const label = document.getElementById('global-label');
   const pctEl = document.getElementById('global-pct');
@@ -1487,6 +1533,7 @@ function loadTodayReview() {
 }
 
 async function fetchReviewStat(roundId, index) {
+  if (!apiAvailable) return;
   const badge = document.getElementById('rv-badge-' + index);
   try {
     const resp = await fetchWithTimeout(API_BASE + '/stats?id=' + roundId, {}, 4000);
