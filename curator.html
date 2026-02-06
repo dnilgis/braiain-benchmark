@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRAIAIN — Image Curator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@700;900&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2a;
+    --text: #e0e0e8;
+    --muted: #6a6a7a;
+    --cyan: #00e5ff;
+    --green: #00ff9d;
+    --red: #ff003c;
+    --font-mono: 'Space Mono', monospace;
+    --font-head: 'Orbitron', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--font-mono); font-size: 14px;
+    min-height: 100vh; padding: 20px;
+  }
+
+  h1 {
+    font-family: var(--font-head); font-size: 1.6rem;
+    color: var(--cyan); letter-spacing: 4px; margin-bottom: 4px;
+  }
+  .subtitle { color: var(--muted); font-size: .75rem; letter-spacing: 2px; margin-bottom: 24px; }
+
+  /* Setup section */
+  .setup {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 20px; margin-bottom: 24px; border-radius: 4px;
+  }
+  .setup label { display: block; color: var(--muted); font-size: .7rem; letter-spacing: 1px; margin-bottom: 6px; }
+  .setup input {
+    width: 100%; max-width: 500px; padding: 10px 14px;
+    background: var(--bg); border: 1px solid var(--border);
+    color: var(--text); font-family: var(--font-mono); font-size: .85rem;
+    border-radius: 2px; outline: none;
+  }
+  .setup input:focus { border-color: var(--cyan); }
+  .setup .hint { color: var(--muted); font-size: .65rem; margin-top: 6px; }
+  .setup .hint a { color: var(--cyan); }
+
+  /* Day tabs */
+  .tabs {
+    display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .tab {
+    padding: 8px 16px; font-family: var(--font-mono); font-size: .7rem;
+    letter-spacing: 1px; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--muted); transition: all .2s;
+  }
+  .tab:hover { border-color: var(--text); color: var(--text); }
+  .tab.active { background: var(--cyan); color: var(--bg); border-color: var(--cyan); font-weight: 700; }
+  .tab .count { opacity: .6; }
+
+  /* Search */
+  .search-row {
+    display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .search-row input {
+    flex: 1; min-width: 200px; padding: 10px 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); font-family: var(--font-mono); font-size: .85rem;
+    outline: none;
+  }
+  .search-row input:focus { border-color: var(--cyan); }
+  .search-row button {
+    padding: 10px 24px; font-family: var(--font-head); font-size: .75rem;
+    letter-spacing: 2px; cursor: pointer;
+    background: var(--cyan); color: var(--bg); border: none;
+    font-weight: 700; transition: background .2s;
+  }
+  .search-row button:hover { background: var(--green); }
+
+  /* Results grid */
+  .results {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px; margin-bottom: 24px;
+  }
+  .photo-card {
+    position: relative; background: var(--surface);
+    border: 2px solid var(--border); border-radius: 4px;
+    overflow: hidden; cursor: pointer; transition: all .2s;
+  }
+  .photo-card:hover { border-color: var(--cyan); transform: translateY(-2px); }
+  .photo-card.selected { border-color: var(--green); box-shadow: 0 0 20px rgba(0,255,157,.2); }
+  .photo-card img {
+    width: 100%; height: 180px; object-fit: cover; display: block;
+  }
+  .photo-card .info {
+    padding: 10px; font-size: .65rem; color: var(--muted);
+  }
+  .photo-card .info .photographer { color: var(--text); font-weight: 700; }
+  .photo-card .badge {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--green); color: var(--bg);
+    font-family: var(--font-head); font-size: .6rem;
+    padding: 3px 8px; letter-spacing: 1px; font-weight: 700;
+    display: none;
+  }
+  .photo-card.selected .badge { display: block; }
+
+  /* Selected photos strip */
+  .selected-section {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 16px; margin-bottom: 24px; border-radius: 4px;
+  }
+  .selected-section h3 {
+    font-family: var(--font-head); font-size: .8rem; color: var(--green);
+    letter-spacing: 2px; margin-bottom: 12px;
+  }
+  .selected-strip {
+    display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;
+  }
+  .selected-thumb {
+    flex-shrink: 0; width: 100px; height: 70px; position: relative;
+    border: 1px solid var(--green); border-radius: 2px; overflow: hidden;
+  }
+  .selected-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .selected-thumb .remove {
+    position: absolute; top: 2px; right: 2px;
+    background: var(--red); color: white; border: none;
+    width: 18px; height: 18px; font-size: 10px; cursor: pointer;
+    font-family: var(--font-mono); border-radius: 2px;
+  }
+  .selected-thumb .slot-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,.7); color: var(--green);
+    font-size: .55rem; text-align: center; padding: 2px;
+    font-family: var(--font-mono); letter-spacing: 1px;
+  }
+  .empty-slot {
+    flex-shrink: 0; width: 100px; height: 70px;
+    border: 1px dashed var(--border); border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: .6rem;
+  }
+
+  /* Export */
+  .export-section {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 20px; border-radius: 4px; margin-bottom: 24px;
+  }
+  .export-section h3 {
+    font-family: var(--font-head); font-size: .8rem; color: var(--cyan);
+    letter-spacing: 2px; margin-bottom: 12px;
+  }
+  .export-section textarea {
+    width: 100%; height: 300px; padding: 12px;
+    background: var(--bg); border: 1px solid var(--border);
+    color: var(--green); font-family: var(--font-mono); font-size: .75rem;
+    resize: vertical; outline: none;
+  }
+  .export-btn {
+    margin-top: 12px; padding: 12px 32px;
+    font-family: var(--font-head); font-size: .75rem;
+    letter-spacing: 2px; cursor: pointer;
+    background: var(--green); color: var(--bg); border: none;
+    font-weight: 700; transition: background .2s;
+  }
+  .export-btn:hover { background: var(--cyan); }
+
+  .status { color: var(--muted); font-size: .7rem; padding: 8px 0; }
+  .status.error { color: var(--red); }
+
+  /* Existing JSON import */
+  .import-row { margin-top: 12px; }
+  .import-row button {
+    padding: 8px 16px; font-family: var(--font-mono); font-size: .7rem;
+    cursor: pointer; background: transparent; color: var(--cyan);
+    border: 1px solid var(--cyan); letter-spacing: 1px; transition: all .2s;
+  }
+  .import-row button:hover { background: rgba(0,229,255,.1); }
+</style>
+</head>
+<body>
+
+<h1>BRAIAIN CURATOR</h1>
+<div class="subtitle">IMAGE SOURCING TOOL — SEARCH UNSPLASH → BUILD CHALLENGE JSON</div>
+
+<!-- API Key Setup -->
+<div class="setup">
+  <label>UNSPLASH API KEY</label>
+  <input type="text" id="api-key" placeholder="Paste your Unsplash Access Key here" />
+  <div class="hint">
+    Free — sign up at <a href="https://unsplash.com/developers" target="_blank">unsplash.com/developers</a>,
+    create an app, copy the "Access Key". 50 searches/hour.
+  </div>
+</div>
+
+<!-- Day Config -->
+<div class="setup">
+  <label>CHALLENGE CONFIG</label>
+  <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:8px;">
+    <div>
+      <label style="font-size:.6rem">Day Number</label>
+      <input type="number" id="day-num" value="2" style="width:80px" />
+    </div>
+    <div>
+      <label style="font-size:.6rem">Date (YYYY-MM-DD)</label>
+      <input type="text" id="day-date" value="2026-02-05" style="width:160px" />
+    </div>
+    <div>
+      <label style="font-size:.6rem">Category</label>
+      <input type="text" id="day-cat" value="NFL Honors Night" style="width:220px" />
+    </div>
+    <div>
+      <label style="font-size:.6rem">Emoji</label>
+      <input type="text" id="day-emoji" value="🏈" style="width:60px" />
+    </div>
+  </div>
+  <div class="import-row">
+    <button onclick="loadExistingJSON()">IMPORT EXISTING CHALLENGE JSON</button>
+    <input type="file" id="json-import" accept=".json" style="display:none" onchange="handleJSONImport(event)" />
+  </div>
+</div>
+
+<!-- Search -->
+<div class="search-row">
+  <input type="text" id="search-query" placeholder="Search Unsplash for real photos (e.g., 'football stadium crowd night')" />
+  <button onclick="searchPhotos()">SEARCH</button>
+</div>
+<div class="status" id="status"></div>
+
+<!-- Selected photos for this day -->
+<div class="selected-section">
+  <h3>SELECTED REAL PHOTOS (5 NEEDED)</h3>
+  <div class="selected-strip" id="selected-strip">
+    <div class="empty-slot">SLOT 1</div>
+    <div class="empty-slot">SLOT 2</div>
+    <div class="empty-slot">SLOT 3</div>
+    <div class="empty-slot">SLOT 4</div>
+    <div class="empty-slot">SLOT 5</div>
+  </div>
+</div>
+
+<!-- Search results -->
+<div class="results" id="results"></div>
+
+<!-- Export -->
+<div class="export-section">
+  <h3>EXPORT CHALLENGE JSON</h3>
+  <p style="color:var(--muted); font-size:.7rem; margin-bottom:12px;">
+    Select 5 real photos above, then click GENERATE. AI rounds use existing Pollinations URLs.
+    Edit the pro_tips and attributions in the JSON output as needed.
+  </p>
+  <button class="export-btn" onclick="generateJSON()">GENERATE CHALLENGE JSON</button>
+  <textarea id="json-output" placeholder="Challenge JSON will appear here..."></textarea>
+  <button class="export-btn" onclick="downloadJSON()" style="background:var(--cyan)">DOWNLOAD .JSON FILE</button>
+</div>
+
+<script>
+const API_BASE = 'https://api.unsplash.com';
+
+// State
+let selectedPhotos = [null, null, null, null, null]; // 5 slots for real photos
+let searchResults = [];
+
+// AI round templates per theme (reuse Pollinations prompts from existing challenges)
+const AI_TEMPLATES = {
+  'NFL Honors Night': [
+    { prompt: 'photorealistic gold football trophy on velvet podium dramatic spotlight dark background', tip: 'Check the trophy details — AI often gets award shapes wrong or adds impossible engravings.' },
+    { prompt: 'photorealistic aerial view American football stadium night game bright lights full crowd', tip: 'Look at the crowd — are individual faces distinct? AI crowds tend to blur into uniform masses.' },
+    { prompt: 'photorealistic red carpet event velvet ropes photographers flashing cameras celebrity gala night', tip: 'Examine the cameras and hands of photographers — AI struggles with complex hand positions on equipment.' },
+    { prompt: 'photorealistic extreme closeup American football leather laces grass field morning dew', tip: 'The leather texture and lace stitching look good, but check where the ball meets the grass — AI often fumbles contact shadows.' },
+    { prompt: 'photorealistic golden confetti shower celebration stage spotlights cheering silhouettes award ceremony', tip: 'Confetti patterns are a tell — real confetti has varied shapes and random distribution; AI confetti often looks too uniform.' }
+  ],
+  'Winter Olympics Opening Ceremony': [
+    { prompt: 'photorealistic Olympic rings sculpture ice and snow stadium background dramatic lighting winter', tip: 'Count the rings and check the colors — AI sometimes gets the Olympic ring count or color order wrong.' },
+    { prompt: 'photorealistic figure skater mid spin ice rink spotlight sparkles trailing motion blur', tip: 'Look at the skater\'s hands and blade position — AI frequently distorts extremities during motion.' },
+    { prompt: 'photorealistic ski jumper in mid air against blue sky snowy mountain background action sports', tip: 'Check the ski tips and binding positions — AI often bends equipment in impossible ways.' },
+    { prompt: 'photorealistic Olympic torch bearer running at dusk dramatic sky flame trail crowd silhouettes', tip: 'Look at the flame — real fire has organic, chaotic movement; AI fire often looks too symmetrical or static.' },
+    { prompt: 'photorealistic Olympic medal ceremony three athletes on podium flags raising gold silver bronze medals', tip: 'Examine the medal ribbons and flag details — AI commonly invents flag patterns or gets ribbon physics wrong.' }
+  ],
+  'Super Bowl Eve': [
+    { prompt: 'photorealistic overhead shot buffalo wings hot sauce celery sticks on wooden board game day food', tip: 'Check the sauce drips and celery details — AI food often has inconsistent lighting on wet surfaces.' },
+    { prompt: 'photorealistic crowded sports bar interior big screen TVs showing football fans cheering beer glasses', tip: 'Look at the TV screens — can you read any text? AI typically generates gibberish on screens.' },
+    { prompt: 'photorealistic tailgate party parking lot BBQ grill smoke American flags team jerseys coolers', tip: 'Check the text on jerseys — AI almost always botches team names and numbers.' },
+    { prompt: 'photorealistic guacamole bowl with tortilla chips nacho platter game day snacks overhead shot', tip: 'The food looks appetizing but check the chip edges — AI chips often have unnaturally smooth or identical shapes.' },
+    { prompt: 'photorealistic row of colorful football jerseys hanging in sports memorabilia shop dramatic lighting', tip: 'Zoom into the jersey numbers and team logos — AI consistently fails at generating legible sports typography.' }
+  ],
+  'Super Bowl Sunday': [
+    { prompt: 'photorealistic Super Bowl halftime show massive stage laser lights pyrotechnics packed stadium aerial view', tip: 'Look at the stage geometry — AI often creates impossible structures that couldn\'t physically exist.' },
+    { prompt: 'photorealistic American football action shot quarterback throwing pass defenders rushing dynamic angle', tip: 'Check the players\' hands and fingers — AI typically generates wrong finger counts or impossible grips.' },
+    { prompt: 'photorealistic silver football championship trophy detailed engraving dramatic studio lighting black background', tip: 'Examine the engraved text — AI cannot generate readable text on metallic surfaces.' },
+    { prompt: 'photorealistic cozy living room Super Bowl party friends watching big TV nachos pizza beer warm lighting', tip: 'Look at the TV screen content and any food labels — AI renders screens and packaging text as gibberish.' },
+    { prompt: 'photorealistic military fighter jet flyover football stadium trailing colored smoke blue sky patriotic', tip: 'Check the jet\'s details — AI often adds too many engines or creates impossible wing configurations.' }
+  ],
+  'National Pizza Day': [
+    { prompt: 'photorealistic overhead shot pepperoni pizza fresh from oven melted cheese stretching steam rising', tip: 'The cheese stretch looks tempting but check where toppings meet the crust — AI often blends boundaries unnaturally.' },
+    { prompt: 'photorealistic Italian chef tossing pizza dough in air flour dusted kitchen warm lighting action shot', tip: 'Look at the chef\'s hands and fingers — AI frequently distorts fingers during complex hand actions.' },
+    { prompt: 'photorealistic brick wood fired pizza oven flames orange glow rustic Italian restaurant interior', tip: 'Check the brick pattern — AI brick textures often repeat or have geometrically impossible mortar lines.' },
+    { prompt: 'photorealistic dinner table with multiple pizza varieties friends sharing casual restaurant warm ambiance', tip: 'Examine the people\'s hands and the pizza slices they\'re holding — AI struggles with natural food-holding poses.' },
+    { prompt: 'photorealistic overhead flatlay fresh pizza ingredients arranged on marble counter tomatoes basil mozzarella', tip: 'Look closely at the basil leaves — AI basil often has unnatural vein patterns or impossible leaf shapes.' }
+  ],
+  "Valentine's Day": [
+    { prompt: 'photorealistic heart shaped red rose bouquet wrapped in craft paper romantic soft lighting bokeh', tip: 'Check the rose petal edges — AI roses often have petals that merge together or have mathematically perfect symmetry.' },
+    { prompt: 'photorealistic candlelit dinner for two elegant restaurant white tablecloth wine glasses roses', tip: 'Look at the wine glass stems and candle flames — AI frequently bends glass stems and makes fire too uniform.' },
+    { prompt: 'photorealistic box of luxury chocolates assorted truffles heart shaped box velvet ribbon', tip: 'Examine the chocolate details — AI chocolates often have surface patterns that don\'t match real confectionery techniques.' },
+    { prompt: 'photorealistic couple holding hands walking through cherry blossom path romantic spring sunset golden hour', tip: 'Check the hands carefully — AI couple shots almost always have finger count issues at the point of contact.' },
+    { prompt: 'photorealistic heart shaped red velvet cake cream cheese frosting decorated berries romantic presentation', tip: 'Look at the frosting texture and berry placement — AI often creates frosting with impossible flow patterns.' }
+  ]
+};
+
+function getApiKey() {
+  const key = document.getElementById('api-key').value.trim();
+  if (!key) {
+    setStatus('Enter your Unsplash API key first', true);
+    return null;
+  }
+  return key;
+}
+
+function setStatus(msg, isError = false) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = 'status' + (isError ? ' error' : '');
+}
+
+async function searchPhotos() {
+  const key = getApiKey();
+  if (!key) return;
+
+  const query = document.getElementById('search-query').value.trim();
+  if (!query) { setStatus('Enter a search query', true); return; }
+
+  setStatus('Searching Unsplash...');
+
+  try {
+    const resp = await fetch(`${API_BASE}/search/photos?query=${encodeURIComponent(query)}&per_page=20&orientation=landscape`, {
+      headers: { 'Authorization': `Client-ID ${key}` }
+    });
+
+    if (!resp.ok) {
+      if (resp.status === 401) throw new Error('Invalid API key');
+      if (resp.status === 403) throw new Error('Rate limit exceeded (50/hour). Wait and try again.');
+      throw new Error('HTTP ' + resp.status);
+    }
+
+    const data = await resp.json();
+    searchResults = data.results;
+    setStatus(`Found ${data.total} results (showing ${searchResults.length})`);
+    renderResults();
+  } catch (e) {
+    setStatus('Error: ' + e.message, true);
+  }
+}
+
+function renderResults() {
+  const grid = document.getElementById('results');
+  grid.innerHTML = '';
+
+  searchResults.forEach((photo, i) => {
+    const isSelected = selectedPhotos.some(p => p && p.id === photo.id);
+    const card = document.createElement('div');
+    card.className = 'photo-card' + (isSelected ? ' selected' : '');
+    card.innerHTML = `
+      <img src="${photo.urls.small}" alt="${photo.alt_description || ''}" loading="lazy" />
+      <div class="info">
+        <div class="photographer">${photo.user.name}</div>
+        <div>${photo.alt_description || 'Untitled'}</div>
+      </div>
+      <div class="badge">SELECTED</div>
+    `;
+    card.onclick = () => togglePhoto(photo);
+    grid.appendChild(card);
+  });
+}
+
+function togglePhoto(photo) {
+  // Check if already selected
+  const existingIdx = selectedPhotos.findIndex(p => p && p.id === photo.id);
+  if (existingIdx >= 0) {
+    selectedPhotos[existingIdx] = null;
+  } else {
+    // Find first empty slot
+    const emptyIdx = selectedPhotos.findIndex(p => p === null);
+    if (emptyIdx < 0) {
+      setStatus('All 5 slots full — remove one first', true);
+      return;
+    }
+    selectedPhotos[emptyIdx] = photo;
+  }
+  renderResults();
+  renderSelected();
+}
+
+function removePhoto(idx) {
+  selectedPhotos[idx] = null;
+  renderResults();
+  renderSelected();
+}
+
+function renderSelected() {
+  const strip = document.getElementById('selected-strip');
+  strip.innerHTML = '';
+
+  for (let i = 0; i < 5; i++) {
+    const photo = selectedPhotos[i];
+    if (photo) {
+      const thumb = document.createElement('div');
+      thumb.className = 'selected-thumb';
+      thumb.innerHTML = `
+        <img src="${photo.urls.thumb}" />
+        <button class="remove" onclick="removePhoto(${i})">✕</button>
+        <div class="slot-label">SLOT ${i + 1}</div>
+      `;
+      strip.appendChild(thumb);
+    } else {
+      const empty = document.createElement('div');
+      empty.className = 'empty-slot';
+      empty.textContent = 'SLOT ' + (i + 1);
+      strip.appendChild(empty);
+    }
+  }
+}
+
+function buildCDNUrl(photo) {
+  // Unsplash CDN URL with resize params
+  return `${photo.urls.raw}&w=800&h=600&fit=crop&q=80`;
+}
+
+function generateJSON() {
+  const dayNum = parseInt(document.getElementById('day-num').value) || 1;
+  const date = document.getElementById('day-date').value.trim();
+  const category = document.getElementById('day-cat').value.trim();
+  const emoji = document.getElementById('day-emoji').value.trim();
+
+  const filledCount = selectedPhotos.filter(p => p !== null).length;
+  if (filledCount < 5) {
+    setStatus(`Need 5 real photos, only ${filledCount} selected`, true);
+    return;
+  }
+
+  // Get AI templates for this category
+  const aiTemplates = AI_TEMPLATES[category] || AI_TEMPLATES['NFL Honors Night'];
+
+  // Build rounds: alternating human/ai (human odd, ai even)
+  const rounds = [];
+  for (let i = 0; i < 10; i++) {
+    const roundNum = i + 1;
+    const id = `d${dayNum}r${roundNum < 10 ? roundNum : roundNum}`;
+
+    if (i % 2 === 0) {
+      // Human round (slots 0-4)
+      const slotIdx = Math.floor(i / 2);
+      const photo = selectedPhotos[slotIdx];
+      rounds.push({
+        id: id,
+        type: 'image',
+        content: buildCDNUrl(photo),
+        source: 'human',
+        attribution: `Real photograph — ${photo.alt_description || 'Untitled'} by ${photo.user.name} on Unsplash`,
+        source_url: photo.links.html,
+        pro_tip: 'Look for natural imperfections — lens flare, slight blur, uneven lighting. Real photos have organic randomness that AI rarely replicates.'
+      });
+    } else {
+      // AI round
+      const aiIdx = Math.floor(i / 2);
+      const tmpl = aiTemplates[aiIdx] || aiTemplates[0];
+      const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(tmpl.prompt)}?width=800&height=600&nologo=true&seed=${dayNum * 100 + roundNum}`;
+
+      rounds.push({
+        id: id,
+        type: 'image',
+        content: pollinationsUrl,
+        source: 'ai',
+        attribution: `AI-generated image — created with Pollinations AI`,
+        pro_tip: tmpl.tip,
+        _note: `POLLINATIONS: ${tmpl.prompt}`
+      });
+    }
+  }
+
+  const challenge = {
+    day_number: dayNum,
+    date: date,
+    category: category,
+    category_emoji: emoji,
+    rounds: rounds
+  };
+
+  const output = JSON.stringify(challenge, null, 2);
+  document.getElementById('json-output').value = output;
+  setStatus(`Generated challenge JSON — Day ${dayNum}: ${category} (${rounds.length} rounds)`);
+}
+
+function downloadJSON() {
+  const json = document.getElementById('json-output').value;
+  if (!json) { setStatus('Generate JSON first', true); return; }
+
+  const date = document.getElementById('day-date').value.trim();
+  const blob = new Blob([json], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${date}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  setStatus(`Downloaded ${date}.json`);
+}
+
+function loadExistingJSON() {
+  document.getElementById('json-import').click();
+}
+
+function handleJSONImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      document.getElementById('day-num').value = data.day_number || 1;
+      document.getElementById('day-date').value = data.date || '';
+      document.getElementById('day-cat').value = data.category || '';
+      document.getElementById('day-emoji').value = data.category_emoji || '';
+      setStatus(`Imported Day ${data.day_number}: ${data.category}. Now search for replacement real photos.`);
+    } catch (err) {
+      setStatus('Invalid JSON file', true);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// Allow Enter key to search
+document.getElementById('search-query').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') searchPhotos();
+});
+
+// Init
+renderSelected();
+</script>
+</body>
+</html>
