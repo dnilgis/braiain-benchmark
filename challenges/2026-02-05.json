@@ -2,8 +2,8 @@
   "day_number": 2,
   "date": "2026-02-05",
   "category": "NFL Honors Night",
-  "category_subtitle": "Super Bowl LX Week \u2014 Awards Night in San Francisco",
-  "category_emoji": "\ud83c\udfc8",
+  "category_subtitle": "Super Bowl LX Week — Awards Night in San Francisco",
+  "category_emoji": "🏈",
   "rounds": [
     {
       "id": "d2r1",
@@ -11,16 +11,15 @@
       "content": "https://picsum.photos/id/235/800/600",
       "source": "human",
       "attribution": "Real photograph via Unsplash",
-      "pro_tip": "CROWD DETAIL: Real crowd photos show natural variation \u2014 different heights, blurry faces in background, random clothing. AI crowds often clone faces or create eerie uniformity."
+      "pro_tip": "CROWD DETAIL: Real crowd photos show natural variation — different heights, blurry faces in background, random clothing. AI crowds often clone faces or create eerie uniformity."
     },
     {
       "id": "d2r2",
       "type": "image",
-      "content": "images/d2r2_ai_trophy.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20gold%20football%20trophy%20on%20velvet%20podium%20dramatic%20spotlight%20dark%20background%20award%20ceremony%208k?width=800&height=600&seed=1001&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 golden football trophy on podium (Flux)",
-      "pro_tip": "REFLECTIONS: Real metallic surfaces reflect their actual environment. AI trophies often have generic, impossible reflections that don't match the surrounding scene.",
-      "_note": "Generate: 'photorealistic gold football trophy on velvet podium, dramatic spotlight, dark background, award ceremony, 8k'"
+      "attribution": "AI-generated — golden football trophy on podium (Flux)",
+      "pro_tip": "REFLECTIONS: Real metallic surfaces reflect their actual environment. AI trophies often have generic, impossible reflections that don't match the surrounding scene."
     },
     {
       "id": "d2r3",
@@ -28,16 +27,15 @@
       "content": "https://picsum.photos/id/308/800/600",
       "source": "human",
       "attribution": "Real photograph via Unsplash",
-      "pro_tip": "LENS FLARE: Real photos capture authentic lens flare from bright lights \u2014 uneven, asymmetric, with ghosting. AI lens flares tend to be perfectly circular and symmetrically placed."
+      "pro_tip": "LENS FLARE: Real photos capture authentic lens flare from bright lights — uneven, asymmetric, with ghosting. AI lens flares tend to be perfectly circular and symmetrically placed."
     },
     {
       "id": "d2r4",
       "type": "image",
-      "content": "images/d2r4_ai_stadium_aerial.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20aerial%20view%20American%20football%20stadium%20at%20night%20packed%20crowd%20bright%20field%20lights%20city%20skyline%20background%20drone%20shot?width=800&height=600&seed=1002&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 aerial view of lit stadium at night (Midjourney)",
-      "pro_tip": "ARCHITECTURE SYMMETRY: Real stadiums have slight imperfections \u2014 uneven wear, random lighting. AI stadiums often look impossibly perfect and symmetrical.",
-      "_note": "Generate: 'photorealistic aerial view of American football stadium at night, packed crowd, bright lights, city skyline background, drone shot'"
+      "attribution": "AI-generated — aerial view of lit stadium at night (Midjourney)",
+      "pro_tip": "ARCHITECTURE SYMMETRY: Real stadiums have slight imperfections — uneven wear, random lighting. AI stadiums often look impossibly perfect and symmetrical."
     },
     {
       "id": "d2r5",
@@ -50,11 +48,10 @@
     {
       "id": "d2r6",
       "type": "image",
-      "content": "images/d2r6_ai_red_carpet.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20red%20carpet%20event%20velvet%20ropes%20camera%20flashes%20elegant%20backdrop%20evening%20awards%20ceremony%20Hollywood%20style?width=800&height=600&seed=1003&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 red carpet event with spotlights (DALL-E 3)",
-      "pro_tip": "BACKGROUND PEOPLE: Look at people in the background. AI often generates figures with melted features, missing limbs, or merged bodies.",
-      "_note": "Generate: 'photorealistic red carpet event, velvet ropes, camera flashes, elegant backdrop with NFL logo, evening atmosphere'"
+      "attribution": "AI-generated — red carpet event with spotlights (DALL-E 3)",
+      "pro_tip": "BACKGROUND PEOPLE: Look at people in the background. AI often generates figures with melted features, missing limbs, or merged bodies."
     },
     {
       "id": "d2r7",
@@ -67,11 +64,10 @@
     {
       "id": "d2r8",
       "type": "image",
-      "content": "images/d2r8_ai_football_closeup.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20extreme%20closeup%20American%20football%20on%20grass%20field%20stadium%20lights%20bokeh%20background%20dramatic%20lighting%20dew%20drops%20on%20leather%20texture?width=800&height=600&seed=1004&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 close-up football on grass with stadium lights (Flux)",
-      "pro_tip": "TEXT ON OBJECTS: Look at text on the football. AI almost always generates garbled, nonsensical lettering \u2014 one of the easiest tells.",
-      "_note": "Generate: 'photorealistic extreme close-up of American football on grass field, stadium lights bokeh background, dramatic lighting, dew drops on leather'"
+      "attribution": "AI-generated — close-up football on grass with stadium lights (Flux)",
+      "pro_tip": "TEXT ON OBJECTS: Look at text on the football. AI almost always generates garbled, nonsensical lettering — one of the easiest tells."
     },
     {
       "id": "d2r9",
@@ -84,11 +80,10 @@
     {
       "id": "d2r10",
       "type": "image",
-      "content": "images/d2r10_ai_confetti.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20golden%20confetti%20shower%20falling%20on%20dark%20stage%20spotlights%20celebration%20atmosphere%20shallow%20depth%20of%20field%20particles?width=800&height=600&seed=1005&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 celebration confetti shower on stage (Midjourney)",
-      "pro_tip": "CONFETTI & PARTICLES: Real confetti has random shapes, varied rotation, and casts micro-shadows. AI confetti pieces often look copy-pasted or float impossibly.",
-      "_note": "Generate: 'photorealistic golden confetti shower falling on a dark stage, spotlights, celebration atmosphere, shallow depth of field'"
+      "attribution": "AI-generated — celebration confetti shower on stage (Midjourney)",
+      "pro_tip": "CONFETTI & PARTICLES: Real confetti has random shapes, varied rotation, and casts micro-shadows. AI confetti pieces often look copy-pasted or float impossibly."
     }
   ]
 }

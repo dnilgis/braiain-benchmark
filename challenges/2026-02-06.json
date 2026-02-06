@@ -2,8 +2,8 @@
   "day_number": 3,
   "date": "2026-02-06",
   "category": "Winter Olympics Opening Ceremony",
-  "category_subtitle": "Milan Cortina 2026 \u2014 Let the Games Begin!",
-  "category_emoji": "\ud83c\udfc5",
+  "category_subtitle": "Milan Cortina 2026 — Let the Games Begin!",
+  "category_emoji": "🏅",
   "rounds": [
     {
       "id": "d3r1",
@@ -16,11 +16,10 @@
     {
       "id": "d3r2",
       "type": "image",
-      "content": "images/d3r2_ai_olympic_rings.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20Olympic%20rings%20sculpture%20in%20snowy%20Italian%20Alps%20Dolomites%20mountain%20background%20golden%20sunset%20light%20winter%20atmosphere?width=800&height=600&seed=2001&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 Olympic rings monument in snowy mountain setting (Flux)",
-      "pro_tip": "GEOMETRIC PRECISION: The Olympic rings have exact proportions. AI often distorts them \u2014 uneven ring sizes, wrong overlap order, or incorrect colors.",
-      "_note": "Generate: 'photorealistic Olympic rings sculpture in snowy Italian Alps, Dolomites background, sunset light, winter atmosphere'"
+      "attribution": "AI-generated — Olympic rings monument in snowy mountain setting (Flux)",
+      "pro_tip": "GEOMETRIC PRECISION: The Olympic rings have exact proportions. AI often distorts them — uneven ring sizes, wrong overlap order, or incorrect colors."
     },
     {
       "id": "d3r3",
@@ -33,11 +32,10 @@
     {
       "id": "d3r4",
       "type": "image",
-      "content": "images/d3r4_ai_figure_skater.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20figure%20skater%20mid%20spin%20on%20ice%20rink%20sparkly%20blue%20costume%20ice%20spray%20frozen%20droplets%20arena%20lights%20dramatic?width=800&height=600&seed=2002&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 figure skater mid-spin on Olympic ice (Midjourney)",
-      "pro_tip": "BODY PROPORTIONS: Real athletes have natural body proportions even in dynamic poses. AI often elongates limbs, twists joints impossibly, or creates anatomical errors.",
-      "_note": "Generate: 'photorealistic figure skater mid-spin on ice rink, sparkly costume, ice spray, arena lights, Olympic rings visible'"
+      "attribution": "AI-generated — figure skater mid-spin on Olympic ice (Midjourney)",
+      "pro_tip": "BODY PROPORTIONS: Real athletes have natural body proportions even in dynamic poses. AI often elongates limbs, twists joints impossibly, or creates anatomical errors."
     },
     {
       "id": "d3r5",
@@ -50,11 +48,10 @@
     {
       "id": "d3r6",
       "type": "image",
-      "content": "images/d3r6_ai_ski_jump.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20ski%20jumper%20in%20mid%20air%20blue%20sky%20snowy%20mountain%20backdrop%20Olympic%20winter%20venue%20action%20shot%20telephoto%20lens?width=800&height=600&seed=2003&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 ski jumper in mid-air against blue sky (DALL-E 3)",
-      "pro_tip": "EQUIPMENT DETAILS: Real ski equipment has brand logos, specific bindings, and wear marks. AI gear tends to have blurry or invented brand names and physically impossible mechanisms.",
-      "_note": "Generate: 'photorealistic ski jumper in mid-air, blue sky, snowy mountain backdrop, Olympic venue, action shot, telephoto lens'"
+      "attribution": "AI-generated — ski jumper in mid-air against blue sky (DALL-E 3)",
+      "pro_tip": "EQUIPMENT DETAILS: Real ski equipment has brand logos, specific bindings, and wear marks. AI gear tends to have blurry or invented brand names and physically impossible mechanisms."
     },
     {
       "id": "d3r7",
@@ -67,11 +64,10 @@
     {
       "id": "d3r8",
       "type": "image",
-      "content": "images/d3r8_ai_torch_relay.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20Olympic%20torch%20bearer%20running%20through%20charming%20Italian%20village%20cobblestone%20street%20crowds%20cheering%20warm%20evening%20light%20flame%20bright?width=800&height=600&seed=2004&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 Olympic torch bearer running through Italian village (Flux)",
-      "pro_tip": "FIRE INTERACTION: Real torch flames interact with the runner's movement \u2014 trailing, flickering. AI flames often sit static on the torch like a sticker.",
-      "_note": "Generate: 'photorealistic Olympic torch bearer running through charming Italian village street, crowds cheering, evening light, torch flame bright'"
+      "attribution": "AI-generated — Olympic torch bearer running through Italian village (Flux)",
+      "pro_tip": "FIRE INTERACTION: Real torch flames interact with the runner's movement — trailing, flickering. AI flames often sit static on the torch like a sticker."
     },
     {
       "id": "d3r9",
@@ -84,11 +80,10 @@
     {
       "id": "d3r10",
       "type": "image",
-      "content": "images/d3r10_ai_medal_ceremony.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20Olympic%20medal%20ceremony%20three%20athletes%20on%20podium%20national%20flags%20behind%20gold%20silver%20bronze%20medals%20indoor%20arena%20spotlight?width=800&height=600&seed=2005&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 Olympic medal ceremony podium with flags (Midjourney)",
-      "pro_tip": "FLAGS & SYMBOLS: Real flags have correct proportions, colors, and designs. AI frequently generates flags with wrong stripe counts, invented symbols, or impossible folds.",
-      "_note": "Generate: 'photorealistic Olympic medal ceremony, three athletes on podium, national flags behind, gold silver bronze medals, indoor arena'"
+      "attribution": "AI-generated — Olympic medal ceremony podium with flags (Midjourney)",
+      "pro_tip": "FLAGS & SYMBOLS: Real flags have correct proportions, colors, and designs. AI frequently generates flags with wrong stripe counts, invented symbols, or impossible folds."
     }
   ]
 }

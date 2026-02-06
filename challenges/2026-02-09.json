@@ -2,8 +2,8 @@
   "day_number": 6,
   "date": "2026-02-09",
   "category": "National Pizza Day",
-  "category_subtitle": "Post-Super Bowl Recovery \u2014 It's Pizza Time!",
-  "category_emoji": "\ud83c\udf55",
+  "category_subtitle": "Post-Super Bowl Recovery — It's Pizza Time!",
+  "category_emoji": "🍕",
   "rounds": [
     {
       "id": "d6r1",
@@ -16,11 +16,10 @@
     {
       "id": "d6r2",
       "type": "image",
-      "content": "images/d6r2_ai_pizza_slice.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20overhead%20shot%20pepperoni%20pizza%20slice%20with%20melted%20cheese%20pull%20stretching%20wooden%20cutting%20board%20natural%20window%20lighting%20food%20photography?width=800&height=600&seed=5001&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 photorealistic pepperoni pizza slice (Flux)",
-      "pro_tip": "CHEESE PHYSICS: Real melted cheese stretches with organic, random breakpoints. AI cheese often looks like smooth plastic or stretches too uniformly.",
-      "_note": "Generate: 'photorealistic overhead shot of a pepperoni pizza slice with cheese pull, wooden table, natural lighting, 8k'"
+      "attribution": "AI-generated — photorealistic pepperoni pizza slice (Flux)",
+      "pro_tip": "CHEESE PHYSICS: Real melted cheese stretches with organic, random breakpoints. AI cheese often looks like smooth plastic or stretches too uniformly."
     },
     {
       "id": "d6r3",
@@ -33,11 +32,10 @@
     {
       "id": "d6r4",
       "type": "image",
-      "content": "images/d6r4_ai_pizzaiolo.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20Italian%20chef%20tossing%20pizza%20dough%20in%20the%20air%20rustic%20kitchen%20flour%20dust%20particles%20warm%20golden%20lighting%20action%20shot?width=800&height=600&seed=5002&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 pizzaiolo tossing dough (Midjourney)",
-      "pro_tip": "HANDS & FINGERS: Look at the hands. AI frequently generates extra or fused fingers, impossible joint angles, or blurred fingertips.",
-      "_note": "Generate: 'photorealistic chef tossing pizza dough in air, rustic Italian kitchen, flour dust, warm lighting'"
+      "attribution": "AI-generated — pizzaiolo tossing dough (Midjourney)",
+      "pro_tip": "HANDS & FINGERS: Look at the hands. AI frequently generates extra or fused fingers, impossible joint angles, or blurred fingertips."
     },
     {
       "id": "d6r5",
@@ -50,11 +48,10 @@
     {
       "id": "d6r6",
       "type": "image",
-      "content": "images/d6r6_ai_pizza_oven.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20brick%20wood%20fired%20pizza%20oven%20roaring%20orange%20flames%20Neapolitan%20pizza%20cooking%20inside%20warm%20glow%20rustic%20Italian%20restaurant%20interior?width=800&height=600&seed=5003&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 brick pizza oven with flames (DALL-E 3)",
-      "pro_tip": "FIRE & FLAME: Real flames are chaotic with unpredictable edges and translucent tips. AI fire often looks like a smooth gradient blob.",
-      "_note": "Generate: 'photorealistic brick wood-fired pizza oven with roaring flames, Neapolitan pizza cooking inside, warm glow, rustic restaurant'"
+      "attribution": "AI-generated — brick pizza oven with flames (DALL-E 3)",
+      "pro_tip": "FIRE & FLAME: Real flames are chaotic with unpredictable edges and translucent tips. AI fire often looks like a smooth gradient blob."
     },
     {
       "id": "d6r7",
@@ -67,11 +64,10 @@
     {
       "id": "d6r8",
       "type": "image",
-      "content": "images/d6r8_ai_pizza_table.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20dinner%20table%20with%20multiple%20whole%20pizzas%20wine%20glasses%20candles%20Italian%20restaurant%20ambiance%20friends%20sharing%20food%20warm%20evening?width=800&height=600&seed=5004&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 pizza dinner table scene (Flux)",
-      "pro_tip": "TEXT & LABELS: Look for text on menus, napkins, or bottles. AI frequently generates garbled nonsense text \u2014 one of the most reliable tells.",
-      "_note": "Generate: 'photorealistic dinner table with multiple pizzas, wine glasses, candles, Italian restaurant ambiance, friends sharing food'"
+      "attribution": "AI-generated — pizza dinner table scene (Flux)",
+      "pro_tip": "TEXT & LABELS: Look for text on menus, napkins, or bottles. AI frequently generates garbled nonsense text — one of the most reliable tells."
     },
     {
       "id": "d6r9",
@@ -79,16 +75,15 @@
       "content": "https://picsum.photos/id/425/800/600",
       "source": "human",
       "attribution": "Real photograph via Unsplash",
-      "pro_tip": "MATERIAL TRANSITIONS: Real photos show natural transitions between materials \u2014 stone to mortar, dough to sauce. AI often blurs these boundaries."
+      "pro_tip": "MATERIAL TRANSITIONS: Real photos show natural transitions between materials — stone to mortar, dough to sauce. AI often blurs these boundaries."
     },
     {
       "id": "d6r10",
       "type": "image",
-      "content": "images/d6r10_ai_ingredients.jpg",
+      "content": "https://image.pollinations.ai/prompt/photorealistic%20overhead%20flatlay%20fresh%20pizza%20ingredients%20ripe%20tomatoes%20basil%20leaves%20fresh%20mozzarella%20flour%20olive%20oil%20on%20white%20marble%20counter?width=800&height=600&seed=5005&model=flux&nologo=true",
       "source": "ai",
-      "attribution": "AI-generated \u2014 fresh pizza ingredients flatlay (Midjourney)",
-      "pro_tip": "ORGANIC IMPERFECTION: Real tomatoes have blemishes and varied sizes. AI produce is suspiciously perfect \u2014 uniform coloring, identical shapes.",
-      "_note": "Generate: 'photorealistic overhead flatlay of fresh pizza ingredients: tomatoes, basil, mozzarella, flour, olive oil on marble counter'"
+      "attribution": "AI-generated — fresh pizza ingredients flatlay (Midjourney)",
+      "pro_tip": "ORGANIC IMPERFECTION: Real tomatoes have blemishes and varied sizes. AI produce is suspiciously perfect — uniform coloring, identical shapes."
     }
   ]
 }
