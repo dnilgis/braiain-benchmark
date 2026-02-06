@@ -2,88 +2,97 @@
   "day_number": 2,
   "date": "2026-02-05",
   "category": "NFL Honors Night",
-  "category_subtitle": "Super Bowl LX Week — Awards Night in San Francisco",
-  "category_emoji": "🏈",
+  "category_emoji": "🧠",
   "rounds": [
     {
       "id": "d2r1",
       "type": "image",
-      "content": "https://picsum.photos/id/235/800/600",
-      "source": "human",
-      "attribution": "Real photograph via Unsplash",
-      "pro_tip": "CROWD DETAIL: Real crowd photos show natural variation — different heights, blurry faces in background, random clothing. AI crowds often clone faces or create eerie uniformity."
+      "content": "images/d2_ai5.png",
+      "source": "ai",
+      "attribution": "AI-generated — created with Google Gemini",
+      "pro_tip": "Real confetti has varied shapes and sizes; AI confetti looks too uniform and repetitive.",
+      "_note": "Prompt: A photorealistic image of golden confetti falling over a celebration stage with spotlights and silhouettes cheering"
     },
     {
       "id": "d2r2",
       "type": "image",
-      "content": "https://image.pollinations.ai/prompt/photorealistic%20gold%20football%20trophy%20on%20velvet%20podium%20dramatic%20spotlight%20dark%20background%20award%20ceremony%208k?width=800&height=600&seed=1001&model=flux&nologo=true",
+      "content": "images/d2_ai4.png",
       "source": "ai",
-      "attribution": "AI-generated — golden football trophy on podium (Flux)",
-      "pro_tip": "REFLECTIONS: Real metallic surfaces reflect their actual environment. AI trophies often have generic, impossible reflections that don't match the surrounding scene."
+      "attribution": "AI-generated — created with Google Gemini",
+      "pro_tip": "The leather texture looks real, but check where the ball meets the grass — AI fumbles contact shadows.",
+      "_note": "Prompt: A photorealistic extreme close-up of a leather football on a grass field with morning dew, showing lace details"
     },
     {
       "id": "d2r3",
       "type": "image",
-      "content": "https://picsum.photos/id/308/800/600",
+      "content": "https://images.unsplash.com/photo-1566577739112-5180d4bf9390?ixid=M3w4NjkxNDJ8MHwxfHNlYXJjaHwxfHxuZmx8ZW58MHwwfHx8MTc3MDM0NjY0MHww&ixlib=rb-4.1.0&w=800&h=600&fit=crop&q=80",
       "source": "human",
-      "attribution": "Real photograph via Unsplash",
-      "pro_tip": "LENS FLARE: Real photos capture authentic lens flare from bright lights — uneven, asymmetric, with ghosting. AI lens flares tend to be perfectly circular and symmetrically placed."
+      "attribution": "Photo by Dave Adamson on Unsplash",
+      "pro_tip": "Natural imperfections like lens flare, slight blur, or uneven lighting are hallmarks of a real photograph.",
+      "source_url": "https://unsplash.com/photos/brown-and-black-wilson-football--nATH0CrkMU"
     },
     {
       "id": "d2r4",
       "type": "image",
-      "content": "https://image.pollinations.ai/prompt/photorealistic%20aerial%20view%20American%20football%20stadium%20at%20night%20packed%20crowd%20bright%20field%20lights%20city%20skyline%20background%20drone%20shot?width=800&height=600&seed=1002&model=flux&nologo=true",
-      "source": "ai",
-      "attribution": "AI-generated — aerial view of lit stadium at night (Midjourney)",
-      "pro_tip": "ARCHITECTURE SYMMETRY: Real stadiums have slight imperfections — uneven wear, random lighting. AI stadiums often look impossibly perfect and symmetrical."
+      "content": "https://images.unsplash.com/photo-1696542095245-512b4c03edfe?ixid=M3w4NjkxNDJ8MHwxfHNlYXJjaHw4fHxuZmx8ZW58MHwwfHx8MTc3MDM0NjY0MHww&ixlib=rb-4.1.0&w=800&h=600&fit=crop&q=80",
+      "source": "human",
+      "attribution": "Photo by Myron Mott on Unsplash",
+      "pro_tip": "Natural imperfections like lens flare, slight blur, or uneven lighting are hallmarks of a real photograph.",
+      "source_url": "https://unsplash.com/photos/a-football-field-with-a-large-american-flag-on-it-Y2U88U962Xg"
     },
     {
       "id": "d2r5",
       "type": "image",
-      "content": "https://picsum.photos/id/449/800/600",
-      "source": "human",
-      "attribution": "Real photograph via Unsplash",
-      "pro_tip": "FABRIC WRINKLES: Real suits and clothing have natural, gravity-driven creases. AI fabric often has wrinkles that defy physics or look painted on."
+      "content": "images/d2_ai2.png",
+      "source": "ai",
+      "attribution": "AI-generated — created with Google Gemini",
+      "pro_tip": "Look at individual faces in the crowd — AI tends to blur them into uniform masses.",
+      "_note": "Prompt: A photorealistic image of a packed football stadium at night with bright floodlights and cheering crowd, wide angle shot"
     },
     {
       "id": "d2r6",
       "type": "image",
-      "content": "https://image.pollinations.ai/prompt/photorealistic%20red%20carpet%20event%20velvet%20ropes%20camera%20flashes%20elegant%20backdrop%20evening%20awards%20ceremony%20Hollywood%20style?width=800&height=600&seed=1003&model=flux&nologo=true",
-      "source": "ai",
-      "attribution": "AI-generated — red carpet event with spotlights (DALL-E 3)",
-      "pro_tip": "BACKGROUND PEOPLE: Look at people in the background. AI often generates figures with melted features, missing limbs, or merged bodies."
+      "content": "https://images.unsplash.com/photo-1625982503303-5a3e849260a7?ixid=M3w4NjkxNDJ8MHwxfHNlYXJjaHwzfHxuZmx8ZW58MHwwfHx8MTc3MDM0NjY0MHww&ixlib=rb-4.1.0&w=800&h=600&fit=crop&q=80",
+      "source": "human",
+      "attribution": "Photo by Deon A. Webster on Unsplash",
+      "pro_tip": "Natural imperfections like lens flare, slight blur, or uneven lighting are hallmarks of a real photograph.",
+      "source_url": "https://unsplash.com/photos/people-in-white-and-black-jersey-shirt-and-black-shorts-pXz8Vh3gFpw"
     },
     {
       "id": "d2r7",
       "type": "image",
-      "content": "https://picsum.photos/id/433/800/600",
-      "source": "human",
-      "attribution": "Real photograph via Unsplash",
-      "pro_tip": "MOTION BLUR: Real action shots have directional, consistent motion blur. AI motion blur is often applied randomly or inconsistently across the frame."
+      "content": "images/d2_ai1.png",
+      "source": "ai",
+      "attribution": "AI-generated — created with Google Gemini",
+      "pro_tip": "Check trophy details — AI often gets engravings and award shapes wrong.",
+      "_note": "Prompt: A photorealistic image of a gold trophy on a podium with dramatic spotlight, dark background, award ceremony setting"
     },
     {
       "id": "d2r8",
       "type": "image",
-      "content": "https://image.pollinations.ai/prompt/photorealistic%20extreme%20closeup%20American%20football%20on%20grass%20field%20stadium%20lights%20bokeh%20background%20dramatic%20lighting%20dew%20drops%20on%20leather%20texture?width=800&height=600&seed=1004&model=flux&nologo=true",
+      "content": "images/d2_ai3.png",
       "source": "ai",
-      "attribution": "AI-generated — close-up football on grass with stadium lights (Flux)",
-      "pro_tip": "TEXT ON OBJECTS: Look at text on the football. AI almost always generates garbled, nonsensical lettering — one of the easiest tells."
+      "attribution": "AI-generated — created with Google Gemini",
+      "pro_tip": "Examine the cameras and hands of photographers — AI struggles with complex hand positions.",
+      "_note": "Prompt: A photorealistic image of a red carpet event with photographers, velvet ropes, camera flashes at night"
     },
     {
       "id": "d2r9",
       "type": "image",
-      "content": "https://picsum.photos/id/338/800/600",
+      "content": "https://images.unsplash.com/photo-1696542095327-1dc9b918d76b?ixid=M3w4NjkxNDJ8MHwxfHNlYXJjaHwyMHx8bmZsfGVufDB8MHx8fDE3NzAzNDY2NDB8MA&ixlib=rb-4.1.0&w=800&h=600&fit=crop&q=80",
       "source": "human",
-      "attribution": "Real photograph via Unsplash",
-      "pro_tip": "DEPTH OF FIELD: Real cameras create natural bokeh with smooth falloff. AI often has abrupt focus transitions or inconsistent blur across equidistant objects."
+      "attribution": "Photo by Myron Mott on Unsplash",
+      "pro_tip": "Natural imperfections like lens flare, slight blur, or uneven lighting are hallmarks of a real photograph.",
+      "source_url": "https://unsplash.com/photos/a-football-stadium-filled-with-lots-of-people-PY_5cDlKvM8"
     },
     {
       "id": "d2r10",
       "type": "image",
-      "content": "https://image.pollinations.ai/prompt/photorealistic%20golden%20confetti%20shower%20falling%20on%20dark%20stage%20spotlights%20celebration%20atmosphere%20shallow%20depth%20of%20field%20particles?width=800&height=600&seed=1005&model=flux&nologo=true",
-      "source": "ai",
-      "attribution": "AI-generated — celebration confetti shower on stage (Midjourney)",
-      "pro_tip": "CONFETTI & PARTICLES: Real confetti has random shapes, varied rotation, and casts micro-shadows. AI confetti pieces often look copy-pasted or float impossibly."
+      "content": "https://images.unsplash.com/photo-1640135076167-4958fbae2bfe?ixid=M3w4NjkxNDJ8MHwxfHNlYXJjaHwyMXx8bmZsfGVufDB8MHx8fDE3NzAzNDY2NDB8MA&ixlib=rb-4.1.0&w=800&h=600&fit=crop&q=80",
+      "source": "human",
+      "attribution": "Photo by Jonathan Olsen-Koziol on Unsplash",
+      "pro_tip": "Natural imperfections like lens flare, slight blur, or uneven lighting are hallmarks of a real photograph.",
+      "source_url": "https://unsplash.com/photos/a-row-of-football-helmets-sitting-on-top-of-a-table-zQAybkkixok"
     }
   ]
 }
