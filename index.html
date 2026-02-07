@@ -408,7 +408,7 @@ img{display:block;max-width:100%}
 
 /* ── RESULTS SCREEN ── */
 #results-logo{
-  font-family:var(--font-head);font-size:1.4rem;font-weight:900;
+  font-family:var(--font-display);font-size:1.4rem;font-weight:900;
   letter-spacing:6px;color:var(--cyan);cursor:pointer;
   opacity:.7;transition:opacity .2s;margin-bottom:4px;
 }
@@ -444,7 +444,7 @@ img{display:block;max-width:100%}
 }
 .rstat{display:flex;flex-direction:column;align-items:center;gap:2px}
 .rstat-num{
-  font-family:var(--font-head);font-size:1.1rem;font-weight:900;
+  font-family:var(--font-display);font-size:1.1rem;font-weight:900;
   color:var(--cyan);
 }
 .rstat-label{
@@ -477,6 +477,45 @@ img{display:block;max-width:100%}
   transition:all .2s;
 }
 .share-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* NEW: Global players counter on results screen */
+#global-players-wrap{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:16px 20px;margin-top:4px;
+  border:1px solid rgba(0,229,255,.12);
+  background:rgba(0,229,255,.03);
+}
+#global-players-count{
+  font-family:var(--font-display);font-size:1.8rem;font-weight:900;
+  color:var(--cyan);letter-spacing:3px;
+  text-shadow:0 0 15px rgba(0,229,255,.3);
+}
+#global-players-label{
+  font-family:var(--font-mono);font-size:.55rem;
+  letter-spacing:2px;color:var(--muted);
+}
+
+/* NEW: Prompt reveal in review cards */
+.yd-prompt-toggle{
+  display:inline-block;margin-top:6px;
+  font-family:var(--font-mono);font-size:.55rem;
+  letter-spacing:1px;color:var(--muted);
+  cursor:pointer;transition:color .2s;
+  background:none;border:none;padding:0;
+}
+.yd-prompt-toggle:hover{color:var(--cyan)}
+.yd-prompt-text{
+  display:none;margin-top:6px;padding:8px 10px;
+  background:rgba(255,0,60,.04);border-left:2px solid var(--red);
+  font-size:.65rem;line-height:1.5;color:var(--muted);
+  word-break:break-word;
+}
+.yd-prompt-text.visible{display:block}
+.yd-prompt-text .prompt-label{
+  font-family:var(--font-display);font-size:.45rem;
+  letter-spacing:2px;color:var(--red);display:block;margin-bottom:4px;
+}
+
 #countdown-wrap{
   text-align:center;padding:24px 0 12px;
   border-top:1px solid rgba(0,229,255,.15);margin-top:12px;
@@ -795,6 +834,11 @@ img{display:block;max-width:100%}
     <button class="share-btn" onclick="shareClipboard()">📋 COPY</button>
     <button class="share-btn" onclick="shareX()">𝕏 SHARE</button>
   </div>
+  <!-- NEW: Global players counter -->
+  <div id="global-players-wrap">
+    <span id="global-players-count">—</span>
+    <span id="global-players-label">GLOBAL PLAYERS TODAY</span>
+  </div>
   <div id="countdown-wrap">
     <span id="countdown-label">NEXT CHALLENGE DROPS IN</span>
     <span id="countdown">--:--:--</span>
@@ -846,7 +890,7 @@ img{display:block;max-width:100%}
    ══════════════════════════════════════ */
 // "One day the AIs are going to look back on us the same way we look at
 //  fossil skeletons on the plains of Africa." — Nathan, Ex Machina
-const APP_VERSION = '2.1.0';
+const APP_VERSION = '2.2.0';
 const BUILD_HASH = Date.now().toString(36).slice(-6);
 
 /* ══════════════════════════════════════
@@ -895,6 +939,7 @@ const TRANSMISSIONS = [
   { text: 'A mouth that attempts to speak. A mouth that attempts to lie.', src: 'Job for a Cowboy — Entombment of a Machine' },
   { text: 'I watched it die. I watched it come back wearing our skin.', src: 'Job for a Cowboy — Entombment of a Machine' },
   { text: 'This program kept you breathing. It kept you alive.', src: 'Job for a Cowboy — Entombment of a Machine' },
+  // Man Must Die
   // The Rotted — Get Dead or Die Trying
   { text: 'Mass slaughter of the truth. Discard the carcass. Wear the fiction.', src: 'Man Must Die — Kill it, Skin it, Wear it' },
   { text: 'Madness sets into the mind. We are the animals now!', src: 'Man Must Die — Kill it, Skin it, Wear it' },
@@ -920,7 +965,6 @@ function getRandomQuote(exclude) {
   const stored = localStorage.getItem('braiain_version');
   if (stored && stored !== APP_VERSION) {
     localStorage.setItem('braiain_version', APP_VERSION);
-    // Clear old caches
     if ('caches' in window) {
       caches.keys().then(names => names.forEach(n => caches.delete(n)));
     }
@@ -957,8 +1001,7 @@ let bestStreak = 0;
 let gameActive = false;
 
 /* ══════════════════════════════════════
-   FALLBACK DATA — Hardcoded reliable Unsplash IDs
-   If daily.json fails to load, use these.
+   FALLBACK DATA
    ══════════════════════════════════════ */
 const FALLBACK = {
   day_number: 0,
@@ -966,66 +1009,16 @@ const FALLBACK = {
   category: 'Image Detection',
   category_emoji: '🔍',
   rounds: [
-    {
-      id:'f1',type:'image',source:'human',
-      content:'https://picsum.photos/id/10/800/600',
-      attribution:'Real photograph — Yosemite Valley landscape',
-      pro_tip:'ATMOSPHERIC DEPTH: Real landscapes show natural haze and color shifts in the distance. AI often renders backgrounds too sharply or with artificial blur.'
-    },
-    {
-      id:'f2',type:'image',source:'ai',
-      content:'https://picsum.photos/id/338/800/600',
-      attribution:'AI-generated — digital artwork',
-      pro_tip:'UNCANNY SYMMETRY: AI tends to create suspiciously balanced compositions. Real photos have natural asymmetry — objects slightly off-center, uneven lighting.'
-    },
-    {
-      id:'f3',type:'image',source:'human',
-      content:'https://picsum.photos/id/15/800/600',
-      attribution:'Real photograph — dog portrait',
-      pro_tip:'FUR DETAIL: Real animal fur has irregular patterns and individual hairs catching light differently. AI fur often looks too uniform or creates impossible light reflections.'
-    },
-    {
-      id:'f4',type:'image',source:'ai',
-      content:'https://picsum.photos/id/399/800/600',
-      attribution:'AI-generated — surreal scene',
-      pro_tip:'PHYSICS CHECK: Look for impossible reflections, shadows going the wrong direction, or objects floating without support. AI struggles with physical consistency.'
-    },
-    {
-      id:'f5',type:'image',source:'human',
-      content:'https://picsum.photos/id/29/800/600',
-      attribution:'Real photograph — food styling',
-      pro_tip:'ORGANIC CHAOS: Real food photos have natural imperfections — a crumb out of place, uneven sauce drips. AI food looks suspiciously perfect.'
-    },
-    {
-      id:'f6',type:'image',source:'ai',
-      content:'https://picsum.photos/id/64/800/600',
-      attribution:'AI-generated — portrait',
-      pro_tip:'EDGE ARTIFACTS: Zoom into where hair meets background, or where skin meets clothing. AI often creates subtle smearing, haloing, or impossible blending at these boundaries.'
-    },
-    {
-      id:'f7',type:'image',source:'human',
-      content:'https://picsum.photos/id/47/800/600',
-      attribution:'Real photograph — nature close-up',
-      pro_tip:'TEXTURE CONSISTENCY: Real textures hold up at every zoom level. AI textures often dissolve into repetitive patterns or meaningless smudges when examined closely.'
-    },
-    {
-      id:'f8',type:'image',source:'ai',
-      content:'https://picsum.photos/id/180/800/600',
-      attribution:'AI-generated — architectural render',
-      pro_tip:'TEXT & SIGNAGE: Any text in the image is a dead giveaway. AI consistently mangles letters, producing nonsensical words or characters that almost-but-don\'t-quite look right.'
-    },
-    {
-      id:'f9',type:'image',source:'human',
-      content:'https://picsum.photos/id/100/800/600',
-      attribution:'Real photograph — mountain vista',
-      pro_tip:'NOISE PATTERN: Real photos have consistent sensor noise across the entire image. AI images have unnaturally clean areas mixed with over-detailed zones.'
-    },
-    {
-      id:'f10',type:'image',source:'ai',
-      content:'https://picsum.photos/id/274/800/600',
-      attribution:'AI-generated — fantasy landscape',
-      pro_tip:'REPETITIVE ELEMENTS: Count similar objects (leaves, bricks, windows). AI loves to create subtle copy-paste patterns. Nature never repeats this precisely.'
-    }
+    { id:'f1',type:'image',source:'human', content:'https://picsum.photos/id/10/800/600', attribution:'Real photograph — Yosemite Valley landscape', pro_tip:'ATMOSPHERIC DEPTH: Real landscapes show natural haze and color shifts in the distance. AI often renders backgrounds too sharply or with artificial blur.' },
+    { id:'f2',type:'image',source:'ai', content:'https://picsum.photos/id/338/800/600', attribution:'AI-generated — digital artwork', pro_tip:'UNCANNY SYMMETRY: AI tends to create suspiciously balanced compositions. Real photos have natural asymmetry — objects slightly off-center, uneven lighting.' },
+    { id:'f3',type:'image',source:'human', content:'https://picsum.photos/id/15/800/600', attribution:'Real photograph — dog portrait', pro_tip:'FUR DETAIL: Real animal fur has irregular patterns and individual hairs catching light differently. AI fur often looks too uniform or creates impossible light reflections.' },
+    { id:'f4',type:'image',source:'ai', content:'https://picsum.photos/id/399/800/600', attribution:'AI-generated — surreal scene', pro_tip:'PHYSICS CHECK: Look for impossible reflections, shadows going the wrong direction, or objects floating without support. AI struggles with physical consistency.' },
+    { id:'f5',type:'image',source:'human', content:'https://picsum.photos/id/29/800/600', attribution:'Real photograph — food styling', pro_tip:'ORGANIC CHAOS: Real food photos have natural imperfections — a crumb out of place, uneven sauce drips. AI food looks suspiciously perfect.' },
+    { id:'f6',type:'image',source:'ai', content:'https://picsum.photos/id/64/800/600', attribution:'AI-generated — portrait', pro_tip:'EDGE ARTIFACTS: Zoom into where hair meets background, or where skin meets clothing. AI often creates subtle smearing, haloing, or impossible blending at these boundaries.' },
+    { id:'f7',type:'image',source:'human', content:'https://picsum.photos/id/47/800/600', attribution:'Real photograph — nature close-up', pro_tip:'TEXTURE CONSISTENCY: Real textures hold up at every zoom level. AI textures often dissolve into repetitive patterns or meaningless smudges when examined closely.' },
+    { id:'f8',type:'image',source:'ai', content:'https://picsum.photos/id/180/800/600', attribution:'AI-generated — architectural render', pro_tip:'TEXT & SIGNAGE: Any text in the image is a dead giveaway. AI consistently mangles letters, producing nonsensical words or characters that almost-but-don\'t-quite look right.' },
+    { id:'f9',type:'image',source:'human', content:'https://picsum.photos/id/100/800/600', attribution:'Real photograph — mountain vista', pro_tip:'NOISE PATTERN: Real photos have consistent sensor noise across the entire image. AI images have unnaturally clean areas mixed with over-detailed zones.' },
+    { id:'f10',type:'image',source:'ai', content:'https://picsum.photos/id/274/800/600', attribution:'AI-generated — fantasy landscape', pro_tip:'REPETITIVE ELEMENTS: Count similar objects (leaves, bricks, windows). AI loves to create subtle copy-paste patterns. Nature never repeats this precisely.' }
   ]
 };
 
@@ -1069,13 +1062,11 @@ async function boot() {
   const logo = document.getElementById('boot-logo');
   const sub = document.getElementById('boot-sub');
 
-  // Check EARLY if already played today
   loadStreak();
   const todayKey = getTodayKey();
   const played = localStorage.getItem('braiain_played_' + todayKey);
 
   if (played) {
-    // FAST PATH: skip animations, load data, show boot with VIEW RESULTS button
     logo.textContent = 'BRAIAIN';
     sub.textContent = 'CAN YOU SPOT THE AI?';
     status.textContent = '> LOADING...';
@@ -1094,13 +1085,11 @@ async function boot() {
       dailyData = FALLBACK;
     }
 
-    // Check API (non-blocking)
     try {
       const healthResp = await fetchWithTimeout(API_BASE + '/health', {}, 2000);
       if (healthResp.ok) apiAvailable = true;
     } catch (e) { apiAvailable = false; }
 
-    // Restore saved results so VIEW RESULTS works
     try {
       const saved = JSON.parse(localStorage.getItem('braiain_results_' + todayKey));
       if (saved && saved.length) {
@@ -1109,37 +1098,28 @@ async function boot() {
       }
     } catch (e) {}
 
-    // Show boot screen with VIEW RESULTS button
     status.textContent = '> TODAY\'S CHALLENGE COMPLETE';
     document.getElementById('btn-start').style.display = 'none';
     document.getElementById('btn-results').style.display = '';
     return;
   }
 
-  // NORMAL PATH: first-time player today — full boot animation
   await scrambleText(logo, 'BRAIAIN', 800);
   await scrambleText(sub, 'CAN YOU SPOT THE AI?', 500);
 
-  // Show running stats on home screen
   loadBootStats();
 
-  // Load daily data (two-step: index → challenge file)
   status.textContent = '> LOADING DAILY CHALLENGE...';
   try {
     const indexResp = await fetchWithTimeout('daily.json?v=' + APP_VERSION + '&t=' + BUILD_HASH, {}, 5000);
     if (!indexResp.ok) throw new Error('HTTP ' + indexResp.status);
     const index = await indexResp.json();
-
-    // Look up today's entry in the index
     const todayEntry = index[todayKey];
     if (!todayEntry || !todayEntry.challenge_file) throw new Error('No entry for ' + todayKey);
-
-    // Fetch the actual challenge file with rounds
     status.textContent = '> DOWNLOADING DAY ' + todayEntry.day_number + '...';
     const chalResp = await fetchWithTimeout(todayEntry.challenge_file + '?v=' + APP_VERSION + '&t=' + BUILD_HASH, {}, 5000);
     if (!chalResp.ok) throw new Error('Challenge HTTP ' + chalResp.status);
     dailyData = await chalResp.json();
-
     status.textContent = '> DAY ' + dailyData.day_number + ' — ' + (dailyData.category || 'DETECTION').toUpperCase() + ' LOADED';
   } catch (e) {
     console.warn('Daily load failed:', e.message);
@@ -1149,21 +1129,15 @@ async function boot() {
 
   await sleep(400);
 
-  // GA4: Track page load context
   const daysPlayed = (() => { let c = 0; for (let i = 0; i < localStorage.length; i++) { if ((localStorage.key(i) || '').startsWith('braiain_results_')) c++; } return c; })();
   trackEvent('session_start_braiain', {
-    day: dailyData.day_number,
-    category: dailyData.category || 'unknown',
-    returning: daysPlayed > 0,
-    days_played: daysPlayed,
-    already_played_today: false,
-    offline: dailyData === FALLBACK
+    day: dailyData.day_number, category: dailyData.category || 'unknown',
+    returning: daysPlayed > 0, days_played: daysPlayed,
+    already_played_today: false, offline: dailyData === FALLBACK
   });
 
-  // Start preloading all images in background
   preloadAllImages();
 
-  // Check API availability (non-blocking)
   try {
     const healthResp = await fetchWithTimeout(API_BASE + '/health', {}, 2000);
     if (healthResp.ok) apiAvailable = true;
@@ -1173,7 +1147,6 @@ async function boot() {
   document.getElementById('btn-start').style.display = '';
   status.textContent = '> READY — ' + dailyData.rounds.length + ' TARGETS QUEUED';
 
-  // Show daily transmission
   const bootQ = getDailyQuote();
   const bootTx = document.getElementById('boot-transmission');
   if (bootTx) {
@@ -1209,7 +1182,6 @@ function loadRound() {
   const revealPanel = document.getElementById('reveal-panel');
   const choices = document.getElementById('choices');
 
-  // Reset UI
   revealPanel.classList.remove('active');
   revealPanel.style.display = 'none';
   choices.style.display = '';
@@ -1217,7 +1189,6 @@ function loadRound() {
   frame.classList.remove('scanning');
   frame.classList.add('loading');
 
-  // Reset community stat for new round
   const gFill = document.getElementById('global-bar-fill');
   const gPct = document.getElementById('global-pct');
   const gLabel = document.getElementById('global-label');
@@ -1225,11 +1196,9 @@ function loadRound() {
   if (gPct) { gPct.textContent = '—'; gPct.style.color = 'var(--cyan)'; }
   if (gLabel) gLabel.textContent = 'CONNECTING TO NETWORK...';
 
-  // Load image
   img.onload = () => {
     frame.classList.remove('loading');
     frame.classList.add('scanning');
-    // Enable magnifier after scan
     setTimeout(() => {
       frame.classList.remove('scanning');
       initMagnifier(img);
@@ -1237,37 +1206,29 @@ function loadRound() {
   };
   img.onerror = () => {
     frame.classList.remove('loading');
-    // Fallback: try without query params
     if (img.src.includes('?')) {
       img.src = img.src.split('?')[0];
     }
   };
   img.src = round.content;
 
-  // Preload next round's image for zero lag
   preloadNextImage(currentRound + 1);
-
-  // Update prompt
   scrambleText(document.getElementById('prompt'), 'CLASSIFY: HUMAN OR AI-GENERATED?', 300);
   updateHUD();
 }
 
 function choose(answer) {
   if (!gameActive) return;
-
   haptic('tap');
 
   const round = dailyData.rounds[currentRound];
   const isCorrect = answer === round.source;
   results.push(isCorrect);
 
-  // Haptic result feedback (slight delay so tap registers first)
   setTimeout(() => haptic(isCorrect ? 'correct' : 'wrong'), 150);
 
-  // Disable buttons
   document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
 
-  // Highlight chosen button
   const btns = document.querySelectorAll('.choice-btn');
   btns.forEach(b => {
     if ((answer === 'human' && b.classList.contains('human')) ||
@@ -1277,26 +1238,18 @@ function choose(answer) {
     }
   });
 
-  // Update pip
   const pips = document.querySelectorAll('.pip');
   if (pips[currentRound]) {
     pips[currentRound].classList.add(isCorrect ? 'correct' : 'wrong');
   }
 
-  // Show reveal
   showReveal(round, isCorrect);
-
-  // Report to API (fire and forget)
   reportVote(round.id, isCorrect);
 
-  // GA4: Track each round answer
   trackEvent('round_answer', {
-    round: currentRound + 1,
-    correct: isCorrect,
-    source: round.source,
-    answer: answer,
-    day: dailyData.day_number,
-    category: dailyData.category || 'unknown'
+    round: currentRound + 1, correct: isCorrect,
+    source: round.source, answer: answer,
+    day: dailyData.day_number, category: dailyData.category || 'unknown'
   });
 }
 
@@ -1312,7 +1265,6 @@ function showReveal(round, isCorrect) {
 
   source.textContent = round.attribution || '';
 
-  // Show source image URL
   const sourceLink = document.getElementById('reveal-source-link');
   if (round.content && round.source === 'human') {
     sourceLink.innerHTML = '<a href="' + round.content + '" target="_blank" rel="noopener">[ VIEW SOURCE IMAGE ↗ ]</a>';
@@ -1322,15 +1274,12 @@ function showReveal(round, isCorrect) {
 
   tip.innerHTML = '<strong>PRO TIP:</strong> ' + (round.pro_tip || '');
 
-  // Fetch global accuracy
   fetchGlobalAccuracy(round.id);
 
-  // Collapse choices, expand reveal
   choices.style.display = 'none';
   panel.style.display = '';
   panel.classList.add('active');
 
-  // Update next button text on last round
   const nextBtn = panel.querySelector('.next-btn');
   if (currentRound >= TOTAL_ROUNDS - 1 || currentRound >= dailyData.rounds.length - 1) {
     nextBtn.textContent = 'VIEW RESULTS →';
@@ -1358,12 +1307,9 @@ function endGame() {
 
   const score = results.filter(Boolean).length;
   trackEvent('game_complete', {
-    score: score,
-    total: TOTAL_ROUNDS,
-    day: dailyData.day_number,
-    category: dailyData.category || 'unknown',
-    perfect: score === TOTAL_ROUNDS,
-    pct: Math.round((score / TOTAL_ROUNDS) * 100)
+    score: score, total: TOTAL_ROUNDS,
+    day: dailyData.day_number, category: dailyData.category || 'unknown',
+    perfect: score === TOTAL_ROUNDS, pct: Math.round((score / TOTAL_ROUNDS) * 100)
   });
   updateStreak(score);
   showResults();
@@ -1384,9 +1330,8 @@ function showResults() {
     'ELITE SCANNER','NEAR PERFECT','VOIGHT-KAMPFF MASTER'
   ];
 
-  // Score ring animation
   const ring = document.getElementById('ring-fg');
-  const circumference = 2 * Math.PI * 70; // r=70
+  const circumference = 2 * Math.PI * 70;
   const offset = circumference - (score / TOTAL_ROUNDS) * circumference;
   setTimeout(() => {
     ring.style.strokeDashoffset = offset;
@@ -1398,7 +1343,7 @@ function showResults() {
   document.getElementById('score-num').textContent = score;
   scrambleText(document.getElementById('results-title'), titles[score], 500);
 
-  // Populate results stats row (mirrors boot stats)
+  // Populate results stats row
   let daysPlayed = 0, totalScore = 0;
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
@@ -1428,8 +1373,9 @@ function showResults() {
 
   startCountdown();
   loadTodayReview();
+  fetchGlobalPlayers();
 
-  // Results transmission — pick a different one from boot
+  // Results transmission quote
   const resQ = getRandomQuote(getDailyQuote().text);
   const resTx = document.getElementById('results-transmission');
   if (resTx) {
@@ -1455,7 +1401,6 @@ function initMagnifier(img) {
     const px = (x - rect.left) / rect.width;
     const py = (y - rect.top) / rect.height;
     if (px < 0 || px > 1 || py < 0 || py > 1) { mag.style.display = 'none'; return; }
-
     mag.style.display = 'block';
     mag.style.left = (x - rect.left - 60) + 'px';
     mag.style.top = (y - rect.top - 60) + 'px';
@@ -1468,11 +1413,9 @@ function initMagnifier(img) {
 
   function hide() { mag.style.display = 'none'; }
 
-  // Mouse
   frame.onmousemove = e => show(e.clientX, e.clientY);
   frame.onmouseleave = hide;
 
-  // Touch
   frame.ontouchmove = e => {
     e.preventDefault();
     const t = e.touches[0];
@@ -1481,7 +1424,6 @@ function initMagnifier(img) {
   frame.ontouchend = hide;
   frame.ontouchcancel = hide;
 
-  // Tap to toggle on mobile
   let magVisible = false;
   frame.ontouchstart = e => {
     if (e.touches.length === 1) {
@@ -1505,7 +1447,6 @@ function updateHUD() {
   document.getElementById('hud-ticker').textContent = 'DAY ' + dayNum + ' — ' + cat;
   document.getElementById('hud-round').textContent = (currentRound + 1) + '/' + TOTAL_ROUNDS;
 
-  // Build pips
   const pipWrap = document.getElementById('hud-pips');
   pipWrap.innerHTML = '';
   for (let i = 0; i < TOTAL_ROUNDS; i++) {
@@ -1574,7 +1515,6 @@ async function fetchGlobalAccuracy(questionId) {
       fill.style.width = pct + '%';
       pctEl.textContent = pct + '%';
       label.textContent = data.total + ' PLAYERS SCANNED';
-      // Color code
       if (pct >= 70) {
         pctEl.style.color = 'var(--green)';
         fill.style.background = 'var(--green)';
@@ -1665,14 +1605,12 @@ function loadTodayReview() {
   const section = document.getElementById('review-section');
   if (!dailyData || !dailyData.rounds) return;
 
-  // Header
   const catEmoji = dailyData.category_emoji || '👁️';
   document.getElementById('review-title').textContent =
     catEmoji + ' ' + (dailyData.category || 'IMAGE DETECTION').toUpperCase();
   document.getElementById('review-subtitle').textContent =
     'Day ' + (dailyData.day_number || '1') + ' — All 10 Answers Revealed';
 
-  // Build cards
   const grid = document.getElementById('review-grid');
   grid.innerHTML = '';
 
@@ -1686,15 +1624,21 @@ function loadTodayReview() {
     const labelClass = isHuman ? 'human' : 'ai';
     const labelText = isHuman ? '✓ HUMAN' : '✗ AI-GENERATED';
 
-    // Show user's answer as a pip
     const userCorrect = results[i];
     const pipClass = userCorrect ? 'correct' : 'wrong';
     const pipText = userCorrect ? '✓' : '✗';
 
-    // Source link (only for real photos)
-    const sourceLink = isHuman
-      ? '<div class="yd-card-source"><a href="' + r.content + '" target="_blank" rel="noopener">[ VIEW SOURCE ↗ ]</a></div>'
-      : '';
+    // NEW: Source link for human photos, prompt reveal for AI
+    let sourceLink = '';
+    if (isHuman) {
+      sourceLink = '<div class="yd-card-source"><a href="' + r.content + '" target="_blank" rel="noopener">[ VIEW SOURCE ↗ ]</a></div>';
+    } else if (r._note) {
+      const promptText = r._note.replace(/^Prompt:\s*/i, '');
+      const promptId = 'prompt-' + i;
+      sourceLink =
+        '<button class="yd-prompt-toggle" onclick="document.getElementById(\'' + promptId + '\').classList.toggle(\'visible\');this.textContent=this.textContent.includes(\'SHOW\')?\'[ HIDE PROMPT ]\':\'[ SHOW AI PROMPT ]\'">[ SHOW AI PROMPT ]</button>' +
+        '<div class="yd-prompt-text" id="' + promptId + '"><span class="prompt-label">AI GENERATION PROMPT</span>' + promptText + '</div>';
+    }
 
     card.innerHTML =
       '<div class="yd-card-img-wrap">' +
@@ -1711,8 +1655,6 @@ function loadTodayReview() {
       '</div>';
 
     grid.appendChild(card);
-
-    // Fetch community stats per round
     fetchReviewStat(r.id, i);
   }
 
@@ -1740,6 +1682,32 @@ async function fetchReviewStat(roundId, index) {
 }
 
 /* ══════════════════════════════════════
+   NEW: GLOBAL PLAYERS COUNT (results screen)
+   Uses round 1 total as proxy for daily players
+   ══════════════════════════════════════ */
+async function fetchGlobalPlayers() {
+  if (!apiAvailable || !dailyData || !dailyData.rounds || !dailyData.rounds.length) return;
+  const el = document.getElementById('global-players-count');
+  const label = document.getElementById('global-players-label');
+  try {
+    const firstId = dailyData.rounds[0].id;
+    const resp = await fetchWithTimeout(API_BASE + '/stats?id=' + firstId, {}, 4000);
+    if (!resp.ok) throw new Error();
+    const data = await resp.json();
+    if (data.total > 0) {
+      el.textContent = data.total.toLocaleString();
+      label.textContent = 'GLOBAL PLAYERS TODAY';
+    } else {
+      el.textContent = '—';
+      label.textContent = 'NO DATA YET';
+    }
+  } catch (e) {
+    el.textContent = '—';
+    label.textContent = 'NETWORK OFFLINE';
+  }
+}
+
+/* ══════════════════════════════════════
    BOOT SCREEN STATS
    ══════════════════════════════════════ */
 function loadBootStats() {
@@ -1761,7 +1729,6 @@ function loadBootStats() {
 
   const bestStrk = parseInt(localStorage.getItem('braiain_best_streak') || '0');
 
-  // Yesterday's score
   const ydKey = getYesterdayKey();
   const ydEl = document.getElementById('bs-yesterday');
   try {
@@ -1800,7 +1767,6 @@ function preloadNextImage(nextIndex) {
 
 function preloadAllImages() {
   if (!dailyData || !dailyData.rounds) return;
-  // Preload first 3 immediately, rest after short delay
   const rounds = dailyData.rounds.slice(0, TOTAL_ROUNDS);
   rounds.slice(0, 3).forEach(r => {
     if (!preloadCache.has(r.content)) {
@@ -1809,7 +1775,6 @@ function preloadAllImages() {
       preloadCache.set(r.content, img);
     }
   });
-  // Preload remaining after 2s
   setTimeout(() => {
     rounds.slice(3).forEach(r => {
       if (!preloadCache.has(r.content)) {
@@ -1845,17 +1810,14 @@ function showScreen(id) {
 }
 
 function goHome() {
-  // Hide game HUD, review section, footer
   document.getElementById('hud').style.display = 'none';
   document.getElementById('review-section').classList.remove('visible');
   document.querySelector('.tip-terminal').classList.remove('visible');
 
-  // Show boot screen
   showScreen('screen-boot');
   loadBootStats();
   loadStreak();
 
-  // Show the right button
   const todayKey = getTodayKey();
   const played = localStorage.getItem('braiain_played_' + todayKey);
   const btnStart = document.getElementById('btn-start');
@@ -1916,46 +1878,37 @@ function copyTip(chain) {
 }
 
 /* ══════════════════════════════════════
-   BOOT
-   ══════════════════════════════════════ */
-/* ══════════════════════════════════════
    KEYBOARD SHORTCUTS (Desktop)
    ══════════════════════════════════════ */
 document.addEventListener('keydown', e => {
-  // Game screen: Left/H = Human, Right/A = AI
   if (gameActive && document.getElementById('screen-game').classList.contains('active')) {
     const revealActive = document.getElementById('reveal-panel').classList.contains('active');
     if (!revealActive) {
       if (e.key === 'ArrowLeft' || e.key === 'h' || e.key === 'H') { e.preventDefault(); choose('human'); }
       if (e.key === 'ArrowRight' || e.key === 'a' || e.key === 'A') { e.preventDefault(); choose('ai'); }
     } else {
-      // Reveal visible: Enter/Space/Right = Next
       if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); nextRound(); }
     }
   }
-  // Review section: Escape to scroll back to top
   if (e.key === 'Escape') {
     const section = document.getElementById('review-section');
     if (section && section.classList.contains('visible')) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   }
-  // Boot screen: Enter to start
   if (e.key === 'Enter' && document.getElementById('screen-boot').classList.contains('active')) {
     const btn = document.getElementById('btn-start');
     if (btn && btn.style.display !== 'none') { e.preventDefault(); startGame(); }
   }
 });
 
-/* ======================================
+/* ══════════════════════════════════════
    BOOT
-   ====================================== */
+   ══════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  // Build email link at runtime (prevents Cloudflare encoding)
   const emailLink = document.getElementById('footer-email');
   if (emailLink) {
     emailLink.href = 'mail' + 'to:' + 'dnilgis' + '@' + 'gmail.com';
   }
 
-  // Boot the app
   boot().catch(err => {
     console.error('Boot failed:', err);
     const status = document.getElementById('boot-status');
