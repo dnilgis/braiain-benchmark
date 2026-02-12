@@ -18,6 +18,7 @@
     --red: #ff003c;
     --orange: #ff9500;
     --yellow: #ffd600;
+    --purple: #a855f7;
     --font-mono: 'Space Mono', monospace;
     --font-head: 'Orbitron', monospace;
   }
@@ -52,7 +53,7 @@
     color: var(--text); font-family: var(--font-mono); font-size: .8rem;
     border-radius: 2px; outline: none; width: 100%;
   }
-  input:focus, textarea:focus { border-color: var(--cyan); }
+  input:focus, textarea:focus, select:focus { border-color: var(--cyan); }
   .hint { color: var(--muted); font-size: .55rem; margin-top: 3px; }
   .hint a { color: var(--cyan); }
   .row { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -73,6 +74,8 @@
   .btn-red:hover { filter: brightness(1.15); }
   .btn-yellow { background: var(--yellow); color: var(--bg); }
   .btn-yellow:hover { filter: brightness(1.15); }
+  .btn-purple { background: var(--purple); color: white; }
+  .btn-purple:hover { filter: brightness(1.15); }
   .btn-outline { background: transparent; color: var(--cyan); border: 1px solid var(--cyan); }
   .btn-outline:hover { background: rgba(0,229,255,.08); }
   .btn-sm { padding: 6px 14px; font-size: .55rem; }
@@ -80,6 +83,17 @@
 
   .search-row { display: flex; gap: 8px; margin-bottom: 10px; }
   .search-row input { flex: 1; }
+
+  .source-toggle { display: flex; gap: 0; margin-bottom: 10px; }
+  .source-toggle button {
+    padding: 6px 14px; font-family: var(--font-head); font-size: .55rem;
+    letter-spacing: 1px; cursor: pointer; border: 1px solid var(--border);
+    background: var(--bg); color: var(--muted); transition: all .2s;
+  }
+  .source-toggle button:first-child { border-radius: 2px 0 0 2px; }
+  .source-toggle button:last-child { border-radius: 0 2px 2px 0; }
+  .source-toggle button:not(:first-child) { border-left: none; }
+  .source-toggle button.active { background: var(--green); color: var(--bg); border-color: var(--green); }
 
   .img-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -94,6 +108,14 @@
   .img-card img { width: 100%; height: 150px; object-fit: cover; display: block; }
   .img-card .meta { padding: 6px 8px; font-size: .55rem; color: var(--muted); line-height: 1.4; }
   .img-card .meta b { color: var(--text); }
+  .img-card .src-badge {
+    position: absolute; top: 5px; left: 5px;
+    font-family: var(--font-head); font-size: .4rem;
+    padding: 2px 6px; letter-spacing: 1px; font-weight: 700;
+    border-radius: 2px; background: rgba(0,0,0,.7);
+  }
+  .img-card .src-badge.unsplash { color: var(--cyan); }
+  .img-card .src-badge.pexels { color: var(--green); }
   .img-card .sel-badge {
     position: absolute; top: 5px; right: 5px;
     font-family: var(--font-head); font-size: .5rem;
@@ -148,12 +170,14 @@
     border-top-color: var(--cyan); border-radius: 50%; animation: sp .5s linear infinite; }
   @keyframes sp { to { transform: rotate(360deg); } }
 
-  #json-out {
-    width: 100%; height: 300px; padding: 12px;
+  #json-out, #daily-json-out {
+    width: 100%; padding: 12px;
     background: var(--bg); border: 1px solid var(--border);
     color: var(--green); font-family: var(--font-mono); font-size: .65rem;
     resize: vertical; outline: none; margin-top: 10px;
   }
+  #json-out { height: 300px; }
+  #daily-json-out { height: 120px; color: var(--cyan); }
 
   .counter { font-family: var(--font-head); font-size: .7rem; }
   .counter .n { color: var(--cyan); }
@@ -213,6 +237,17 @@
   .q-stat .q-val.warn { color: var(--orange); }
   .q-stat .q-val.bad { color: var(--red); }
 
+  .model-select { max-width: 360px; margin-bottom: 12px; }
+  .model-select select { font-size: .7rem; }
+
+  .export-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .export-section h3 {
+    font-family: var(--font-head); font-size: .7rem; letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .export-section h3.cyan { color: var(--cyan); }
+  .export-section h3.purple { color: var(--purple); }
+
   @media (max-width: 768px) {
     .preview-grid { grid-template-columns: repeat(2, 1fr); }
   }
@@ -228,12 +263,15 @@
   <h2><span class="step-num" style="background:var(--cyan);color:var(--bg)">1</span> CHALLENGE CONFIG</h2>
   <div class="row">
     <div style="max-width:80px"><label>Day #</label><input type="number" id="cfg-day" value="2" min="1"></div>
-    <div style="max-width:160px"><label>Date</label><input type="date" id="cfg-date" value="2026-02-06"></div>
+    <div style="max-width:160px"><label>Date</label><input type="date" id="cfg-date"></div>
     <div><label>Category / Theme</label><input type="text" id="cfg-cat" placeholder="e.g. National Pizza Day"></div>
     <div style="max-width:70px"><label>Emoji</label><input type="text" id="cfg-emoji" placeholder="🍕"></div>
   </div>
   <div class="row" style="margin-top:10px;">
-    <div><label>Subtitle (optional)</label><input type="text" id="cfg-subtitle" placeholder="e.g. Can you spot the fake slice?"></div>
+    <div><label>Subtitle / Tagline</label><input type="text" id="cfg-subtitle" placeholder="Auto-generated after picking theme, or type your own"></div>
+    <div style="max-width:180px;display:flex;align-items:flex-end;">
+      <button class="btn btn-purple btn-sm" onclick="autoTagline()" style="width:100%">✨ AUTO TAGLINE</button>
+    </div>
   </div>
   <hr>
   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
@@ -253,22 +291,32 @@
     <div>
       <label>Unsplash Access Key</label>
       <input type="text" id="key-unsplash" placeholder="Paste key here">
-      <div class="hint">Free → <a href="https://unsplash.com/developers" target="_blank">unsplash.com/developers</a> → New App → copy Access Key</div>
+      <div class="hint">Free → <a href="https://unsplash.com/developers" target="_blank">unsplash.com/developers</a></div>
     </div>
     <div>
-      <label>Google AI Studio API Key</label>
+      <label>Pexels API Key</label>
+      <input type="text" id="key-pexels" placeholder="Paste key here">
+      <div class="hint">Free → <a href="https://www.pexels.com/api/" target="_blank">pexels.com/api</a></div>
+    </div>
+    <div>
+      <label>Google AI Studio Key</label>
       <input type="text" id="key-gemini" placeholder="Paste key here">
-      <div class="hint">Free tier → <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a> → Create API Key</div>
+      <div class="hint">Free → <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a></div>
     </div>
   </div>
 </div>
 
 <!-- ═══ STEP 3: REAL PHOTOS ═══ -->
 <div class="panel">
-  <h2><span class="step-num" style="background:var(--green);color:var(--bg)">3</span> <span style="color:var(--green)">REAL PHOTOS</span> — PICK 5 FROM UNSPLASH</h2>
+  <h2><span class="step-num" style="background:var(--green);color:var(--bg)">3</span> <span style="color:var(--green)">REAL PHOTOS</span> — PICK 5</h2>
+  <div class="source-toggle" id="photo-source-toggle">
+    <button class="active" data-src="unsplash" onclick="setPhotoSource('unsplash')">UNSPLASH</button>
+    <button data-src="pexels" onclick="setPhotoSource('pexels')">PEXELS</button>
+    <button data-src="both" onclick="setPhotoSource('both')">BOTH</button>
+  </div>
   <div class="search-row">
     <input type="text" id="us-query" placeholder="Search photos (e.g. ice cream cone summer)">
-    <button class="btn btn-green btn-sm" onclick="searchUnsplash()">SEARCH</button>
+    <button class="btn btn-green btn-sm" onclick="searchPhotos()">SEARCH</button>
   </div>
   <div style="display:flex;justify-content:space-between;align-items:center;">
     <div class="status" id="us-status"></div>
@@ -281,11 +329,20 @@
 
 <!-- ═══ STEP 4: AI IMAGES ═══ -->
 <div class="panel">
-  <h2><span class="step-num" style="background:var(--red);color:white">4</span> <span style="color:var(--red)">AI IMAGES</span> — GENERATE 5 WITH GEMINI</h2>
+  <h2><span class="step-num" style="background:var(--red);color:white">4</span> <span style="color:var(--red)">AI IMAGES</span> — GENERATE 5</h2>
   <p style="color:var(--muted);font-size:.65rem;margin-bottom:12px;">
-    Write a prompt for each, click Generate, pick the best result. You can generate multiple times per slot.
-    You can also upload an image file instead (e.g. from Gemini web, Midjourney, etc).
+    Write a prompt, then either Generate via API or <b style="color:var(--cyan)">Copy Prompt</b> → paste into 
+    <a href="https://gemini.google.com" target="_blank" style="color:var(--cyan)">Gemini web</a> → Upload result.
   </p>
+  <div class="model-select">
+    <label>Gemini Image Model</label>
+    <select id="gemini-model">
+      <option value="gemini-2.0-flash-exp">gemini-2.0-flash-exp (recommended)</option>
+      <option value="gemini-2.0-flash-preview-image-generation">gemini-2.0-flash-preview-image-generation</option>
+      <option value="imagen-3.0-generate-002">imagen-3.0-generate-002</option>
+    </select>
+    <div class="hint">If generation fails, try different model or use Copy Prompt → Gemini web → Upload</div>
+  </div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <button class="btn btn-yellow btn-sm" onclick="suggestPrompts()">✨ SUGGEST PROMPTS</button>
@@ -304,9 +361,6 @@
 <!-- ═══ STEP 5: PREVIEW ═══ -->
 <div class="panel">
   <h2><span class="step-num" style="background:var(--yellow);color:var(--bg)">5</span> CHALLENGE PREVIEW</h2>
-  <p style="color:var(--muted);font-size:.65rem;margin-bottom:12px;">
-    See the final 10 images in shuffled order, exactly as players will experience them. Check for patterns and difficulty balance.
-  </p>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
     <button class="btn btn-yellow btn-sm" onclick="renderPreview()">👁 PREVIEW</button>
     <button class="btn btn-outline btn-sm" onclick="reshufflePreview()">🔀 RE-SHUFFLE</button>
@@ -321,16 +375,26 @@
 <div class="panel">
   <h2><span class="step-num" style="background:var(--cyan);color:var(--bg)">6</span> EXPORT CHALLENGE</h2>
   <p style="color:var(--muted);font-size:.65rem;margin-bottom:12px;">
-    Once you have 5 real + 5 AI images, generate the JSON. Then download everything — the JSON goes in
-    <code style="color:var(--cyan)">challenges/</code> and AI images go in <code style="color:var(--cyan)">images/</code>.
+    JSON → <code style="color:var(--cyan)">challenges/</code> &nbsp;|&nbsp; AI images → <code style="color:var(--cyan)">images/</code> &nbsp;|&nbsp; 
+    Snippet → paste into <code style="color:var(--purple)">daily.json</code>
   </p>
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
     <button class="btn btn-cyan" onclick="generateJSON()">GENERATE JSON</button>
     <button class="btn btn-green" onclick="downloadAll()">⬇ DOWNLOAD ALL</button>
-    <button class="btn btn-outline btn-sm" onclick="copyJSON()">COPY JSON</button>
   </div>
   <div class="status" id="export-status"></div>
-  <textarea id="json-out" placeholder="Challenge JSON will appear here..."></textarea>
+
+  <div class="export-section">
+    <h3 class="cyan">CHALLENGE JSON → challenges/[date].json</h3>
+    <button class="btn btn-outline btn-sm" onclick="copyJSON()" style="margin-bottom:4px">📋 COPY</button>
+    <textarea id="json-out" placeholder="Challenge JSON will appear here..."></textarea>
+  </div>
+
+  <div class="export-section">
+    <h3 class="purple">DAILY.JSON SNIPPET → paste into daily.json</h3>
+    <button class="btn btn-purple btn-sm" onclick="copyDailyJSON()" style="margin-bottom:4px">📋 COPY SNIPPET</button>
+    <textarea id="daily-json-out" placeholder="daily.json entry will appear here after generating..."></textarea>
+  </div>
 </div>
 
 <script>
@@ -339,7 +403,8 @@
    ═══════════════════════════════════════ */
 const REAL = [null, null, null, null, null];
 const AI   = [null, null, null, null, null];
-let unsplashResults = [];
+let photoResults = [];
+let photoSource = 'unsplash';
 
 const defaultPrompts = [
   'A photorealistic photograph of [subject], natural lighting, shot on Canon EOS R5, 85mm lens',
@@ -363,17 +428,37 @@ let tips = [...defaultTips];
    INIT
    ═══════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', () => {
+  // Load saved keys
   document.getElementById('key-unsplash').value = localStorage.getItem('braiain_key_unsplash') || '';
+  document.getElementById('key-pexels').value = localStorage.getItem('braiain_key_pexels') || '';
   document.getElementById('key-gemini').value = localStorage.getItem('braiain_key_gemini') || '';
 
   document.getElementById('key-unsplash').addEventListener('input', e =>
     localStorage.setItem('braiain_key_unsplash', e.target.value.trim()));
+  document.getElementById('key-pexels').addEventListener('input', e =>
+    localStorage.setItem('braiain_key_pexels', e.target.value.trim()));
   document.getElementById('key-gemini').addEventListener('input', e =>
     localStorage.setItem('braiain_key_gemini', e.target.value.trim()));
 
+  const savedModel = localStorage.getItem('braiain_gemini_model');
+  if (savedModel) document.getElementById('gemini-model').value = savedModel;
+  document.getElementById('gemini-model').addEventListener('change', e =>
+    localStorage.setItem('braiain_gemini_model', e.target.value));
+
   document.getElementById('us-query').addEventListener('keydown', e => {
-    if (e.key === 'Enter') searchUnsplash();
+    if (e.key === 'Enter') searchPhotos();
   });
+
+  // ── Default date to today, auto-calc day number ──
+  const today = new Date();
+  document.getElementById('cfg-date').value = today.toISOString().split('T')[0];
+
+  // Day 9 = 2026-02-12 is the last known entry
+  const knownDay = 9;
+  const knownDate = new Date('2026-02-12T12:00:00');
+  today.setHours(12, 0, 0, 0);
+  const diffDays = Math.round((today - knownDate) / 86400000);
+  document.getElementById('cfg-day').value = Math.max(knownDay + diffDays, knownDay);
 
   renderRealStrip();
   renderAIStrip();
@@ -381,81 +466,112 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ═══════════════════════════════════════
-   IMPORT JSON
+   PHOTO SOURCE TOGGLE
+   ═══════════════════════════════════════ */
+function setPhotoSource(src) {
+  photoSource = src;
+  document.querySelectorAll('#photo-source-toggle button').forEach(b => {
+    b.classList.toggle('active', b.dataset.src === src);
+  });
+}
+
+/* ═══════════════════════════════════════
+   AUTO TAGLINE
+   ═══════════════════════════════════════ */
+async function autoTagline() {
+  const key = document.getElementById('key-gemini').value.trim();
+  if (!key) return stat('import-status', 'Enter Google AI key in Step 2', 'err');
+  const theme = document.getElementById('cfg-cat').value.trim();
+  if (!theme) return stat('import-status', 'Enter a theme first', 'err');
+
+  const date = document.getElementById('cfg-date').value;
+  const d = new Date(date + 'T12:00:00');
+  const formatted = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+
+  stat('import-status', 'Generating tagline…');
+  try {
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`,
+      {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text:
+          `Generate a short, witty subtitle for a daily AI image detection game.
+Theme: "${theme}" | Date: ${formatted}
+Rules: 5-12 words, fun/cheeky, theme-related. Similar to:
+"Post-Super Bowl Recovery — It's Pizza Time!"
+"Rain, Snow, or AI — They Always Deliver"
+Return ONLY the tagline, no quotes.`
+        }], role: 'user' }] })
+      }
+    );
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    const text = (data.candidates?.[0]?.content?.parts?.[0]?.text || '').trim().replace(/^["']|["']$/g, '');
+    if (text) {
+      document.getElementById('cfg-subtitle').value = text;
+      stat('import-status', 'Tagline generated ✓', 'ok');
+    } else throw new Error('Empty');
+  } catch (e) { stat('import-status', 'Failed: ' + e.message, 'err'); }
+}
+
+/* ═══════════════════════════════════════
+   WHAT'S TODAY?
    ═══════════════════════════════════════ */
 async function lookupDays() {
   const key = document.getElementById('key-gemini').value.trim();
-  if (!key) return stat('days-status', 'Enter Google AI key in Step 2 first', 'err');
-
+  if (!key) return stat('days-status', 'Enter Google AI key in Step 2', 'err');
   const date = document.getElementById('cfg-date').value;
   if (!date) return stat('days-status', 'Pick a date first', 'err');
 
   const d = new Date(date + 'T12:00:00');
-  const formatted = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-
-  stat('days-status', `Looking up special days for ${formatted}…`);
+  const formatted = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  stat('days-status', `Looking up ${formatted}…`);
   document.getElementById('days-list').innerHTML = '';
 
   try {
     const resp = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`,
       {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text:
-            `What national days, international days, awareness days, food days, and fun/unofficial holidays fall on ${formatted}?
-
-Include things like "National Pizza Day", "World Emoji Day", "International Ice Cream for Breakfast Day", etc. Include both well-known and obscure ones. Also include any major events, cultural moments, or seasonal themes relevant to this date (e.g. Super Bowl weekend, Oscar season, back to school, etc).
-
-For each day, suggest a single emoji that represents it.
-
-Return as a JSON array of objects with "name" and "emoji" fields. Return ONLY the JSON array, no other text. Example:
-[{"name": "National Pizza Day", "emoji": "🍕"}, {"name": "International Read in the Bathtub Day", "emoji": "🛁"}]
-
-Aim for 10-20 results, prioritizing the most visually interesting and game-friendly themes (food, nature, sports, art, animals are great for image detection games).`
-          }], role: 'user' }]
-        })
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text:
+          `What national days, international days, awareness days, food days, and fun holidays fall on ${formatted}?
+Include well-known and obscure. Also major events or seasonal themes.
+Return as JSON array: [{"name":"National Pizza Day","emoji":"🍕"}]
+ONLY JSON, no other text. 10-20 results, prioritize visually interesting themes.`
+        }], role: 'user' }] })
       }
     );
-
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const data = await resp.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-    // Parse JSON from response (handle markdown code blocks)
     const jsonStr = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
     const days = JSON.parse(jsonStr);
-
-    if (!Array.isArray(days) || days.length === 0) throw new Error('No days found');
+    if (!Array.isArray(days) || !days.length) throw new Error('No days found');
 
     const list = document.getElementById('days-list');
     list.innerHTML = '';
-
     days.forEach(day => {
       const chip = document.createElement('div');
       chip.className = 'day-chip';
-      chip.innerHTML = `<span class="day-emoji">${day.emoji || '📅'}</span>${day.name}`;
+      chip.innerHTML = `<span class="day-emoji">${day.emoji||'📅'}</span>${day.name}`;
       chip.onclick = () => {
-        // Fill category and emoji fields
         document.getElementById('cfg-cat').value = day.name;
         document.getElementById('cfg-emoji').value = day.emoji || '📅';
-        // Also set search query
-        document.getElementById('us-query').value = day.name.replace(/^(National|International|World)\s+/i, '').replace(/\s+Day$/i, '');
-        // Visual feedback
+        document.getElementById('us-query').value = day.name.replace(/^(National|International|World)\s+/i,'').replace(/\s+Day$/i,'');
         list.querySelectorAll('.day-chip').forEach(c => c.classList.remove('picked'));
         chip.classList.add('picked');
-        stat('days-status', `Selected: ${day.name} — theme and search query updated!`, 'ok');
+        stat('days-status', `Selected: ${day.name}`, 'ok');
+        autoTagline();
       };
       list.appendChild(chip);
     });
-
-    stat('days-status', `Found ${days.length} days for ${formatted}. Click one to use as theme →`, 'ok');
-  } catch (e) {
-    stat('days-status', 'Lookup failed: ' + e.message, 'err');
-  }
+    stat('days-status', `${days.length} days found. Click to use →`, 'ok');
+  } catch (e) { stat('days-status', 'Failed: ' + e.message, 'err'); }
 }
 
+/* ═══════════════════════════════════════
+   IMPORT JSON
+   ═══════════════════════════════════════ */
 function importJSON(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -468,7 +584,6 @@ function importJSON(event) {
       document.getElementById('cfg-cat').value = data.category || '';
       document.getElementById('cfg-emoji').value = data.category_emoji || '';
       document.getElementById('cfg-subtitle').value = data.category_subtitle || '';
-
       let aiIdx = 0;
       if (data.rounds) {
         data.rounds.forEach(r => {
@@ -480,52 +595,82 @@ function importJSON(event) {
         });
       }
       renderAICards();
-      stat('import-status', `Loaded day ${data.day_number} — "${data.category}". Re-select images, tips & prompts restored.`, 'ok');
-    } catch (e) {
-      stat('import-status', 'Invalid JSON: ' + e.message, 'err');
-    }
+      stat('import-status', `Loaded day ${data.day_number} — "${data.category}"`, 'ok');
+    } catch (e) { stat('import-status', 'Invalid JSON: ' + e.message, 'err'); }
   };
   reader.readAsText(file);
   event.target.value = '';
 }
 
 /* ═══════════════════════════════════════
-   UNSPLASH — REAL PHOTOS
+   PHOTO SEARCH — UNSPLASH + PEXELS
    ═══════════════════════════════════════ */
-async function searchUnsplash() {
-  const key = document.getElementById('key-unsplash').value.trim();
-  if (!key) return stat('us-status', 'Enter Unsplash key in Step 2', 'err');
-
+async function searchPhotos() {
   const q = document.getElementById('us-query').value.trim();
   if (!q) return stat('us-status', 'Type a search term', 'err');
 
+  photoResults = [];
   stat('us-status', 'Searching…');
+  const promises = [];
+
+  if (photoSource === 'unsplash' || photoSource === 'both') {
+    const k = document.getElementById('key-unsplash').value.trim();
+    if (k) promises.push(searchUnsplash(q, k));
+    else if (photoSource === 'unsplash') return stat('us-status', 'Enter Unsplash key', 'err');
+  }
+  if (photoSource === 'pexels' || photoSource === 'both') {
+    const k = document.getElementById('key-pexels').value.trim();
+    if (k) promises.push(searchPexels(q, k));
+    else if (photoSource === 'pexels') return stat('us-status', 'Enter Pexels key', 'err');
+  }
+  if (!promises.length) return stat('us-status', 'No API keys for selected source', 'err');
 
   try {
-    const r = await fetch(
-      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=24&orientation=landscape`,
-      { headers: { Authorization: `Client-ID ${key}` } }
-    );
-    if (!r.ok) throw new Error(r.status === 401 ? 'Invalid API key' : 'HTTP ' + r.status);
-    const d = await r.json();
-    unsplashResults = d.results;
-    stat('us-status', `${d.total} results (showing ${unsplashResults.length})`, 'ok');
-    renderUSGrid();
-  } catch (e) {
-    stat('us-status', e.message, 'err');
-  }
+    const results = await Promise.allSettled(promises);
+    results.forEach(r => { if (r.status === 'fulfilled' && r.value) photoResults.push(...r.value); });
+    if (photoSource === 'both') photoResults.sort(() => Math.random() - 0.5);
+    stat('us-status', `${photoResults.length} results`, 'ok');
+    renderPhotoGrid();
+  } catch (e) { stat('us-status', e.message, 'err'); }
 }
 
-function renderUSGrid() {
+async function searchUnsplash(q, key) {
+  const r = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=24&orientation=landscape`,
+    { headers: { Authorization: `Client-ID ${key}` } });
+  if (!r.ok) throw new Error('Unsplash: ' + (r.status===401 ? 'Invalid key' : 'HTTP '+r.status));
+  const d = await r.json();
+  return d.results.map(p => ({
+    id: 'us_'+p.id, platform: 'unsplash',
+    thumb: p.urls.small, full: p.urls.raw+'&w=800&h=600&fit=crop&q=80',
+    photographer: p.user.name, desc: p.alt_description||'Untitled',
+    sourceUrl: p.links.html, attribution: `Photo by ${p.user.name} on Unsplash`,
+  }));
+}
+
+async function searchPexels(q, key) {
+  const r = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(q)}&per_page=24&orientation=landscape`,
+    { headers: { Authorization: key } });
+  if (!r.ok) throw new Error('Pexels: ' + (r.status===401 ? 'Invalid key' : 'HTTP '+r.status));
+  const d = await r.json();
+  return d.photos.map(p => ({
+    id: 'px_'+p.id, platform: 'pexels',
+    thumb: p.src.medium, full: p.src.large,
+    photographer: p.photographer, desc: p.alt||'Untitled',
+    sourceUrl: p.url, attribution: `Photo by ${p.photographer} on Pexels`,
+  }));
+}
+
+function renderPhotoGrid() {
   const g = document.getElementById('us-grid');
   g.innerHTML = '';
-  unsplashResults.forEach(p => {
+  photoResults.forEach(p => {
     const sel = REAL.some(r => r && r.id === p.id);
     const c = document.createElement('div');
     c.className = 'img-card' + (sel ? ' selected' : '');
     c.innerHTML = `
-      <img src="${p.urls.small}" loading="lazy">
-      <div class="meta"><b>${p.user.name}</b><br>${(p.alt_description || 'Untitled').slice(0, 55)}</div>
+      <img src="${p.thumb}" loading="lazy">
+      <div class="src-badge ${p.platform}">${p.platform==='pexels'?'PX':'US'}</div>
+      <div class="meta"><b>${p.photographer}</b><br>${p.desc.slice(0,55)}</div>
       <div class="sel-badge">✓ REAL</div>`;
     c.onclick = () => toggleReal(p);
     g.appendChild(c);
@@ -537,28 +682,24 @@ function toggleReal(photo) {
   if (idx >= 0) { REAL[idx] = null; }
   else {
     const empty = REAL.findIndex(r => r === null);
-    if (empty < 0) return stat('us-status', 'All 5 slots full — remove one first', 'err');
+    if (empty < 0) return stat('us-status', 'All 5 full — remove one first', 'err');
     REAL[empty] = photo;
   }
-  renderUSGrid(); renderRealStrip();
+  renderPhotoGrid(); renderRealStrip();
 }
 
-function removeReal(i) { REAL[i] = null; renderUSGrid(); renderRealStrip(); }
+function removeReal(i) { REAL[i] = null; renderPhotoGrid(); renderRealStrip(); }
 
 function renderRealStrip() {
-  const s = document.getElementById('real-strip');
-  s.innerHTML = '';
+  const s = document.getElementById('real-strip'); s.innerHTML = '';
   let count = 0;
   for (let i = 0; i < 5; i++) {
     if (REAL[i]) {
       count++;
       s.innerHTML += `<div class="slot" style="border:2px solid var(--green)">
-        <img src="${REAL[i].urls.thumb}">
-        <button class="rm" onclick="removeReal(${i})">✕</button>
+        <img src="${REAL[i].thumb}"><button class="rm" onclick="removeReal(${i})">✕</button>
         <div class="sn" style="color:var(--green)">REAL ${i+1}</div></div>`;
-    } else {
-      s.innerHTML += `<div class="slot-empty human">REAL ${i+1}</div>`;
-    }
+    } else s.innerHTML += `<div class="slot-empty human">REAL ${i+1}</div>`;
   }
   document.getElementById('real-count').textContent = count;
 }
@@ -567,18 +708,17 @@ function renderRealStrip() {
    GEMINI — AI IMAGES
    ═══════════════════════════════════════ */
 function renderAICards() {
-  const wrap = document.getElementById('ai-cards');
-  wrap.innerHTML = '';
+  const wrap = document.getElementById('ai-cards'); wrap.innerHTML = '';
   for (let i = 0; i < 5; i++) {
     const card = document.createElement('div');
-    card.className = 'ai-card';
-    card.id = `aic-${i}`;
+    card.className = 'ai-card'; card.id = `aic-${i}`;
     card.innerHTML = `
       <div class="ai-num">AI IMAGE ${i+1}</div>
       <textarea id="prompt-${i}" rows="2">${prompts[i]}</textarea>
       <div class="actions">
         <button class="btn btn-orange btn-sm" id="gen-${i}" onclick="geminiGen(${i})">GENERATE</button>
-        <button class="btn btn-outline btn-sm" onclick="document.getElementById('up-${i}').click()">UPLOAD FILE</button>
+        <button class="btn btn-cyan btn-sm" onclick="copyPrompt(${i})">📋 COPY PROMPT</button>
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('up-${i}').click()">UPLOAD</button>
         <input type="file" id="up-${i}" accept="image/*" style="display:none" onchange="handleUpload(${i},event)">
         <span class="status" id="ai-st-${i}"></span>
       </div>
@@ -591,72 +731,92 @@ function renderAICards() {
   }
 }
 
+function copyPrompt(i) {
+  const p = document.getElementById(`prompt-${i}`).value.trim();
+  if (!p) return stat(`ai-st-${i}`, 'No prompt', 'err');
+  navigator.clipboard.writeText(p).then(() =>
+    stat(`ai-st-${i}`, 'Copied! Paste into Gemini web, then upload result here.', 'ok')
+  ).catch(() => stat(`ai-st-${i}`, 'Copy failed', 'err'));
+}
+
 async function geminiGen(i) {
   const key = document.getElementById('key-gemini').value.trim();
-  if (!key) return stat(`ai-st-${i}`, 'Enter Google AI key in Step 2', 'err');
-
+  if (!key) return stat(`ai-st-${i}`, 'Enter Google AI key', 'err');
   const prompt = document.getElementById(`prompt-${i}`).value.trim();
   if (!prompt) return stat(`ai-st-${i}`, 'Write a prompt first', 'err');
 
+  const model = document.getElementById('gemini-model').value;
   const btn = document.getElementById(`gen-${i}`);
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spin"></span> WAIT…';
-  stat(`ai-st-${i}`, 'Calling Gemini…');
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span> WAIT…';
+  stat(`ai-st-${i}`, `Calling ${model}…`);
 
   try {
-    const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${key}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+    let resp, data;
+
+    if (model === 'imagen-3.0-generate-002') {
+      resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:predict?key=${key}`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ instances: [{ prompt }], parameters: { sampleCount: 1, aspectRatio: '4:3' } })
+      });
+      if (!resp.ok) { const e = await resp.json().catch(()=>({})); throw new Error(e.error?.message || 'HTTP '+resp.status); }
+      data = await resp.json();
+      const prev = document.getElementById(`prev-${i}`);
+      let found = false;
+      if (data.predictions) {
+        for (const pred of data.predictions) {
+          if (pred.bytesBase64Encoded) {
+            const b64 = pred.bytesBase64Encoded, mime = 'image/png';
+            const dataUrl = `data:${mime};base64,${b64}`;
+            const bytes = atob(b64), arr = new Uint8Array(bytes.length);
+            for (let j = 0; j < bytes.length; j++) arr[j] = bytes.charCodeAt(j);
+            const blob = new Blob([arr], { type: mime });
+            const img = document.createElement('img');
+            img.src = dataUrl; img.title = 'Click to select';
+            img.onclick = () => pickAI(i, blob, dataUrl, prompt, img);
+            prev.appendChild(img);
+            if (!AI[i]) pickAI(i, blob, dataUrl, prompt, img);
+            found = true;
+          }
+        }
+      }
+      if (!found) throw new Error('No image returned');
+    } else {
+      resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }], role: 'user' }],
           generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
         })
-      }
-    );
-
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.error?.message || 'HTTP ' + resp.status);
-    }
-
-    const data = await resp.json();
-    let found = false;
-    const prev = document.getElementById(`prev-${i}`);
-
-    if (data.candidates?.[0]?.content?.parts) {
-      for (const part of data.candidates[0].content.parts) {
-        if (part.inlineData) {
-          const mime = part.inlineData.mimeType || 'image/png';
-          const b64 = part.inlineData.data;
-          const dataUrl = `data:${mime};base64,${b64}`;
-
-          const bytes = atob(b64);
-          const arr = new Uint8Array(bytes.length);
-          for (let j = 0; j < bytes.length; j++) arr[j] = bytes.charCodeAt(j);
-          const blob = new Blob([arr], { type: mime });
-
-          const img = document.createElement('img');
-          img.src = dataUrl;
-          img.title = 'Click to select';
-          img.onclick = () => pickAI(i, blob, dataUrl, prompt, img);
-          prev.appendChild(img);
-
-          if (!AI[i]) pickAI(i, blob, dataUrl, prompt, img);
-          found = true;
+      });
+      if (!resp.ok) { const e = await resp.json().catch(()=>({})); throw new Error(e.error?.message || 'HTTP '+resp.status); }
+      data = await resp.json();
+      let found = false;
+      const prev = document.getElementById(`prev-${i}`);
+      if (data.candidates?.[0]?.content?.parts) {
+        for (const part of data.candidates[0].content.parts) {
+          if (part.inlineData) {
+            const mime = part.inlineData.mimeType || 'image/png';
+            const b64 = part.inlineData.data;
+            const dataUrl = `data:${mime};base64,${b64}`;
+            const bytes = atob(b64), arr = new Uint8Array(bytes.length);
+            for (let j = 0; j < bytes.length; j++) arr[j] = bytes.charCodeAt(j);
+            const blob = new Blob([arr], { type: mime });
+            const img = document.createElement('img');
+            img.src = dataUrl; img.title = 'Click to select';
+            img.onclick = () => pickAI(i, blob, dataUrl, prompt, img);
+            prev.appendChild(img);
+            if (!AI[i]) pickAI(i, blob, dataUrl, prompt, img);
+            found = true;
+          }
         }
       }
+      if (!found) throw new Error('No image — use Copy Prompt → Gemini web → Upload');
     }
-
-    if (!found) throw new Error('No image returned — try different wording or check quota');
-    stat(`ai-st-${i}`, 'Done! Click to select, or generate again for alternatives.', 'ok');
+    stat(`ai-st-${i}`, 'Done ✓', 'ok');
   } catch (e) {
     stat(`ai-st-${i}`, e.message, 'err');
   }
-
-  btn.disabled = false;
-  btn.innerHTML = 'GENERATE';
+  btn.disabled = false; btn.innerHTML = 'GENERATE';
 }
 
 function pickAI(i, blob, dataUrl, prompt, imgEl) {
@@ -668,8 +828,7 @@ function pickAI(i, blob, dataUrl, prompt, imgEl) {
 }
 
 function handleUpload(i, e) {
-  const file = e.target.files[0];
-  if (!file) return;
+  const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
     const dataUrl = ev.target.result;
@@ -688,341 +847,156 @@ function handleUpload(i, e) {
 function removeAI(i) { AI[i] = null; renderAIStrip(); }
 
 function renderAIStrip() {
-  const s = document.getElementById('ai-strip');
-  s.innerHTML = '';
+  const s = document.getElementById('ai-strip'); s.innerHTML = '';
   let count = 0;
   for (let i = 0; i < 5; i++) {
     if (AI[i]) {
       count++;
       s.innerHTML += `<div class="slot" style="border:2px solid var(--red)">
-        <img src="${AI[i].dataUrl}">
-        <button class="rm" onclick="removeAI(${i})">✕</button>
+        <img src="${AI[i].dataUrl}"><button class="rm" onclick="removeAI(${i})">✕</button>
         <div class="sn" style="color:var(--red)">AI ${i+1}</div></div>`;
-    } else {
-      s.innerHTML += `<div class="slot-empty ai">AI ${i+1}</div>`;
-    }
+    } else s.innerHTML += `<div class="slot-empty ai">AI ${i+1}</div>`;
   }
   document.getElementById('ai-count').textContent = count;
 }
 
 /* ═══════════════════════════════════════
-   SUGGEST PROMPTS (via Gemini text)
+   SUGGEST PROMPTS
    ═══════════════════════════════════════ */
 async function suggestPrompts() {
   const key = document.getElementById('key-gemini').value.trim();
-  if (!key) return stat('ai-status-global', 'Enter Google AI key in Step 2', 'err');
-
+  if (!key) return stat('ai-status-global', 'Enter Google AI key', 'err');
   const theme = document.getElementById('cfg-cat').value.trim();
-  if (!theme) return stat('ai-status-global', 'Enter a theme in Step 1 first', 'err');
+  if (!theme) return stat('ai-status-global', 'Enter a theme first', 'err');
 
-  const realDescs = REAL.filter(Boolean).map((p, i) =>
-    `Real ${i+1}: ${p.alt_description || 'landscape photo'}`
-  ).join('\n');
+  const realDescs = REAL.filter(Boolean).map((p,i) => `Real ${i+1}: ${p.desc}`).join('\n');
+  const ctx = realDescs ? `\n\nReal photos selected:\n${realDescs}\nMatch similar subjects to make AI hard to distinguish.` : '';
 
-  const contextNote = realDescs
-    ? `\n\nThe real photos already selected are:\n${realDescs}\n\nMake the AI prompts match similar subjects and compositions so they're difficult to distinguish from the real photos.`
-    : '';
-
-  stat('ai-status-global', 'Asking Gemini for prompt suggestions…');
-
+  stat('ai-status-global', 'Generating prompts…');
   try {
-    const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text:
-            `You are helping create a daily AI detection game challenge. The theme is: "${theme}".
-
-Generate exactly 5 photorealistic image prompts for an AI image generator. Each prompt should:
-- Start with "A photorealistic photograph of"
-- Describe a scene that fits the theme
-- Include camera/lighting details for realism (lens type, lighting condition)
-- Vary the subjects and compositions (close-up, wide shot, overhead, etc.)
-- Be designed to create images that could fool someone into thinking they're real photos
-${contextNote}
-
-Return ONLY the 5 prompts, one per line, numbered 1-5. No other text.`
-          }], role: 'user' }]
-        })
-      }
-    );
-
+    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text:
+        `Theme: "${theme}". Generate 5 photorealistic image prompts for AI image generation.
+Each: starts with "A photorealistic photograph of", includes camera/lighting details, varies composition.${ctx}
+Return ONLY 5 prompts numbered 1-5.`
+      }], role: 'user' }] })
+    });
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const data = await resp.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-    const lines = text.split('\n')
-      .map(l => l.replace(/^\d+[\.\)]\s*/, '').trim())
-      .filter(l => l.length > 20);
-
-    if (lines.length < 5) throw new Error('Unexpected response format — try again');
-
+    const lines = (data.candidates?.[0]?.content?.parts?.[0]?.text || '').split('\n')
+      .map(l => l.replace(/^\d+[\.\)]\s*/, '').trim()).filter(l => l.length > 20);
+    if (lines.length < 5) throw new Error('Bad response — retry');
     for (let i = 0; i < 5; i++) {
       const el = document.getElementById(`prompt-${i}`);
       if (el && lines[i]) el.value = lines[i];
     }
-    stat('ai-status-global', 'Prompts filled! Review and edit, then Generate All.', 'ok');
-  } catch (e) {
-    stat('ai-status-global', 'Suggest failed: ' + e.message, 'err');
-  }
+    stat('ai-status-global', 'Prompts filled ✓', 'ok');
+  } catch (e) { stat('ai-status-global', 'Failed: ' + e.message, 'err'); }
 }
 
 /* ═══════════════════════════════════════
-   GENERATE ALL AI IMAGES
+   GENERATE ALL
    ═══════════════════════════════════════ */
 async function generateAllAI() {
   const key = document.getElementById('key-gemini').value.trim();
-  if (!key) return stat('ai-status-global', 'Enter Google AI key in Step 2', 'err');
-
+  if (!key) return stat('ai-status-global', 'Enter Google AI key', 'err');
   const btn = document.getElementById('gen-all-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spin"></span> GENERATING…';
-
-  let successes = 0;
-  let failures = 0;
-
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span> GENERATING…';
+  let ok = 0, fail = 0;
   for (let i = 0; i < 5; i++) {
-    const prompt = document.getElementById(`prompt-${i}`).value.trim();
-    if (!prompt) { failures++; stat(`ai-st-${i}`, 'No prompt', 'err'); continue; }
-    if (AI[i]) { successes++; stat(`ai-st-${i}`, 'Already filled — skipped', 'ok'); continue; }
-
-    stat('ai-status-global', `Generating image ${i+1}/5…`);
-
-    try {
-      await geminiGen(i);
-      if (AI[i]) successes++;
-      else failures++;
-    } catch (e) {
-      failures++;
-    }
-
+    if (!document.getElementById(`prompt-${i}`).value.trim()) { fail++; continue; }
+    if (AI[i]) { ok++; continue; }
+    stat('ai-status-global', `Generating ${i+1}/5…`);
+    try { await geminiGen(i); if (AI[i]) ok++; else fail++; } catch(e) { fail++; }
     if (i < 4) await sleep(2000);
   }
-
-  btn.disabled = false;
-  btn.innerHTML = '🚀 GENERATE ALL';
-  stat('ai-status-global',
-    `Done! ${successes} succeeded, ${failures} failed.${failures > 0 ? ' Retry failed ones individually.' : ''}`,
-    failures > 0 ? 'err' : 'ok');
+  btn.disabled = false; btn.innerHTML = '🚀 GENERATE ALL';
+  stat('ai-status-global', `${ok} done, ${fail} failed${fail ? ' — use Copy Prompt for failed' : ''}`, fail ? 'err' : 'ok');
 }
 
 /* ═══════════════════════════════════════
-   AUTO TIPS (via Gemini text)
+   AUTO TIPS
    ═══════════════════════════════════════ */
 async function autoTips() {
   const key = document.getElementById('key-gemini').value.trim();
-  if (!key) return stat('ai-status-global', 'Enter Google AI key in Step 2', 'err');
-
+  if (!key) return stat('ai-status-global', 'Enter Google AI key', 'err');
   const theme = document.getElementById('cfg-cat').value.trim();
-  const aiPrompts = [];
-  for (let i = 0; i < 5; i++) {
-    aiPrompts.push(document.getElementById(`prompt-${i}`).value.trim());
-  }
-  if (aiPrompts.every(p => !p)) return stat('ai-status-global', 'Fill in prompts first', 'err');
+  const aiP = []; for (let i=0;i<5;i++) aiP.push(document.getElementById(`prompt-${i}`).value.trim());
+  if (aiP.every(p => !p)) return stat('ai-status-global', 'Fill prompts first', 'err');
 
-  const realDescs = REAL.filter(Boolean).map((p, i) =>
-    `Real ${i+1}: ${p.alt_description || 'landscape photo'}`
-  ).join('\n');
-
-  stat('ai-status-global', 'Generating pro tips…');
-
+  const realDescs = REAL.filter(Boolean).map((p,i) => `Real ${i+1}: ${p.desc}`).join('\n');
+  stat('ai-status-global', 'Generating tips…');
   try {
-    const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text:
-            `You are writing "Pro Tips" for a daily game where players guess if images are real photos or AI-generated.
-
-Theme: "${theme || 'General'}"
-
-Here are 5 AI image prompts. For each, write a specific, educational pro tip that teaches players what to look for to identify it as AI-generated. Tips should:
-- Be specific to the subject matter (not generic)
-- Reference concrete visual tells (textures, physics, details)
-- Start with a CATEGORY in ALL CAPS followed by colon (e.g. "TEXTURE:", "PHYSICS:", "REFLECTIONS:", "HANDS:", "TEXT:")
-- Be 1-2 sentences, max 30 words
-- Teach something players can use in future rounds
-
-AI Image prompts:
-${aiPrompts.map((p, i) => `${i+1}. ${p}`).join('\n')}
-
-${realDescs ? `Here are the real photos:
-${realDescs}
-
-Also write 5 pro tips for the real photos. These should teach players what signals authenticity — natural imperfections, camera artifacts, lens effects, environmental details.
-Same format: CATEGORY in caps, 1-2 sentences.` : ''}
-
-Return exactly ${realDescs ? '10' : '5'} tips, numbered. ${realDescs ? 'Tips 1-5 are for AI images, tips 6-10 are for real photos.' : ''} No other text.`
-          }], role: 'user' }]
-        })
-      }
-    );
-
+    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text:
+        `Write pro tips for AI detection game. Theme: "${theme||'General'}"
+AI prompts:\n${aiP.map((p,i)=>`${i+1}. ${p}`).join('\n')}
+${realDescs ? `Real photos:\n${realDescs}\nWrite 10 tips: 1-5 for AI, 6-10 for real.` : 'Write 5 tips for AI images.'}
+Each tip: CATEGORY: in caps, 1-2 sentences, max 30 words, specific visual tells.
+Numbered list only.`
+      }], role: 'user' }] })
+    });
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const data = await resp.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-    const lines = text.split('\n')
-      .map(l => l.replace(/^\d+[\.\)]\s*/, '').trim())
-      .filter(l => l.length > 15);
-
-    for (let i = 0; i < 5 && i < lines.length; i++) {
+    const lines = (data.candidates?.[0]?.content?.parts?.[0]?.text || '').split('\n')
+      .map(l => l.replace(/^\d+[\.\)]\s*/, '').trim()).filter(l => l.length > 15);
+    for (let i=0;i<5&&i<lines.length;i++) {
       const el = document.getElementById(`tip-${i}`);
       if (el && lines[i]) el.value = lines[i];
     }
-
     window._realTips = [];
-    for (let i = 5; i < 10 && i < lines.length; i++) {
-      window._realTips.push(lines[i]);
-    }
-
-    stat('ai-status-global',
-      `Tips generated! ${Math.min(lines.length, 5)} AI tips${window._realTips.length ? ' + ' + window._realTips.length + ' real photo tips' : ''} filled. Review and edit.`,
-      'ok');
-  } catch (e) {
-    stat('ai-status-global', 'Auto tips failed: ' + e.message, 'err');
-  }
+    for (let i=5;i<10&&i<lines.length;i++) window._realTips.push(lines[i]);
+    stat('ai-status-global', 'Tips generated ✓', 'ok');
+  } catch (e) { stat('ai-status-global', 'Failed: ' + e.message, 'err'); }
 }
 
 /* ═══════════════════════════════════════
-   CHALLENGE PREVIEW
+   PREVIEW
    ═══════════════════════════════════════ */
 function buildShuffledItems() {
-  const rc = REAL.filter(Boolean).length;
-  const ac = AI.filter(Boolean).length;
-  if (rc < 5 || ac < 5) return null;
-
+  if (REAL.filter(Boolean).length < 5 || AI.filter(Boolean).length < 5) return null;
   const items = [];
-  for (let i = 0; i < 5; i++) {
-    items.push({
-      source: 'human',
-      thumb: REAL[i].urls.small,
-      label: `Real ${i+1}: ${(REAL[i].alt_description || '').slice(0, 40)}`
-    });
-  }
-  for (let i = 0; i < 5; i++) {
-    items.push({
-      source: 'ai',
-      thumb: AI[i].dataUrl,
-      label: `AI ${i+1}`
-    });
-  }
-
-  for (let i = items.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [items[i], items[j]] = [items[j], items[i]];
-  }
-
+  for (let i=0;i<5;i++) items.push({ source:'human', thumb:REAL[i].thumb, label:`Real ${i+1}` });
+  for (let i=0;i<5;i++) items.push({ source:'ai', thumb:AI[i].dataUrl, label:`AI ${i+1}` });
+  for (let i=items.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1));[items[i],items[j]]=[items[j],items[i]]; }
   return items;
-}
-
-function analyzePattern(items) {
-  const warnings = [];
-
-  let maxStreak = 1, curStreak = 1, streakType = items[0]?.source;
-  for (let i = 1; i < items.length; i++) {
-    if (items[i].source === items[i-1].source) {
-      curStreak++;
-      if (curStreak > maxStreak) {
-        maxStreak = curStreak;
-        streakType = items[i].source;
-      }
-    } else {
-      curStreak = 1;
-    }
-  }
-  if (maxStreak >= 3) {
-    warnings.push(`⚠️ Found ${maxStreak} ${streakType === 'ai' ? 'AI' : 'REAL'} images in a row — players might notice the pattern.`);
-  }
-
-  let alternating = true;
-  for (let i = 1; i < items.length; i++) {
-    if (items[i].source === items[i-1].source) { alternating = false; break; }
-  }
-  if (alternating) {
-    warnings.push('⚠️ Perfect alternating pattern (human-AI-human-AI...) — too predictable! Re-shuffle.');
-  }
-
-  const first3 = items.slice(0, 3).map(i => i.source);
-  const last3 = items.slice(-3).map(i => i.source);
-  if (first3.every(s => s === first3[0])) {
-    warnings.push(`⚠️ First 3 rounds are all ${first3[0] === 'ai' ? 'AI' : 'REAL'} — consider re-shuffling.`);
-  }
-  if (last3.every(s => s === last3[0])) {
-    warnings.push(`⚠️ Last 3 rounds are all ${last3[0] === 'ai' ? 'AI' : 'REAL'} — consider re-shuffling.`);
-  }
-
-  return warnings;
 }
 
 function renderPreview() {
   const items = buildShuffledItems();
-  if (!items) return stat('preview-status', 'Need 5 real + 5 AI images first', 'err');
-
-  const grid = document.getElementById('preview-grid');
-  grid.innerHTML = '';
-
-  items.forEach((item, idx) => {
-    const card = document.createElement('div');
-    card.className = 'preview-card';
-    card.innerHTML = `
-      <img src="${item.thumb}">
+  if (!items) return stat('preview-status', 'Need 5 real + 5 AI first', 'err');
+  const grid = document.getElementById('preview-grid'); grid.innerHTML = '';
+  items.forEach((item,idx) => {
+    const card = document.createElement('div'); card.className = 'preview-card';
+    card.innerHTML = `<img src="${item.thumb}">
       <div class="round-num">R${idx+1}</div>
-      <div class="type-badge ${item.source === 'ai' ? 'ai' : 'human'}">${item.source === 'ai' ? 'AI' : 'REAL'}</div>`;
-    card.title = item.label;
+      <div class="type-badge ${item.source==='ai'?'ai':'human'}">${item.source==='ai'?'AI':'REAL'}</div>`;
     grid.appendChild(card);
   });
 
-  const warnings = analyzePattern(items);
-  const warnBox = document.getElementById('pattern-warning');
-  if (warnings.length > 0) {
-    warnBox.innerHTML = warnings.join('<br>');
-    warnBox.classList.add('visible');
-  } else {
-    warnBox.classList.remove('visible');
-  }
+  const warnings = [];
+  let ms=1,cs=1;
+  for(let i=1;i<items.length;i++){if(items[i].source===items[i-1].source){cs++;if(cs>ms)ms=cs;}else cs=1;}
+  if(ms>=3) warnings.push(`⚠️ ${ms} same type in a row`);
+  let alt=true;for(let i=1;i<items.length;i++){if(items[i].source===items[i-1].source){alt=false;break;}}
+  if(alt) warnings.push('⚠️ Perfect alternation — re-shuffle');
 
-  const qBar = document.getElementById('quality-bar');
-  qBar.style.display = 'flex';
+  const wb = document.getElementById('pattern-warning');
+  if (warnings.length) { wb.innerHTML = warnings.join('<br>'); wb.classList.add('visible'); }
+  else wb.classList.remove('visible');
 
-  const firstHalf = items.slice(0, 5);
-  const secondHalf = items.slice(5);
-  const aiFirst = firstHalf.filter(i => i.source === 'ai').length;
-  const aiSecond = secondHalf.filter(i => i.source === 'ai').length;
-
-  let maxS = 1, curS = 1;
-  for (let i = 1; i < items.length; i++) {
-    if (items[i].source === items[i-1].source) { curS++; if (curS > maxS) maxS = curS; }
-    else curS = 1;
-  }
-
-  const pattern = items.map(i => i.source === 'ai' ? 'A' : 'R').join('');
-
+  const qBar = document.getElementById('quality-bar'); qBar.style.display = 'flex';
+  const pattern = items.map(i=>i.source==='ai'?'A':'R').join('');
+  const aiF = items.slice(0,5).filter(i=>i.source==='ai').length;
   qBar.innerHTML = `
-    <div class="q-stat">
-      <div class="q-label">Pattern</div>
-      <div class="q-val" style="color:var(--cyan);font-size:.6rem;letter-spacing:2px;">${pattern}</div>
-    </div>
-    <div class="q-stat">
-      <div class="q-label">1st Half / 2nd Half</div>
-      <div class="q-val ${Math.abs(aiFirst - aiSecond) <= 1 ? 'good' : 'warn'}">${aiFirst}A+${5-aiFirst}R / ${aiSecond}A+${5-aiSecond}R</div>
-    </div>
-    <div class="q-stat">
-      <div class="q-label">Max Streak</div>
-      <div class="q-val ${maxS <= 2 ? 'good' : maxS <= 3 ? 'warn' : 'bad'}">${maxS} in a row</div>
-    </div>
-    <div class="q-stat">
-      <div class="q-label">Quality</div>
-      <div class="q-val ${warnings.length === 0 ? 'good' : 'warn'}">${warnings.length === 0 ? 'CLEAN ✓' : warnings.length + ' warning(s)'}</div>
-    </div>`;
-
-  stat('preview-status', 'Preview generated. Check pattern and balance above.', 'ok');
+    <div class="q-stat"><div class="q-label">Pattern</div><div class="q-val" style="color:var(--cyan);font-size:.6rem;letter-spacing:2px">${pattern}</div></div>
+    <div class="q-stat"><div class="q-label">Balance</div><div class="q-val ${Math.abs(aiF-2.5)<=1.5?'good':'warn'}">${aiF}A+${5-aiF}R / ${5-aiF+items.slice(5).filter(i=>i.source==='ai').length}A</div></div>
+    <div class="q-stat"><div class="q-label">Max Streak</div><div class="q-val ${ms<=2?'good':ms<=3?'warn':'bad'}">${ms}</div></div>
+    <div class="q-stat"><div class="q-label">Quality</div><div class="q-val ${warnings.length===0?'good':'warn'}">${warnings.length===0?'CLEAN ✓':warnings.length+' warn'}</div></div>`;
+  stat('preview-status', 'Preview ready', 'ok');
 }
-
 function reshufflePreview() { renderPreview(); }
 
 /* ═══════════════════════════════════════
@@ -1035,161 +1009,89 @@ function generateJSON() {
   const emoji = document.getElementById('cfg-emoji').value.trim();
   const subtitle = document.getElementById('cfg-subtitle').value.trim();
 
-  const rc = REAL.filter(Boolean).length;
-  const ac = AI.filter(Boolean).length;
-  if (rc < 5 || ac < 5) return stat('export-status', `Need 5 real (${rc}) + 5 AI (${ac})`, 'err');
+  const rc = REAL.filter(Boolean).length, ac = AI.filter(Boolean).length;
+  if (rc<5||ac<5) return stat('export-status', `Need 5 real (${rc}) + 5 AI (${ac})`, 'err');
 
   const items = [];
-
-  for (let i = 0; i < 5; i++) {
-    const photo = REAL[i];
-    const realTip = (window._realTips && window._realTips[i])
-      || 'Natural imperfections like lens flare, slight blur, or uneven lighting are hallmarks of a real photograph.';
-    items.push({
-      source: 'human',
-      content: `${photo.urls.raw}&w=800&h=600&fit=crop&q=80`,
-      attribution: `Photo by ${photo.user.name} on Unsplash`,
-      source_url: photo.links.html,
-      pro_tip: realTip,
-    });
+  for (let i=0;i<5;i++) {
+    const p = REAL[i];
+    const realTip = window._realTips?.[i] || 'Natural imperfections like lens flare, slight blur, or uneven lighting are hallmarks of a real photograph.';
+    items.push({ source:'human', content:p.full, attribution:p.attribution, source_url:p.sourceUrl, pro_tip:realTip });
   }
-
-  for (let i = 0; i < 5; i++) {
+  for (let i=0;i<5;i++) {
     const ext = AI[i].blob.type?.includes('png') ? 'png' : 'jpg';
-    items.push({
-      source: 'ai',
-      content: `images/d${day}_ai${i+1}.${ext}`,
-      attribution: 'AI-generated — created with Google Gemini',
+    items.push({ source:'ai', content:`images/d${day}_ai${i+1}.${ext}`, attribution:'AI-generated — created with Google Gemini',
       pro_tip: document.getElementById(`tip-${i}`).value || tips[i],
-      _prompt: document.getElementById(`prompt-${i}`).value,
-      _ext: ext
-    });
+      _prompt: document.getElementById(`prompt-${i}`).value, _ext: ext });
   }
 
-  // Smart shuffle: try up to 20 times, pick the cleanest result
-  let bestShuffle = null;
-  let bestScore = -999;
-
-  for (let attempt = 0; attempt < 20; attempt++) {
-    const shuffled = [...items];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-
-    let score = 10; // start perfect
-
-    // Penalize long streaks
-    let streak = 1;
-    for (let i = 1; i < shuffled.length; i++) {
-      if (shuffled[i].source === shuffled[i-1].source) {
-        streak++;
-        if (streak >= 3) score -= 3;
-        if (streak >= 4) score -= 5;
-      } else streak = 1;
-    }
-
-    // Penalize perfect alternation
-    let alt = true;
-    for (let i = 1; i < shuffled.length; i++) {
-      if (shuffled[i].source === shuffled[i-1].source) { alt = false; break; }
-    }
-    if (alt) score -= 10;
-
-    // Penalize unbalanced halves
-    const aiFirst = shuffled.slice(0, 5).filter(i => i.source === 'ai').length;
-    if (Math.abs(aiFirst - 2.5) > 1.5) score -= 2;
-
-    // Penalize first/last 3 being same type
-    if (shuffled.slice(0, 3).every(s => s.source === shuffled[0].source)) score -= 2;
-    if (shuffled.slice(-3).every(s => s.source === shuffled[9]?.source)) score -= 2;
-
-    if (score > bestScore) {
-      bestScore = score;
-      bestShuffle = shuffled;
-    }
-    if (score >= 9) break; // good enough
+  let best=null,bestS=-999;
+  for(let a=0;a<20;a++){
+    const sh=[...items];for(let i=sh.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[sh[i],sh[j]]=[sh[j],sh[i]];}
+    let sc=10,st=1;
+    for(let i=1;i<sh.length;i++){if(sh[i].source===sh[i-1].source){st++;if(st>=3)sc-=3;if(st>=4)sc-=5;}else st=1;}
+    let al=true;for(let i=1;i<sh.length;i++){if(sh[i].source===sh[i-1].source){al=false;break;}}if(al)sc-=10;
+    const af=sh.slice(0,5).filter(i=>i.source==='ai').length;if(Math.abs(af-2.5)>1.5)sc-=2;
+    if(sh.slice(0,3).every(s=>s.source===sh[0].source))sc-=2;
+    if(sh.slice(-3).every(s=>s.source===sh[9]?.source))sc-=2;
+    if(sc>bestS){bestS=sc;best=sh;}if(sc>=9)break;
   }
 
-  const rounds = bestShuffle.map((item, idx) => {
-    const r = {
-      id: `d${day}r${idx + 1}`,
-      type: 'image',
-      content: item.content,
-      source: item.source,
-      attribution: item.attribution,
-      pro_tip: item.pro_tip
-    };
+  const rounds = best.map((item,idx) => {
+    const r = { id:`d${day}r${idx+1}`, type:'image', content:item.content, source:item.source, attribution:item.attribution, pro_tip:item.pro_tip };
     if (item.source_url) r.source_url = item.source_url;
     if (item._prompt) r._note = `Prompt: ${item._prompt}`;
     return r;
   });
 
-  const challenge = {
-    day_number: day,
-    date: date,
-    category: cat || 'Daily Challenge',
-    category_emoji: emoji || '🧠',
-    rounds
-  };
-
+  const challenge = { day_number:day, date, category:cat||'Daily Challenge', category_emoji:emoji||'🧠', rounds };
   if (subtitle) challenge.category_subtitle = subtitle;
 
   document.getElementById('json-out').value = JSON.stringify(challenge, null, 2);
 
-  const pattern = bestShuffle.map(i => i.source === 'ai' ? 'A' : 'R').join('');
-  stat('export-status',
-    `✓ ${rounds.length} rounds exported. Pattern: ${pattern} (score: ${bestScore}/10)`,
-    bestScore >= 7 ? 'ok' : 'err');
+  // ── Daily.json snippet ──
+  const entry = { day_number: day, category: cat||'Daily Challenge', category_emoji: emoji||'🧠' };
+  if (subtitle) entry.category_subtitle = subtitle;
+  entry.challenge_file = `challenges/${date}.json`;
+
+  const snippet = `  "${date}": ${JSON.stringify(entry, null, 4).split('\n').map((l,i) => i===0?l:'  '+l).join('\n')}`;
+  document.getElementById('daily-json-out').value = snippet;
+
+  const pattern = best.map(i=>i.source==='ai'?'A':'R').join('');
+  stat('export-status', `✓ ${rounds.length} rounds. Pattern: ${pattern} (${bestS}/10). Daily snippet ready.`, bestS>=7?'ok':'err');
 }
 
 async function downloadAll() {
   const json = document.getElementById('json-out').value;
   if (!json) return stat('export-status', 'Generate JSON first', 'err');
-
-  const day = parseInt(document.getElementById('cfg-day').value) || 1;
+  const day = parseInt(document.getElementById('cfg-day').value)||1;
   const date = document.getElementById('cfg-date').value;
-
-  stat('export-status', 'Downloading files…');
-
-  dlBlob(new Blob([json], { type: 'application/json' }), `${date}.json`);
-
-  for (let i = 0; i < 5; i++) {
+  stat('export-status', 'Downloading…');
+  dlBlob(new Blob([json],{type:'application/json'}), `${date}.json`);
+  for (let i=0;i<5;i++) {
     if (AI[i]) {
-      const ext = AI[i].blob.type?.includes('png') ? 'png' : 'jpg';
+      const ext = AI[i].blob.type?.includes('png')?'png':'jpg';
       dlBlob(AI[i].blob, `d${day}_ai${i+1}.${ext}`);
       await sleep(350);
     }
   }
-
-  stat('export-status', `Downloaded! Put JSON → challenges/${date}.json, images → images/ folder. Redeploy.`, 'ok');
+  stat('export-status', `Downloaded! JSON → challenges/${date}.json, images → images/, paste daily.json snippet.`, 'ok');
 }
 
 function copyJSON() {
-  const ta = document.getElementById('json-out');
-  if (!ta.value) return;
-  navigator.clipboard.writeText(ta.value);
-  stat('export-status', 'Copied to clipboard ✓', 'ok');
+  const v = document.getElementById('json-out').value; if(!v) return;
+  navigator.clipboard.writeText(v); stat('export-status', 'Challenge JSON copied ✓', 'ok');
+}
+function copyDailyJSON() {
+  const v = document.getElementById('daily-json-out').value; if(!v) return;
+  navigator.clipboard.writeText(v); stat('export-status', 'Daily.json snippet copied ✓ — paste before last } in daily.json', 'ok');
 }
 
 /* ═══════════════════════════════════════
    UTILS
    ═══════════════════════════════════════ */
-function stat(id, msg, type = '') {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = msg;
-  el.className = 'status' + (type ? ' ' + type : '');
-}
-
-function dlBlob(blob, name) {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = name;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
+function stat(id,msg,type='') { const el=document.getElementById(id); if(!el)return; el.textContent=msg; el.className='status'+(type?' '+type:''); }
+function dlBlob(blob,name) { const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href); }
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 </script>
 </body>
